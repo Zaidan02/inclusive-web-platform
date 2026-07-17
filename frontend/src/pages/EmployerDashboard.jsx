@@ -12,9 +12,7 @@ import {
   getToken,
   logout,
 } from "../services/authService";
-
-const API_BASE_URL = "https://fyp-backend-cbaa.onrender.com/api";
-const BACKEND_BASE_URL = "https://fyp-backend-cbaa.onrender.com";
+import { API_BASE_URL, BACKEND_BASE_URL } from "../config";
 
 const globalStyles = `
   * { box-sizing: border-box; }

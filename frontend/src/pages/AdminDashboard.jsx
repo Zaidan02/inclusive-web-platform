@@ -6,6 +6,7 @@ import {
   getAdminApplications,
   getAdminApplicationFileUrl,
 } from "../services/authService";
+import { API_BASE_URL } from "../config";
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -98,8 +99,8 @@ function AdminDashboard() {
       const token = getToken();
       if (!token) { navigate("/signin"); return; }
       const endpoint = tab === "ARCHIVED_USERS"
-        ? "https://fyp-backend-cbaa.onrender.com/api/admin/users/archived"
-        : "https://fyp-backend-cbaa.onrender.com/api/admin/users";
+        ? `${API_BASE_URL}/admin/users/archived`
+        : `${API_BASE_URL}/admin/users`;
       const res = await fetch(endpoint, { method: "GET", headers: { "X-Auth-Token": token } });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to load users.");
@@ -112,7 +113,7 @@ function AdminDashboard() {
       setLoading(true); setError("");
       const token = getToken();
       if (!token) { navigate("/signin"); return; }
-      const res = await fetch("https://fyp-backend-cbaa.onrender.com/api/admin/candidate-profiles", { method: "GET", headers: { "X-Auth-Token": token } });
+      const res = await fetch(`${API_BASE_URL}/admin/candidate-profiles`, { method: "GET", headers: { "X-Auth-Token": token } });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to load profiles.");
       setCandidateProfiles(data.profiles || []);
@@ -151,7 +152,7 @@ function AdminDashboard() {
       setEditingUser(true); setActionLoadingId(userToEdit.id);
       const token = getToken();
       if (!token) { navigate("/signin"); return; }
-      const res = await fetch(`https://fyp-backend-cbaa.onrender.com/api/admin/users/${userToEdit.id}`, {
+      const res = await fetch(`${API_BASE_URL}/admin/users/${userToEdit.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json", "X-Auth-Token": token },
         body: JSON.stringify({ username: editFormData.username, email: editFormData.email, password: showPasswordField ? editFormData.password : "" }),
@@ -172,7 +173,7 @@ function AdminDashboard() {
       setArchivingUser(true); setActionLoadingId(userToArchive.id);
       const token = getToken();
       if (!token) { navigate("/signin"); return; }
-      const res = await fetch(`https://fyp-backend-cbaa.onrender.com/api/admin/users/${userToArchive.id}/archive`, { method: "PATCH", headers: { "X-Auth-Token": token } });
+      const res = await fetch(`${API_BASE_URL}/admin/users/${userToArchive.id}/archive`, { method: "PATCH", headers: { "X-Auth-Token": token } });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to archive user.");
       setUsers((prev) => prev.filter((u) => u.id !== userToArchive.id));
@@ -185,7 +186,7 @@ function AdminDashboard() {
       setActionLoadingId(user.id);
       const token = getToken();
       if (!token) { navigate("/signin"); return; }
-      const res = await fetch(`https://fyp-backend-cbaa.onrender.com/api/admin/users/${user.id}/restore`, { method: "PATCH", headers: { "X-Auth-Token": token } });
+      const res = await fetch(`${API_BASE_URL}/admin/users/${user.id}/restore`, { method: "PATCH", headers: { "X-Auth-Token": token } });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to restore user.");
       setUsers((prev) => prev.filter((u) => u.id !== user.id));
@@ -198,7 +199,7 @@ function AdminDashboard() {
       setDeletingUser(true);
       const token = getToken();
       if (!token) { navigate("/signin"); return; }
-      const res = await fetch(`https://fyp-backend-cbaa.onrender.com/api/admin/users/${userToDelete.id}`, { method: "DELETE", headers: { "X-Auth-Token": token } });
+      const res = await fetch(`${API_BASE_URL}/admin/users/${userToDelete.id}`, { method: "DELETE", headers: { "X-Auth-Token": token } });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to delete user.");
       setUsers((prev) => prev.filter((u) => u.id !== userToDelete.id));

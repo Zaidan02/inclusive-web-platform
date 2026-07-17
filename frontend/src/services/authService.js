@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://fyp-backend-cbaa.onrender.com/api";
+import { API_BASE_URL } from "../config";
 
 export async function registerUser(userData) {
   const response = await fetch(`${API_BASE_URL}/register`, {

@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getToken, logout, applyToJob, getCandidateApplications } from "../services/authService";
-
-const API_BASE_URL = "https://fyp-backend-cbaa.onrender.com/api";
-const BACKEND_BASE_URL = "https://fyp-backend-cbaa.onrender.com";
-const AI_SERVICE_URL = "https://fyp-ai-service-tiyi.onrender.com/predict";
+import { AI_SERVICE_URL, API_BASE_URL, BACKEND_BASE_URL } from "../config";
 
 const disabilities = [
   { name: "Ankle", image: "/Disabilities/Ankle.png" },
