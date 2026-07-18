@@ -1,88 +1,74 @@
-import { useNavigate } from "react-router-dom";
-import logoImage from "../assets/john-logo.png";
-import "../styles/authPages.css";
+import { Link } from "react-router-dom";
+import heroImage from "../assets/hero.png";
+import ArrowIcon from "../components/common/ArrowIcon";
+import SiteHeader from "../components/layout/SiteHeader";
+import SiteFooter from "../components/layout/SiteFooter";
+import "../styles/landing.css";
 
-function WelcomePage() {
-  const navigate = useNavigate();
+const steps = [
+  { number: "01", title: "Share what you can do", text: "Candidates build an ability-led profile focused on strengths, preferences, and practical potential." },
+  { number: "02", title: "Describe the real work", text: "Employers break opportunities into clear tasks and the abilities each task actually requires." },
+  { number: "03", title: "Discover better matches", text: "Our platform brings both sides together with transparent, task-based compatibility insights." },
+];
 
+const principles = [
+  ["Ability first", "We start with strengths and practical capabilities—not labels or assumptions."],
+  ["Clear by design", "Jobs, tasks, and expectations are presented in a way people can understand."],
+  ["Human at heart", "Technology supports better decisions while people remain at the center."],
+];
+
+export default function WelcomePage() {
   return (
-    <div className="auth-page">
-      <div className="auth-shell auth-shell--welcome">
-        <div className="auth-left auth-left--welcome">
-          {/* <span className="auth-badge"> */}
-          <span className="auth-badge">JoIn Hospitality</span>
-            {/* Jo<span className="badge-i">I</span>n Hospitality */}
-          {/* </span> */}
-
-          <h1 className="auth-heading">
-            <span>Inclusive Hospitality</span> starts with the right opportunity.
-          </h1>
-
-          <p className="auth-text">
-            A professional and accessible platform designed to connect people
-            and possibilities in hospitality.
-          </p>
-
-          <div className="welcome-stats">
-            <div className="welcome-stat-card">
-              <div className="stat-icon stat-icon-blue">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M12 3L19 6V11C19 15.5 16.2 19.4 12 21C7.8 19.4 5 15.5 5 11V6L12 3Z" />
-                  <path d="M9 12L11 14L15.5 9.5" />
-                </svg>
+    <div className="landing-page">
+      <SiteHeader />
+      <main>
+        <section className="hero-section">
+          <div className="landing-container hero-grid">
+            <div className="hero-copy">
+              <span className="eyebrow"><i /> Inclusive hospitality starts here</span>
+              <h1>Opportunity should be shaped by <em>ability.</em></h1>
+              <p>JoIn connects candidates and hospitality employers through a clearer, more human way of matching people to the work they can thrive in.</p>
+              <div className="hero-actions">
+                <Link className="button button--primary" to="/signup?role=candidate">Find your opportunity <ArrowIcon /></Link>
+                <a className="button button--secondary" href="#purpose">Explore our purpose</a>
               </div>
-              <strong>100%</strong>
-              <span>Inclusive</span>
+              <div className="hero-trust"><span><b>✓</b> Ability-led profiles</span><span><b>✓</b> Task-based matching</span><span><b>✓</b> Inclusive by design</span></div>
             </div>
-
-            <div className="welcome-stat-card">
-              <div className="stat-icon stat-icon-green">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="8" r="4" />
-                  <path d="M5 21C5.8 16.8 8.6 14.5 12 14.5C15.4 14.5 18.2 16.8 19 21" />
-                </svg>
-              </div>
-              <strong>Accessible</strong>
-              <span>Opportunities</span>
-            </div>
-
-            <div className="welcome-stat-card">
-              <div className="stat-icon stat-icon-purple">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <circle cx="9" cy="9" r="3.2" />
-                  <circle cx="16.5" cy="10.5" r="2.6" />
-                  <path d="M3.8 21C4.4 17.5 6.4 15.6 9 15.6C11.6 15.6 13.6 17.5 14.2 21" />
-                  <path d="M13.5 16.4C15.8 16.6 17.5 18.1 18.1 21" />
-                </svg>
-              </div>
-              <strong>Meaningful</strong>
-              <span>Connections</span>
+            <div className="hero-visual" aria-label="Inclusive hospitality illustration">
+              <div className="hero-visual__glow" />
+              <div className="hero-visual__frame"><img src={heroImage} alt="People connecting through inclusive employment" /></div>
+              <div className="floating-card floating-card--top"><span className="floating-icon">✦</span><div><strong>Strengths recognized</strong><small>Potential made visible</small></div></div>
+              <div className="floating-card floating-card--bottom"><span className="match-ring">92<small>%</small></span><div><strong>Great match</strong><small>Based on real tasks</small></div></div>
             </div>
           </div>
+        </section>
 
-          <div className="welcome-actions">
-            <button className="primary-btn" onClick={() => navigate("/signup")}>
-              <span>Create Account</span>
-              <span className="btn-arrow">→</span>
-            </button>
-
-            <button className="secondary-btn" onClick={() => navigate("/signin")}>
-              Sign In
-            </button>
+        <section className="purpose-section section" id="purpose">
+          <div className="landing-container purpose-grid">
+            <div><span className="section-kicker">Why JoIn exists</span><h2>Work becomes more inclusive when we ask a better question.</h2></div>
+            <div className="purpose-copy"><p>Instead of asking what someone cannot do, we help employers understand what a person <strong>can contribute</strong>. That shift turns uncertainty into practical opportunity.</p><p>JoIn makes hospitality roles easier to understand by connecting job tasks with real abilities—giving candidates confidence and employers clarity.</p></div>
           </div>
-        </div>
+          <div className="landing-container principles-grid">{principles.map(([title, text], i) => <article className="principle-card" key={title}><span>0{i + 1}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
+        </section>
 
-        <div className="auth-right">
-          <div className="logo-panel">
-            <div className="logo-orb logo-orb-1"></div>
-            <div className="logo-orb logo-orb-2"></div>
-            <div className="logo-glow"></div>
-            <img src={logoImage} alt="JoIn Hospitality logo" className="logo-image" />
+        <section className="process-section section" id="how-it-works">
+          <div className="landing-container"><div className="section-heading section-heading--center"><span className="section-kicker">How it works</span><h2>A thoughtful path from potential to opportunity.</h2><p>Simple steps, clearer information, and matching built around the work itself.</p></div>
+            <div className="steps-grid">{steps.map((step) => <article className="step-card" key={step.number}><span className="step-number">{step.number}</span><div className="step-line" /><h3>{step.title}</h3><p>{step.text}</p></article>)}</div>
           </div>
-        </div>
-      </div>
+        </section>
+
+        <section className="paths-section section" id="paths">
+          <div className="landing-container"><div className="section-heading section-heading--center"><span className="section-kicker">Choose your path</span><h2>One purpose. Two ways to take part.</h2></div>
+            <div className="paths-grid">
+              <article className="path-card path-card--candidate"><span className="path-label">For candidates</span><h3>Let your abilities lead the way.</h3><p>Create your profile, understand your strengths, explore suitable roles, and apply with confidence.</p><ul><li>Build an ability-led profile</li><li>Receive compatibility insights</li><li>Explore accessible employers</li></ul><Link className="button button--light" to="/signup?role=candidate">Become a candidate <ArrowIcon /></Link></article>
+              <article className="path-card path-card--employer"><span className="path-label">For employers</span><h3>Hire with more clarity and confidence.</h3><p>Describe the work that matters, reach a wider talent pool, and focus hiring decisions on capability.</p><ul><li>Publish task-based opportunities</li><li>Build an inclusive company profile</li><li>Review applications in one place</li></ul><Link className="button button--primary" to="/employers">For employers <ArrowIcon /></Link></article>
+            </div>
+          </div>
+        </section>
+
+        <section className="closing-cta"><div className="landing-container closing-cta__inner"><div><span className="section-kicker section-kicker--light">A more inclusive future of work</span><h2>Ready to turn potential into possibility?</h2><p>Join a community that sees ability first.</p></div><div className="closing-cta__actions"><Link className="button button--light" to="/signup">Create your account <ArrowIcon /></Link><Link className="button button--outline-light" to="/signin">Sign in</Link></div></div></section>
+      </main>
+      <SiteFooter />
     </div>
   );
 }
-
-export default WelcomePage;

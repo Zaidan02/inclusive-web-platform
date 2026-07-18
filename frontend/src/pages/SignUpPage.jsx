@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { registerUser } from "../services/authService";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { registerUser } from "../services/authApi";
 import "../styles/authPages.css";
 
 function EyeIcon({ hidden }) {
@@ -50,12 +50,14 @@ function LockIcon() {
 
 function SignUpPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const requestedRole = searchParams.get("role");
 
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
-    accountType: "candidate",
+    accountType: requestedRole === "employer" ? "employer" : "candidate",
   });
 
   const [showPassword, setShowPassword] = useState(false);

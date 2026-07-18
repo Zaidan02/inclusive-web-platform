@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  getToken,
-  logout,
   getAdminApplications,
   getAdminApplicationFileUrl,
-} from "../services/authService";
+} from "../services/adminApi";
+import { getToken, logout } from "../services/authService";
 import { API_BASE_URL } from "../config";
 
 const globalStyles = `
@@ -365,7 +364,7 @@ function AdminDashboard() {
   ];
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", fontFamily: '"Inter", -apple-system, sans-serif', background: "#f8fafc", color: "#0f172a" }}>
+    <div className="dashboard-screen dashboard-screen--admin" style={{ minHeight: "100vh", display: "flex", fontFamily: '"Inter", -apple-system, sans-serif', background: "#f8fafc", color: "#0f172a" }}>
       <style>{globalStyles}</style>
 
       {/* SIDEBAR */}

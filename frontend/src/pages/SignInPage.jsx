@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logoImage from "../assets/john-logo.png";
-import {
-  loginUser,
-  saveToken,
-  getRoleFromToken,
-} from "../services/authService";
+import { loginUser } from "../services/authApi";
+import { getRoleFromToken } from "../services/authService";
+import { saveToken } from "../services/tokenService";
 import "../styles/authPages.css";
 
 function EyeIcon({ hidden }) {

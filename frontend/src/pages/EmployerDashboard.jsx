@@ -9,6 +9,8 @@ import {
   deleteEmployerApplication,
   updateEmployerProfile,
   getEmployerProfile,
+} from "../services/employerApi";
+import {
   getToken,
   logout,
 } from "../services/authService";
@@ -227,7 +229,7 @@ function EmployerDashboard() {
   const textareaStyle = { ...inputStyle, minHeight: "100px", resize: "vertical", padding: "10px 12px" };
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", fontFamily: '"Inter", -apple-system, sans-serif', background: "#f8fafc", color: "#0f172a" }}>
+    <div className="dashboard-screen dashboard-screen--employer" style={{ minHeight: "100vh", display: "flex", fontFamily: '"Inter", -apple-system, sans-serif', background: "#f8fafc", color: "#0f172a" }}>
       <style>{globalStyles}</style>
 
       {/* SIDEBAR */}

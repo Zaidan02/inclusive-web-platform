@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import logoImage from "../assets/john-logo.png";
-import { resetPassword } from "../services/authService";
+import { resetPassword } from "../services/authApi";
 import "../styles/authPages.css";
 
 function ResetPasswordPage() {

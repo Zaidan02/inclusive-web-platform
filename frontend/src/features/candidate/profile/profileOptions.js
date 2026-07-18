@@ -1,0 +1,17 @@
+export const disabilityOptions = [
+  { name: "Ankle", image: "/Disabilities/Ankle.png" },
+  { name: "Arm", image: "/Disabilities/Arm.png" },
+  { name: "Both Ankles", image: "/Disabilities/BothAnkles.png" },
+  { name: "Both Arms", image: "/Disabilities/BothArms.png" },
+  { name: "Both Forearms", image: "/Disabilities/BothForearms.png" },
+  { name: "Both Hands", image: "/Disabilities/BothHands.png" },
+  { name: "Both Knees", image: "/Disabilities/BothKnees.png" },
+  { name: "Both Legs", image: "/Disabilities/BothLegs.png" },
+  { name: "CVA", image: "/Disabilities/CVA.png" },
+  { name: "Forearm", image: "/Disabilities/Forearm.png" },
+  { name: "Knee", image: "/Disabilities/Knee.png" },
+  { name: "Leg", image: "/Disabilities/Leg.png" },
+  { name: "Pelvis Legs Wheelchair", image: "/Disabilities/PelvisLegsWheelchair.png" },
+  { name: "Waist Wheelchair", image: "/Disabilities/WaistWheelchair.png" },
+  { name: "Wheelchair", image: "/Disabilities/Wheelchair.png" },
+];

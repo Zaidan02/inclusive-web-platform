@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "../config";
+import { clearToken, decodeJwt, getPrimaryRole, getToken, saveToken } from "./tokenService";
 
 export async function registerUser(userData) {
   const response = await fetch(`${API_BASE_URL}/register`, {
@@ -72,50 +73,15 @@ export async function resetPassword(token, newPassword) {
   return data;
 }
 
-export function decodeJwt(token) {
-  try {
-    const base64Url = token.split(".")[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map(
-          (char) =>
-            "%" + ("00" + char.charCodeAt(0).toString(16)).slice(-2)
-        )
-        .join("")
-    );
-
-    return JSON.parse(jsonPayload);
-  } catch {
-    return null;
-  }
-}
-
 export function getRoleFromToken(token) {
-  const decoded = decodeJwt(token);
-
-  if (!decoded) return null;
-
-  if (decoded.roles && Array.isArray(decoded.roles) && decoded.roles.length > 0) {
-    return decoded.roles[0];
-  }
-
-  return decoded.role || null;
-}
-
-export function saveToken(token) {
-  localStorage.setItem("token", token);
-}
-
-export function getToken() {
-  return localStorage.getItem("token");
+  return getPrimaryRole(token);
 }
 
 export function logout() {
-  localStorage.removeItem("token");
+  clearToken();
 }
+
+export { decodeJwt, getToken, saveToken };
 
 export async function createEmployerJob(jobData) {
   const token = getToken();

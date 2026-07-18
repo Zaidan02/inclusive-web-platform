@@ -1,0 +1,36 @@
+.dashboard-screen {
+  width: 100%;
+  min-width: 0;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: #f7f9fd !important;
+}
+
+.dashboard-screen--candidate {
+  font-family: 'DM Sans', system-ui, sans-serif !important;
+}
+
+.dashboard-screen--admin > aside,
+.dashboard-screen--employer > aside {
+  background: linear-gradient(180deg, var(--brand-950), #07142f) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.dashboard-screen input,
+.dashboard-screen textarea,
+.dashboard-screen select {
+  font-family: 'DM Sans', system-ui, sans-serif !important;
+}
+
+@media (max-width: 760px) {
+  .dashboard-screen--admin,
+  .dashboard-screen--employer {
+    overflow-x: auto;
+  }
+
+  .dashboard-screen--admin > aside,
+  .dashboard-screen--employer > aside {
+    width: 190px !important;
+    min-width: 190px !important;
+  }
+}

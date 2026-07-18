@@ -1,25 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getToken, logout, applyToJob, getCandidateApplications } from "../services/authService";
+import { getToken, logout } from "../services/authService";
+import { applyToJob, getCandidateApplications } from "../services/candidateApi";
+import { getCandidateProfile, updateCandidateProfile } from "../services/candidateProfileApi";
+import { isCandidateProfileComplete } from "../features/candidate/profile/profileCompletion";
+import { disabilityOptions } from "../features/candidate/profile/profileOptions";
 import { AI_SERVICE_URL, API_BASE_URL, BACKEND_BASE_URL } from "../config";
-
-const disabilities = [
-  { name: "Ankle", image: "/Disabilities/Ankle.png" },
-  { name: "Arm", image: "/Disabilities/Arm.png" },
-  { name: "Both Ankles", image: "/Disabilities/BothAnkles.png" },
-  { name: "Both Arms", image: "/Disabilities/BothArms.png" },
-  { name: "Both Forearms", image: "/Disabilities/BothForearms.png" },
-  { name: "Both Hands", image: "/Disabilities/BothHands.png" },
-  { name: "Both Knees", image: "/Disabilities/BothKnees.png" },
-  { name: "Both Legs", image: "/Disabilities/BothLegs.png" },
-  { name: "CVA", image: "/Disabilities/CVA.png" },
-  { name: "Forearm", image: "/Disabilities/Forearm.png" },
-  { name: "Knee", image: "/Disabilities/Knee.png" },
-  { name: "Leg", image: "/Disabilities/Leg.png" },
-  { name: "Pelvis Legs Wheelchair", image: "/Disabilities/PelvisLegsWheelchair.png" },
-  { name: "Waist Wheelchair", image: "/Disabilities/WaistWheelchair.png" },
-  { name: "Wheelchair", image: "/Disabilities/Wheelchair.png" },
-];
 
 const disabilityFeasibilityRules = {
   Wheelchair: { difficult: ["move around", "cleaning", "display"], notFeasible: ["stand", "walk", "lift heavy", "carry heavy", "climb"] },
@@ -309,9 +295,44 @@ function CompanyLogo({ item, size = "small" }) {
   return <div style={ws}>{getCompanyInitial(item?.companyName)}</div>;
 }
 
+function AiJobMatchCard({ aiLoading, aiError, aiResults, selectedDisabilities, onMatch }) {
+  return (
+    <div style={{ ...styles.aiCard, marginBottom: "18px" }}>
+      <div style={styles.aiCardHeader}>
+        <div style={styles.aiIconWrapper}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 2L14.4 9.6H22L15.8 14.4L18.2 22L12 17.2L5.8 22L8.2 14.4L2 9.6H9.6L12 2Z" fill="white" />
+          </svg>
+        </div>
+        <div>
+          <h2 style={styles.aiTitle}>AI Job Match</h2>
+          <p style={styles.aiSubtitle}>Powered by machine learning</p>
+        </div>
+      </div>
+      <p style={{ ...styles.aiDescription, textAlign: "center", width: "100%" }}>
+        Use your saved profile to get personalized compatibility scores before exploring opportunities.
+      </p>
+      <button onClick={onMatch} disabled={aiLoading} className={aiLoading ? "shimmer-btn" : "ai-btn-idle"} style={{ ...styles.aiButton, opacity: aiLoading ? 0.9 : 1, cursor: aiLoading ? "not-allowed" : "pointer" }}>
+        {aiLoading ? <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}><SpinnerIcon /> Analyzing your profile...</span> : "Get My Job Match"}
+      </button>
+      {aiError && <div style={styles.aiErrorBox}>⚠️ {aiError}</div>}
+      {aiResults && (
+        <div style={{ marginTop: "20px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+            <span style={{ fontSize: "13px", fontWeight: "600", color: "#0f172a" }}>Your results</span>
+            <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: "400" }}>{selectedDisabilities.length} condition{selectedDisabilities.length !== 1 ? "s" : ""} analyzed</span>
+          </div>
+          {aiResults.results.map((result, index) => <JobResultCard key={result.job} result={result} index={index} />)}
+        </div>
+      )}
+      {!aiResults && !aiLoading && <div style={styles.aiEmptyState}><EmptyStateIllustration /><p style={styles.aiEmptyText}>Your compatibility scores will appear here after analysis</p></div>}
+    </div>
+  );
+}
+
 function CandidateDashboard() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("PROFILE");
+  const [activeTab, setActiveTab] = useState("JOBS");
   const [candidateName, setCandidateName] = useState("Candidate");
   const [selectedDisabilities, setSelectedDisabilities] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -342,7 +363,7 @@ function CandidateDashboard() {
     if (activeTab === "APPLICATIONS") fetchCandidateApplications();
   }, [activeTab]);
 
-  const filteredDisabilities = disabilities.filter((d) => d.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredDisabilities = disabilityOptions.filter((d) => d.name.toLowerCase().includes(searchTerm.toLowerCase()));
   const filteredApplications = applicationStatusFilter === "all" ? candidateApplications : candidateApplications.filter((a) => a.status === applicationStatusFilter);
 
   function getCompanyKey(item) { return item?.employerProfile?.companyName || item?.companyName || item?.company || ""; }
@@ -355,10 +376,12 @@ function CandidateDashboard() {
       setLoadingProfile(true);
       const token = getToken();
       if (!token) { navigate("/signin"); return; }
-      const res = await fetch(`${API_BASE_URL}/candidate/profile`, { method: "GET", headers: { "X-Auth-Token": token } });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.message || "Failed to load profile.");
+      const data = await getCandidateProfile();
       const profile = data.profile || data;
+      if (!isCandidateProfileComplete(profile)) {
+        navigate("/candidate/setup", { replace: true });
+        return;
+      }
       setCandidateName(profile.username || profile.name || profile.fullName || profile.email?.split("@")[0] || "Candidate");
       setSelectedDisabilities(profile.selectedDisabilities || []);
     } catch (err) { setErrorMessage(err.message); } finally { setLoadingProfile(false); }
@@ -461,13 +484,13 @@ function CandidateDashboard() {
   }
 
   async function handleSaveProfile() {
+    if (!selectedDisabilities.length) {
+      setErrorMessage("Select at least one option to keep your profile complete.");
+      return;
+    }
     try {
       setSavingProfile(true); setSuccessMessage(""); setErrorMessage("");
-      const token = getToken();
-      if (!token) { navigate("/signin"); return; }
-      const res = await fetch(`${API_BASE_URL}/candidate/profile`, { method: "PATCH", headers: { "Content-Type": "application/json", "X-Auth-Token": token }, body: JSON.stringify({ selectedDisabilities }) });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.message || "Failed to save profile.");
+      const data = await updateCandidateProfile(selectedDisabilities);
       setSelectedDisabilities(data.profile?.selectedDisabilities || []);
       setSuccessMessage("Profile saved.");
     } catch (err) { setErrorMessage(err.message); } finally { setSavingProfile(false); }
@@ -496,7 +519,7 @@ function CandidateDashboard() {
   const companyJobs = selectedCompany ? getCompanyJobs(selectedCompany) : [];
 
   return (
-    <div style={styles.page}>
+    <div className="dashboard-screen dashboard-screen--candidate" style={styles.page}>
       <style>{globalStyles}</style>
 
       {/* HEADER */}
@@ -506,7 +529,15 @@ function CandidateDashboard() {
           <h1 style={styles.headerTitle}>Find your best job match ✦</h1>
         </div>
         <div style={styles.userBox}>
-          <div style={styles.userAvatar}>{getUserInitials(candidateName)}</div>
+          <button
+            type="button"
+            style={styles.userAvatar}
+            onClick={() => setActiveTab("PROFILE")}
+            aria-label="Open my profile"
+            title="My Profile"
+          >
+            {getUserInitials(candidateName)}
+          </button>
           <div>
             <p style={styles.userName}>{candidateName}</p>
             <p style={styles.userRole}>Candidate</p>
@@ -517,10 +548,10 @@ function CandidateDashboard() {
 
       {/* TABS */}
       <nav style={styles.tabs}>
-        {["PROFILE", "JOBS", "APPLICATIONS"].map((tab) => (
+        {["JOBS", "APPLICATIONS"].map((tab) => (
           <button key={tab} onClick={() => { setActiveTab(tab); if (tab === "JOBS") setSelectedJob(null); }}
             style={{ ...styles.tabButton, ...(activeTab === tab ? styles.activeTab : {}) }}>
-            {tab === "PROFILE" ? "My Profile" : tab === "JOBS" ? "Jobs" : "My Applications"}
+            {tab === "JOBS" ? "Jobs" : "My Applications"}
           </button>
         ))}
       </nav>
@@ -601,7 +632,7 @@ function CandidateDashboard() {
               </div>
 
               {/* RIGHT CARD — AI */}
-              <div style={styles.aiCard}>
+              <div style={{ ...styles.aiCard, display: "none" }} aria-hidden="true">
                 <div style={styles.aiCardHeader}>
                   <div style={styles.aiIconWrapper}>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -662,6 +693,15 @@ function CandidateDashboard() {
 
         {activeTab === "JOBS" && (
           <section style={styles.card}>
+            {!selectedJob && (
+              <AiJobMatchCard
+                aiLoading={aiLoading}
+                aiError={aiError}
+                aiResults={aiResults}
+                selectedDisabilities={selectedDisabilities}
+                onMatch={handleGetAiMatch}
+              />
+            )}
             {!selectedJob ? (
               <>
                 <h2 style={styles.sectionTitle}>Available Jobs</h2>
@@ -900,7 +940,7 @@ const styles = {
   stepDot: { width: "7px", height: "7px", borderRadius: "50%", flexShrink: 0 },
   stepLabel: { fontSize: "11px", fontWeight: "500", whiteSpace: "nowrap" },
   stepLine: { width: "44px", height: "1px", background: "#e2e8f0", margin: "0 8px" },
-  profileGrid: { display: "grid", gridTemplateColumns: "1.3fr 0.7fr", gap: "18px" },
+  profileGrid: { display: "grid", gridTemplateColumns: "1fr", gap: "18px" },
   card: { background: "#ffffff", borderRadius: "18px", padding: "24px", boxShadow: "0 1px 10px rgba(15,23,42,0.05)", border: "1px solid #e8edf5" },
   cardHeader: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" },
   sectionTitle: { margin: "0 0 4px", fontSize: "17px", fontWeight: "600", color: "#0f172a", letterSpacing: "-0.2px", textAlign: "center" },

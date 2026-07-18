@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import logoImage from "../assets/john-logo.png";
-import { requestPasswordReset } from "../services/authService";
+import { requestPasswordReset } from "../services/authApi";
 import "../styles/authPages.css";
 
 function EmailIcon() {
