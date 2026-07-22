@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      CORS_ALLOW_ORIGIN: '^http://(localhost|127\.0\.0\.1):5173$'
     working_dir: /app
     volumes:
       - .:/app
