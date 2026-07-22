@@ -1,1 +1,1 @@
-export { createEmployerJob, deleteEmployerApplication, deleteEmployerJob, getEmployerApplications, getEmployerJobs, getEmployerProfile, updateApplicationStatus, updateEmployerJob, updateEmployerProfile } from "./authService";
+export { createEmployerJob, deleteEmployerApplication, deleteEmployerJob, getEmployerApplications, getEmployerJobDefinition, getEmployerJobs, getEmployerProfile, getJobDefinitions, updateApplicationStatus, updateEmployerJob, updateEmployerProfile } from "./authService";

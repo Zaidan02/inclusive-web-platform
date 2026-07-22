@@ -1,5 +1,1 @@
-flask
-flask-cors
-pandas
-scikit-learn==1.6.1
-joblib
+openpyxl==3.1.5

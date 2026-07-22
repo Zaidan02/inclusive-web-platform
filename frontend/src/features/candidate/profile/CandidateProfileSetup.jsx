@@ -9,6 +9,8 @@ import "./candidateProfile.css";
 export default function CandidateProfileSetup() {
   const navigate = useNavigate();
   const [selected, setSelected] = useState([]);
+  const [educationLevel, setEducationLevel] = useState("");
+  const [basicInfo, setBasicInfo] = useState({ firstName: "", lastName: "", phone: "", location: "", about: "" });
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -25,6 +27,8 @@ export default function CandidateProfileSetup() {
           return;
         }
         setSelected(profile.selectedDisabilities || []);
+        setEducationLevel(profile.educationLevel || "");
+        setBasicInfo({ firstName: profile.firstName || "", lastName: profile.lastName || "", phone: profile.phone || "", location: profile.location || "", about: profile.about || "" });
       })
       .catch((err) => active && setError(err.message))
       .finally(() => active && setLoading(false));
@@ -39,14 +43,14 @@ export default function CandidateProfileSetup() {
   }
 
   async function completeSetup() {
-    if (!selected.length) {
-      setError("Select at least one option to complete your profile.");
+    if (!selected.length || !educationLevel || !basicInfo.firstName.trim() || !basicInfo.lastName.trim() || !basicInfo.location.trim()) {
+      setError("Add your name, location, education level, and at least one disability.");
       return;
     }
     try {
       setSaving(true);
       setError("");
-      await updateCandidateProfile(selected);
+      await updateCandidateProfile({ selectedDisabilities: selected, educationLevel, ...basicInfo });
       navigate("/candidate", { replace: true });
     } catch (err) {
       setError(err.message);
@@ -67,6 +71,9 @@ export default function CandidateProfileSetup() {
         </div>
         <div className="profile-setup__card">
           <div className="profile-setup__card-header"><div><span className="profile-setup__eyebrow">Profile information</span><h2>Select your disabilities</h2><p>Choose all that apply.</p></div><span className="profile-setup__count">{selected.length} selected</span></div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "14px" }}><label style={{ display: "grid", gap: "6px" }}><strong>First name</strong><input value={basicInfo.firstName} onChange={(e) => setBasicInfo((p) => ({ ...p, firstName: e.target.value }))} style={{ padding: "12px", border: "1px solid #dbe3ef", borderRadius: "10px" }} /></label><label style={{ display: "grid", gap: "6px" }}><strong>Last name</strong><input value={basicInfo.lastName} onChange={(e) => setBasicInfo((p) => ({ ...p, lastName: e.target.value }))} style={{ padding: "12px", border: "1px solid #dbe3ef", borderRadius: "10px" }} /></label><label style={{ display: "grid", gap: "6px" }}><strong>Location</strong><input value={basicInfo.location} onChange={(e) => setBasicInfo((p) => ({ ...p, location: e.target.value }))} placeholder="City, region" style={{ padding: "12px", border: "1px solid #dbe3ef", borderRadius: "10px" }} /></label><label style={{ display: "grid", gap: "6px" }}><strong>Phone <small>(optional)</small></strong><input value={basicInfo.phone} onChange={(e) => setBasicInfo((p) => ({ ...p, phone: e.target.value }))} style={{ padding: "12px", border: "1px solid #dbe3ef", borderRadius: "10px" }} /></label></div>
+          <label style={{ display: "grid", gap: "6px", marginBottom: "14px" }}><strong>About you <small>(optional)</small></strong><textarea value={basicInfo.about} onChange={(e) => setBasicInfo((p) => ({ ...p, about: e.target.value }))} rows="3" placeholder="A short introduction, interests, or work goals" style={{ padding: "12px", border: "1px solid #dbe3ef", borderRadius: "10px", resize: "vertical" }} /></label>
+          <label style={{ display: "grid", gap: "6px", marginBottom: "18px" }}><strong>Highest education level</strong><select value={educationLevel} onChange={(event) => setEducationLevel(event.target.value)} style={{ padding: "12px", border: "1px solid #dbe3ef", borderRadius: "10px" }}><option value="">Select education level</option><option value="none">No formal education</option><option value="primary">Primary school</option><option value="middle_school">Middle school</option><option value="high_school">High school</option><option value="vocational">Vocational or technical education</option><option value="university">University</option></select></label>
           <label className="profile-setup__search"><span aria-hidden="true">⌕</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search options" aria-label="Search disability options" /></label>
           {loading ? <div className="profile-setup__state">Loading your profile…</div> : (
             <div className="profile-options">{filteredOptions.map((option) => {

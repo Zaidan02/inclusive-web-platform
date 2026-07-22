@@ -113,3 +113,253 @@ npx.cmd eslint src
 ```
 
 The production build currently succeeds. Existing hook-dependency warnings in the candidate and admin dashboards are tracked separately from the redesign.
+
+## Current implementation update — July 2026
+
+This section extends the original revamp notes above. It records the backend, database, fixture, catalogue, and later UX work completed after the initial frontend redesign. Earlier sections are retained as historical context; where an earlier statement conflicts with this section, this section describes the current implementation.
+
+### Product direction
+
+- The platform now uses an administrator-controlled job catalogue.
+- Employers cannot create arbitrary job titles in the current version. They advertise positions selected from the catalogue maintained by the platform.
+- Candidate-to-job evaluation is planned as a deterministic mathematical scoring engine, not a machine-learning or generative-AI feature.
+- Scoring work is deliberately paused until the core platform and performance work are complete.
+- The previous runtime AI matching integration and legacy serialized model files were removed from the active application.
+
+### Accounts, roles, and authentication
+
+- The fixture loader creates one verified account for each current role: administrator, employer, and candidate.
+- Every fixture account uses the local development password `Pass123!@#`.
+- The fixture accounts are:
+
+```text
+admin@join.local
+employer@join.local
+candidate@join.local
+```
+
+- All three accounts have `isVerified = true` and are not archived.
+- Successful administrator login is routed to the administrator panel.
+- Login and JWT user providers are now separated correctly: login resolves an email address, while an issued JWT resolves the username claim used by the current token structure.
+
+### Database reset and fixture catalogue
+
+The fixture command intentionally purges local application data before loading the known development state:
+
+```powershell
+cd backend
+docker compose exec php php bin/console doctrine:fixtures:load --no-interaction --env=dev --no-debug
+```
+
+The fixture loader now creates:
+
+- Three verified role accounts.
+- A complete generic employer/company profile.
+- The normalized disability catalogue.
+- The known job definitions.
+- The tasks belonging to each job definition.
+- Disability-specific task assessments imported into the generated catalogue data.
+
+The generic employer profile contains:
+
+```text
+Company:  JoIn Hospitality Demo
+Industry: Food and Beverage
+Location: Beirut, Lebanon
+Website:  https://example.com
+```
+
+It also contains a company description and accessibility statement, so resetting fixtures no longer forces the company form to be completed again.
+
+### Normalized job and disability model
+
+The old single-field/legacy task representation is no longer the active model. The catalogue is normalized so tasks and assessments can be queried, maintained, and scored without extracting text from a job record at runtime.
+
+The new model includes:
+
+- `disability` for the supported disability categories.
+- `job_definition` for administrator-controlled job positions.
+- `job_definition_task` for the individual tasks belonging to a job definition.
+- `disability_task_assessment` for disability-specific feasibility information associated with a task.
+- `job_post_highlighted_task` for the subset of catalogue tasks an employer wants to emphasize in an advertisement.
+- Updated candidate profiles with normalized disability relationships, education level, and basic personal information.
+- Updated job posts linked to their catalogue job definition.
+
+Each schema concern was introduced through its own Doctrine migration file rather than combining the entire redesign into one migration.
+
+### Dataset handling
+
+- The job-description spreadsheets were inspected as source datasets for the catalogue design.
+- Non-English worksheet content is ignored for the current import scope.
+- The spreadsheet extraction process was designed to be reusable across datasets that follow the supported structure.
+- Extracted catalogue data is stored in `backend/data/job_catalogue.json` for deterministic fixture loading.
+- Source job-description dataset folders are ignored by Git so raw spreadsheet files are not committed accidentally.
+- The administrator interface includes an Add Data Sheets action as a visual placeholder. Upload/import behavior is intentionally not connected yet.
+
+### Employer job-posting experience
+
+- Employers choose a position from the administrator-controlled job catalogue.
+- Selecting a position makes its catalogue tasks available to the posting form.
+- Employers can select highlighted tasks using a searchable, keyboard-accessible control.
+- Highlighted tasks are saved separately from the complete catalogue task list.
+- The public/candidate job card remains concise: candidates see the job title, description, company information, location, and relevant advertisement details without being shown the complete source dataset.
+- Company information is resolved from the employer profile instead of requiring the employer to type the company name into every job advertisement.
+- Employers must complete a company name before posting a job.
+
+### Candidate profile and experience
+
+Candidate profiles now support the basic information needed for a realistic platform experience:
+
+- First name
+- Last name
+- Phone number
+- Location
+- About/biography
+- Education level
+- Selected disabilities
+
+The candidate setup and profile screens were updated around these fields. Profile completion is no longer based only on selecting at least one disability; the centralized completion utility accounts for the required profile information. Candidate job and application views were also refined to present company and job information more clearly.
+
+### Employer profile experience
+
+Employer profiles support:
+
+- Company name
+- Industry
+- Location
+- Website
+- Company description
+- Accessibility statement
+- Company logo upload
+
+Company profile information is reused across job advertisements. Both employer and candidate views were adjusted so company context is presented consistently without duplicating data-entry work.
+
+### Performance work
+
+The primary local performance bottleneck was Symfony repeatedly reading dependency and cache files through the Windows-to-Docker bind mount while running with development debugging enabled.
+
+The PHP development stack now uses:
+
+- `APP_ENV=prod` and `APP_DEBUG=0` in Docker Compose.
+- A Docker named volume for `/app/vendor`.
+- A Docker named volume for `/app/var` and the Symfony cache.
+- Composer dependencies installed into the PHP image with an optimized autoloader.
+- PHP OPcache with a larger script cache.
+- A warmed Symfony production cache owned by the Apache user.
+
+Measured locally against `GET /api/job-definitions`:
+
+```text
+Before: approximately 4.4–6.5 seconds per request
+After:  approximately 41–61 milliseconds for warm requests
+```
+
+The first Docker image build remains slower because PHP extensions and OPcache must be compiled once. Normal container starts and API requests are fast afterward.
+
+After changing Symfony configuration, clear the production cache with:
+
+```powershell
+cd backend
+docker compose exec --user www-data php php bin/console cache:clear --env=prod --no-debug
+```
+
+After changing Composer dependencies, synchronize the named dependency volume with:
+
+```powershell
+cd backend
+docker compose exec php composer install --optimize-autoloader
+```
+
+### Current verification state
+
+The following checks passed after the performance and fixture update:
+
+- Docker PHP and PostgreSQL services start successfully.
+- PostgreSQL reports healthy.
+- PHP OPcache reports enabled.
+- Doctrine fixture loading completes successfully.
+- Doctrine entity mapping validation succeeds.
+- Employer login succeeds with the fixture credentials.
+- The authenticated employer profile returns all seeded company data.
+- `GET /api/job-definitions` returns HTTP 200 at the improved response time.
+- The Vite production frontend build succeeds.
+
+### Deferred work
+
+- The deterministic candidate/job scoring engine remains paused.
+- Employer-provided assistance or accommodation capacity must be incorporated into the future scoring design because support can change whether a task is feasible.
+- The Add Data Sheets administrator action still needs its upload, validation, preview, and import workflow.
+
+## Scoring engine integration update
+
+The deterministic Python scoring engine is now active end to end.
+
+- The engine is isolated in `scoring_engine/` with separate domain models, policy, task resolver, calculation engine, serialization, HTTP adapter, example, and unit tests.
+- Docker Compose starts the scoring service on port `5001` and waits for its health check before starting PHP.
+- Symfony exposes `GET /api/candidate/matches`, loads authoritative profile and catalogue data from PostgreSQL, and sends normalized input to the Python `POST /score` endpoint.
+- React requests the Symfony match endpoint and displays eligibility, percentage, company, accommodation availability, summary, and task-level explanations.
+- The previous browser-side keyword heuristics and machine-learning claims are no longer used to calculate displayed results.
+- Eleven Python business-rule tests pass.
+
+The fixture state now contains exactly one candidate, four employer/company accounts, and six published offers. The six offers cover every combination of the three catalogue jobs with the proof-of-concept assistance checkbox disabled and enabled.
+
+All fixture accounts continue to use `Pass123!@#`. Additional employer accounts are:
+
+```text
+cedar.sweets@join.local
+north.scoop@join.local
+artisan.bakery@join.local
+```
+
+## Matching proof-of-concept completion update
+
+This update supersedes the earlier deferred-work note stating that the scoring engine was paused. That note is retained above as part of the project's chronological history; the deterministic scoring engine has since been implemented, integrated, tested, documented, and exposed to candidates.
+
+### Scoring behavior completed
+
+- Candidate/job matching now uses the saved candidate education level and selected disabilities together with the administrator-controlled job catalogue, job tasks, disability/task assessments, task weights, mandatory flags, highlighted employer tasks, and employer-provided accommodation flag.
+- Education and mandatory-task requirements act as hard eligibility gates. An excluded offer returns `score = null`; it is not represented as a zero-percent compatible offer.
+- When several disabilities are selected, the most restrictive applicable task assessment wins.
+- A missing disability/task assessment follows the documented proof-of-concept fallback policy.
+- Employer accommodation can transform a `needs_help` task into assisted feasibility. An explicit `avoid` assessment remains an avoid assessment.
+- Task points are calculated deterministically from adjusted task weight and effective feasibility. Highlighting changes a task's importance rather than directly adding arbitrary percentage points.
+- Eligible offers are ordered by descending score, with deterministic tie handling. Excluded offers appear after eligible offers.
+- The engine has no training, probabilistic inference, generative-AI decision, or browser-side authoritative calculation. Identical persisted inputs and policy produce identical results.
+
+The complete equations, validation rules, request and response contracts, runtime call sequence, decisions, limitations, test coverage, and worked examples are documented in `docs/scoring-engine-technical-specification.md`.
+
+### Candidate matching and application flow
+
+- The candidate dashboard calls the authenticated Symfony matching endpoint, which assembles authoritative database data and calls the isolated Python scoring service.
+- Results show the calculated percentage, eligibility, company, accommodation availability, a short summary, and an expandable task-level explanation.
+- The former `BEST MATCH` label was removed because it confused relative rank with absolute compatibility.
+- The first eligible result is now labelled `HIGHEST-RANKED OFFER`, meaning only that it scored above the other currently returned offers.
+- Every result also receives an absolute presentation band: Strong (`80–100`), Moderate (`60–<80`), Limited (`40–<60`), Low (`0–<40`), or Not eligible (`null`). These bands do not change the engine's mathematics or eligibility rules.
+- A highest-ranked offer can still have limited or low compatibility. For example, `55.87%` can rank first while still meaning that approximately `44.13%` of adjusted task weight was not earned under the current policy.
+- Candidate results now include a `View job & apply` action. It resolves the engine's exact `job_id` against the published job collection and opens that job's existing details and application view.
+- Opening a match does not automatically submit an application. The candidate still reviews the complete advertisement, attaches the required documents, and deliberately submits.
+- If a returned job is no longer available in the published collection, the interface reports the problem instead of opening a different job with a similar title.
+
+### Scoring interpretation and calibration decision
+
+The current percentages are intentionally not reduced merely because values around 50–60% may look subjectively high. The number represents the proportion of adjusted task weight earned under the current catalogue and policy; it is not an academic grade, a probability of hiring, or a guarantee of job success.
+
+Future changes to scoring should be evidence-driven. The next calibration stage should create expert-reviewed candidate/job benchmark cases with expected eligibility and compatibility outcomes, then evaluate task weights, mandatory flags, highlighted-task importance, accommodation behavior, missing-assessment handling, and presentation thresholds against those cases. Cosmetic manipulation of the final percentage would make the engine less transparent.
+
+### Verification
+
+- The scoring service health check and Symfony integration operate through Docker Compose.
+- The Python scoring-engine unit test suite passes.
+- The candidate matching endpoint returns ranked, explained offer results.
+- Fixture data covers three catalogue job definitions with accommodation disabled and enabled across six published offers.
+- Match-result navigation uses the unique returned job identifier.
+- The Vite production frontend build passes after the candidate result-label and application-navigation update.
+
+### Work intentionally left for later
+
+- Replace the proof-of-concept accommodation checkbox with structured accommodation types and, if domain review requires it, task-specific support capabilities.
+- Build the administrator spreadsheet upload, validation, preview, error-reporting, and transactional import workflow behind the existing placeholder action.
+- Expand and professionally validate the job catalogue and disability/task assessment data.
+- Calibrate the scoring policy using expert-reviewed benchmark cases rather than subjective percentage expectations.
+- Add production monitoring, security review, broader integration/end-to-end coverage, and deployment hardening.
+- Design and implement the separate voice-only navigation accessibility workstream.

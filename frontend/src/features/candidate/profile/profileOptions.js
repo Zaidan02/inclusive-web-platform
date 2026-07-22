@@ -1,4 +1,5 @@
 export const disabilityOptions = [
+  { name: "Hand", image: "/Disabilities/BothHands.png" },
   { name: "Ankle", image: "/Disabilities/Ankle.png" },
   { name: "Arm", image: "/Disabilities/Arm.png" },
   { name: "Both Ankles", image: "/Disabilities/BothAnkles.png" },

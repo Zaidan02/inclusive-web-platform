@@ -5,14 +5,33 @@ services:
       dockerfile: Dockerfile
     environment:
       CORS_ALLOW_ORIGIN: '^http://(localhost|127\.0\.0\.1):5173$'
+      APP_ENV: prod
+      APP_DEBUG: 0
+      SCORING_ENGINE_URL: http://scoring-engine:5001
     working_dir: /app
     volumes:
       - .:/app
+      - vendor_data:/app/vendor
+      - symfony_var:/app/var
     ports:
       - "8081:80"
     depends_on:
       database:
         condition: service_healthy
+      scoring-engine:
+        condition: service_healthy
+
+  scoring-engine:
+    build:
+      context: ..
+      dockerfile: scoring_engine/Dockerfile
+    ports:
+      - "5001:5001"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5001/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   database:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
@@ -30,3 +49,5 @@ services:
 
 volumes:
   database_data:
+  vendor_data:
+  symfony_var:

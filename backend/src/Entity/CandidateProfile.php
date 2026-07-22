@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CandidateProfileRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CandidateProfileRepository::class)]
@@ -17,14 +19,36 @@ class CandidateProfile
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $user = null;
 
-    #[ORM\Column(type: 'json')]
-    private array $selectedDisabilities = [];
-
-    #[ORM\Column(type: 'json')]
-    private array $remainingAbilities = [];
+    /** @var Collection<int, Disability> */
+    #[ORM\ManyToMany(targetEntity: Disability::class)]
+    #[ORM\JoinTable(name: 'candidate_profile_disability')]
+    private Collection $disabilities;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $educationLevel = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $firstName = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $lastName = null;
+
+    #[ORM\Column(length: 40, nullable: true)]
+    private ?string $phone = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $location = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $about = null;
+
+    public function __construct()
+    {
+        $this->disabilities = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -44,23 +68,26 @@ class CandidateProfile
 
     public function getSelectedDisabilities(): array
     {
-        return $this->selectedDisabilities;
+        return $this->disabilities
+            ->map(static fn (Disability $disability): string => (string) $disability->getName())
+            ->toArray();
     }
 
-    public function setSelectedDisabilities(array $selectedDisabilities): static
+    /** @return Collection<int, Disability> */
+    public function getDisabilities(): Collection
     {
-        $this->selectedDisabilities = $selectedDisabilities;
-        return $this;
+        return $this->disabilities;
     }
 
-    public function getRemainingAbilities(): array
+    /** @param iterable<Disability> $disabilities */
+    public function replaceDisabilities(iterable $disabilities): static
     {
-        return $this->remainingAbilities;
-    }
-
-    public function setRemainingAbilities(array $remainingAbilities): static
-    {
-        $this->remainingAbilities = $remainingAbilities;
+        $this->disabilities->clear();
+        foreach ($disabilities as $disability) {
+            if (!$this->disabilities->contains($disability)) {
+                $this->disabilities->add($disability);
+            }
+        }
         return $this;
     }
 
@@ -74,4 +101,17 @@ class CandidateProfile
         $this->updatedAt = $updatedAt;
         return $this;
     }
+
+    public function getEducationLevel(): ?string { return $this->educationLevel; }
+    public function setEducationLevel(?string $level): static { $this->educationLevel = $level; return $this; }
+    public function getFirstName(): ?string { return $this->firstName; }
+    public function setFirstName(?string $value): static { $this->firstName = $value; return $this; }
+    public function getLastName(): ?string { return $this->lastName; }
+    public function setLastName(?string $value): static { $this->lastName = $value; return $this; }
+    public function getPhone(): ?string { return $this->phone; }
+    public function setPhone(?string $value): static { $this->phone = $value; return $this; }
+    public function getLocation(): ?string { return $this->location; }
+    public function setLocation(?string $value): static { $this->location = $value; return $this; }
+    public function getAbout(): ?string { return $this->about; }
+    public function setAbout(?string $value): static { $this->about = $value; return $this; }
 }

@@ -1,1 +1,1 @@
-export { applyToJob, getCandidateApplications } from "./authService";
+export { applyToJob, getCandidateApplications, getCandidateMatches } from "./authService";

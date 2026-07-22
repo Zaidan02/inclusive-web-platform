@@ -29,6 +29,7 @@ class AdminApplicationController extends AbstractController
             return $this->json(['message' => 'Invalid authentication token.'], 401);
         }
 
+        
         $roles = $decodedToken['roles'] ?? [];
 
         if (!in_array('ROLE_ADMIN', $roles, true) && !in_array('ROLE_SUPER_ADMIN', $roles, true)) {
@@ -89,7 +90,7 @@ class AdminApplicationController extends AbstractController
             'candidateId' => $candidate?->getId(),
             'candidateName' => $candidate?->getUsername(),
             'candidateEmail' => $candidate?->getEmail(),
-            'jobTitle' => $job?->getTitle(),
+            'jobTitle' => $job?->getJobDefinition()?->getName(),
             'status' => $application->getStatus(),
             'applicationOriginalName' => $application->getApplicationOriginalName(),
             'hasApplicationDocument' => $application->getApplicationFileName() !== null,

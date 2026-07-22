@@ -14,11 +14,11 @@ export async function getCandidateProfile() {
   return readJson(response);
 }
 
-export async function updateCandidateProfile(selectedDisabilities) {
+export async function updateCandidateProfile(profileData) {
   const response = await fetch(`${API_BASE_URL}/candidate/profile`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json", "X-Auth-Token": getToken() },
-    body: JSON.stringify({ selectedDisabilities }),
+    body: JSON.stringify(profileData),
   });
   return readJson(response);
 }

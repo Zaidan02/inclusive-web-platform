@@ -8,10 +8,15 @@ security:
         ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_EMPLOYER]
 
     providers:
-        app_user_provider:
+        login_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
+
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: username
 
     firewalls:
         dev:
@@ -21,7 +26,7 @@ security:
         login:
             pattern: ^/api/login
             stateless: true
-            provider: app_user_provider
+            provider: login_user_provider
             user_checker: App\Security\UserChecker
             json_login:
                 check_path: /api/login_check
@@ -59,14 +64,17 @@ security:
         - { path: ^/api/admin/applications, roles: PUBLIC_ACCESS }
 
         - { path: ^/api/candidate/profile, roles: PUBLIC_ACCESS }
+        - { path: ^/api/candidate/matches, roles: PUBLIC_ACCESS }
         - { path: ^/api/candidate/jobs, roles: PUBLIC_ACCESS }
         - { path: ^/api/candidate/applications, roles: PUBLIC_ACCESS }
 
         - { path: ^/api/employer/profile, roles: PUBLIC_ACCESS }
         - { path: ^/api/employer/jobs, roles: PUBLIC_ACCESS }
+        - { path: ^/api/employer/job-definitions, roles: PUBLIC_ACCESS }
         - { path: ^/api/employer/applications, roles: PUBLIC_ACCESS }
 
         - { path: ^/api/jobs, roles: PUBLIC_ACCESS }
+        - { path: ^/api/job-definitions, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:

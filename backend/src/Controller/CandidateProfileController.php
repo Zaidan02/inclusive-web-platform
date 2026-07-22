@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\CandidateProfile;
+use App\Entity\Disability;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
@@ -72,7 +73,12 @@ class CandidateProfileController extends AbstractController
                 'username' => $user->getUsername(),
                 'email' => $user->getEmail(),
                 'selectedDisabilities' => $profile ? $profile->getSelectedDisabilities() : [],
-                'remainingAbilities' => $profile ? $profile->getRemainingAbilities() : [],
+                'educationLevel' => $profile?->getEducationLevel(),
+                'firstName' => $profile?->getFirstName(),
+                'lastName' => $profile?->getLastName(),
+                'phone' => $profile?->getPhone(),
+                'location' => $profile?->getLocation(),
+                'about' => $profile?->getAbout(),
                 'updatedAt' => $profile && $profile->getUpdatedAt()
                     ? $profile->getUpdatedAt()->format('Y-m-d H:i:s')
                     : null,
@@ -100,6 +106,27 @@ class CandidateProfileController extends AbstractController
             ], 400);
         }
 
+        $selectedDisabilities = [];
+        foreach (array_unique($data['selectedDisabilities']) as $name) {
+            $disability = $entityManager->getRepository(Disability::class)->findOneBy(['name' => $name]);
+            if (!$disability || !$disability->isActive()) {
+                return $this->json(['message' => "Unknown or inactive disability: {$name}"], 400);
+            }
+            $selectedDisabilities[] = $disability;
+        }
+
+        $educationLevels = ['none', 'primary', 'middle_school', 'high_school', 'vocational', 'university'];
+        $educationLevel = $data['educationLevel'] ?? null;
+        if (!is_string($educationLevel) || !in_array($educationLevel, $educationLevels, true)) {
+            return $this->json(['message' => 'Select a valid education level.'], 400);
+        }
+        foreach (['firstName', 'lastName', 'location'] as $field) {
+            if (!isset($data[$field]) || trim((string) $data[$field]) === '') return $this->json(['message' => "$field is required."], 400);
+        }
+        if (mb_strlen(trim((string) $data['firstName'])) > 100 || mb_strlen(trim((string) $data['lastName'])) > 100 || mb_strlen(trim((string) $data['location'])) > 255) {
+            return $this->json(['message' => 'Candidate profile information is too long.'], 400);
+        }
+
         $profile = $user->getCandidateProfile();
 
         if (!$profile) {
@@ -107,8 +134,13 @@ class CandidateProfileController extends AbstractController
             $profile->setUser($user);
         }
 
-        $profile->setSelectedDisabilities($data['selectedDisabilities']);
-        $profile->setRemainingAbilities([]);
+        $profile->replaceDisabilities($selectedDisabilities);
+        $profile->setEducationLevel($educationLevel);
+        $profile->setFirstName(trim((string) $data['firstName']));
+        $profile->setLastName(trim((string) $data['lastName']));
+        $profile->setPhone(trim((string) ($data['phone'] ?? '')) ?: null);
+        $profile->setLocation(trim((string) $data['location']));
+        $profile->setAbout(trim((string) ($data['about'] ?? '')) ?: null);
         $profile->setUpdatedAt(new \DateTimeImmutable());
 
         $entityManager->persist($profile);
@@ -120,7 +152,12 @@ class CandidateProfileController extends AbstractController
                 'username' => $user->getUsername(),
                 'email' => $user->getEmail(),
                 'selectedDisabilities' => $profile->getSelectedDisabilities(),
-                'remainingAbilities' => $profile->getRemainingAbilities(),
+                'educationLevel' => $profile->getEducationLevel(),
+                'firstName' => $profile->getFirstName(),
+                'lastName' => $profile->getLastName(),
+                'phone' => $profile->getPhone(),
+                'location' => $profile->getLocation(),
+                'about' => $profile->getAbout(),
                 'updatedAt' => $profile->getUpdatedAt()->format('Y-m-d H:i:s'),
             ],
         ]);

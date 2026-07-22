@@ -1,29 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getToken, logout } from "../services/authService";
-import { applyToJob, getCandidateApplications } from "../services/candidateApi";
+import { applyToJob, getCandidateApplications, getCandidateMatches } from "../services/candidateApi";
 import { getCandidateProfile, updateCandidateProfile } from "../services/candidateProfileApi";
 import { isCandidateProfileComplete } from "../features/candidate/profile/profileCompletion";
 import { disabilityOptions } from "../features/candidate/profile/profileOptions";
-import { AI_SERVICE_URL, API_BASE_URL, BACKEND_BASE_URL } from "../config";
-
-const disabilityFeasibilityRules = {
-  Wheelchair: { difficult: ["move around", "cleaning", "display"], notFeasible: ["stand", "walk", "lift heavy", "carry heavy", "climb"] },
-  "Waist Wheelchair": { difficult: ["move around", "cleaning", "display"], notFeasible: ["stand", "walk", "lift heavy", "carry heavy", "climb"] },
-  "Pelvis Legs Wheelchair": { difficult: ["move around", "cleaning", "display"], notFeasible: ["stand", "walk", "lift heavy", "carry heavy", "climb"] },
-  Leg: { difficult: ["move around", "cleaning", "display"], notFeasible: ["stand for long", "walk for long", "lift heavy", "carry heavy"] },
-  "Both Legs": { difficult: ["move around", "cleaning", "display"], notFeasible: ["stand", "walk", "lift heavy", "carry heavy", "climb"] },
-  Knee: { difficult: ["move around", "cleaning", "display"], notFeasible: ["stand for long", "walk for long", "climb"] },
-  "Both Knees": { difficult: ["move around", "cleaning", "display"], notFeasible: ["stand", "walk", "climb", "carry heavy"] },
-  Ankle: { difficult: ["move around", "display"], notFeasible: ["stand for long", "walk for long", "carry heavy"] },
-  "Both Ankles": { difficult: ["move around", "display", "cleaning"], notFeasible: ["stand", "walk", "carry heavy"] },
-  Arm: { difficult: ["use one hand", "precise hand", "repetitive hand", "package", "cleaning"], notFeasible: ["lift heavy", "carry heavy"] },
-  "Both Arms": { difficult: ["communicate", "read", "count"], notFeasible: ["use one hand", "precise hand", "repetitive hand", "package", "handle lightweight", "handle money", "cleaning"] },
-  Forearm: { difficult: ["use one hand", "precise hand", "repetitive hand", "package", "cleaning"], notFeasible: ["lift heavy", "carry heavy"] },
-  "Both Forearms": { difficult: ["communicate", "read", "count"], notFeasible: ["use one hand", "precise hand", "repetitive hand", "package", "handle lightweight", "handle money", "cleaning"] },
-  "Both Hands": { difficult: ["communicate", "read", "count"], notFeasible: ["use one hand", "precise hand", "repetitive hand", "package", "handle lightweight", "handle money", "cleaning"] },
-  CVA: { difficult: ["use one hand", "precise hand", "repetitive hand", "communicate", "move around", "cleaning"], notFeasible: ["carry heavy", "lift heavy"] },
-};
+import { API_BASE_URL, BACKEND_BASE_URL } from "../config";
 
 const globalStyles = `
   @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -179,7 +161,17 @@ function CircleProgress({ percent, size = 80, color = "#2563eb" }) {
   );
 }
 
-function JobResultCard({ result, index }) {
+function getCompatibilityBand(result) {
+  if (!result.eligible || result.score == null) {
+    return { label: "Not eligible", color: "#b91c1c", background: "#fef2f2", border: "#fecaca" };
+  }
+  if (result.score >= 80) return { label: "Strong compatibility", color: "#047857", background: "#ecfdf5", border: "#a7f3d0" };
+  if (result.score >= 60) return { label: "Moderate compatibility", color: "#0369a1", background: "#f0f9ff", border: "#bae6fd" };
+  if (result.score >= 40) return { label: "Limited compatibility", color: "#a16207", background: "#fefce8", border: "#fde68a" };
+  return { label: "Low compatibility", color: "#b91c1c", background: "#fef2f2", border: "#fecaca" };
+}
+
+function JobResultCard({ result, index, onOpenJob }) {
   const [expanded, setExpanded] = useState(false);
   const palettes = [
     { color: "#2563eb", light: "#eff6ff", border: "#bfdbfe" },
@@ -187,33 +179,38 @@ function JobResultCard({ result, index }) {
     { color: "#7c3aed", light: "#f5f3ff", border: "#ddd6fe" },
   ];
   const p = palettes[index] || palettes[0];
+  const compatibilityBand = getCompatibilityBand(result);
 
   return (
     <div className="result-card-in" style={{ border: `1px solid ${index === 0 ? p.border : "#e8edf5"}`, borderRadius: "16px", padding: "16px", marginBottom: "10px", background: index === 0 ? p.light : "#fafbfc", animationDelay: `${index * 0.1}s` }}>
       <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-        <CircleProgress percent={result.compatibility} size={76} color={p.color} />
+        <CircleProgress percent={result.score ?? 0} size={76} color={result.eligible ? p.color : "#dc2626"} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "3px" }}>
             <span style={{ fontSize: "10px", fontWeight: "500", color: "#94a3b8" }}>#{index + 1}</span>
-            {index === 0 && <span style={{ background: p.color, color: "#fff", fontSize: "9px", fontWeight: "600", padding: "2px 7px", borderRadius: "999px", letterSpacing: "0.4px" }}>BEST MATCH</span>}
+            {index === 0 && result.eligible && <span style={{ background: p.color, color: "#fff", fontSize: "9px", fontWeight: "600", padding: "2px 7px", borderRadius: "999px", letterSpacing: "0.4px" }}>HIGHEST-RANKED OFFER</span>}
+            <span style={{ background: compatibilityBand.background, color: compatibilityBand.color, border: `1px solid ${compatibilityBand.border}`, fontSize: "9px", fontWeight: "600", padding: "2px 7px", borderRadius: "999px", letterSpacing: "0.2px" }}>{compatibilityBand.label}</span>
           </div>
-          <p style={{ margin: "0 0 8px", fontSize: "16px", fontWeight: "600", color: "#0f172a", letterSpacing: "-0.2px" }}>{result.job}</p>
+          <p style={{ margin: "0 0 2px", fontSize: "16px", fontWeight: "600", color: "#0f172a", letterSpacing: "-0.2px" }}>{result.job_title}</p>
+          <p style={{ margin: "0 0 8px", fontSize: "11px", color: "#64748b" }}>{result.companyName}{result.assistanceAvailable ? " · Accommodation offered" : ""}</p>
           <div style={{ height: "4px", background: "#e2e8f0", borderRadius: "999px", overflow: "hidden" }}>
-            <div style={{ width: `${result.compatibility}%`, height: "100%", background: `linear-gradient(90deg, ${p.color}, ${p.color}aa)`, borderRadius: "999px", transition: "width 1.2s ease" }} />
+            <div style={{ width: `${result.score ?? 0}%`, height: "100%", background: result.eligible ? `linear-gradient(90deg, ${p.color}, ${p.color}aa)` : "#dc2626", borderRadius: "999px", transition: "width 1.2s ease" }} />
           </div>
         </div>
       </div>
       <button onClick={() => setExpanded(!expanded)} style={{ marginTop: "12px", width: "100%", background: "transparent", border: `1px solid ${p.border}`, borderRadius: "8px", padding: "7px", color: p.color, fontWeight: "500", fontSize: "12px", cursor: "pointer", fontFamily: "Inter, sans-serif", transition: "background 0.15s" }}>
-        {expanded ? "▲ Hide abilities" : `▼ Show ${result.remainingAbilities.length} remaining abilities`}
+        {expanded ? "▲ Hide explanation" : "▼ Show scoring explanation"}
       </button>
       {expanded && (
         <div style={{ marginTop: "10px", display: "flex", flexWrap: "wrap", gap: "5px", animation: "fadeIn 0.2s ease" }}>
-          {result.remainingAbilities.map((ability) => (
-            <span key={ability} style={{ background: `${p.color}10`, color: p.color, padding: "4px 9px", borderRadius: "999px", fontSize: "11px", fontWeight: "500", border: `1px solid ${p.color}20` }}>
-              ✓ {ability}
-            </span>
-          ))}
+          <p style={{ width: "100%", margin: "0 0 6px", fontSize: "12px", color: "#475569", lineHeight: 1.5 }}>{result.summary}</p>
+          {(result.task_results || []).slice(0, 8).map((task) => <span key={task.task_id} style={{ background: `${p.color}10`, color: task.effective_feasibility === "avoid" ? "#b91c1c" : p.color, padding: "4px 9px", borderRadius: "999px", fontSize: "11px", fontWeight: "500", border: `1px solid ${p.color}20` }}>{task.task_name}: {task.effective_feasibility.replaceAll("_", " ")}</span>)}
         </div>
+      )}
+      {onOpenJob && (
+        <button type="button" onClick={() => onOpenJob(result)} style={{ marginTop: "10px", width: "100%", background: p.color, border: "none", borderRadius: "8px", padding: "9px", color: "#fff", fontWeight: "600", fontSize: "12px", cursor: "pointer", fontFamily: "Inter, sans-serif" }}>
+          {result.eligible ? "View job & apply" : "View job details"} &rarr;
+        </button>
       )}
     </div>
   );
@@ -295,7 +292,15 @@ function CompanyLogo({ item, size = "small" }) {
   return <div style={ws}>{getCompanyInitial(item?.companyName)}</div>;
 }
 
-function AiJobMatchCard({ aiLoading, aiError, aiResults, selectedDisabilities, onMatch }) {
+function AccommodationBadge({ compact = false }) {
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: "5px", width: "fit-content", marginTop: compact ? "5px" : 0, padding: compact ? "3px 7px" : "5px 10px", borderRadius: "999px", background: "#ecfdf5", border: "1px solid #a7f3d0", color: "#047857", fontSize: compact ? "10px" : "12px", fontWeight: "600" }}>
+      <span aria-hidden="true">✓</span> Accommodation offered
+    </span>
+  );
+}
+
+function AiJobMatchCard({ aiLoading, aiError, aiResults, selectedDisabilities, onMatch, onOpenJob }) {
   return (
     <div style={{ ...styles.aiCard, marginBottom: "18px" }}>
       <div style={styles.aiCardHeader}>
@@ -305,8 +310,8 @@ function AiJobMatchCard({ aiLoading, aiError, aiResults, selectedDisabilities, o
           </svg>
         </div>
         <div>
-          <h2 style={styles.aiTitle}>AI Job Match</h2>
-          <p style={styles.aiSubtitle}>Powered by machine learning</p>
+          <h2 style={styles.aiTitle}>Compatibility Match</h2>
+          <p style={styles.aiSubtitle}>Powered by transparent mathematical rules</p>
         </div>
       </div>
       <p style={{ ...styles.aiDescription, textAlign: "center", width: "100%" }}>
@@ -322,7 +327,7 @@ function AiJobMatchCard({ aiLoading, aiError, aiResults, selectedDisabilities, o
             <span style={{ fontSize: "13px", fontWeight: "600", color: "#0f172a" }}>Your results</span>
             <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: "400" }}>{selectedDisabilities.length} condition{selectedDisabilities.length !== 1 ? "s" : ""} analyzed</span>
           </div>
-          {aiResults.results.map((result, index) => <JobResultCard key={result.job} result={result} index={index} />)}
+          {aiResults.results.map((result, index) => <JobResultCard key={result.job_id} result={result} index={index} onOpenJob={onOpenJob} />)}
         </div>
       )}
       {!aiResults && !aiLoading && <div style={styles.aiEmptyState}><EmptyStateIllustration /><p style={styles.aiEmptyText}>Your compatibility scores will appear here after analysis</p></div>}
@@ -335,6 +340,8 @@ function CandidateDashboard() {
   const [activeTab, setActiveTab] = useState("JOBS");
   const [candidateName, setCandidateName] = useState("Candidate");
   const [selectedDisabilities, setSelectedDisabilities] = useState([]);
+  const [educationLevel, setEducationLevel] = useState("");
+  const [basicInfo, setBasicInfo] = useState({ firstName: "", lastName: "", phone: "", location: "", about: "" });
   const [searchTerm, setSearchTerm] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -370,6 +377,15 @@ function CandidateDashboard() {
   function getCompanyJobs(ci) { const k = getCompanyKey(ci).toLowerCase(); return jobs.filter((j) => getCompanyKey(j).toLowerCase() === k); }
   function openCompanyProfile(item) { setSelectedCompany(item); setCompanyModalTab("PROFILE"); }
   function openJobFromCompany(job) { setSelectedJob(job); setSelectedCompany(null); setApplicationDocument(null); setRecommendationLetter(null); setSuccessMessage(""); setErrorMessage(""); setActiveTab("JOBS"); }
+  function openMatchedJob(result) {
+    const job = jobs.find((item) => String(item.id) === String(result.job_id));
+    if (!job) {
+      setAiError("This job is no longer available. Refresh the job list and try again.");
+      return;
+    }
+    openJobFromCompany(job);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
   async function fetchCandidateProfile() {
     try {
@@ -382,8 +398,10 @@ function CandidateDashboard() {
         navigate("/candidate/setup", { replace: true });
         return;
       }
-      setCandidateName(profile.username || profile.name || profile.fullName || profile.email?.split("@")[0] || "Candidate");
+      setCandidateName([profile.firstName, profile.lastName].filter(Boolean).join(" ") || profile.username || profile.email?.split("@")[0] || "Candidate");
       setSelectedDisabilities(profile.selectedDisabilities || []);
+      setEducationLevel(profile.educationLevel || "");
+      setBasicInfo({ firstName: profile.firstName || "", lastName: profile.lastName || "", phone: profile.phone || "", location: profile.location || "", about: profile.about || "" });
     } catch (err) { setErrorMessage(err.message); } finally { setLoadingProfile(false); }
   }
 
@@ -475,22 +493,20 @@ function CandidateDashboard() {
   async function handleGetAiMatch() {
     if (!selectedDisabilities.length) { setAiError("Please select at least one disability first."); return; }
     try {
-      setAiLoading(true); setAiError(""); setAiResults(null);
-      const res = await fetch(AI_SERVICE_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ disabilities: selectedDisabilities }) });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.message || "AI match failed.");
-      setAiResults(data);
-    } catch (err) { setAiError(err.message || "Something went wrong."); } finally { setAiLoading(false); }
+      setAiResults(null); setAiLoading(true); setAiError("");
+      const data = await getCandidateMatches();
+      setAiResults({ results: data.results || [] });
+    } catch (err) { setAiError(err.message); } finally { setAiLoading(false); }
   }
 
   async function handleSaveProfile() {
-    if (!selectedDisabilities.length) {
-      setErrorMessage("Select at least one option to keep your profile complete.");
+    if (!selectedDisabilities.length || !educationLevel || !basicInfo.firstName.trim() || !basicInfo.lastName.trim() || !basicInfo.location.trim()) {
+      setErrorMessage("Add your name, location, education level, and at least one disability.");
       return;
     }
     try {
       setSavingProfile(true); setSuccessMessage(""); setErrorMessage("");
-      const data = await updateCandidateProfile(selectedDisabilities);
+      const data = await updateCandidateProfile({ selectedDisabilities, educationLevel, ...basicInfo });
       setSelectedDisabilities(data.profile?.selectedDisabilities || []);
       setSuccessMessage("Profile saved.");
     } catch (err) { setErrorMessage(err.message); } finally { setSavingProfile(false); }
@@ -561,7 +577,7 @@ function CandidateDashboard() {
           <div>
             {/* STEP INDICATOR */}
             <div style={styles.stepRow}>
-              {["Select disabilities", "Get AI match", "Apply to jobs"].map((step, i) => (
+              {["Complete your profile", "Calculate matches", "Apply to jobs"].map((step, i) => (
                 <div key={step} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                   <div style={{ ...styles.stepDot, background: i === 0 ? "#2563eb" : i === 1 && aiResults ? "#2563eb" : "#cbd5e1", transition: "background 0.4s" }} />
                   <span style={{ ...styles.stepLabel, color: i === 0 ? "#2563eb" : i === 1 && aiResults ? "#2563eb" : "#94a3b8", transition: "color 0.4s" }}>{step}</span>
@@ -585,6 +601,10 @@ function CandidateDashboard() {
 
                 {loadingProfile && <p style={styles.infoText}>Loading...</p>}
                 {errorMessage && <p style={styles.errorText}>{errorMessage}</p>}
+
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "12px" }}><input value={basicInfo.firstName} onChange={(e) => setBasicInfo((p) => ({ ...p, firstName: e.target.value }))} placeholder="First name" style={{ ...styles.searchInput, paddingLeft: "12px" }} /><input value={basicInfo.lastName} onChange={(e) => setBasicInfo((p) => ({ ...p, lastName: e.target.value }))} placeholder="Last name" style={{ ...styles.searchInput, paddingLeft: "12px" }} /><input value={basicInfo.location} onChange={(e) => setBasicInfo((p) => ({ ...p, location: e.target.value }))} placeholder="City or region" style={{ ...styles.searchInput, paddingLeft: "12px" }} /><input value={basicInfo.phone} onChange={(e) => setBasicInfo((p) => ({ ...p, phone: e.target.value }))} placeholder="Phone (optional)" style={{ ...styles.searchInput, paddingLeft: "12px" }} /></div>
+                <textarea value={basicInfo.about} onChange={(e) => setBasicInfo((p) => ({ ...p, about: e.target.value }))} placeholder="A short introduction or your work goals (optional)" rows="3" style={{ width: "100%", border: "1px solid #e2e8f0", borderRadius: "10px", padding: "10px 12px", resize: "vertical", marginBottom: "12px", fontFamily: "inherit" }} />
+                <label style={{ display: "grid", gap: "6px", marginBottom: "14px", fontSize: "12px", color: "#475569" }}>Highest education level<select value={educationLevel} onChange={(e) => setEducationLevel(e.target.value)} style={{ ...styles.searchInput, paddingLeft: "12px" }}><option value="">Select education level</option><option value="none">No formal education</option><option value="primary">Primary school</option><option value="middle_school">Middle school</option><option value="high_school">High school</option><option value="vocational">Vocational or technical education</option><option value="university">University</option></select></label>
 
                 <div style={styles.searchWrapper}>
                   <SearchIcon />
@@ -631,7 +651,7 @@ function CandidateDashboard() {
                 </div>
               </div>
 
-              {/* RIGHT CARD — AI */}
+              {/* RIGHT CARD — DETERMINISTIC MATCHING */}
               <div style={{ ...styles.aiCard, display: "none" }} aria-hidden="true">
                 <div style={styles.aiCardHeader}>
                   <div style={styles.aiIconWrapper}>
@@ -640,8 +660,8 @@ function CandidateDashboard() {
                     </svg>
                   </div>
                   <div>
-                    <h2 style={styles.aiTitle}>AI Job Match</h2>
-                    <p style={styles.aiSubtitle}>Powered by machine learning</p>
+                    <h2 style={styles.aiTitle}>Compatibility Match</h2>
+                    <p style={styles.aiSubtitle}>Powered by transparent mathematical rules</p>
                   </div>
                 </div>
 
@@ -675,7 +695,7 @@ function CandidateDashboard() {
                       </span>
                     </div>
                     {aiResults.results.map((result, index) => (
-                      <JobResultCard key={result.job} result={result} index={index} />
+                      <JobResultCard key={result.job_id} result={result} index={index} onOpenJob={openMatchedJob} />
                     ))}
                   </div>
                 )}
@@ -700,6 +720,7 @@ function CandidateDashboard() {
                 aiResults={aiResults}
                 selectedDisabilities={selectedDisabilities}
                 onMatch={handleGetAiMatch}
+                onOpenJob={openMatchedJob}
               />
             )}
             {!selectedJob ? (
@@ -720,6 +741,7 @@ function CandidateDashboard() {
                           onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); openCompanyProfile(job); } }}>
                           {job.companyName}
                         </span>
+                        {job.assistanceAvailable && <AccommodationBadge compact />}
                       </div>
                     </button>
                   ))}
@@ -741,6 +763,7 @@ function CandidateDashboard() {
                           {meta}
                         </span>
                       ))}
+                      {selectedJob.assistanceAvailable && <AccommodationBadge />}
                     </div>
                   </div>
                   {selectedJob.applicationDeadline && (
@@ -759,37 +782,16 @@ function CandidateDashboard() {
                   </>
                 )}
 
-                {/* Requirements as chips */}
-                {selectedJob.requirements && (
-                  <>
-                    <h3 style={styles.detailsSectionTitle}>Requirements</h3>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "4px" }}>
-                      {selectedJob.requirements.split(/\s*-\s*|,|\n/).map((r) => r.trim()).filter((r) => r.length > 2).map((req) => (
-                        <span key={req} style={{ background: "#f0f9ff", color: "#0284c7", border: "1px solid #bae6fd", padding: "5px 11px", borderRadius: "999px", fontSize: "12px", fontWeight: "400" }}>
-                          {req}
-                        </span>
-                      ))}
-                    </div>
-                  </>
+                {selectedJob.assistanceAvailable && (
+                  <div style={{ marginTop: "18px", padding: "14px 16px", borderRadius: "12px", background: "#ecfdf5", border: "1px solid #a7f3d0", color: "#065f46" }}>
+                    <strong style={{ display: "block", fontSize: "14px", marginBottom: "4px" }}>Workplace accommodation is available</strong>
+                    <span style={{ fontSize: "13px", lineHeight: "1.5" }}>The employer has indicated that task assistance or accommodation can be provided for this position.</span>
+                  </div>
                 )}
-                <h3 style={styles.detailsSectionTitle}>Tasks</h3>
-                <div style={styles.taskList}>
-                  {(selectedJob.tasks || []).map((task, index) => {
-                    const f = calculateTaskFeasibility(task);
-                    const abilities = getTaskRequiredAbilities(task);
-                    const borderColor = f.status === "feasible" ? "#22c55e" : f.status === "assistance" ? "#f59e0b" : f.status === "not_feasible" ? "#ef4444" : "#e2e8f0";
-                    return (
-                      <TaskCard
-                        key={task.id || index}
-                        task={task}
-                        index={index}
-                        feasibility={f}
-                        borderColor={borderColor}
-                        abilities={abilities}
-                        getFeasibilityBadgeStyle={getFeasibilityBadgeStyle}
-                      />
-                    );
-                  })}
+
+                <h3 style={styles.detailsSectionTitle}>What you’ll do</h3>
+                <div style={{ display: "grid", gap: "8px", marginBottom: "24px" }}>
+                  {(selectedJob.highlightedTasks || []).map((task) => <div key={task.id} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "11px 13px", borderRadius: "11px", background: "#f8fafc", border: "1px solid #e8edf5", color: "#334155", fontSize: "13px" }}><span aria-hidden="true" style={{ color: "#2563eb", fontWeight: 700 }}>✓</span>{task.name}</div>)}
                 </div>
                 <div style={styles.applicationBox}>
                   <h3 style={styles.detailsSectionTitle}>Application Documents</h3>
@@ -909,6 +911,7 @@ function CandidateDashboard() {
                     <div>
                       <h3 style={{ margin: "0 0 3px", color: "#0f172a", fontSize: "14px", fontWeight: "600" }}>{job.title}</h3>
                       <p style={{ margin: 0, color: "#64748b", fontSize: "12px" }}>{job.location} · {job.jobType} · {job.workMode}</p>
+                      {job.assistanceAvailable && <AccommodationBadge compact />}
                     </div>
                     <button type="button" style={{ border: "none", background: "#2563eb", color: "#fff", padding: "8px 14px", borderRadius: "8px", cursor: "pointer", fontWeight: "600", fontSize: "12px", fontFamily: "Inter, sans-serif" }} onClick={() => openJobFromCompany(job)}>View & Apply</button>
                   </div>

@@ -19,11 +19,9 @@ class JobPost
     #[ORM\JoinColumn(nullable: false)]
     private ?User $employer = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $title = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $companyName = null;
+    #[ORM\ManyToOne(targetEntity: JobDefinition::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?JobDefinition $jobDefinition = null;
 
     #[ORM\Column(length: 255)]
     private ?string $location = null;
@@ -34,14 +32,8 @@ class JobPost
     #[ORM\Column(length: 50)]
     private ?string $workMode = null;
 
-    #[ORM\Column(length: 100)]
-    private ?string $category = null;
-
     #[ORM\Column(type: 'text')]
     private ?string $description = null;
-
-    #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $requirements = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $applicationDeadline = null;
@@ -52,6 +44,9 @@ class JobPost
     #[ORM\Column(options: ['default' => false])]
     private bool $coverLetterRequired = false;
 
+    #[ORM\Column(options: ['default' => false])]
+    private bool $assistanceAvailable = false;
+
     #[ORM\Column(length: 50)]
     private ?string $status = 'published';
 
@@ -61,15 +56,17 @@ class JobPost
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'jobPost', targetEntity: JobTask::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private Collection $tasks;
+    /** @var Collection<int, JobPostHighlightedTask> */
+    #[ORM\OneToMany(mappedBy: 'jobPost', targetEntity: JobPostHighlightedTask::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['displayPosition' => 'ASC'])]
+    private Collection $highlightedTasks;
 
     public function __construct()
     {
-        $this->tasks = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
         $this->status = 'published';
+        $this->highlightedTasks = new ArrayCollection();
     }
 
     public function getId(): ?int { return $this->id; }
@@ -82,19 +79,11 @@ class JobPost
         return $this;
     }
 
-    public function getTitle(): ?string { return $this->title; }
+    public function getJobDefinition(): ?JobDefinition { return $this->jobDefinition; }
 
-    public function setTitle(string $title): static
+    public function setJobDefinition(?JobDefinition $jobDefinition): static
     {
-        $this->title = $title;
-        return $this;
-    }
-
-    public function getCompanyName(): ?string { return $this->companyName; }
-
-    public function setCompanyName(string $companyName): static
-    {
-        $this->companyName = $companyName;
+        $this->jobDefinition = $jobDefinition;
         return $this;
     }
 
@@ -122,27 +111,11 @@ class JobPost
         return $this;
     }
 
-    public function getCategory(): ?string { return $this->category; }
-
-    public function setCategory(string $category): static
-    {
-        $this->category = $category;
-        return $this;
-    }
-
     public function getDescription(): ?string { return $this->description; }
 
     public function setDescription(string $description): static
     {
         $this->description = $description;
-        return $this;
-    }
-
-    public function getRequirements(): ?string { return $this->requirements; }
-
-    public function setRequirements(?string $requirements): static
-    {
-        $this->requirements = $requirements;
         return $this;
     }
 
@@ -191,32 +164,30 @@ class JobPost
         return $this;
     }
 
-    /**
-     * @return Collection<int, JobTask>
-     */
-    public function getTasks(): Collection
-    {
-        return $this->tasks;
-    }
+    /** @return Collection<int, JobPostHighlightedTask> */
+    public function getHighlightedTasks(): Collection { return $this->highlightedTasks; }
 
-    public function addTask(JobTask $task): static
+    public function clearHighlightedTasks(): static
     {
-        if (!$this->tasks->contains($task)) {
-            $this->tasks->add($task);
-            $task->setJobPost($this);
-        }
-
+        $this->highlightedTasks->clear();
         return $this;
     }
 
-    public function removeTask(JobTask $task): static
-    {
-        if ($this->tasks->removeElement($task)) {
-            if ($task->getJobPost() === $this) {
-                $task->setJobPost(null);
-            }
-        }
+    public function isAssistanceAvailable(): bool { return $this->assistanceAvailable; }
 
+    public function setAssistanceAvailable(bool $assistanceAvailable): static
+    {
+        $this->assistanceAvailable = $assistanceAvailable;
         return $this;
     }
+
+    public function addHighlightedTask(JobPostHighlightedTask $highlight): static
+    {
+        if (!$this->highlightedTasks->contains($highlight)) {
+            $this->highlightedTasks->add($highlight);
+            $highlight->setJobPost($this);
+        }
+        return $this;
+    }
+
 }

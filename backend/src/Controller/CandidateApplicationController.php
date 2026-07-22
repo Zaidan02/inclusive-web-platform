@@ -157,8 +157,8 @@ class CandidateApplicationController extends AbstractController
 
                 return [
                     'id' => $application->getId(),
-                    'jobTitle' => $job?->getTitle(),
-                    'companyName' => $job?->getCompanyName(),
+                    'jobTitle' => $job?->getJobDefinition()?->getName(),
+                    'companyName' => $job?->getEmployer()?->getEmployerProfile()?->getCompanyName(),
                     'companyLogoUrl' => $job?->getEmployer()?->getEmployerProfile()?->getLogoUrl(),
                     'location' => $job?->getLocation(),
                     'jobType' => $job?->getJobType(),

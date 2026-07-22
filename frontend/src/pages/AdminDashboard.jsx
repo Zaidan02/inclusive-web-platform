@@ -324,7 +324,7 @@ function AdminDashboard() {
   const adminUsers = users.filter((u) => u.roles.includes("ROLE_ADMIN")).length;
   const totalProfiles = candidateProfiles.length;
   const completedProfiles = candidateProfiles.filter((p) => p.selectedDisabilities.length > 0).length;
-  const pendingAbilityProfiles = candidateProfiles.filter((p) => p.remainingAbilities.length === 0).length;
+  const pendingEducationProfiles = candidateProfiles.filter((p) => !p.educationLevel).length;
   const totalProfileApplications = candidateProfiles.reduce((t, p) => t + (p.applications?.length || 0), 0);
 
   const filteredUsers = users.filter((u) => {
@@ -354,7 +354,7 @@ function AdminDashboard() {
   const statsCards = isUserProfilesView ? [
     { label: "Total Profiles", value: totalProfiles, color: "#2563eb", bg: "#eff6ff", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
     { label: "Completed Profiles", value: completedProfiles, color: "#16a34a", bg: "#f0fdf4", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg> },
-    { label: "Pending Abilities", value: pendingAbilityProfiles, color: "#d97706", bg: "#fffbeb", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> },
+    { label: "Pending Education", value: pendingEducationProfiles, color: "#d97706", bg: "#fffbeb", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> },
     { label: "Total Applications", value: totalProfileApplications, color: "#7c3aed", bg: "#f5f3ff", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> },
   ] : [
     { label: isArchivedView ? "Archived Users" : "Active Users", value: totalUsers, color: "#2563eb", bg: "#eff6ff", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
@@ -418,13 +418,16 @@ function AdminDashboard() {
       <main style={{ flex: 1, padding: "32px 36px", boxSizing: "border-box", overflowX: "hidden" }}>
 
         {/* HEADER */}
-        <div style={{ marginBottom: "28px" }}>
+        <div style={{ marginBottom: "28px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
           <p style={{ margin: "0 0 4px", fontSize: "12px", fontWeight: "400", color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.8px" }}>
             {navItems.find((n) => n.tab === activeTab)?.label}
           </p>
           <h1 style={{ margin: 0, fontSize: "26px", fontWeight: "600", color: "#0f172a", letterSpacing: "-0.4px" }}>
             {isArchivedView ? "Archived Users" : isUserProfilesView ? "User Profiles" : isApplicationsView ? "Applications" : "Users"}
           </h1>
+          </div>
+          <button type="button" style={{ border: "none", borderRadius: "10px", background: "#2563eb", color: "white", padding: "10px 16px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>Add data sheets</button>
         </div>
 
         {/* STATS */}
@@ -550,7 +553,7 @@ function AdminDashboard() {
                   <div style={{ display: "flex", flexDirection: "column", gap: "5px", marginBottom: "14px" }}>
                     {[
                       `${profile.selectedDisabilities.length} disabilities`,
-                      profile.remainingAbilities.length > 0 ? "Abilities ready" : "Abilities pending",
+                      profile.educationLevel ? `Education: ${profile.educationLevel.replaceAll("_", " ")}` : "Education pending",
                       `${profile.applications?.length || 0} applications`,
                     ].map((s) => (
                       <span key={s} style={{ background: "#ffffff", border: "1px solid #e8edf5", borderRadius: "8px", padding: "6px 10px", fontSize: "12px", fontWeight: "400", color: "#475569" }}>{s}</span>
@@ -587,7 +590,7 @@ function AdminDashboard() {
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
                 {[
                   { title: "Selected Disabilities", chips: selectedProfile.selectedDisabilities, empty: "No disabilities selected.", chipStyle: { background: "#eef2ff", color: "#4338ca" } },
-                  { title: "Remaining Abilities", chips: selectedProfile.remainingAbilities, empty: "Abilities pending analysis.", chipStyle: { background: "#f0fdf4", color: "#16a34a" } },
+                  { title: "Education", chips: selectedProfile.educationLevel ? [selectedProfile.educationLevel.replaceAll("_", " ")] : [], empty: "Education not provided.", chipStyle: { background: "#f0fdf4", color: "#16a34a" } },
                 ].map(({ title, chips, empty, chipStyle }) => (
                   <div key={title} style={{ background: "#f8fafc", border: "1px solid #e8edf5", borderRadius: "14px", padding: "16px" }}>
                     <p style={{ margin: "0 0 12px", fontSize: "13px", fontWeight: "600", color: "#0f172a" }}>{title}</p>

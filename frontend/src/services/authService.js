@@ -104,6 +104,20 @@ export async function createEmployerJob(jobData) {
   return data;
 }
 
+export async function getJobDefinitions() {
+  const response = await fetch(`${API_BASE_URL}/job-definitions`);
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.message || "Failed to load the job catalogue.");
+  return data;
+}
+
+export async function getEmployerJobDefinition(jobDefinitionId) {
+  const response = await fetch(`${API_BASE_URL}/employer/job-definitions/${jobDefinitionId}`, { headers: { "X-Auth-Token": getToken() } });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.message || "Failed to load job tasks.");
+  return data;
+}
+
 export async function getEmployerJobs() {
   const token = getToken();
 
@@ -209,6 +223,15 @@ export async function getCandidateApplications() {
     throw new Error(data.message || "Failed to load applications.");
   }
 
+  return data;
+}
+
+export async function getCandidateMatches() {
+  const response = await fetch(`${API_BASE_URL}/candidate/matches`, {
+    headers: { "X-Auth-Token": getToken() },
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.message || "Failed to calculate job matches.");
   return data;
 }
 

@@ -70,7 +70,6 @@ final class EmployerProfileController extends AbstractController
 
     private function formatProfile(EmployerProfile $profile): array
     {
-        echo("Profile changed");
         return [
             'id' => $profile->getId(),
             'companyName' => $profile->getCompanyName(),

@@ -375,3 +375,4 @@ We would like to thank our academic supervisors, participating organizations, em
 ---
 
 > **Note for future teams:** Before making major modifications, first understand the relationship between **jobs, tasks, abilities, and compatibility calculations** — these concepts form the core foundation of the platform. Any future development should preserve the original objective of evaluating individuals based on their abilities and potential contributions rather than limitations.
+

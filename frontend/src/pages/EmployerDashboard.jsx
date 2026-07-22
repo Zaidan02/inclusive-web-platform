@@ -9,6 +9,8 @@ import {
   deleteEmployerApplication,
   updateEmployerProfile,
   getEmployerProfile,
+  getJobDefinitions,
+  getEmployerJobDefinition,
 } from "../services/employerApi";
 import {
   getToken,
@@ -27,11 +29,11 @@ const globalStyles = `
 `;
 
 const emptyForm = {
-  title: "", companyName: "", location: "", jobType: "Full-time",
-  workMode: "On-site", description: "", requirements: "",
+  jobDefinitionId: "", location: "", jobType: "Full-time",
+  workMode: "On-site", description: "",
   applicationDeadline: "", cvRequired: true, coverLetterRequired: false,
+  assistanceAvailable: false,
 };
-const emptyTask = { taskName: "", description: "", requiredAbilitiesText: "" };
 const emptyProfile = { companyName: "", industry: "", location: "", website: "", description: "", accessibilityStatement: "" };
 
 function PostJobIcon() {
@@ -63,7 +65,10 @@ function Field({ label, children, hint }) {
 function EmployerDashboard() {
   const [activeTab, setActiveTab] = useState("POST_JOB");
   const [formData, setFormData] = useState(emptyForm);
-  const [tasks, setTasks] = useState([emptyTask]);
+  const [jobDefinitions, setJobDefinitions] = useState([]);
+  const [catalogueTasks, setCatalogueTasks] = useState([]);
+  const [highlightedTaskIds, setHighlightedTaskIds] = useState([]);
+  const [taskSearch, setTaskSearch] = useState("");
   const [editingJobId, setEditingJobId] = useState(null);
   const [myJobs, setMyJobs] = useState([]);
   const [applications, setApplications] = useState([]);
@@ -84,6 +89,8 @@ function EmployerDashboard() {
     if (activeTab === "PROFILE") fetchEmployerProfile();
   }, [activeTab]);
 
+  useEffect(() => { getJobDefinitions().then((data) => setJobDefinitions(data.jobs || [])).catch((err) => setError(err.message)); fetchEmployerProfile(); }, []);
+
   function switchTab(tab) { setMessage(""); setError(""); setActiveTab(tab); }
 
   async function fetchMyJobs() {
@@ -103,11 +110,12 @@ function EmployerDashboard() {
       if (data.profile) {
         setEmployerProfile({ companyName: data.profile.companyName || "", industry: data.profile.industry || "", location: data.profile.location || "", website: data.profile.website || "", description: data.profile.description || "", accessibilityStatement: data.profile.accessibilityStatement || "" });
         setLogoPreview(data.profile.logoUrl || "");
+        setFormData((previous) => ({ ...previous, location: previous.location || data.profile.location || "" }));
       }
     } catch (err) { setError(err.message); } finally { setLoadingProfile(false); }
   }
 
-  function resetForm() { setFormData(emptyForm); setTasks([emptyTask]); setEditingJobId(null); }
+  function resetForm() { setFormData({ ...emptyForm, location: employerProfile.location || "" }); setHighlightedTaskIds([]); setCatalogueTasks([]); setTaskSearch(""); setEditingJobId(null); }
   function handleChange(e) { const { name, value, type, checked } = e.target; setFormData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value })); }
   function handleProfileChange(e) { const { name, value } = e.target; setEmployerProfile((prev) => ({ ...prev, [name]: value })); }
   function handleLogoChange(e) { const file = e.target.files?.[0]; if (!file) return; setLogoFile(file); setLogoPreview(URL.createObjectURL(file)); }
@@ -127,20 +135,10 @@ function EmployerDashboard() {
     } catch (err) { setError(err.message); } finally { setLoading(false); }
   }
 
-  function handleTaskChange(i, field, value) { setTasks((prev) => prev.map((t, idx) => idx === i ? { ...t, [field]: value } : t)); }
-  function addTask() { setTasks((prev) => [...prev, emptyTask]); }
-  function removeTask(i) { setTasks((prev) => prev.filter((_, idx) => idx !== i)); }
-
-  function buildPayload() {
-    const cleanTasks = tasks.filter((t) => t.taskName.trim()).map((t) => ({ taskName: t.taskName.trim(), description: t.description.trim(), feasibilityLevel: "not_calculated", requiredAbilities: t.requiredAbilitiesText.split(",").map((a) => a.trim()).filter(Boolean) }));
-    if (!cleanTasks.length) throw new Error("Please add at least one task.");
-    return { ...formData, category: formData.title, tasks: cleanTasks };
-  }
-
   async function handleSubmit(e) {
     e.preventDefault(); setMessage(""); setError("");
     try {
-      const payload = buildPayload(); setLoading(true);
+      const payload = { ...formData, highlightedTaskIds }; setLoading(true);
       if (editingJobId) { await updateEmployerJob(editingJobId, payload); setMessage("Job updated successfully."); }
       else { await createEmployerJob(payload); setMessage("Job posted successfully."); }
       resetForm(); setActiveTab("MY_JOBS"); await fetchMyJobs();
@@ -149,9 +147,23 @@ function EmployerDashboard() {
 
   function handleEditJob(job) {
     setMessage(""); setError(""); setEditingJobId(job.id);
-    setFormData({ title: job.title || "", companyName: job.companyName || "", location: job.location || "", jobType: job.jobType || "Full-time", workMode: job.workMode || "On-site", description: job.description || "", requirements: job.requirements || "", applicationDeadline: job.applicationDeadline || "", cvRequired: Boolean(job.cvRequired), coverLetterRequired: Boolean(job.coverLetterRequired) });
-    setTasks(job.tasks?.length ? job.tasks.map((t) => ({ taskName: t.taskName || "", description: t.description || "", requiredAbilitiesText: (t.requiredAbilities || []).join(", ") })) : [emptyTask]);
+    setFormData({ jobDefinitionId: String(job.jobDefinitionId || ""), location: job.location || "", jobType: job.jobType || "Full-time", workMode: job.workMode || "On-site", description: job.description || "", applicationDeadline: job.applicationDeadline || "", cvRequired: Boolean(job.cvRequired), coverLetterRequired: Boolean(job.coverLetterRequired), assistanceAvailable: Boolean(job.assistanceAvailable) });
+    setHighlightedTaskIds((job.highlightedTasks || []).map((task) => task.id));
+    if (job.jobDefinitionId) getEmployerJobDefinition(job.jobDefinitionId).then((data) => setCatalogueTasks(data.job?.tasks || [])).catch((err) => setError(err.message));
     setActiveTab("POST_JOB");
+  }
+
+  async function handleJobDefinitionChange(event) {
+    const value = event.target.value;
+    setFormData((previous) => ({ ...previous, jobDefinitionId: value }));
+    setHighlightedTaskIds([]); setTaskSearch(""); setCatalogueTasks([]);
+    if (!value) return;
+    try { const data = await getEmployerJobDefinition(value); setCatalogueTasks(data.job?.tasks || []); }
+    catch (err) { setError(err.message); }
+  }
+
+  function toggleHighlightedTask(taskId) {
+    setHighlightedTaskIds((current) => current.includes(taskId) ? current.filter((id) => id !== taskId) : current.length >= 10 ? current : [...current, taskId]);
   }
 
   async function handleDeleteJob(jobId) {
@@ -172,7 +184,7 @@ function EmployerDashboard() {
   }
 
   function handleViewProfile(app) {
-    setSelectedProfile({ name: app.candidateName, email: app.candidateEmail, selectedDisabilities: app.candidateSelectedDisabilities || [], remainingAbilities: app.candidateRemainingAbilities || [] });
+    setSelectedProfile({ name: app.candidateName, email: app.candidateEmail, selectedDisabilities: app.candidateSelectedDisabilities || [], educationLevel: app.candidateEducationLevel || "Not provided" });
   }
 
   async function fetchFileBlob(appId, type) {
@@ -286,12 +298,10 @@ function EmployerDashboard() {
             <div style={{ background: "#ffffff", borderRadius: "20px", padding: "28px", border: "1px solid #e8edf5", boxShadow: "0 1px 8px rgba(15,23,42,0.05)", marginBottom: "16px" }}>
               <h2 style={{ margin: "0 0 4px", fontSize: "16px", fontWeight: "600", color: "#0f172a" }}>Job Details</h2>
               <p style={{ margin: "0 0 20px", fontSize: "12px", color: "#94a3b8" }}>Fields marked with * are required.</p>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", padding: "12px 14px", marginBottom: "18px", borderRadius: "12px", background: employerProfile.companyName ? "#f0fdf4" : "#fff7ed", border: `1px solid ${employerProfile.companyName ? "#bbf7d0" : "#fed7aa"}` }}><div><span style={{ display: "block", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.6px", color: "#64748b" }}>Posting as</span><strong style={{ color: "#0f172a" }}>{employerProfile.companyName || "Company profile required"}</strong></div>{!employerProfile.companyName && <button type="button" onClick={() => switchTab("PROFILE")} style={{ border: "none", borderRadius: "8px", padding: "8px 11px", background: "#ea580c", color: "#fff", cursor: "pointer" }}>Complete profile</button>}</div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0 20px" }}>
-                <Field label="Job Title *">
-                  <input className="input-field" style={inputStyle} name="title" value={formData.title} onChange={handleChange} required />
-                </Field>
-                <Field label="Company Name *">
-                  <input className="input-field" style={inputStyle} name="companyName" value={formData.companyName} onChange={handleChange} required />
+                <Field label="Job Position *" hint="Positions are controlled by the platform administrator.">
+                  <select className="input-field" style={inputStyle} name="jobDefinitionId" value={formData.jobDefinitionId} onChange={handleJobDefinitionChange} required><option value="">Select a position</option>{jobDefinitions.map((job) => <option key={job.id} value={job.id}>{job.name}</option>)}</select>
                 </Field>
                 <Field label="Location *">
                   <input className="input-field" style={inputStyle} name="location" value={formData.location} onChange={handleChange} required />
@@ -323,49 +333,18 @@ function EmployerDashboard() {
               <Field label="Job Description *">
                 <textarea className="input-field" style={textareaStyle} name="description" value={formData.description} onChange={handleChange} required />
               </Field>
-              <Field label="Requirements" hint="List the physical or practical requirements">
-                <textarea className="input-field" style={{ ...textareaStyle, minHeight: "80px" }} name="requirements" value={formData.requirements} onChange={handleChange} />
+              <Field label="Highlighted Tasks *" hint="Choose 1–10 responsibilities candidates should see. Type to search the catalogue.">
+                <input className="input-field" style={inputStyle} value={taskSearch} onChange={(e) => setTaskSearch(e.target.value)} placeholder={formData.jobDefinitionId ? "Search tasks…" : "Select a job position first"} disabled={!formData.jobDefinitionId} />
+                {highlightedTaskIds.length > 0 && <div style={{ display: "flex", flexWrap: "wrap", gap: "7px", marginTop: "9px" }}>{highlightedTaskIds.map((id) => { const task = catalogueTasks.find((item) => item.id === id); return task ? <button type="button" key={id} onClick={() => toggleHighlightedTask(id)} style={{ border: "none", borderRadius: "999px", padding: "6px 10px", color: "#1d4ed8", background: "#eff6ff", cursor: "pointer" }}>{task.taskName} ×</button> : null; })}</div>}
+                {formData.jobDefinitionId && <div role="listbox" aria-label="Available job tasks" style={{ marginTop: "8px", maxHeight: "210px", overflowY: "auto", border: "1px solid #e2e8f0", borderRadius: "12px", padding: "6px", background: "#fff" }}>{catalogueTasks.filter((task) => task.taskName.toLowerCase().includes(taskSearch.toLowerCase())).slice(0, 40).map((task) => { const selected = highlightedTaskIds.includes(task.id); return <button type="button" role="option" aria-selected={selected} key={task.id} onClick={() => toggleHighlightedTask(task.id)} style={{ width: "100%", display: "flex", alignItems: "center", gap: "9px", textAlign: "left", border: "none", borderRadius: "8px", padding: "9px 10px", marginBottom: "2px", background: selected ? "#eff6ff" : "transparent", color: selected ? "#1d4ed8" : "#334155", cursor: "pointer" }}><span aria-hidden="true">{selected ? "✓" : "○"}</span>{task.taskName}</button>; })}</div>}
+                <span style={{ fontSize: "11px", color: highlightedTaskIds.length >= 10 ? "#b45309" : "#64748b", marginTop: "6px" }}>{highlightedTaskIds.length}/10 selected</span>
               </Field>
               <div style={{ display: "flex", gap: "20px", marginTop: "4px" }}>
-                {[{ name: "cvRequired", label: "Application document required" }, { name: "coverLetterRequired", label: "Recommendation letter required" }].map(({ name, label }) => (
+                {[{ name: "cvRequired", label: "Application document required" }, { name: "coverLetterRequired", label: "Recommendation letter required" }, { name: "assistanceAvailable", label: "Task assistance is available" }].map(({ name, label }) => (
                   <label key={name} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#475569", cursor: "pointer" }}>
                     <input type="checkbox" name={name} checked={formData[name]} onChange={handleChange} style={{ accentColor: "#2563eb" }} />
                     {label}
                   </label>
-                ))}
-              </div>
-            </div>
-
-            {/* TASKS */}
-            <div style={{ background: "#ffffff", borderRadius: "20px", padding: "28px", border: "1px solid #e8edf5", boxShadow: "0 1px 8px rgba(15,23,42,0.05)", marginBottom: "16px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
-                <div>
-                  <h2 style={{ margin: "0 0 3px", fontSize: "16px", fontWeight: "600", color: "#0f172a" }}>Job Tasks *</h2>
-                  <p style={{ margin: 0, fontSize: "12px", color: "#94a3b8" }}>Add tasks the candidate may need to perform.</p>
-                </div>
-                <button type="button" onClick={addTask} style={{ border: "1px solid #bfdbfe", background: "#eff6ff", color: "#2563eb", padding: "8px 14px", borderRadius: "8px", cursor: "pointer", fontSize: "12px", fontWeight: "500", fontFamily: "Inter, sans-serif" }}>
-                  + Add Task
-                </button>
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "14px" }}>
-                {tasks.map((task, i) => (
-                  <div key={i} style={{ border: "1px solid #e8edf5", borderRadius: "14px", padding: "16px", background: "#f8fafc" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-                      <span style={{ fontSize: "12px", fontWeight: "600", color: "#2563eb", background: "#eff6ff", padding: "3px 9px", borderRadius: "999px" }}>Task {i + 1}</span>
-                      {tasks.length > 1 && (
-                        <button type="button" onClick={() => removeTask(i)} style={{ border: "none", background: "#fef2f2", color: "#dc2626", padding: "4px 10px", borderRadius: "7px", cursor: "pointer", fontSize: "11px", fontFamily: "Inter, sans-serif" }}>Remove</button>
-                      )}
-                    </div>
-                    <Field label="Task Name *">
-                      <input className="input-field" style={inputStyle} value={task.taskName} onChange={(e) => handleTaskChange(i, "taskName", e.target.value)} required />
-                    </Field>
-                    <Field label="Description">
-                      <textarea className="input-field" style={{ ...textareaStyle, minHeight: "70px" }} value={task.description} onChange={(e) => handleTaskChange(i, "description", e.target.value)} />
-                    </Field>
-                    <Field label="Required Abilities" hint="Comma separated">
-                      <input className="input-field" style={inputStyle} value={task.requiredAbilitiesText} onChange={(e) => handleTaskChange(i, "requiredAbilitiesText", e.target.value)} placeholder="Can use one hand, Can work seated" />
-                    </Field>
-                  </div>
                 ))}
               </div>
             </div>
@@ -407,6 +386,9 @@ function EmployerDashboard() {
                       ))}
                       {job.applicationDeadline && (
                         <span style={{ background: "#fffbeb", color: "#d97706", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", fontWeight: "400" }}>Deadline: {job.applicationDeadline}</span>
+                      )}
+                      {job.assistanceAvailable && (
+                        <span style={{ background: "#ecfdf5", color: "#047857", border: "1px solid #a7f3d0", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", fontWeight: "600" }}>✓ Accommodation offered</span>
                       )}
                     </div>
                   </div>
@@ -545,7 +527,6 @@ function EmployerDashboard() {
             </div>
             {[
               { title: "Selected Disabilities", items: selectedProfile.selectedDisabilities, chipStyle: { background: "#eef2ff", color: "#4338ca" }, empty: "No disabilities selected." },
-              { title: "Remaining Abilities", items: selectedProfile.remainingAbilities, chipStyle: { background: "#f0fdf4", color: "#16a34a" }, empty: "No abilities available yet." },
             ].map(({ title, items, chipStyle, empty }) => (
               <div key={title} style={{ marginBottom: "14px" }}>
                 <p style={{ margin: "0 0 8px", fontSize: "13px", fontWeight: "600", color: "#0f172a" }}>{title}</p>
