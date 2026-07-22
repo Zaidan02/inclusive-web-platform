@@ -24,6 +24,7 @@ final class EmployerProfileController extends AbstractController
 
         try {
             $decodedToken = $jwtEncoder->decode($token);
+
         } catch (\Throwable $e) {
             return $this->json(['message' => 'Invalid authentication token.'], 401);
         }
@@ -69,6 +70,7 @@ final class EmployerProfileController extends AbstractController
 
     private function formatProfile(EmployerProfile $profile): array
     {
+        echo("Profile changed");
         return [
             'id' => $profile->getId(),
             'companyName' => $profile->getCompanyName(),
