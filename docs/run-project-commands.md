@@ -13,14 +13,15 @@ This is the command-focused reference for running the inclusive web platform loc
 7. [Load fixture data](#load-fixture-data)
 8. [Frontend commands](#frontend-commands)
 9. [Scoring-engine commands](#scoring-engine-commands)
-10. [Backend validation](#backend-validation)
-11. [Logs and service status](#logs-and-service-status)
-12. [Rebuild and cache commands](#rebuild-and-cache-commands)
-13. [Database inspection](#database-inspection)
-14. [Dataset extraction](#dataset-extraction)
-15. [Complete verification sequence](#complete-verification-sequence)
-16. [Destructive reset](#destructive-reset)
-17. [Common problems](#common-problems)
+10. [Voice-navigation commands](#voice-navigation-commands)
+11. [Backend validation](#backend-validation)
+12. [Logs and service status](#logs-and-service-status)
+13. [Rebuild and cache commands](#rebuild-and-cache-commands)
+14. [Database inspection](#database-inspection)
+15. [Dataset extraction](#dataset-extraction)
+16. [Complete verification sequence](#complete-verification-sequence)
+17. [Destructive reset](#destructive-reset)
+18. [Common problems](#common-problems)
 
 ## Required software
 
@@ -53,6 +54,8 @@ PHP, Composer, PostgreSQL, and the scoring HTTP service run through Docker. They
 | Symfony API | `http://localhost:8081/api` |
 | Scoring service | `http://localhost:5001` |
 | Scoring health check | `http://localhost:5001/health` |
+| Voice-navigation service | `http://localhost:5002` |
+| Voice-navigation health check | `http://localhost:5002/health` |
 
 ## First-time setup
 
@@ -284,6 +287,45 @@ View scoring-service logs:
 ```powershell
 docker compose logs scoring-engine --tail 100
 docker compose logs -f scoring-engine
+```
+
+## Voice-navigation commands
+
+Place the OpenAI API key in the Git-ignored file:
+
+```text
+backend/voice_navigation/.env
+```
+
+```env
+OPENAI_API_KEY=your_actual_key
+```
+
+Recreate the service after changing `.env`:
+
+```powershell
+cd C:\Users\fouad\Desktop\inclusive-web-platform\backend
+docker compose up -d --build --force-recreate voice-navigation
+```
+
+Check configuration and health:
+
+```powershell
+Invoke-RestMethod http://localhost:5002/health
+```
+
+The response should contain `"openaiConfigured": true`.
+
+Run deterministic registry tests:
+
+```powershell
+docker compose exec voice-navigation python -m unittest discover -s tests -v
+```
+
+Follow voice-service logs:
+
+```powershell
+docker compose logs -f voice-navigation
 ```
 
 ## Backend validation

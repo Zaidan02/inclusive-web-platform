@@ -22,7 +22,7 @@ export default function WelcomePage() {
     <div className="landing-page">
       <SiteHeader />
       <main>
-        <section className="hero-section">
+        <section className="hero-section" id="hero" data-voice-section="hero">
           <div className="landing-container hero-grid">
             <div className="hero-copy">
               <span className="eyebrow"><i /> Inclusive hospitality starts here</span>
@@ -43,7 +43,7 @@ export default function WelcomePage() {
           </div>
         </section>
 
-        <section className="purpose-section section" id="purpose">
+        <section className="purpose-section section" id="purpose" data-voice-section="features">
           <div className="landing-container purpose-grid">
             <div><span className="section-kicker">Why JoIn exists</span><h2>Work becomes more inclusive when we ask a better question.</h2></div>
             <div className="purpose-copy"><p>Instead of asking what someone cannot do, we help employers understand what a person <strong>can contribute</strong>. That shift turns uncertainty into practical opportunity.</p><p>JoIn makes hospitality roles easier to understand by connecting job tasks with real abilities—giving candidates confidence and employers clarity.</p></div>
@@ -51,7 +51,7 @@ export default function WelcomePage() {
           <div className="landing-container principles-grid">{principles.map(([title, text], i) => <article className="principle-card" key={title}><span>0{i + 1}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
         </section>
 
-        <section className="process-section section" id="how-it-works">
+        <section className="process-section section" id="how-it-works" data-voice-section="accessibility">
           <div className="landing-container"><div className="section-heading section-heading--center"><span className="section-kicker">How it works</span><h2>A thoughtful path from potential to opportunity.</h2><p>Simple steps, clearer information, and matching built around the work itself.</p></div>
             <div className="steps-grid">{steps.map((step) => <article className="step-card" key={step.number}><span className="step-number">{step.number}</span><div className="step-line" /><h3>{step.title}</h3><p>{step.text}</p></article>)}</div>
           </div>

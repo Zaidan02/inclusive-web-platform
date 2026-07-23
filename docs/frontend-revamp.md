@@ -373,3 +373,45 @@ Future changes to scoring should be evidence-driven. The next calibration stage 
 - The task picker no longer hides catalogue tasks after the first 40 results.
 - Fixtures now create 24 published offers: each of the three job definitions has variants with 10, 20, 30, and 50 important tasks, both with and without accommodation.
 - This fixture matrix makes the effect of employer-declared importance visible without asking the engine to guess importance from task wording or spreadsheet position.
+
+## Voice-navigation foundation
+
+- Added an isolated `backend/voice_navigation` service with separate transcription, intent interpretation, deterministic registry routing, multilingual feedback, speech generation, orchestration, and HTTP layers.
+- Added request-based OpenAI speech-to-text for bounded microphone utterances and optional OpenAI text-to-speech output.
+- Added a trusted versioned command registry. The model proposes canonical commands, while ordinary code validates targets and resolves trusted React paths.
+- Added generic navigation, section reading, back, help, repeat, stop, and unknown commands as the initial unrestricted proof-of-concept capability set.
+- Added a global React voice-navigation control that appears on every route.
+- Activating voice mode requests microphone permission, records a turn, detects silence, sends audio for processing, executes only an authorized action, speaks feedback, and resumes listening.
+- Deactivating voice mode immediately stops recording, microphone tracks, generated audio, browser speech, and monitoring.
+- Added visible listening, processing, speaking, error, transcript, and AI-voice disclosure states.
+- The OpenAI key is loaded from `backend/voice_navigation/.env`, which is excluded from Git and the Docker image.
+- The service runs through Docker Compose on port `5002` under Gunicorn.
+- Deterministic registry tests, frontend production build, authenticated text interpretation, OpenAI TTS, OpenAI transcription, and the complete audio-to-route round trip pass.
+
+## Voice-navigation interaction and safety update
+
+This section appends to and supersedes only the incomplete command details in the earlier voice-navigation foundation entry. The earlier entry is retained to preserve the chronological record.
+
+- Added an explicit English/Arabic spoken-language selector after real-device testing showed that automatic language detection could classify accented English incorrectly.
+- The selected language is sent with every bounded audio turn and supplied directly to the transcription API.
+- Retained `whisper-1` as the configurable default transcription model after it correctly recovered a real target-machine WebM login command with the domain vocabulary prompt.
+- Added playback, size, duration, and download controls for the exact most recently uploaded browser recording so microphone and transcription problems can be distinguished.
+- Added browser and backend pipeline diagnostics for the recording, transcript, intent proposal, registry decision, and feedback.
+- Replaced the ambiguous original stop behavior with separate canonical commands for stopping speech, pausing listening, cancelling a request, and completely disabling voice navigation.
+- Added visible `Cancel`, `Stop talking`, and `Resume` controls during the relevant frontend states.
+- Paused mode releases the recorder, microphone tracks, analyser, and audio context. Resume is intentionally a visible button because a genuinely stopped microphone cannot also hear a resume phrase.
+- The ordinary recorder remains stopped during processing and generated speech. Reliable spoken barge-in during speech is deferred because it requires a separate interruption channel and echo-handling strategy.
+- Added a public `/voice-help` mini tutorial containing standard phrases, natural alternatives, interaction steps, clarification behavior, and honest proof-of-concept limitations.
+- Expanded interpretation so ordinary synonyms resolve to canonical targets. For example, `landing page`, `main page`, `homepage`, `start page`, and `front page` resolve to `home`; sign-in/login and registration/signup wording are also normalized.
+- Added `CLARIFY` as a schema-constrained interpretation outcome for requests that are valid but have several plausible registered destinations.
+- Clarification may contain no more than three choices, and every choice must be revalidated against the current deterministic registry context.
+- Added six-turn structured browser-memory context so a user can answer a current clarification with phrases such as `the first one`, `login`, `no`, or `never mind`.
+- The temporary history is sanitized and bounded again by the backend, is not saved to PostgreSQL or local storage, is cleared when voice mode is disabled, and disappears on full reload.
+- A bare confirmation such as `yes` is rejected when no pending clarification anchors its meaning.
+- The OpenAI-backed components remain interpretation adapters rather than execution authorities. The model cannot invent a URL, React path, selector, target, or action that bypasses the trusted registry.
+- Registry version 3 now covers canonical navigation, section reading, history back, help, repeat, stop speaking, pause listening, cancel, disable voice, clarification, and unknown outcomes.
+- Nine deterministic registry tests pass, including rejection of invented navigation and clarification targets.
+- Live checks confirm that `Can you go to the landing page?` resolves to authorized `home`, an ambiguous account-page request produces login/signup clarification, `the first one` resolves the pending choice to `/signin`, and an unanchored `yes` is rejected.
+- The frontend production build passes after the state controls, language selection, short-term memory, and tutorial route were added.
+
+The complete current architecture, state machine, audio capture mathematics, transcription and interpretation behavior, canonical commands, clarification protocol, API contracts, security boundaries, privacy behavior, tests, limitations, and future calibration plan are documented in `docs/voice-navigation-technical-specification.md`.

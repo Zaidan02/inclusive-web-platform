@@ -33,6 +33,25 @@ services:
       timeout: 3s
       retries: 10
 
+  voice-navigation:
+    build:
+      context: ./voice_navigation
+      dockerfile: Dockerfile
+    env_file:
+      - path: ./voice_navigation/.env
+        required: false
+    environment:
+      VOICE_HOST: 0.0.0.0
+      VOICE_PORT: 5002
+      VOICE_ALLOWED_ORIGIN: http://localhost:5173
+    ports:
+      - "5002:5002"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5002/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
   database:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
     environment:
