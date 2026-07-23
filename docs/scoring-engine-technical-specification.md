@@ -19,6 +19,7 @@ The engine is deterministic. It is not machine learning, generative AI, a statis
 3. [Mathematical notation](#3-mathematical-notation)
    - [Base weight](#31-base-weight)
    - [Highlighting](#32-highlighting)
+     - [How task importance is determined](#how-task-importance-is-determined)
    - [Effective feasibility factor](#33-effective-feasibility-factor)
    - [Task points](#34-task-points)
    - [Job totals](#35-job-totals)
@@ -175,6 +176,38 @@ Highlighting makes a task more influential. It does not make it mandatory.
 ```text
 a_i = w_i × h_i
 ```
+
+#### How task importance is determined
+
+> **Important design decision:** the engine does not guess which responsibilities matter most from task wording, spreadsheet order, or an undocumented heuristic. The dataset defines the complete occupational task pool and the disability-specific `feasible` / `needs_assistance` / `avoid` assessments. The employer defines which of those real catalogue tasks are especially important for the specific vacancy being advertised.
+
+The division of responsibility is deliberate:
+
+| Source | Authoritative contribution |
+|---|---|
+| Administrator-controlled dataset | Which tasks belong to the occupation and how each recorded disability affects each task. |
+| Employer posting the vacancy | Which catalogue tasks are especially important in this particular workplace and offer. |
+| Scoring policy | The numeric importance multiplier applied consistently to every employer-highlighted task. |
+| Engine | Mechanical application of the declared data and policy; it does not infer importance. |
+
+All imported tasks currently start with equal base importance:
+
+```text
+w_i = 1.0
+```
+
+The employer selects important tasks by meaning, not by assigning numbers. For each selected task the engine applies the centrally documented multiplier:
+
+```text
+selected as important     -> h_i = 1.5 -> a_i = 1.5
+not selected as important -> h_i = 1.0 -> a_i = 1.0
+```
+
+This is preferable to automatically guessing importance because the same occupation can be organized differently by two employers. One ice-cream vacancy may emphasize customer service while another emphasizes production and cleaning. The employer knows the actual vacancy; the engine knows only the supplied structured facts. Keeping that judgment explicit makes the result reviewable, explainable, and correctable.
+
+The previous proof-of-concept limit of ten selected tasks was removed. An employer must select at least one task and may select any number up to the complete task count of the chosen job definition. The API verifies that every selected identifier belongs to that definition, so expanding the selection cannot introduce invented or cross-job responsibilities.
+
+Selecting more tasks does not automatically raise a score. Highlighting changes relative importance in both the numerator and denominator. Important feasible tasks tend to raise the percentage; important avoided tasks tend to lower it; important assisted tasks contribute according to the assisted feasibility factor. Therefore, the selection must describe the real vacancy rather than be used to target a desired percentage.
 
 ### 3.3 Effective feasibility factor
 
@@ -595,23 +628,23 @@ Some old, unused helper functions remain in the component. They are not called b
 
 ## 18. Fixture coverage
 
-Fixtures create exactly:
+Fixtures create:
 
 - One admin
 - One candidate
 - Four employer/company accounts
 - Three job definitions
-- Six published offers
+- Twenty-four published offers
 
-The offer set is:
+For each job definition, the offer set is:
 
 ```text
-{three job definitions} × {assistance false, assistance true}
+{10, 20, 30, 50 important tasks} × {assistance false, assistance true}
 ```
 
-This permits direct comparison of otherwise equivalent job definitions with help on and off.
+Across all definitions this produces `3 × 4 × 2 = 24` offers. It preserves direct accommodation-on/off comparisons and adds comparisons across different employer-declared importance sets. Every configured count is below the smallest current catalogue size, so the fixture variants contain exactly 10, 20, 30, or 50 selected tasks.
 
-Measured Both Hands example:
+The earlier six-offer fixture produced the following historical example before importance-count expansion:
 
 ```text
 Ice Cream Maker, help on:       55.87%

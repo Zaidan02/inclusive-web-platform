@@ -143,25 +143,29 @@ final class AppFixtures extends Fixture
                 $manager->persist($assessment);
             }
 
-            foreach ([false, true] as $assistanceAvailable) {
-                $employer = $employerUsers[($jobIndex * 2 + (int) $assistanceAvailable) % count($employerUsers)];
-                $companyProfile = $employer->getEmployerProfile();
-                $post = (new JobPost())
-                    ->setEmployer($employer)
-                    ->setJobDefinition($job)
-                    ->setLocation((string) $companyProfile?->getLocation())
-                    ->setJobType($assistanceAvailable ? 'Full-time' : 'Part-time')
-                    ->setWorkMode('On-site')
-                    ->setDescription('A practical ' . $jobRecord['name'] . ' opportunity at ' . $companyProfile?->getCompanyName() . '. This seeded offer demonstrates the scoring engine with assistance ' . ($assistanceAvailable ? 'available.' : 'not available.'))
-                    ->setApplicationDeadline(new \DateTimeImmutable('+6 months'))
-                    ->setCvRequired(true)
-                    ->setCoverLetterRequired(false)
-                    ->setAssistanceAvailable($assistanceAvailable)
-                    ->setStatus('published');
-                foreach (array_slice(array_values($tasks), 0, 5) as $position => $task) {
-                    $post->addHighlightedTask((new JobPostHighlightedTask())->setTask($task)->setDisplayPosition($position + 1));
+            foreach ([10, 20, 30, 50] as $importantTaskCount) {
+                foreach ([false, true] as $assistanceAvailable) {
+                    $employer = $employerUsers[($jobIndex * 8 + $importantTaskCount + (int) $assistanceAvailable) % count($employerUsers)];
+                    $companyProfile = $employer->getEmployerProfile();
+                    $selectedTasks = array_slice(array_values($tasks), 0, min($importantTaskCount, count($tasks)));
+                    $actualImportantTaskCount = count($selectedTasks);
+                    $post = (new JobPost())
+                        ->setEmployer($employer)
+                        ->setJobDefinition($job)
+                        ->setLocation((string) $companyProfile?->getLocation())
+                        ->setJobType($assistanceAvailable ? 'Full-time' : 'Part-time')
+                        ->setWorkMode('On-site')
+                        ->setDescription('A practical ' . $jobRecord['name'] . ' opportunity at ' . $companyProfile?->getCompanyName() . '. This seeded offer marks ' . $actualImportantTaskCount . ' catalogue tasks as important and demonstrates scoring with assistance ' . ($assistanceAvailable ? 'available.' : 'not available.'))
+                        ->setApplicationDeadline(new \DateTimeImmutable('+6 months'))
+                        ->setCvRequired(true)
+                        ->setCoverLetterRequired(false)
+                        ->setAssistanceAvailable($assistanceAvailable)
+                        ->setStatus('published');
+                    foreach ($selectedTasks as $position => $task) {
+                        $post->addHighlightedTask((new JobPostHighlightedTask())->setTask($task)->setDisplayPosition($position + 1));
+                    }
+                    $manager->persist($post);
                 }
-                $manager->persist($post);
             }
             $jobIndex++;
         }

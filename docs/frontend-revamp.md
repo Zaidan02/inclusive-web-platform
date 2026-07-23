@@ -363,3 +363,13 @@ Future changes to scoring should be evidence-driven. The next calibration stage 
 - Calibrate the scoring policy using expert-reviewed benchmark cases rather than subjective percentage expectations.
 - Add production monitoring, security review, broader integration/end-to-end coverage, and deployment hardening.
 - Design and implement the separate voice-only navigation accessibility workstream.
+
+## Employer importance-selection expansion
+
+- The former limit of 10 highlighted tasks per job post was removed.
+- Employers must still select at least one important task, but may now select any number up to all tasks in the selected administrator-controlled job definition.
+- The backend continues to reject unknown tasks and tasks belonging to a different job definition.
+- The employer interface explains that selecting a task increases its scoring importance, displays the selected count against the complete catalogue count, and provides Select all and Clear selection actions.
+- The task picker no longer hides catalogue tasks after the first 40 results.
+- Fixtures now create 24 published offers: each of the three job definitions has variants with 10, 20, 30, and 50 important tasks, both with and without accommodation.
+- This fixture matrix makes the effect of employer-declared importance visible without asking the engine to guess importance from task wording or spreadsheet position.

@@ -83,7 +83,7 @@ final class EmployerJobController extends AbstractController
         $companyProfile = $job->getEmployer()?->getEmployerProfile();
         if (!$companyProfile || trim((string) $companyProfile->getCompanyName()) === '') return $this->json(['message' => 'Complete your company profile before posting a job.'], 400);
         $taskIds = array_values(array_unique(array_map('intval', is_array($data['highlightedTaskIds'] ?? null) ? $data['highlightedTaskIds'] : [])));
-        if (count($taskIds) < 1 || count($taskIds) > 10) return $this->json(['message' => 'Select between 1 and 10 highlighted tasks.'], 400);
+        if (count($taskIds) < 1) return $this->json(['message' => 'Select at least one important task.'], 400);
         $tasks = $em->getRepository(JobDefinitionTask::class)->findBy(['id' => $taskIds, 'jobDefinition' => $definition]);
         $tasksById = []; foreach ($tasks as $task) $tasksById[$task->getId()] = $task;
         if (count($tasksById) !== count($taskIds)) return $this->json(['message' => 'Every highlighted task must belong to the selected job.'], 400);
