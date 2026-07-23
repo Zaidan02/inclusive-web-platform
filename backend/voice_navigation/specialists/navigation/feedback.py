@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from schemas import AuthorizedCommand, ClarificationCommand, IntentProposal, RejectedCommand
+from core.schemas import AuthorizedCommand, ClarificationCommand, IntentProposal, RejectedCommand
 
 
 _MESSAGES = {
@@ -54,4 +54,4 @@ def build_feedback(
     if isinstance(route, ClarificationCommand):
         return route.question
     template = messages.get(route.command, _MESSAGES["en"].get(route.command, "Done."))
-    return template.format(target=route.target or "")
+    return template.format(target=(route.target or "").replace("_", " "))

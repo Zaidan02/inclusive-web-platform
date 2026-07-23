@@ -1,0 +1,97 @@
+{
+  "version": 6,
+  "commands": {
+    "NAVIGATE": { "risk": 1 },
+    "READ_SECTION": { "risk": 0 },
+    "GO_BACK": { "risk": 1 },
+    "HELP": { "risk": 0 },
+    "REPEAT": { "risk": 0 },
+    "STOP_SPEAKING": { "risk": 0, "local": true },
+    "PAUSE_LISTENING": { "risk": 0, "local": true },
+    "CANCEL": { "risk": 0, "local": true },
+    "DISABLE_VOICE": { "risk": 0, "local": true },
+    "CLARIFY": { "risk": 0 },
+    "UNKNOWN": { "risk": 0 }
+  },
+  "pages": {
+    "home": { "path": "/", "description": "Public landing or main page", "aliases": ["home", "homepage", "main page", "landing page", "start page", "front page"] },
+    "login": { "path": "/signin", "description": "Account sign-in page", "aliases": ["login", "log in", "sign in"] },
+    "signup": { "path": "/signup", "description": "Candidate or employer account registration", "aliases": ["signup", "sign up", "register", "create account"] },
+    "forgot_password": { "path": "/forgot-password", "description": "Request a password-reset email", "aliases": ["forgot password", "recover password", "reset request"] },
+    "reset_password": { "path": "/reset-password", "description": "Choose a new password using a reset token", "aliases": ["reset password", "new password"] },
+    "employers_info": { "path": "/employers", "description": "Public information page for employers", "aliases": ["employer information", "for employers", "employers page"] },
+    "voice_help": { "path": "/voice-help", "description": "Voice navigation commands and tutorial", "aliases": ["voice help", "voice commands", "voice tutorial"] },
+    "candidate_dashboard": { "path": "/candidate", "description": "Protected candidate dashboard main Jobs view", "aliases": ["candidate dashboard", "candidate area", "my candidate account"], "action": { "type": "route_and_tab", "value": "/candidate", "tab": "JOBS" } },
+    "candidate_jobs": { "path": "/candidate", "description": "Candidate available-jobs view", "aliases": ["candidate jobs", "available jobs", "jobs page", "job listings"], "action": { "type": "route_and_tab", "value": "/candidate", "tab": "JOBS" } },
+    "candidate_applications": { "path": "/candidate", "description": "Candidate's own applications view", "aliases": ["my applications", "candidate applications", "applications I submitted", "application history"], "action": { "type": "route_and_tab", "value": "/candidate", "tab": "APPLICATIONS" } },
+    "candidate_profile": { "path": "/candidate", "description": "Candidate profile editing view", "aliases": ["my profile", "candidate profile", "edit my profile", "disability profile"], "action": { "type": "route_and_tab", "value": "/candidate", "tab": "PROFILE" } },
+    "candidate_setup": { "path": "/candidate/setup", "description": "Protected candidate profile setup", "aliases": ["candidate setup", "profile setup", "complete my candidate profile"] },
+    "employer_dashboard": { "path": "/employer", "description": "Protected employer console default Post a Job view", "aliases": ["employer dashboard", "employer console", "my company dashboard"], "action": { "type": "route_and_tab", "value": "/employer", "tab": "POST_JOB" } },
+    "employer_post_job": { "path": "/employer", "description": "Employer Post a Job view", "aliases": ["post a job", "create a job", "new job", "job posting form"], "action": { "type": "route_and_tab", "value": "/employer", "tab": "POST_JOB" } },
+    "employer_jobs": { "path": "/employer", "description": "Employer's posted jobs view", "aliases": ["my jobs", "posted jobs", "employer jobs", "my job posts"], "action": { "type": "route_and_tab", "value": "/employer", "tab": "MY_JOBS" } },
+    "employer_applications": { "path": "/employer", "description": "Applications received by the employer", "aliases": ["employer applications", "received applications", "job applicants", "applications to my jobs"], "action": { "type": "route_and_tab", "value": "/employer", "tab": "APPLICATIONS" } },
+    "employer_profile": { "path": "/employer", "description": "Employer company profile view", "aliases": ["company profile", "employer profile", "my company information", "edit company profile"], "action": { "type": "route_and_tab", "value": "/employer", "tab": "PROFILE" } },
+    "admin_dashboard": { "path": "/admin", "description": "Protected administrator console default Users view", "aliases": ["admin dashboard", "administrator console", "admin panel"], "action": { "type": "route_and_tab", "value": "/admin", "tab": "USERS" } },
+    "admin_users": { "path": "/admin", "description": "Administrator active users view", "aliases": ["admin users", "users", "active users", "manage users"], "action": { "type": "route_and_tab", "value": "/admin", "tab": "USERS" } },
+    "admin_archived_users": { "path": "/admin", "description": "Administrator archived users view", "aliases": ["archived users", "user archive", "admin archive"], "action": { "type": "route_and_tab", "value": "/admin", "tab": "ARCHIVED_USERS" } },
+    "admin_applications": { "path": "/admin", "description": "Administrator all-applications view", "aliases": ["admin applications", "all applications", "platform applications"], "action": { "type": "route_and_tab", "value": "/admin", "tab": "APPLICATIONS" } },
+    "admin_candidate_profiles": { "path": "/admin", "description": "Administrator candidate profiles view", "aliases": ["candidate profiles", "user profiles", "admin profiles"], "action": { "type": "route_and_tab", "value": "/admin", "tab": "USER_PROFILES" } }
+  },
+  "contexts": {
+    "home": {
+      "commands": ["NAVIGATE", "READ_SECTION", "GO_BACK", "HELP", "REPEAT", "STOP_SPEAKING", "PAUSE_LISTENING", "CANCEL", "DISABLE_VOICE", "CLARIFY", "UNKNOWN"],
+      "navigationTargets": ["home", "login", "signup", "forgot_password", "employers_info", "voice_help", "candidate_dashboard", "candidate_setup", "employer_dashboard", "admin_dashboard"],
+      "sectionTargets": ["hero", "features", "accessibility"]
+    },
+    "login": {
+      "commands": ["NAVIGATE", "READ_SECTION", "GO_BACK", "HELP", "REPEAT", "STOP_SPEAKING", "PAUSE_LISTENING", "CANCEL", "DISABLE_VOICE", "CLARIFY", "UNKNOWN"],
+      "navigationTargets": ["home", "login", "signup", "forgot_password", "employers_info", "voice_help", "candidate_dashboard", "employer_dashboard", "admin_dashboard"],
+      "sectionTargets": ["login-form", "login-help"]
+    },
+    "signup": {
+      "commands": ["NAVIGATE", "READ_SECTION", "GO_BACK", "HELP", "REPEAT", "STOP_SPEAKING", "PAUSE_LISTENING", "CANCEL", "DISABLE_VOICE", "CLARIFY", "UNKNOWN"],
+      "navigationTargets": ["home", "login", "signup", "forgot_password", "employers_info", "voice_help", "candidate_dashboard", "employer_dashboard", "admin_dashboard"],
+      "sectionTargets": ["signup-form", "signup-help"]
+    },
+    "forgot_password": {
+      "commands": ["NAVIGATE", "READ_SECTION", "GO_BACK", "HELP", "REPEAT", "STOP_SPEAKING", "PAUSE_LISTENING", "CANCEL", "DISABLE_VOICE", "CLARIFY", "UNKNOWN"],
+      "navigationTargets": ["home", "login", "signup", "voice_help"],
+      "sectionTargets": ["password-recovery-form"]
+    },
+    "reset_password": {
+      "commands": ["NAVIGATE", "READ_SECTION", "GO_BACK", "HELP", "REPEAT", "STOP_SPEAKING", "PAUSE_LISTENING", "CANCEL", "DISABLE_VOICE", "CLARIFY", "UNKNOWN"],
+      "navigationTargets": ["home", "login", "voice_help"],
+      "sectionTargets": ["password-reset-form"]
+    },
+    "employers_info": {
+      "commands": ["NAVIGATE", "READ_SECTION", "GO_BACK", "HELP", "REPEAT", "STOP_SPEAKING", "PAUSE_LISTENING", "CANCEL", "DISABLE_VOICE", "CLARIFY", "UNKNOWN"],
+      "navigationTargets": ["home", "login", "signup", "employers_info", "voice_help", "employer_dashboard"],
+      "sectionTargets": ["employers-information"]
+    },
+    "voice_help": {
+      "commands": ["NAVIGATE", "READ_SECTION", "GO_BACK", "HELP", "REPEAT", "STOP_SPEAKING", "PAUSE_LISTENING", "CANCEL", "DISABLE_VOICE", "CLARIFY", "UNKNOWN"],
+      "navigationTargets": ["home", "login", "signup", "employers_info", "voice_help"],
+      "sectionTargets": ["voice-help"]
+    },
+    "candidate": {
+      "commands": ["NAVIGATE", "READ_SECTION", "GO_BACK", "HELP", "REPEAT", "STOP_SPEAKING", "PAUSE_LISTENING", "CANCEL", "DISABLE_VOICE", "CLARIFY", "UNKNOWN"],
+      "navigationTargets": ["home", "voice_help", "candidate_dashboard", "candidate_jobs", "candidate_applications", "candidate_profile", "candidate_setup"],
+      "sectionTargets": ["candidate-dashboard"]
+    },
+    "candidate_setup": {
+      "commands": ["NAVIGATE", "READ_SECTION", "GO_BACK", "HELP", "REPEAT", "STOP_SPEAKING", "PAUSE_LISTENING", "CANCEL", "DISABLE_VOICE", "CLARIFY", "UNKNOWN"],
+      "navigationTargets": ["home", "voice_help", "candidate_dashboard", "candidate_setup"],
+      "sectionTargets": ["candidate-setup"]
+    },
+    "employer": {
+      "commands": ["NAVIGATE", "READ_SECTION", "GO_BACK", "HELP", "REPEAT", "STOP_SPEAKING", "PAUSE_LISTENING", "CANCEL", "DISABLE_VOICE", "CLARIFY", "UNKNOWN"],
+      "navigationTargets": ["home", "employers_info", "voice_help", "employer_dashboard", "employer_post_job", "employer_jobs", "employer_applications", "employer_profile"],
+      "sectionTargets": ["employer-dashboard"]
+    },
+    "admin": {
+      "commands": ["NAVIGATE", "READ_SECTION", "GO_BACK", "HELP", "REPEAT", "STOP_SPEAKING", "PAUSE_LISTENING", "CANCEL", "DISABLE_VOICE", "CLARIFY", "UNKNOWN"],
+      "navigationTargets": ["home", "voice_help", "admin_dashboard", "admin_users", "admin_archived_users", "admin_applications", "admin_candidate_profiles"],
+      "sectionTargets": ["admin-dashboard"]
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   getAdminApplications,
   getAdminApplicationFileUrl,
@@ -64,6 +64,7 @@ function ProfilesIcon() {
 
 function AdminDashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [activeTab, setActiveTab] = useState("USERS");
   const [_hoveredTab, setHoveredTab] = useState(null);
@@ -126,6 +127,12 @@ function AdminDashboard() {
       setAdminApplications(data.applications || []);
     } catch (err) { setError(err.message); } finally { setLoading(false); }
   }
+
+  useEffect(() => {
+    const requestedTab = location.state?.voiceTab;
+    if (!["USERS", "ARCHIVED_USERS", "APPLICATIONS", "USER_PROFILES"].includes(requestedTab)) return;
+    handleTabChange(requestedTab);
+  }, [location.state?.voiceNavigationTurn, location.state?.voiceTab]);
 
   useEffect(() => {
     if (activeTab === "USER_PROFILES") { fetchCandidateProfiles(); return; }
@@ -364,7 +371,7 @@ function AdminDashboard() {
   ];
 
   return (
-    <div className="dashboard-screen dashboard-screen--admin" style={{ minHeight: "100vh", display: "flex", fontFamily: '"Inter", -apple-system, sans-serif', background: "#f8fafc", color: "#0f172a" }}>
+    <div className="dashboard-screen dashboard-screen--admin" style={{ minHeight: "100vh", display: "flex", fontFamily: '"Inter", -apple-system, sans-serif', background: "#f8fafc", color: "#0f172a" }} data-voice-section="admin-dashboard">
       <style>{globalStyles}</style>
 
       {/* SIDEBAR */}

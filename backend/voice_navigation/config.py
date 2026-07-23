@@ -18,6 +18,7 @@ class Settings:
         "JoIn website. Navigation vocabulary: home page, login page, sign-in page, "
         "sign-up page, candidate, employer, administrator, profile, jobs, applications.",
     )
+    classifier_model: str = os.getenv("OPENAI_CLASSIFIER_MODEL", "gpt-5.6-sol")
     intent_model: str = os.getenv("OPENAI_INTENT_MODEL", "gpt-5.6-sol")
     speech_model: str = os.getenv("OPENAI_SPEECH_MODEL", "gpt-4o-mini-tts")
     speech_voice: str = os.getenv("OPENAI_SPEECH_VOICE", "cedar")

@@ -4,10 +4,10 @@ import json
 
 from openai import OpenAI
 
-from schemas import IntentProposal
+from core.schemas import IntentProposal
 
 
-class OpenAIIntentInterpreter:
+class OpenAINavigationInterpreter:
     def __init__(self, client: OpenAI, model: str) -> None:
         self._client = client
         self._model = model

@@ -19,6 +19,16 @@ CommandName = Literal[
     "UNKNOWN",
 ]
 
+RequestCategory = Literal["NAVIGATION", "WEBSITE_QUESTION", "ACTION"]
+
+
+class RequestClassification(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    category: RequestCategory
+    confidence: float = Field(ge=0, le=1)
+    language: str = Field(default="und", min_length=2, max_length=16)
+
 
 class IntentProposal(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -61,12 +71,22 @@ class ClarificationCommand(BaseModel):
     action: dict[str, Any]
 
 
+class SpecialistUnavailable(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    status: Literal["specialist_unavailable"]
+    category: Literal["WEBSITE_QUESTION", "ACTION"]
+    reason: str
+    action: None = None
+
+
 class VoiceTurnResult(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     request_id: str
     transcript: str
     language: str
-    proposal: IntentProposal
-    route: AuthorizedCommand | RejectedCommand | ClarificationCommand
+    classification: RequestClassification
+    proposal: IntentProposal | None = None
+    route: AuthorizedCommand | RejectedCommand | ClarificationCommand | SpecialistUnavailable
     feedback: str

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import {
   createEmployerJob,
   getEmployerJobs,
@@ -63,6 +64,7 @@ function Field({ label, children, hint }) {
 }
 
 function EmployerDashboard() {
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState("POST_JOB");
   const [formData, setFormData] = useState(emptyForm);
   const [jobDefinitions, setJobDefinitions] = useState([]);
@@ -82,6 +84,12 @@ function EmployerDashboard() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [selectedProfile, setSelectedProfile] = useState(null);
+
+  useEffect(() => {
+    const requestedTab = location.state?.voiceTab;
+    if (!["POST_JOB", "MY_JOBS", "APPLICATIONS", "PROFILE"].includes(requestedTab)) return;
+    setActiveTab(requestedTab);
+  }, [location.state?.voiceNavigationTurn, location.state?.voiceTab]);
 
   useEffect(() => {
     if (activeTab === "MY_JOBS") fetchMyJobs();
@@ -241,7 +249,7 @@ function EmployerDashboard() {
   const textareaStyle = { ...inputStyle, minHeight: "100px", resize: "vertical", padding: "10px 12px" };
 
   return (
-    <div className="dashboard-screen dashboard-screen--employer" style={{ minHeight: "100vh", display: "flex", fontFamily: '"Inter", -apple-system, sans-serif', background: "#f8fafc", color: "#0f172a" }}>
+    <div className="dashboard-screen dashboard-screen--employer" style={{ minHeight: "100vh", display: "flex", fontFamily: '"Inter", -apple-system, sans-serif', background: "#f8fafc", color: "#0f172a" }} data-voice-section="employer-dashboard">
       <style>{globalStyles}</style>
 
       {/* SIDEBAR */}

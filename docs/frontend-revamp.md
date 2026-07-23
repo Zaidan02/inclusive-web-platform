@@ -415,3 +415,37 @@ This section appends to and supersedes only the incomplete command details in th
 - The frontend production build passes after the state controls, language selection, short-term memory, and tutorial route were added.
 
 The complete current architecture, state machine, audio capture mathematics, transcription and interpretation behavior, canonical commands, clarification protocol, API contracts, security boundaries, privacy behavior, tests, limitations, and future calibration plan are documented in `docs/voice-navigation-technical-specification.md`.
+
+## Voice classifier and navigation-specialist refactor
+
+- Refactored the Python service into `api`, `audio`, `classification`, `core`, `orchestration`, and `specialists/navigation` packages while preserving the existing HTTP endpoints and Docker entry point.
+- Added a schema-constrained three-way classifier: `NAVIGATION`, `WEBSITE_QUESTION`, or `ACTION`.
+- Classification determines request type only. It does not judge whether a request is logical, supported, authorized, safe, or executable.
+- Added a deterministic orchestrator that dispatches only navigation to the implemented navigation specialist.
+- Questions and actions are recognized but return `specialist_unavailable` until their specialists are implemented, preventing them from falling through into navigation.
+- Expanded the navigation registry to version 4 with every current React route and distinct frontend contexts for each route.
+- Added readable root markers to candidate, candidate-setup, employer, and admin screens.
+- Protected destinations still rely on the existing React role guards and Symfony API authentication/authorization. No parallel voice JWT system was introduced.
+- Browser diagnostics now show classification before the navigation proposal and registry result.
+- Fourteen deterministic tests pass: eleven navigation-registry tests and three orchestrator dispatch-isolation tests.
+- Live category checks and the saved real-browser audio-to-login round trip pass after the refactor.
+
+## Candidate voice-navigation internal views
+
+- Corrected the assumption that one React URL always represents one visible destination.
+- `/candidate` contains Jobs, Applications, and Profile views controlled by component state, so navigating to the same URL could previously report success without changing the screen.
+- Navigation registry version 5 now separates `candidate_dashboard`, `candidate_jobs`, `candidate_applications`, and `candidate_profile`.
+- These destinations return a trusted `route_and_tab` action containing `/candidate` and one fixed tab identifier: `JOBS`, `APPLICATIONS`, or `PROFILE`.
+- `CandidateDashboard` accepts only those declared tab values from React Router navigation state and clears selected job details when returning to Jobs.
+- Live model checks confirm that candidate dashboard, applications, and profile requests resolve to the intended distinct views.
+- Sixteen deterministic voice tests pass after the change.
+
+## Employer and administrator voice-navigation internal views
+
+- Expanded the route-plus-tab correction to every current Employer and Administrator dashboard tab.
+- Employer targets now distinguish Post a Job, My Jobs, Applications, and Company Profile under `/employer`.
+- Administrator targets now distinguish Users, Archived Users, Applications, and Candidate Profiles under `/admin`.
+- Voice navigation changes only the active tab through trusted React Router state. Existing mouse navigation, forms, drafts, default tabs, route guards, and Symfony behavior are unchanged.
+- Employer tab navigation does not clear a partially completed or edited job form.
+- Navigation registry version 6 contains fixed internal tab identifiers for all three role dashboards.
+- Twenty deterministic tests and representative live model phrases pass.

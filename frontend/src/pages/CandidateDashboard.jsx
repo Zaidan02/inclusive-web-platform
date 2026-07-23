@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getToken, logout } from "../services/authService";
 import { applyToJob, getCandidateApplications, getCandidateMatches } from "../services/candidateApi";
 import { getCandidateProfile, updateCandidateProfile } from "../services/candidateProfileApi";
@@ -337,6 +337,7 @@ function AiJobMatchCard({ aiLoading, aiError, aiResults, selectedDisabilities, o
 
 function CandidateDashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState("JOBS");
   const [candidateName, setCandidateName] = useState("Candidate");
   const [selectedDisabilities, setSelectedDisabilities] = useState([]);
@@ -365,6 +366,12 @@ function CandidateDashboard() {
   const [applicationStatusFilter, setApplicationStatusFilter] = useState("all");
 
   useEffect(() => { fetchCandidateProfile(); }, []);
+  useEffect(() => {
+    const requestedTab = location.state?.voiceTab;
+    if (!["JOBS", "APPLICATIONS", "PROFILE"].includes(requestedTab)) return;
+    setActiveTab(requestedTab);
+    if (requestedTab === "JOBS") setSelectedJob(null);
+  }, [location.state?.voiceNavigationTurn, location.state?.voiceTab]);
   useEffect(() => {
     if (activeTab === "JOBS") fetchJobs();
     if (activeTab === "APPLICATIONS") fetchCandidateApplications();
@@ -535,7 +542,7 @@ function CandidateDashboard() {
   const companyJobs = selectedCompany ? getCompanyJobs(selectedCompany) : [];
 
   return (
-    <div className="dashboard-screen dashboard-screen--candidate" style={styles.page}>
+    <div className="dashboard-screen dashboard-screen--candidate" style={styles.page} data-voice-section="candidate-dashboard">
       <style>{globalStyles}</style>
 
       {/* HEADER */}

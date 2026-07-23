@@ -4,12 +4,12 @@ import json
 from pathlib import Path
 from typing import Any
 
-from schemas import AuthorizedCommand, ClarificationCommand, IntentProposal, RejectedCommand
+from core.schemas import AuthorizedCommand, ClarificationCommand, IntentProposal, RejectedCommand
 
 
-class CommandRegistry:
+class NavigationRegistry:
     def __init__(self, path: Path | None = None) -> None:
-        registry_path = path or Path(__file__).with_name("commands.json")
+        registry_path = path or Path(__file__).with_name("registry.json")
         self._data: dict[str, Any] = json.loads(registry_path.read_text(encoding="utf-8"))
 
     @property
@@ -22,6 +22,10 @@ class CommandRegistry:
             "context": current_context,
             "commands": context["commands"],
             "navigationTargets": context["navigationTargets"],
+            "targetDescriptions": {
+                target: self._data["pages"][target]
+                for target in context["navigationTargets"]
+            },
             "sectionTargets": context["sectionTargets"],
         }
 
@@ -60,7 +64,8 @@ class CommandRegistry:
         if command == "NAVIGATE":
             if target not in context["navigationTargets"] or target not in self._data["pages"]:
                 return self._reject(proposal, "Navigation target is not allowed in the current context.")
-            action = {"type": "route", "value": self._data["pages"][target]}
+            page = self._data["pages"][target]
+            action = page.get("action") or {"type": "route", "value": page["path"]}
         elif command == "READ_SECTION":
             if target not in context["sectionTargets"]:
                 return self._reject(proposal, "Section target is not allowed in the current context.")

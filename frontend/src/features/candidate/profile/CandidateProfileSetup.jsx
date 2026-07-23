@@ -62,7 +62,7 @@ export default function CandidateProfileSetup() {
   return (
     <main className="profile-setup">
       <header className="profile-setup__header"><Brand /><span>Candidate profile setup</span></header>
-      <section className="profile-setup__shell">
+      <section className="profile-setup__shell" data-voice-section="candidate-setup">
         <div className="profile-setup__intro">
           <span className="profile-setup__step">Step 1 of 1</span>
           <h1>Let’s build your ability-led profile.</h1>

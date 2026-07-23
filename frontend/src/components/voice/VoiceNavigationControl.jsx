@@ -8,9 +8,17 @@ const SILENCE_AFTER_SPEECH_MS = 1100;
 const EMPTY_TURN_TIMEOUT_MS = 12000;
 
 function contextForPath(pathname) {
-  if (pathname === "/signin" || pathname === "/forgot-password" || pathname === "/reset-password") return "login";
+  if (pathname === "/signin") return "login";
   if (pathname === "/signup") return "signup";
-  return "landing";
+  if (pathname === "/forgot-password") return "forgot_password";
+  if (pathname === "/reset-password") return "reset_password";
+  if (pathname === "/employers") return "employers_info";
+  if (pathname === "/voice-help") return "voice_help";
+  if (pathname === "/candidate/setup") return "candidate_setup";
+  if (pathname === "/candidate") return "candidate";
+  if (pathname === "/employer") return "employer";
+  if (pathname === "/admin") return "admin";
+  return "home";
 }
 
 function supportedMimeType() {
@@ -136,6 +144,13 @@ export default function VoiceNavigationControl() {
     const action = route.action || {};
     if (action.type === "route" && action.value) {
       navigate(action.value);
+    } else if (action.type === "route_and_tab" && action.value && action.tab) {
+      navigate(action.value, {
+        state: {
+          voiceTab: action.tab,
+          voiceNavigationTurn: result.request_id,
+        },
+      });
     } else if (action.type === "history_back") {
       navigate(-1);
     } else if (action.type === "read_section" && action.value) {
@@ -191,6 +206,7 @@ export default function VoiceNavigationControl() {
     }
     console.groupCollapsed(`[VOICE] Turn ${data.request_id || "unknown"}`);
     console.info("[VOICE STT] Transcript:", data.transcript);
+    console.info("[VOICE CLASSIFIER] Category:", data.classification);
     console.info("[VOICE INTENT] Proposal:", data.proposal);
     console.info("[VOICE ROUTER] Decision:", data.route);
     console.info("[VOICE FEEDBACK] Text:", data.feedback);

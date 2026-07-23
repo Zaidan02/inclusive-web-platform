@@ -2,24 +2,27 @@ from __future__ import annotations
 
 from uuid import uuid4
 
-from feedback import build_feedback
-from interpretation import OpenAIIntentInterpreter
-from registry import CommandRegistry
-from schemas import IntentProposal, VoiceTurnResult
-from transcription import OpenAITranscriber
+from audio.transcription import OpenAITranscriber
+from classification.classifier import OpenAIRequestClassifier
+from core.schemas import SpecialistUnavailable, VoiceTurnResult
+from specialists.navigation.feedback import build_feedback
+from specialists.navigation.interpreter import OpenAINavigationInterpreter
+from specialists.navigation.registry import NavigationRegistry
 
 
-class VoiceNavigationService:
+class VoiceOrchestrator:
     def __init__(
         self,
-        registry: CommandRegistry,
         transcriber: OpenAITranscriber,
-        interpreter: OpenAIIntentInterpreter,
+        classifier: OpenAIRequestClassifier,
+        navigation_registry: NavigationRegistry,
+        navigation_interpreter: OpenAINavigationInterpreter,
         max_transcript_chars: int,
     ) -> None:
-        self._registry = registry
         self._transcriber = transcriber
-        self._interpreter = interpreter
+        self._classifier = classifier
+        self._navigation_registry = navigation_registry
+        self._navigation_interpreter = navigation_interpreter
         self._max_transcript_chars = max_transcript_chars
 
     def interpret_text(
@@ -34,15 +37,43 @@ class VoiceNavigationService:
         if len(normalized) > self._max_transcript_chars:
             raise ValueError(f"Transcript exceeds {self._max_transcript_chars} characters.")
 
-        allowed_context = self._registry.context_for_prompt(current_context)
         history = self._sanitize_history(recent_history or [])
-        proposal = self._interpreter.interpret(normalized, allowed_context, history)
-        route = self._registry.route(proposal, current_context)
+        classification = self._classifier.classify(normalized)
+
+        if classification.category != "NAVIGATION":
+            label = (
+                "Website questions"
+                if classification.category == "WEBSITE_QUESTION"
+                else "Website actions"
+            )
+            request_kind = classification.category.lower().replace("_", " ")
+            article = "an" if request_kind[0] in "aeiou" else "a"
+            feedback = (
+                f"I understood this as {article} {request_kind}. "
+                f"{label} are recognized, but that specialist has not been implemented yet."
+            )
+            return VoiceTurnResult(
+                request_id=str(uuid4()),
+                transcript=normalized,
+                language=classification.language,
+                classification=classification,
+                route=SpecialistUnavailable(
+                    status="specialist_unavailable",
+                    category=classification.category,
+                    reason=feedback,
+                ),
+                feedback=feedback,
+            )
+
+        allowed_context = self._navigation_registry.context_for_prompt(current_context)
+        proposal = self._navigation_interpreter.interpret(normalized, allowed_context, history)
+        route = self._navigation_registry.route(proposal, current_context)
         feedback = build_feedback(proposal, route)
         return VoiceTurnResult(
             request_id=str(uuid4()),
             transcript=normalized,
             language=proposal.language,
+            classification=classification,
             proposal=proposal,
             route=route,
             feedback=feedback,

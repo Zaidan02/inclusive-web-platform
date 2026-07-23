@@ -26,6 +26,7 @@
 22. [Known limitations](#22-known-limitations)
 23. [Future calibration and extension points](#23-future-calibration-and-extension-points)
 24. [Operational commands](#24-operational-commands)
+25. [Classifier, orchestrator, and navigation-specialist refactor](#25-classifier-orchestrator-and-navigation-specialist-refactor)
 
 ## 1. Purpose and current scope
 
@@ -861,3 +862,150 @@ Invoke-RestMethod `
 ```
 
 The central project command reference remains `docs/run-project-commands.md`.
+
+## 25. Classifier, orchestrator, and navigation-specialist refactor
+
+This section supersedes the earlier single-interpreter architectural description where the
+details differ. The audio, registry, clarification, privacy, and frontend execution principles
+documented above remain applicable.
+
+The current invariant is:
+
+> Classification identifies the kind of request; it does not judge validity, permission, safety, or feasibility.
+
+After transcription, a schema-constrained classifier returns exactly one category:
+
+- `NAVIGATION`;
+- `WEBSITE_QUESTION`;
+- `ACTION`.
+
+The deterministic orchestrator dispatches only `NAVIGATION` to the implemented navigation
+specialist. Website questions and actions return `specialist_unavailable` with clear feedback.
+This intentionally proves category separation before either future specialist receives authority.
+
+```text
+bounded audio
+  -> transcription
+  -> three-way classifier
+  -> deterministic orchestrator
+       -> NAVIGATION
+            -> navigation interpreter
+            -> navigation registry
+            -> authorized / clarification / rejected
+       -> WEBSITE_QUESTION
+            -> explicit specialist-unavailable result
+       -> ACTION
+            -> explicit specialist-unavailable result
+```
+
+The refactored backend structure is:
+
+| Package | Responsibility |
+|---|---|
+| `api/` | Flask transport, validation, error mapping, and trace logging |
+| `audio/` | OpenAI transcription and speech adapters |
+| `classification/` | Neutral three-way request classification |
+| `core/` | Shared Pydantic schemas |
+| `orchestration/` | Normalization, history sanitization, and specialist dispatch |
+| `specialists/navigation/` | Navigation interpretation, feedback, and deterministic registry |
+| `tests/` | Registry and dispatch-isolation tests |
+
+The root `app.py` remains a stable Gunicorn façade importing `api.app:create_app`, so the
+Docker command and public HTTP endpoints remain unchanged.
+
+Navigation registry version 4 now includes every current React route:
+
+- `/`;
+- `/signin`;
+- `/signup`;
+- `/forgot-password`;
+- `/reset-password`;
+- `/employers`;
+- `/voice-help`;
+- `/candidate`;
+- `/candidate/setup`;
+- `/employer`;
+- `/admin`.
+
+The frontend supplies a distinct context for each route instead of collapsing most pages into
+the landing context. Protected destinations resolve to the existing protected React route;
+existing `RoleRoute` behavior and Symfony APIs remain responsible for the project's current
+authentication and authorization. The voice service does not implement a second JWT system.
+
+During this transition, assistant lifecycle controls such as stop speaking, pause, cancel,
+repeat, help, and disable remain classified into the navigation/control path so existing
+behavior is preserved. A later action specialist may separate those controls behind a dedicated
+priority recognizer.
+
+The response contract now includes `classification`. Navigation responses also include the
+existing `proposal` and deterministic `route`. Question/action responses have `proposal = null`
+and a `specialist_unavailable` route, which React speaks but never executes.
+
+Verification after the refactor:
+
+- Python compilation succeeds.
+- The registry JSON parses at version 4.
+- The frontend production build succeeds.
+- The voice container is healthy.
+- Eleven deterministic navigation-registry tests pass.
+- Three deterministic orchestrator tests prove questions and actions cannot reach navigation.
+- Live requests correctly separate navigation, website questions, website actions, and controls.
+- The saved browser WebM login request still completes transcription, classification,
+  navigation interpretation, and trusted `/signin` resolution.
+
+### Candidate internal-view navigation correction
+
+Registry version 5 distinguishes a React route from the internal view displayed by that route.
+The candidate dashboard keeps Jobs, Applications, and Profile in component state under the
+single `/candidate` URL. Re-navigating to `/candidate` therefore cannot by itself guarantee a
+visible state change.
+
+The registry now exposes:
+
+| Canonical target | Route | Internal tab |
+|---|---|---|
+| `candidate_dashboard` | `/candidate` | `JOBS` |
+| `candidate_jobs` | `/candidate` | `JOBS` |
+| `candidate_applications` | `/candidate` | `APPLICATIONS` |
+| `candidate_profile` | `/candidate` | `PROFILE` |
+
+These targets resolve to a trusted `route_and_tab` action. React Router carries the fixed tab
+identifier in navigation state, and `CandidateDashboard` applies only one of the three declared
+tab values. This works both when entering `/candidate` from another route and when the user is
+already on `/candidate`.
+
+Live checks confirm that “candidate dashboard,” “my applications,” and “candidate profile”
+produce separate targets and open Jobs, Applications, and Profile respectively. Sixteen
+deterministic tests pass after this correction.
+
+### Employer and administrator internal views
+
+Registry version 6 applies the same route-plus-tab model to the remaining multi-view dashboards.
+
+Employer destinations under `/employer`:
+
+| Canonical target | Internal tab |
+|---|---|
+| `employer_dashboard` | `POST_JOB` |
+| `employer_post_job` | `POST_JOB` |
+| `employer_jobs` | `MY_JOBS` |
+| `employer_applications` | `APPLICATIONS` |
+| `employer_profile` | `PROFILE` |
+
+Administrator destinations under `/admin`:
+
+| Canonical target | Internal tab |
+|---|---|
+| `admin_dashboard` | `USERS` |
+| `admin_users` | `USERS` |
+| `admin_archived_users` | `ARCHIVED_USERS` |
+| `admin_applications` | `APPLICATIONS` |
+| `admin_candidate_profiles` | `USER_PROFILES` |
+
+The existing dashboard tab buttons, default tabs, forms, drafts, and Symfony/React security
+behavior are unchanged. Voice navigation supplies the same fixed tab identifiers through React
+Router state. Employer voice tab changes do not clear form values or editing state.
+
+Twenty deterministic tests pass. Live model checks resolve representative natural phrases for
+all Employer and Administrator internal destinations to the correct trusted `route_and_tab`
+action.
