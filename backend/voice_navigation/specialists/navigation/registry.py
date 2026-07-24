@@ -24,9 +24,13 @@ class NavigationRegistry:
 
     def context_for_prompt(self, current_context: str) -> dict[str, Any]:
         context = self._context(current_context)
+        commands = list(context["commands"])
+        for command in ("SCROLL_UP", "SCROLL_DOWN"):
+            if command not in commands:
+                commands.append(command)
         return {
             "context": current_context,
-            "commands": context["commands"],
+            "commands": commands,
             "allowedNavigationTargets": context["navigationTargets"],
             "allNavigationTargets": list(self._data["pages"]),
             "targetDescriptions": {
@@ -43,7 +47,7 @@ class NavigationRegistry:
         command = proposal.command
         target = proposal.target
 
-        if command not in context["commands"]:
+        if command not in [*context["commands"], "SCROLL_UP", "SCROLL_DOWN"]:
             return self._reject(proposal, "Command is not available in the current context.")
 
         if command == "UNKNOWN":
@@ -87,6 +91,15 @@ class NavigationRegistry:
         elif command == "GO_BACK":
             self._require_null_target(proposal)
             action = {"type": "history_back", "value": None}
+        elif command in {"SCROLL_UP", "SCROLL_DOWN"}:
+            amount = target or "small"
+            if amount not in {"small", "page", "edge"}:
+                return self._reject(proposal, "Scroll amount must be small, page, or edge.")
+            action = {
+                "type": "scroll",
+                "direction": "up" if command == "SCROLL_UP" else "down",
+                "amount": amount,
+            }
         elif command == "HELP":
             self._require_null_target(proposal)
             action = {"type": "help", "value": current_context}

@@ -39,6 +39,9 @@ const commandGroups = [
     title: "Control the conversation",
     commands: [
       ["Stop talking", "Interrupt spoken feedback"],
+      ["Scroll down a bit", "Move down by a bounded part of the current screen"],
+      ["Scroll up one page", "Move upward by approximately one screen"],
+      ["Scroll to the top", "Move to the beginning of the page"],
       ["Pause listening", "Temporarily stop the microphone"],
       ["Cancel that", "Discard the current request"],
       ["Repeat that", "Hear the last response again"],

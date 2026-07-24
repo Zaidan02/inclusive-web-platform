@@ -28,6 +28,7 @@ class OpenAIActionInterpreter:
                 "'choose employer' => SELECT_OPTION/account_type/employer; "
                 "'select wheelchair' => TOGGLE_OPTION/disabilities/Wheelchair; "
                 "'open Ice Cream Maker' => OPEN_ITEM/job/Ice Cream Maker; "
+                "'take me to the first matched job' => OPEN_ITEM/matched_job/first; "
                 "'upload my CV' => FOCUS_FIELD/application_document; "
                 "'sign in' => PRESS/sign_in; 'yes' after a confirmation => CONFIRM. "
                 "'no', 'cancel', or 'never mind' after a confirmation => CANCEL_ACTION. "

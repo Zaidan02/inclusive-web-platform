@@ -41,12 +41,18 @@ The voice-navigation subsystem is an accessibility proof of concept for controll
 - safe clarification when several registered destinations are plausible;
 - six-turn, in-memory conversational context;
 - deterministic command and target authorization;
-- controlled React navigation and section reading;
+- controlled React navigation, internal-view switching, section reading, and bounded scrolling;
+- authentication-form and Candidate-dashboard actions through a separate deterministic Action Registry;
+- contextual field corrections, registered selections, dynamic loaded-item resolution, and confirmation-gated consequential actions;
 - generated spoken feedback with browser speech fallback;
 - pause, cancel, stop-speaking, repeat, help, and full-disable controls;
 - a public mini tutorial at `/voice-help`.
 
-This subsystem is not a general autonomous browser agent. It cannot freely inspect the interface, invent routes, construct URLs, click arbitrary elements, submit forms, or perform unregistered operations. Its current role is intentionally narrow: understand a person flexibly, then execute only actions declared by trusted application code.
+This subsystem is not a general autonomous browser agent. It cannot freely inspect the
+interface, invent routes, construct URLs, click arbitrary elements, or perform unregistered
+operations. It can submit only explicitly registered forms after the required confirmation.
+Its role is intentionally narrow: understand a person flexibly, then execute only actions
+declared by trusted application code.
 
 ## 2. Design principle
 
@@ -735,17 +741,17 @@ Production deployment still requires a formal privacy notice, retention review, 
 
 ## 21. Validation and test coverage
 
-The deterministic registry suite currently contains nine tests covering:
+The deterministic voice suite currently contains 36 passing tests. Coverage includes:
 
-1. a registered navigation target resolving to a trusted path;
-2. a model being unable to invent an `admin` navigation target;
-3. a section being unavailable outside its registered context;
-4. `UNKNOWN` producing safe rejection;
-5. stop-speaking resolving as a distinct local action;
-6. pause-listening resolving as a distinct local action;
-7. full voice disable remaining distinct from stop-speaking;
-8. clarification accepting registered choices;
-9. clarification rejecting an unregistered destination.
+1. registered routes, internal dashboard views, and role-context permission results;
+2. rejection of invented destinations, controls, clarification choices, and scroll amounts;
+3. section restrictions and distinct lifecycle controls;
+4. bounded scroll directions and amounts;
+5. classifier/orchestrator specialist isolation;
+6. authentication fields, sensitive password handling, and confirmation-gated submission;
+7. Candidate matching, profile actions, registered disability options, loaded jobs, file-picker
+   focusing, and confirmation-gated applications;
+8. short confirmation replies after a pending action.
 
 Live integration checks have also verified:
 
@@ -767,16 +773,27 @@ Live integration checks have also verified:
 "Yes" without a pending clarification
     -> UNKNOWN
     -> rejected
+
+"Scroll down a bit"
+    -> SCROLL_DOWN / small
+    -> authorized bounded scroll
+
+"Take me to the first matched job"
+    -> ACTION / OPEN_ITEM
+    -> matched_job / first
+    -> authorized
 ```
 
-The frontend production build passes with the global control and tutorial page.
+The frontend production build passes. Live model checks cover navigation, permission denial,
+clarification, authentication actions, Candidate matching/actions, scrolling, and rendered-job
+routing. Deterministic tests do not call OpenAI; live checks do.
 
 ## 22. Known limitations
 
 - Only English and Arabic may currently be selected as transcription languages.
 - Language/accent/microphone calibration remains device dependent.
-- Context registration currently concentrates on public landing, login, and signup pages.
-- Dashboard navigation commands and dashboard section maps are not yet defined.
+- Employer and Administrator navigation is supported, but their form/button actions are not yet
+  registered in the Action Master.
 - Silence detection uses fixed constants rather than adaptive calibration.
 - There is no local wake word.
 - Paused mode cannot hear a spoken resume command because the microphone is off.
@@ -785,7 +802,8 @@ The frontend production build passes with the global control and tutorial page.
 - Browser cancellation does not prove that already-started upstream computation stopped.
 - The interpreter uses only six recent structured turns and is not intended for open-ended conversation.
 - History is lost on full page reload.
-- Clarification currently selects among navigation targets, not arbitrary parameterized operations.
+- Navigation clarification selects among registered destinations. Action corrections use recent
+  structured history, but a general action-clarification protocol is not yet implemented.
 - The service is a proof of concept and still needs production authentication, rate limiting, observability, retry policy, cost controls, and formal security/privacy review.
 - Generated speech and transcription depend on network and upstream API availability.
 
@@ -797,9 +815,12 @@ Recommended next stages are:
 2. Measure transcription word error rate and command success rate separately.
 3. Tune or adapt silence thresholds without hiding transcription failures.
 4. Add more explicit language options only after testing each language.
-5. Expand `commands.json` with role- and page-specific contexts.
-6. Add dashboard routes only when authorization and current-user state are available to the registry layer.
-7. Introduce parameterized commands through new strict schemas rather than free-form action payloads.
+5. Expand the Action Registry and trusted React handlers to Employer and, where useful,
+   Administrator controls.
+6. Add action clarification for ambiguous loaded objects without weakening deterministic
+   execution.
+7. Continue introducing new parameterized operations through strict schemas rather than
+   free-form action payloads.
 8. Add a local or dedicated interruption channel if spoken barge-in is required.
 9. Prevent generated speech echo through echo cancellation and interruption-specific recognition.
 10. Add clarification expiry by time and/or intervening non-clarification turns.
@@ -870,6 +891,10 @@ This section supersedes the earlier single-interpreter architectural description
 details differ. The audio, registry, clarification, privacy, and frontend execution principles
 documented above remain applicable.
 
+> Historical stage note: this section describes the system immediately after the classifier
+> refactor, before the Action Master was implemented. Section 26 and its subsections describe
+> the current action behavior.
+
 The current invariant is:
 
 > Classification identifies the kind of request; it does not judge validity, permission, safety, or feasibility.
@@ -880,9 +905,10 @@ After transcription, a schema-constrained classifier returns exactly one categor
 - `WEBSITE_QUESTION`;
 - `ACTION`.
 
-The deterministic orchestrator dispatches only `NAVIGATION` to the implemented navigation
-specialist. Website questions and actions return `specialist_unavailable` with clear feedback.
-This intentionally proves category separation before either future specialist receives authority.
+At this historical stage, the deterministic orchestrator dispatched only `NAVIGATION` to the
+implemented navigation specialist. Website questions and actions returned
+`specialist_unavailable`. The current system still returns that result for website questions,
+but dispatches supported actions to the Action Master described in Section 26.
 
 ```text
 bounded audio
@@ -895,7 +921,7 @@ bounded audio
             -> authorized / clarification / rejected
        -> WEBSITE_QUESTION
             -> explicit specialist-unavailable result
-       -> ACTION
+       -> ACTION (historical state)
             -> explicit specialist-unavailable result
 ```
 
@@ -1072,7 +1098,7 @@ navigation registry. Each context declares controls with:
 
 | Property | Meaning |
 |---|---|
-| `kind` | `field`, `select`, or `button` |
+| `kind` | `field`, `select`, `multi_select`, `collection`, `file`, or `button` |
 | `label` | Human-readable feedback name |
 | `aliases` | Natural expressions available to the interpreter |
 | `editable` | Whether a field may be changed |
@@ -1087,8 +1113,9 @@ The login context registers `email`, `password`, and `sign_in`. The signup conte
 
 ### 26.3 Canonical action operations
 
-The current schema permits `SET_FIELD`, `CLEAR_FIELD`, `SELECT_OPTION`, `PRESS`, `CONFIRM`,
-`CANCEL_ACTION`, and `UNKNOWN`. A command/control kind mismatch is rejected. Closed enum
+The current schema permits `SET_FIELD`, `CLEAR_FIELD`, `SELECT_OPTION`, `TOGGLE_OPTION`,
+`OPEN_ITEM`, `FOCUS_FIELD`, `PRESS`, `CONFIRM`, `CANCEL_ACTION`, and `UNKNOWN`. A
+command/control kind mismatch is rejected. Closed enum
 membership is checked deterministically because it determines whether the browser can execute
 the operation. Open draft values such as emails, usernames, and passwords are not judged by
 the Action Master. Their React form and Symfony endpoint retain responsibility for validation.
@@ -1121,12 +1148,13 @@ The backend trace similarly replaces the structured proposal and authorized acti
 `[REDACTED]`. This minimizes secondary exposure but does not remove the upstream transcription
 and interpretation exposure.
 
-### 26.5 Current scope and extension rule
+### 26.5 Extension rule established by the authentication pilot
 
-This proof of concept covers authentication forms only. The next form or dashboard must first
-declare semantic controls in the action registry and then implement explicit React handlers.
-Adding aliases alone cannot make an action executable. Arbitrary selectors, DOM mutation, and
-model-generated execution instructions remain prohibited.
+The first pilot covered authentication forms only; Section 26.6 records its subsequent
+Candidate expansion. Every additional form or dashboard must still declare semantic controls
+in the Action Registry and implement explicit React handlers. Adding aliases alone cannot make
+an action executable. Arbitrary selectors, DOM mutation, and model-generated execution
+instructions remain prohibited.
 
 ### 26.6 Candidate Action Master expansion
 
@@ -1158,3 +1186,21 @@ must select the actual local file.
 The Candidate matcher uses the existing `handleGetAiMatch` function, so clicking the button and
 saying “Get my job match” reach the same candidate API and scoring workflow. The voice layer
 does not duplicate or replace matching logic.
+
+### 26.7 Bounded scrolling and rendered-item routing
+
+Navigation Registry version 8 adds `SCROLL_UP` and `SCROLL_DOWN`. The interpreter may select
+only `small`, `page`, or `edge`; it cannot generate pixel values or arbitrary browser code.
+React maps `small` to 35 percent of the viewport with a 220-pixel minimum, `page` to 85 percent
+of the viewport, and `edge` to the document top or bottom. All movement uses smooth native
+scrolling.
+
+A rendered job card is not a website destination even when a user says “take me to the first
+matched job.” The classifier now treats opening, choosing, or selecting a currently rendered
+job, match, application, or company as `ACTION`. Page and dashboard-view movement remains
+`NAVIGATION`.
+
+When compatibility results are visible, an ordinal request such as “select the first job”
+prefers the visible ranked match list. A title request still resolves against the loaded job
+objects. This prevents the first item in the general jobs array from silently replacing the
+first result the user can currently see.

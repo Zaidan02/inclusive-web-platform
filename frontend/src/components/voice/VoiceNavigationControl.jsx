@@ -176,6 +176,14 @@ export default function VoiceNavigationControl() {
       });
     } else if (action.type === "history_back") {
       navigate(-1);
+    } else if (action.type === "scroll") {
+      const direction = action.direction === "up" ? -1 : 1;
+      if (action.amount === "edge") {
+        window.scrollTo({ top: direction < 0 ? 0 : document.documentElement.scrollHeight, behavior: "smooth" });
+      } else {
+        const distance = action.amount === "page" ? window.innerHeight * 0.85 : Math.max(220, window.innerHeight * 0.35);
+        window.scrollBy({ top: direction * distance, behavior: "smooth" });
+      }
     } else if (action.type === "read_section" && action.value) {
       const escaped = window.CSS?.escape ? window.CSS.escape(action.value) : action.value;
       const section = document.querySelector(`[data-voice-section="${escaped}"]`) || document.getElementById(action.value);

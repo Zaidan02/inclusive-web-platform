@@ -1,9 +1,11 @@
 {
-  "version": 7,
+  "version": 8,
   "commands": {
     "NAVIGATE": { "risk": 1 },
     "READ_SECTION": { "risk": 0 },
     "GO_BACK": { "risk": 1 },
+    "SCROLL_UP": { "risk": 0 },
+    "SCROLL_DOWN": { "risk": 0 },
     "HELP": { "risk": 0 },
     "REPEAT": { "risk": 0 },
     "STOP_SPEAKING": { "risk": 0, "local": true },

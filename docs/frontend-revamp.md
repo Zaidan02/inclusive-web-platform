@@ -499,3 +499,32 @@ The complete current architecture, state machine, audio capture mathematics, tra
 - Thirty-three deterministic voice tests and the frontend production build pass. Live
   interpretation checks pass for matching, disability selection, ranked-result opening,
   application filtering, and profile saving.
+
+## Voice scrolling and rendered-job routing
+
+- Added bounded Navigator commands for small scrolls, page-sized scrolls, and top/bottom edges.
+- Kept scrolling deterministic: model-generated pixel distances are rejected.
+- Corrected “take me to the first matched job” from Navigation/UNKNOWN to an Action Master
+  `OPEN_ITEM` request.
+- When match results are visible, ordinal “first/second/third job” requests prefer that visible
+  ranking; job-title requests continue to resolve against loaded jobs.
+- Navigation Registry version 8, thirty-six deterministic tests, representative live
+  interpretations, and the frontend production build pass.
+
+## Voice-navigation documentation consistency pass
+
+- Reviewed only the navigation-related documentation under `docs/`; the original project
+  README was intentionally left unchanged.
+- Updated the technical specification's current scope to include internal views, bounded
+  scrolling, authentication actions, Candidate actions, contextual corrections, and
+  confirmation-gated submissions.
+- Marked the classifier-only Action-unavailable description as a historical stage superseded
+  by the Action Master sections instead of deleting the project history.
+- Updated the canonical Action Master operation and control-kind lists.
+- Replaced the obsolete nine-test summary with the current thirty-six-test coverage summary and
+  representative live checks.
+- Corrected stale limitations that said dashboard contexts and routes were not defined.
+- Clarified that Employer and Administrator navigation exists while their Action Master
+  controls remain future work.
+- Added voice tests and voice-service health to the complete verification sequence in
+  `docs/run-project-commands.md`.

@@ -520,6 +520,14 @@ Check the scoring-service health:
 Invoke-RestMethod http://localhost:5001/health
 ```
 
+Run deterministic voice tests and check the voice service:
+
+```powershell
+cd C:\Users\fouad\Desktop\inclusive-web-platform\backend
+docker compose exec voice-navigation python -m unittest discover -s tests -v
+Invoke-RestMethod http://localhost:5002/health
+```
+
 ## Destructive reset
 
 The following command deletes Docker volumes, including the PostgreSQL database, Composer dependency volume, and Symfony cache volume:

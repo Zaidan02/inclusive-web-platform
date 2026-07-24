@@ -182,6 +182,37 @@ class NavigationRegistryTest(unittest.TestCase):
         )
         self.assertIsInstance(result, RejectedCommand)
 
+    def test_scroll_down_a_small_amount_is_authorized(self) -> None:
+        result = self.registry.route(
+            IntentProposal(command="SCROLL_DOWN", target="small", language="en", confidence=1),
+            "candidate",
+        )
+        self.assertIsInstance(result, AuthorizedCommand)
+        self.assertEqual(
+            {"type": "scroll", "direction": "down", "amount": "small"},
+            result.action,
+        )
+
+    def test_scroll_to_top_uses_bounded_edge_action(self) -> None:
+        result = self.registry.route(
+            IntentProposal(command="SCROLL_UP", target="edge", language="en", confidence=1),
+            "candidate",
+        )
+        self.assertIsInstance(result, AuthorizedCommand)
+        self.assertEqual("edge", result.action["amount"])
+
+    def test_unregistered_scroll_amount_is_rejected(self) -> None:
+        result = self.registry.route(
+            IntentProposal(
+                command="SCROLL_DOWN",
+                target="100000_pixels",
+                language="en",
+                confidence=1,
+            ),
+            "candidate",
+        )
+        self.assertIsInstance(result, RejectedCommand)
+
 
 if __name__ == "__main__":
     unittest.main()

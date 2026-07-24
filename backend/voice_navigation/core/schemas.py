@@ -9,6 +9,8 @@ CommandName = Literal[
     "NAVIGATE",
     "READ_SECTION",
     "GO_BACK",
+    "SCROLL_UP",
+    "SCROLL_DOWN",
     "HELP",
     "REPEAT",
     "STOP_SPEAKING",
@@ -71,7 +73,7 @@ class AuthorizedCommand(BaseModel):
     command: CommandName
     target: str | None
     risk: int = Field(ge=0, le=5)
-    action: dict[str, str | None]
+    action: dict[str, Any]
 
 
 class RejectedCommand(BaseModel):

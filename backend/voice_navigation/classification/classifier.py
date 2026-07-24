@@ -28,7 +28,10 @@ class OpenAIRequestClassifier:
                 "language as a short BCP 47 tag. Context matters when words overlap: if the user is "
                 "already on a page and refers to one of its supplied action controls, classify it as "
                 "ACTION. For example, 'sign in' on the login page means pressing the sign-in button, "
-                "while 'take me to sign in' from another page means NAVIGATION."
+                "while 'take me to sign in' from another page means NAVIGATION. Opening, choosing, "
+                "selecting, or 'taking me to' a currently rendered dynamic item such as the first "
+                "job, second match, application, or company is ACTION, not NAVIGATION. Scrolling "
+                "the current viewport is NAVIGATION."
             ),
             input=f"Current page controls: {current_context or {}}\nTranscript: {transcript}",
             text_format=RequestClassification,

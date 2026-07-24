@@ -610,6 +610,15 @@ function CandidateDashboard() {
         highlightVoiceControl("disabilities");
       } else if (action.type === "open_item") {
         if (action.target === "job") {
+          const ordinal = /^(first|second|third|[123](st|nd|rd)?)$/i.test(String(action.value || "").trim());
+          if (ordinal && aiResults?.results?.length) {
+            const result = findSpokenItem(aiResults.results, action.value, (item) => item.job_title);
+            if (result) {
+              openMatchedJob(result);
+              respond(`Opening the matched job ${result.job_title}.`);
+              return;
+            }
+          }
           const job = findSpokenItem(jobs, action.value, (item) => item.title);
           if (!job) { respond(`I could not find a loaded job matching ${action.value}.`); return; }
           openJobFromCompany(job);
