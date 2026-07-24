@@ -1,0 +1,9 @@
+.git
+.gitignore
+.env
+.env.*
+vendor
+var
+public/uploads
+voice_navigation/.venv
+voice_navigation/__pycache__

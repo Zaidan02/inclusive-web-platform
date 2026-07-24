@@ -7,6 +7,7 @@ services:
       CORS_ALLOW_ORIGIN: '^http://(localhost|127\.0\.0\.1):5173$'
       APP_ENV: prod
       APP_DEBUG: 0
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-16}&charset=utf8"
       SCORING_ENGINE_URL: http://scoring-engine:5001
     working_dir: /app
     volumes:
