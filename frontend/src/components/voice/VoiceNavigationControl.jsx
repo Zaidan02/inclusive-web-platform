@@ -27,6 +27,23 @@ function supportedMimeType() {
   return options.find((type) => window.MediaRecorder?.isTypeSupported(type)) || "";
 }
 
+function currentPageContext(pathname) {
+  const root = document.querySelector("main")
+    || document.querySelector("[data-voice-section]")
+    || document.body;
+  const text = (root?.innerText || "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 12000);
+  return {
+    title: document.title,
+    path: pathname,
+    roleContext: contextForPath(pathname),
+    currentView: document.querySelector("[data-voice-view]")?.dataset.voiceView || "",
+    text,
+  };
+}
+
 export default function VoiceNavigationControl() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -218,6 +235,7 @@ export default function VoiceNavigationControl() {
     body.append("audio", blob, blob.type.includes("ogg") ? "utterance.ogg" : "utterance.webm");
     body.append("currentContext", contextForPath(locationRef.current));
     body.append("currentView", document.querySelector("[data-voice-view]")?.dataset.voiceView || "");
+    body.append("pageContext", JSON.stringify(currentPageContext(locationRef.current)));
     body.append("spokenLanguage", spokenLanguage);
     body.append("history", JSON.stringify(historyRef.current));
     const controller = new AbortController();

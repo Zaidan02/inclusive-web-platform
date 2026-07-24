@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   getAdminApplications,
@@ -99,6 +99,9 @@ function AdminDashboard() {
   const [deletingUser, setDeletingUser] = useState(false);
   const [appStatusFilter, setAppStatusFilter] = useState("");
   const [actionLoadingId, setActionLoadingId] = useState(null);
+  const [catalogueImporting, setCatalogueImporting] = useState(false);
+  const [catalogueImportResult, setCatalogueImportResult] = useState(null);
+  const catalogueInputRef = useRef(null);
 
   const isArchivedView = activeTab === "ARCHIVED_USERS";
   const isUserProfilesView = activeTab === "USER_PROFILES";
@@ -251,6 +254,33 @@ function AdminDashboard() {
     return date.toLocaleDateString("en-GB");
   }
 
+  async function handleCatalogueImport(event) {
+    const files = Array.from(event.target.files || []);
+    event.target.value = "";
+    if (!files.length) return;
+
+    try {
+      setCatalogueImporting(true);
+      setCatalogueImportResult(null);
+      const token = getToken();
+      if (!token) { navigate("/signin"); return; }
+      const body = new FormData();
+      files.forEach((file) => body.append("workbooks[]", file));
+      const response = await fetch(`${API_BASE_URL}/admin/job-catalogue/import`, {
+        method: "POST",
+        headers: { "X-Auth-Token": token },
+        body,
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.details ? `${data.message} ${data.details}` : data.message || "Catalogue import failed.");
+      setCatalogueImportResult({ type: "success", message: data.message, summary: data.summary });
+    } catch (err) {
+      setCatalogueImportResult({ type: "error", message: err.message });
+    } finally {
+      setCatalogueImporting(false);
+    }
+  }
+
   useEffect(() => {
     function handleVoiceAction(event) {
       const action = event.detail.action;
@@ -306,6 +336,9 @@ function AdminDashboard() {
           window.open(url, "_blank", "noopener,noreferrer");
           respond(`Opening ${action.label} for ${app.candidateName || app.jobTitle}.`);
         } else return;
+      } else if (action.type === "focus_field" && action.target === "catalogue_workbooks") {
+        catalogueInputRef.current?.click();
+        respond("Opening the workbook picker. Select one or more XLSX data sheets.");
       } else if (action.type === "press") {
         if (action.target === "toggle_password" && userToEdit) {
           setShowPasswordField((current) => !current);
@@ -521,8 +554,49 @@ function AdminDashboard() {
             {isArchivedView ? "Archived Users" : isUserProfilesView ? "User Profiles" : isApplicationsView ? "Applications" : "Users"}
           </h1>
           </div>
-          <button type="button" style={{ border: "none", borderRadius: "10px", background: "#2563eb", color: "white", padding: "10px 16px", fontSize: "13px", fontWeight: 600, cursor: "pointer" }}>Add data sheets</button>
+          <div>
+            <input
+              ref={catalogueInputRef}
+              type="file"
+              accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+              multiple
+              onChange={handleCatalogueImport}
+              style={{ display: "none" }}
+            />
+            <button
+              type="button"
+              onClick={() => catalogueInputRef.current?.click()}
+              disabled={catalogueImporting}
+              style={{ border: "none", borderRadius: "10px", background: catalogueImporting ? "#94a3b8" : "#2563eb", color: "white", padding: "10px 16px", fontSize: "13px", fontWeight: 600, cursor: catalogueImporting ? "wait" : "pointer" }}
+            >
+              {catalogueImporting ? "Importing data sheets..." : "Add data sheets"}
+            </button>
+          </div>
         </div>
+
+        {catalogueImportResult && (
+          <div
+            role={catalogueImportResult.type === "error" ? "alert" : "status"}
+            style={{
+              margin: "-12px 0 20px",
+              padding: "12px 14px",
+              borderRadius: "10px",
+              border: `1px solid ${catalogueImportResult.type === "error" ? "#fecaca" : "#bbf7d0"}`,
+              background: catalogueImportResult.type === "error" ? "#fef2f2" : "#f0fdf4",
+              color: catalogueImportResult.type === "error" ? "#b91c1c" : "#166534",
+              fontSize: "13px",
+            }}
+          >
+            <strong>{catalogueImportResult.type === "error" ? "Import failed: " : "Import complete: "}</strong>
+            {catalogueImportResult.message}
+            {catalogueImportResult.summary?.warnings?.length > 0 && (
+              <details style={{ marginTop: "8px" }}>
+                <summary>{catalogueImportResult.summary.warnings.length} extractor warning(s)</summary>
+                <ul>{catalogueImportResult.summary.warnings.map((warning) => <li key={warning}>{warning}</li>)}</ul>
+              </details>
+            )}
+          </div>
+        )}
 
         {/* STATS */}
         {!isApplicationsView && (

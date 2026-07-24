@@ -3,6 +3,15 @@ import "../styles/voiceHelp.css";
 
 const commandGroups = [
   {
+    title: "Ask about the current page",
+    commands: [
+      ["What is this page about?", "Summarize readable content on the current page"],
+      ["What does this score mean?", "Explain the score using the visible explanation"],
+      ["Which company posted this job?", "Answer from the currently rendered job details"],
+      ["What information do I need to enter?", "Describe the visible form and instructions"],
+    ],
+  },
+  {
     title: "Fill authentication forms",
     commands: [
       ["Set my email to name@example.com", "Fill and highlight the current email field"],
@@ -119,6 +128,14 @@ export default function VoiceNavigationHelpPage() {
           ))}
         </section>
 
+        <aside className="voice-help__note">
+          <strong>Questions are grounded in the current page</strong>
+          <p>
+            JoIn can summarize and explain readable content currently rendered on the website.
+            It does not answer general-knowledge questions or invent information that is not
+            available on the current page.
+          </p>
+        </aside>
         <aside className="voice-help__note">
           <strong>Important for this version</strong>
           <p>
