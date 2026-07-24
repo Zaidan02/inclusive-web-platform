@@ -65,6 +65,25 @@ Open PowerShell in the repository root:
 cd C:\Users\fouad\Desktop\inclusive-web-platform
 ```
 
+Create the local environment files from the committed templates:
+
+```powershell
+Copy-Item backend\.env.example backend\.env
+Copy-Item backend\voice_navigation\.env.example backend\voice_navigation\.env
+Copy-Item frontend\.env.example frontend\.env.local
+```
+
+Edit `backend/voice_navigation/.env` and set:
+
+```dotenv
+OPENAI_API_KEY=your_actual_openai_api_key
+```
+
+The frontend file is optional because its committed example contains the normal local defaults.
+The Symfony template uses Docker service names and development-only values. Change its
+`APP_SECRET` and `JWT_PASSPHRASE` before treating the environment as anything beyond local
+development. All three generated local files are ignored by Git.
+
 Install frontend dependencies:
 
 ```powershell
@@ -73,7 +92,7 @@ npm.cmd install
 cd ..
 ```
 
-Build and start PostgreSQL, Symfony/PHP, and the Python scoring service:
+Build and start PostgreSQL, Symfony/PHP, the Python scoring service, and voice navigation:
 
 ```powershell
 cd backend
@@ -297,9 +316,20 @@ Place the OpenAI API key in the Git-ignored file:
 backend/voice_navigation/.env
 ```
 
+The file should normally be created from the committed template:
+
+```powershell
+Copy-Item backend\voice_navigation\.env.example backend\voice_navigation\.env
+```
+
 ```env
 OPENAI_API_KEY=your_actual_key
 ```
+
+The same key/model configuration powers transcription, classification, Navigator, Action
+Master, Question Master, and speech output. The optional model, prompt, voice, CORS, and request
+limit variables are documented inline in `.env.example`. The Question Master does not need a
+second API key or environment file.
 
 Recreate the service after changing `.env`:
 
@@ -465,6 +495,13 @@ docker compose exec database psql -U app -d app -c "SELECT highlighted_count, as
 ## Dataset extraction
 
 The extraction script reads the supported workbooks from the Git-ignored `job descriptions` folder and writes the normalized catalogue to `backend/data/job_catalogue.json`.
+
+For normal non-destructive imports, sign in as an administrator and use **Add data sheets** in
+the Admin Console. It accepts one or more `.xlsx` files, rejects duplicate job definitions,
+imports transactionally, and does not purge existing data. Python and OpenPyXL for this UI
+workflow are already included in the PHP Docker image.
+
+The direct command below is for deliberately regenerating the fixture catalogue JSON:
 
 From the repository root:
 

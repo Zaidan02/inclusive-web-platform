@@ -6,7 +6,7 @@ Existing README files are not replaced by this guide.
 
 ## 1. Project architecture
 
-The repository contains four runtime services:
+The repository contains five runtime services:
 
 ```text
 React frontend             http://localhost:5173
@@ -16,17 +16,24 @@ Symfony/PHP backend        http://localhost:8081
         |
         +-- PostgreSQL      Docker port 5432
         |
-        +-- Flask AI        http://localhost:5001
+        +-- Scoring engine  http://localhost:5001
+
+React frontend
+        |
+        +-- Voice assistant http://localhost:5002
 ```
 
-The current Docker Compose configuration starts only:
+Docker Compose starts:
 
 - The Symfony/PHP backend
 - PostgreSQL
+- The Python scoring engine
+- The Python voice assistant
 
-The frontend and AI service are started separately on the host machine.
+The React frontend is the only runtime started separately on the host machine.
 
-The AI service is not required for registration, login, profiles, jobs, or applications. It is required only for AI job matching.
+The scoring engine provides deterministic compatibility matching. The voice service provides
+transcription, classification, Navigator, Action Master, Question Master, and speech output.
 
 ## 2. Prerequisites
 
@@ -35,7 +42,7 @@ Install:
 - Git
 - Docker Desktop using Linux containers
 - Node.js 18 or newer
-- Python 3.12 for the AI service
+- Python 3.12 only when running Python tests or catalogue extraction directly on Windows
 
 Composer and PHP do not need to be installed on Windows because the backend Docker image includes them.
 
@@ -70,9 +77,14 @@ Do not run `cd frontend` when the PowerShell prompt already ends in `\frontend`.
 
 ## 4. Local backend environment
 
-Symfony requires `backend/.env` locally. This file is ignored by Git and should not contain production secrets.
+Symfony requires `backend/.env` locally. This file is ignored by Git and should not contain
+production secrets. Copy the committed template:
 
-Create `backend/.env` with development values similar to:
+```powershell
+Copy-Item backend\.env.example backend\.env
+```
+
+Then review `backend/.env`. The development template contains:
 
 ```dotenv
 APP_ENV=dev
@@ -85,10 +97,11 @@ JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
 JWT_PASSPHRASE=replace-with-a-local-passphrase
 
 MAILER_DSN=null://null
+MAILER_FROM=inclusive.web.platform@example.com
 DEFAULT_URI=http://localhost:8081
 CORS_ALLOW_ORIGIN="^http://(localhost|127\.0\.0\.1):5173$"
 
-AI_SERVICE_URL=http://host.docker.internal:5001/predict
+SCORING_ENGINE_URL=http://scoring-engine:5001
 VERIFICATION_BASE_URL=http://localhost:8081
 RESET_PASSWORD_BASE_URL=http://localhost:5173
 ```
@@ -96,8 +109,51 @@ RESET_PASSWORD_BASE_URL=http://localhost:5173
 Important hostnames:
 
 - Symfony connects to PostgreSQL using `database`, not `localhost`, because both run in Docker Compose.
-- Symfony connects to a host-machine AI service using `host.docker.internal`, not `127.0.0.1`.
+- Symfony connects to the Compose scoring service using `scoring-engine`.
 - TablePlus connects from Windows using `127.0.0.1` and the published PostgreSQL host port.
+
+### Voice assistant environment
+
+Copy the committed voice template:
+
+```powershell
+Copy-Item backend\voice_navigation\.env.example backend\voice_navigation\.env
+```
+
+Set at minimum:
+
+```dotenv
+OPENAI_API_KEY=your_actual_openai_api_key
+```
+
+The remaining values already have development defaults:
+
+- `OPENAI_TRANSCRIPTION_MODEL` and `OPENAI_TRANSCRIPTION_PROMPT` control speech-to-text.
+- `OPENAI_CLASSIFIER_MODEL` chooses Navigation, Website Question, or Action.
+- `OPENAI_INTENT_MODEL` powers the Navigator, Action Master, and Question Master.
+- `OPENAI_SPEECH_MODEL` and `OPENAI_SPEECH_VOICE` control spoken feedback.
+- `VOICE_HOST` and `VOICE_PORT` configure the container listener.
+- `VOICE_ALLOWED_ORIGIN` must match the React origin.
+- `VOICE_MAX_AUDIO_BYTES` and `VOICE_MAX_TRANSCRIPT_CHARS` bound requests.
+
+Never commit `backend/voice_navigation/.env`. Recreate the service after changing it:
+
+```powershell
+cd backend
+docker compose up -d --build --force-recreate voice-navigation
+```
+
+### Frontend environment
+
+The frontend defaults work with the documented local ports. Optional overrides may be placed in
+the Git-ignored `frontend/.env.local`, copied from `frontend/.env.example`:
+
+```powershell
+Copy-Item frontend\.env.example frontend\.env.local
+```
+
+The supported variables are `VITE_BACKEND_URL`, `VITE_API_URL`, and
+`VITE_VOICE_NAVIGATION_URL`. Restart Vite after changing them.
 
 ## 5. Start Docker correctly
 
@@ -116,6 +172,8 @@ Expected services:
 ```text
 php         Up
 database    Up (healthy)
+scoring-engine     Up (healthy)
+voice-navigation   Up (healthy)
 ```
 
 The backend is published using this mapping:
@@ -161,7 +219,11 @@ Expected application tables include:
 - `candidate_profile`
 - `employer_profile`
 - `job_post`
-- `job_task`
+- `job_definition`
+- `job_definition_task`
+- `disability`
+- `disability_task_assessment`
+- `job_post_highlighted_task`
 - `job_application`
 - `doctrine_migration_versions`
 
@@ -287,7 +349,8 @@ The frontend currently defaults to:
 
 ```text
 Backend: http://127.0.0.1:8081
-AI:      http://127.0.0.1:5001/predict
+API:     http://127.0.0.1:8081/api
+Voice:   http://127.0.0.1:5002
 ```
 
 Optional PowerShell overrides:
@@ -295,38 +358,38 @@ Optional PowerShell overrides:
 ```powershell
 $env:VITE_BACKEND_URL="http://localhost:8081"
 $env:VITE_API_URL="http://localhost:8081/api"
-$env:VITE_AI_SERVICE_URL="http://localhost:5001/predict"
+$env:VITE_VOICE_NAVIGATION_URL="http://localhost:5002"
 npm.cmd run dev
 ```
 
 Environment variables set this way apply only to the current PowerShell window.
 
-## 10. Start the AI service
+## 10. Check the Python services
 
-Use Python 3.12 because the pinned `scikit-learn==1.6.1` dependency is not compatible with every newer Python release.
-
-First-time setup:
+Both Python runtime services start through Docker Compose:
 
 ```powershell
-cd ai_service
-py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install --upgrade pip
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe app.py
+cd backend
+docker compose up -d --build scoring-engine voice-navigation
 ```
 
-If the command is entered from `ai_service/`, use:
+Check them from PowerShell:
 
 ```powershell
-.\.venv\Scripts\python.exe app.py
+Invoke-RestMethod http://localhost:5001/health
+Invoke-RestMethod http://localhost:5002/health
 ```
 
-Directly calling the virtual environment’s Python avoids PowerShell activation-policy problems.
+The voice response should report `"openaiConfigured": true`. If it reports false, review
+`backend/voice_navigation/.env` and recreate the voice container.
 
-Health check:
+The PHP image also includes Python and OpenPyXL for the Admin Console's Add Data Sheets
+workflow. Administrators can upload `.xlsx` workbooks from the UI without installing Python on
+Windows. The Compose file mounts `tools/` read-only so Symfony can call the shared extractor.
+After Dockerfile or Compose changes, rebuild the PHP service:
 
-```text
-http://localhost:5001/health
+```powershell
+docker compose up -d --build php
 ```
 
 ## 11. How backend code changes reach Docker
@@ -575,9 +638,14 @@ Check:
 - JWT keys exist under `backend/config/jwt/`.
 - The backend logs with `docker compose logs php --tail 100`.
 
-### Python tries to compile scikit-learn
+### Python or OpenPyXL is missing on Windows
 
-The virtual environment probably uses an unsupported Python version. Recreate it with Python 3.12.
+Normal runtime use is containerized. For direct scoring tests, use Python 3.12. For direct
+catalogue extraction, install OpenPyXL:
+
+```powershell
+py -3.12 -m pip install openpyxl
+```
 
 ## 17. Quick full startup checklist
 
@@ -596,17 +664,11 @@ cd frontend
 npm.cmd run dev
 ```
 
-Terminal 3, only when AI matching is needed:
-
-```powershell
-cd ai_service
-.\.venv\Scripts\python.exe app.py
-```
-
 URLs:
 
 ```text
-Frontend:  http://localhost:5173
-Backend:   http://localhost:8081
-AI health: http://localhost:5001/health
+Frontend:       http://localhost:5173
+Backend:        http://localhost:8081
+Scoring health: http://localhost:5001/health
+Voice health:   http://localhost:5002/health
 ```

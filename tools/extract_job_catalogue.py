@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import re
 from collections import defaultdict
@@ -77,19 +78,22 @@ def infer_job(source: Path, workbook) -> tuple[str, str]:
     raise ValueError(f"Could not infer the job name from {source.name}")
 
 
-def main() -> None:
+def extract_catalogue(sources: list[Path]) -> dict:
     jobs = []
     disabilities: dict[str, str] = {}
     warnings = []
 
-    sources = sorted(SOURCE_DIR.glob("*.xlsx"))
     if not sources:
-        raise FileNotFoundError(f"No .xlsx workbooks found in {SOURCE_DIR}")
+        raise FileNotFoundError("No .xlsx workbooks were supplied.")
 
     used_slugs = set()
     for source in sources:
         filename = source.name
-        workbook = load_workbook(source, data_only=True)
+        # Uploaded files commonly have extensionless temporary paths. Opening the
+        # validated file as a binary stream lets OpenPyXL inspect the OOXML archive
+        # itself instead of rejecting PHP's temporary filename.
+        with source.open("rb") as workbook_stream:
+            workbook = load_workbook(workbook_stream, data_only=True)
         job_slug, job_name = infer_job(source, workbook)
         if job_slug in used_slugs:
             raise ValueError(f"Duplicate inferred job slug {job_slug!r} from {filename}")
@@ -177,7 +181,7 @@ def main() -> None:
             },
         })
 
-    output = {
+    return {
         "schemaVersion": 1,
         "feasibilityValues": ["feasible", "needs_assistance", "avoid"],
         "disabilities": [
@@ -188,17 +192,42 @@ def main() -> None:
         "warnings": warnings,
     }
 
-    OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT_FILE.write_text(json.dumps(output, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"Wrote {OUTPUT_FILE}")
-    for job in jobs:
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "workbooks",
+        nargs="*",
+        type=Path,
+        help="Specific .xlsx workbooks. Defaults to every workbook in the local source folder.",
+    )
+    parser.add_argument("--stdout", action="store_true", help="Write only normalized JSON to stdout.")
+    parser.add_argument("--output", type=Path, default=OUTPUT_FILE, help="Catalogue JSON output path.")
+    args = parser.parse_args()
+
+    sources = args.workbooks or sorted(SOURCE_DIR.glob("*.xlsx"))
+    for source in sources:
+        if not source.is_file():
+            raise ValueError(f"Missing workbook: {source}")
+
+    output = extract_catalogue(sources)
+    rendered = json.dumps(output, indent=2, ensure_ascii=False) + "\n"
+    if args.stdout:
+        print(rendered, end="")
+        return
+
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(rendered, encoding="utf-8")
+    print(f"Wrote {args.output}")
+    for job in output["jobs"]:
         matrix = job["matrix"]
         print(
             f"{job['name']}: {matrix['taskCount']} tasks, "
             f"{matrix['disabilityCount']} disabilities, "
             f"{matrix['assessmentCount']}/{matrix['expectedAssessmentCount']} assessments"
         )
-    print(f"Warnings: {len(warnings)}")
+    print(f"Warnings: {len(output['warnings'])}")
 
 
 if __name__ == "__main__":

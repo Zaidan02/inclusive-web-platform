@@ -16,6 +16,7 @@ from specialists.actions.interpreter import OpenAIActionInterpreter
 from specialists.actions.registry import ActionRegistry
 from specialists.navigation.interpreter import OpenAINavigationInterpreter
 from specialists.navigation.registry import NavigationRegistry
+from specialists.questions.answerer import OpenAIWebsiteQuestionAnswerer
 
 
 def create_app(settings: Settings | None = None) -> Flask:
@@ -57,6 +58,7 @@ def create_app(settings: Settings | None = None) -> Flask:
             str(data.get("currentContext", "home")),
             history,
             str(data.get("currentView", "")) or None,
+            data.get("pageContext") if isinstance(data.get("pageContext"), dict) else None,
         )
         _trace_result(result, str(data.get("currentContext", "home")))
         return jsonify(result.model_dump()), 200
@@ -83,6 +85,12 @@ def create_app(settings: Settings | None = None) -> Flask:
             raise ValueError("History must be valid JSON.") from error
         if not isinstance(history, list):
             raise ValueError("History must be a list.")
+        try:
+            page_context = json.loads(request.form.get("pageContext", "{}"))
+        except json.JSONDecodeError as error:
+            raise ValueError("Page context must be valid JSON.") from error
+        if not isinstance(page_context, dict):
+            raise ValueError("Page context must be an object.")
         service = _service(require_client(), active_settings, registry, action_registry)
         result = service.process_audio(
             audio,
@@ -91,6 +99,7 @@ def create_app(settings: Settings | None = None) -> Flask:
             spoken_language,
             history,
             request.form.get("currentView") or None,
+            page_context,
         )
         _trace_result(result, request.form.get("currentContext", "home"))
         return jsonify(result.model_dump()), 200
@@ -146,6 +155,7 @@ def _service(
         action_registry=action_registry,
         action_interpreter=OpenAIActionInterpreter(client, settings.intent_model),
         max_transcript_chars=settings.max_transcript_chars,
+        question_answerer=OpenAIWebsiteQuestionAnswerer(client, settings.intent_model),
     )
 
 

@@ -62,6 +62,7 @@ security:
         - { path: ^/api/admin/users, roles: PUBLIC_ACCESS }
         - { path: ^/api/admin/candidate-profiles, roles: PUBLIC_ACCESS }
         - { path: ^/api/admin/applications, roles: PUBLIC_ACCESS }
+        - { path: ^/api/admin/job-catalogue/import, roles: PUBLIC_ACCESS }
 
         - { path: ^/api/candidate/profile, roles: PUBLIC_ACCESS }
         - { path: ^/api/candidate/matches, roles: PUBLIC_ACCESS }

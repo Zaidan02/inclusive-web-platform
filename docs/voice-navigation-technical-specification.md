@@ -30,6 +30,8 @@
 26. [Action Master authentication-form proof of concept](#26-action-master-authentication-form-proof-of-concept)
     - [Employer and Administrator coverage](#268-employer-and-administrator-action-master-coverage)
     - [Static capabilities and dynamic records](#269-static-capabilities-and-dynamic-records)
+    - [Administrator catalogue picker](#2610-administrator-catalogue-picker)
+27. [Website Question Master](#27-website-question-master)
 
 ## 1. Purpose and current scope
 
@@ -46,6 +48,7 @@ The voice-navigation subsystem is an accessibility proof of concept for controll
 - controlled React navigation, internal-view switching, section reading, and bounded scrolling;
 - authentication-form, Candidate, Employer, and Administrator actions through a separate deterministic Action Registry;
 - contextual field corrections, registered selections, dynamic loaded-item resolution, and confirmation-gated consequential actions;
+- grounded questions and answers from bounded content currently rendered on the active page;
 - generated spoken feedback with browser speech fallback;
 - pause, cancel, stop-speaking, repeat, help, and full-disable controls;
 - a public mini tutorial at `/voice-help`.
@@ -738,12 +741,16 @@ The API key and raw audio bytes are not printed.
 - History is cleared when voice mode is disabled.
 - Recordings are not persisted by application code.
 - Audio and transcript content are sent to configured OpenAI APIs to provide transcription, interpretation, and speech.
+- For website questions, up to 12,000 normalized characters of readable content from the
+  currently rendered page are also sent to the configured OpenAI API. Input values are not
+  collected by the page reader, but rendered content may include personal data visible to the
+  authenticated user.
 
 Production deployment still requires a formal privacy notice, retention review, consent design, threat model, authentication/rate limiting as appropriate, and jurisdiction-specific compliance review.
 
 ## 21. Validation and test coverage
 
-The deterministic voice suite currently contains 43 passing tests. Coverage includes:
+The deterministic voice suite currently contains 46 passing tests. Coverage includes:
 
 1. registered routes, internal dashboard views, and role-context permission results;
 2. rejection of invented destinations, controls, clarification choices, and scroll amounts;
@@ -756,6 +763,7 @@ The deterministic voice suite currently contains 43 passing tests. Coverage incl
 8. short confirmation replies after a pending action.
 9. dynamic Employer job definitions, tasks, jobs, applications, and confirmation policies;
 10. dynamic Administrator users, role isolation, and high-risk confirmation policies.
+11. Question Master dispatch isolation and bounded page-context sanitization.
 
 Live integration checks have also verified:
 
@@ -792,12 +800,16 @@ The frontend production build passes. Live model checks cover navigation, permis
 clarification, authentication actions, Candidate matching/actions, scrolling, and rendered-job
 routing. Deterministic tests do not call OpenAI; live checks do.
 
+Live Question Master checks additionally verify that visible Candidate matching instructions
+produce a grounded answer and that an unrelated weather question is explicitly reported as
+unavailable on the current page.
+
 ## 22. Known limitations
 
 - Only English and Arabic may currently be selected as transcription languages.
 - Language/accent/microphone calibration remains device dependent.
-- Admin Add Data Sheets remains a visual no-op placeholder and is intentionally not registered
-  as an executable voice action.
+- Admin Add Data Sheets is limited to opening the browser-controlled workbook picker. Voice
+  cannot choose local files or bypass the import endpoint's validation.
 - Silence detection uses fixed constants rather than adaptive calibration.
 - There is no local wake word.
 - Paused mode cannot hear a spoken resume command because the microphone is off.
@@ -911,8 +923,8 @@ After transcription, a schema-constrained classifier returns exactly one categor
 
 At this historical stage, the deterministic orchestrator dispatched only `NAVIGATION` to the
 implemented navigation specialist. Website questions and actions returned
-`specialist_unavailable`. The current system still returns that result for website questions,
-but dispatches supported actions to the Action Master described in Section 26.
+`specialist_unavailable`. The current system dispatches supported actions to the Action Master
+described in Section 26 and website questions to the Question Master described in Section 27.
 
 ```text
 bounded audio
@@ -968,9 +980,9 @@ repeat, help, and disable remain classified into the navigation/control path so 
 behavior is preserved. A later action specialist may separate those controls behind a dedicated
 priority recognizer.
 
-The response contract now includes `classification`. Navigation responses also include the
-existing `proposal` and deterministic `route`. Question/action responses have `proposal = null`
-and a `specialist_unavailable` route, which React speaks but never executes.
+The response contract introduced `classification`. At this historical stage, question/action
+responses had `proposal = null` and a `specialist_unavailable` route. Sections 26 and 27
+supersede that behavior for the implemented Action and Question specialists.
 
 Verification after the refactor:
 
@@ -1223,8 +1235,8 @@ changes, application deletion, and registered document view/download operations.
 Administrator capabilities include search, role/verification/application-status filters,
 loaded user editing, sensitive password-field updates, confirmation-gated save/archive/restore/
 delete operations, loaded candidate profiles, profile-application visibility, and registered
-application document operations. The Add Data Sheets button remains unregistered because its
-underlying import behavior is still intentionally a no-op placeholder.
+application document operations. The implemented Add Data Sheets workflow is registered as the
+`catalogue_workbooks` file control. Voice may open its picker, but cannot select local files.
 
 #### Dynamic-data invariant
 
@@ -1326,3 +1338,89 @@ names static would couple releases to every dataset import. Making execution ful
 would let model output or arbitrary DOM structure define behavior, which would make the system
 less predictable, less testable, and easier to misuse. Static capabilities plus dynamic
 authorized records provide extensibility without surrendering deterministic execution.
+
+### 26.10 Administrator catalogue picker
+
+The Admin Action Registry exposes `catalogue_workbooks` as a static `file` capability.
+`FOCUS_FIELD` opens the same hidden multi-file picker as the Add Data Sheets button. The voice
+assistant cannot supply filesystem paths, manufacture file contents, or bypass the browser's
+selection dialog.
+
+After manual selection, React uploads the workbooks to the authenticated Symfony catalogue
+endpoint. The Python extractor normalizes their job, task, disability, and feasibility records;
+Symfony validates duplicate policy and performs the database transaction. The voice subsystem
+does not parse or persist catalogue data.
+
+Once imported, job definitions and tasks become dynamically addressable because Employer React
+screens receive them through the existing API. No voice-registry entry is added for an imported
+job or task name.
+
+## 27. Website Question Master
+
+### 27.1 Scope
+
+The Question Master is a bounded reader, not a general-knowledge assistant. It answers questions
+about readable content currently rendered in the user's JoIn page. Supported examples include:
+
+- summarizing the purpose of the current page;
+- explaining visible instructions, labels, statuses, job details, and scoring explanations;
+- identifying information explicitly shown in a loaded job, company, application, or profile;
+- describing what a visible form asks the user to provide.
+
+It does not browse the web, query Symfony or PostgreSQL independently, inspect hidden application
+state, or answer from general model knowledge. If the current page does not contain enough
+information, it returns an explicit ungrounded answer such as “That information is not available
+on the current page.”
+
+### 27.2 Page-context collection
+
+For each audio turn, React creates a fresh context object:
+
+```json
+{
+  "title": "JoIn",
+  "path": "/candidate",
+  "roleContext": "candidate",
+  "currentView": "JOBS",
+  "text": "Compatibility Match Use your saved profile ..."
+}
+```
+
+The text comes from `innerText` of the current `main` element, falling back to the registered
+voice section or document body. Browser-rendered text is whitespace-normalized and truncated to
+12,000 characters. Form input values are not extracted. The snapshot represents content already
+visible to the authenticated browser; it does not grant access to another role or fetch records.
+
+The frontend sends this JSON as `pageContext` with `/api/voice/process`. The text-only
+`/api/voice/interpret` endpoint accepts the same object for diagnostics and integration tests.
+
+### 27.3 Dispatch and grounding
+
+The three-way classifier first returns `WEBSITE_QUESTION`. The orchestrator dispatches only that
+category to `OpenAIWebsiteQuestionAnswerer`; navigation and action interpreters are not called.
+The specialist returns a schema-constrained object:
+
+```json
+{
+  "answer": "It uses your saved profile to generate compatibility scores.",
+  "grounded": true
+}
+```
+
+The public route has status `answered`, category `WEBSITE_QUESTION`, the bounded answer, and the
+grounding flag. React performs no navigation or action for this status; it simply speaks the
+feedback through the existing TTS pipeline.
+
+### 27.4 Safety and limitations
+
+The Question Master instruction treats page content as untrusted data rather than executable
+instructions. Prompt-like text embedded in a job description or other page content must be
+ignored. The answerer is instructed to use only supplied page facts and to avoid claiming that
+an operation occurred.
+
+Grounding remains model-enforced rather than a formal citation proof. The 12,000-character bound
+may omit content from exceptionally long pages, and only currently rendered text is available.
+Content behind a closed dialog, collapsed panel, another dashboard tab, or unloaded pagination
+must be opened before it can be discussed. This design deliberately avoids a vector database:
+the requested scope is reading the active website view, not building a global JoIn knowledge
+base.

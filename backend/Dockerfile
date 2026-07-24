@@ -4,6 +4,8 @@ RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libpq-dev \
+    python3 \
+    python3-openpyxl \
     && docker-php-ext-install pdo pdo_pgsql pgsql opcache \
     && a2enmod rewrite
 

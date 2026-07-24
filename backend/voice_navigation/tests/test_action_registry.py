@@ -138,6 +138,14 @@ class ActionRegistryTest(unittest.TestCase):
         self.assertEqual("needs_confirmation", result.status)
         self.assertEqual("future-user", result.action["value"])
 
+    def test_admin_catalogue_upload_only_opens_registered_file_picker(self) -> None:
+        result = self.registry.route(
+            self.proposal("FOCUS_FIELD", "catalogue_workbooks"),
+            "admin",
+        )
+        self.assertEqual("authorized", result.status)
+        self.assertEqual("focus_field", result.action["type"])
+
     def test_employer_control_is_unavailable_in_admin_context(self) -> None:
         result = self.registry.route(
             self.proposal("PRESS", "submit_job"),

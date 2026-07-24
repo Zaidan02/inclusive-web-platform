@@ -11,6 +11,7 @@ services:
     working_dir: /app
     volumes:
       - .:/app
+      - ../tools:/tools:ro
       - vendor_data:/app/vendor
       - symfony_var:/app/var
     ports:

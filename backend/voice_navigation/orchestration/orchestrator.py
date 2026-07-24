@@ -4,7 +4,7 @@ from uuid import uuid4
 
 from audio.transcription import OpenAITranscriber
 from classification.classifier import OpenAIRequestClassifier
-from core.schemas import RequestClassification, SpecialistUnavailable, VoiceTurnResult
+from core.schemas import AnsweredQuestion, RequestClassification, SpecialistUnavailable, VoiceTurnResult
 from specialists.actions.interpreter import OpenAIActionInterpreter
 from specialists.actions.registry import ActionRegistry
 from specialists.navigation.feedback import build_feedback
@@ -22,6 +22,7 @@ class VoiceOrchestrator:
         action_registry: ActionRegistry,
         action_interpreter: OpenAIActionInterpreter,
         max_transcript_chars: int,
+        question_answerer=None,
     ) -> None:
         self._transcriber = transcriber
         self._classifier = classifier
@@ -30,6 +31,7 @@ class VoiceOrchestrator:
         self._action_registry = action_registry
         self._action_interpreter = action_interpreter
         self._max_transcript_chars = max_transcript_chars
+        self._question_answerer = question_answerer
 
     def interpret_text(
         self,
@@ -37,6 +39,7 @@ class VoiceOrchestrator:
         current_context: str,
         recent_history: list[dict] | None = None,
         current_view: str | None = None,
+        page_context: dict | None = None,
     ) -> VoiceTurnResult:
         normalized = " ".join(transcript.split())
         if not normalized:
@@ -56,6 +59,21 @@ class VoiceOrchestrator:
             )
 
         if classification.category == "WEBSITE_QUESTION":
+            if self._question_answerer is not None:
+                answer = self._question_answerer.answer(normalized, page_context, history)
+                return VoiceTurnResult(
+                    request_id=str(uuid4()),
+                    transcript=normalized,
+                    language=classification.language,
+                    classification=classification,
+                    route=AnsweredQuestion(
+                        status="answered",
+                        category="WEBSITE_QUESTION",
+                        grounded=answer.grounded,
+                        answer=answer.answer,
+                    ),
+                    feedback=answer.answer,
+                )
             label = "Website questions"
             request_kind = classification.category.lower().replace("_", " ")
             article = "an" if request_kind[0] in "aeiou" else "a"
@@ -139,9 +157,16 @@ class VoiceOrchestrator:
         spoken_language: str | None = None,
         recent_history: list[dict] | None = None,
         current_view: str | None = None,
+        page_context: dict | None = None,
     ) -> VoiceTurnResult:
         transcript = self._transcriber.transcribe(audio, filename, spoken_language)
-        return self.interpret_text(transcript, current_context, recent_history, current_view)
+        return self.interpret_text(
+            transcript,
+            current_context,
+            recent_history,
+            current_view,
+            page_context,
+        )
 
     @staticmethod
     def _sanitize_history(history: list[dict]) -> list[dict]:

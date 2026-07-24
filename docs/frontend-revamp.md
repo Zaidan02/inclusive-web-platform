@@ -194,7 +194,8 @@ Each schema concern was introduced through its own Doctrine migration file rathe
 - The spreadsheet extraction process was designed to be reusable across datasets that follow the supported structure.
 - Extracted catalogue data is stored in `backend/data/job_catalogue.json` for deterministic fixture loading.
 - Source job-description dataset folders are ignored by Git so raw spreadsheet files are not committed accidentally.
-- The administrator interface includes an Add Data Sheets action as a visual placeholder. Upload/import behavior is intentionally not connected yet.
+- The administrator interface originally included Add Data Sheets as a visual placeholder. The
+  completed transactional upload workflow is recorded later in this document.
 
 ### Employer job-posting experience
 
@@ -288,7 +289,8 @@ The following checks passed after the performance and fixture update:
 
 - The deterministic candidate/job scoring engine remains paused.
 - Employer-provided assistance or accommodation capacity must be incorporated into the future scoring design because support can change whether a task is feasible.
-- The Add Data Sheets administrator action still needs its upload, validation, preview, and import workflow.
+- The Add Data Sheets workflow was subsequently implemented with upload validation, extractor
+  warnings, duplicate protection, and transactional import.
 
 ## Scoring engine integration update
 
@@ -358,7 +360,8 @@ Future changes to scoring should be evidence-driven. The next calibration stage 
 ### Work intentionally left for later
 
 - Replace the proof-of-concept accommodation checkbox with structured accommodation types and, if domain review requires it, task-specific support capabilities.
-- Build the administrator spreadsheet upload, validation, preview, error-reporting, and transactional import workflow behind the existing placeholder action.
+- The administrator spreadsheet upload, validation, error-reporting, and transactional import
+  workflow has now been built behind the original placeholder action.
 - Expand and professionally validate the job catalogue and disability/task assessment data.
 - Calibrate the scoring policy using expert-reviewed benchmark cases rather than subjective percentage expectations.
 - Add production monitoring, security review, broader integration/end-to-end coverage, and deployment hardening.
@@ -423,6 +426,8 @@ The complete current architecture, state machine, audio capture mathematics, tra
 - Classification determines request type only. It does not judge whether a request is logical, supported, authorized, safe, or executable.
 - Added a deterministic orchestrator that dispatches only navigation to the implemented navigation specialist.
 - Questions and actions are recognized but return `specialist_unavailable` until their specialists are implemented, preventing them from falling through into navigation.
+- This was an intermediate classifier-refactor state. The Action Master and bounded Website
+  Question Master were subsequently implemented without removing this historical record.
 - Expanded the navigation registry to version 4 with every current React route and distinct frontend contexts for each route.
 - Added readable root markers to candidate, candidate-setup, employer, and admin screens.
 - Protected destinations still rely on the existing React role guards and Symfony API authentication/authorization. No parallel voice JWT system was introduced.
@@ -547,12 +552,12 @@ The complete current architecture, state machine, audio capture mathematics, tra
 - Added confirmation to posting/updating jobs, deleting jobs/applications, application decisions,
   saving administrator user changes, archive/restore/delete operations, and logout.
 - Kept Symfony and existing React route guards as authentication/authorization authorities.
-- Left Admin Add Data Sheets unregistered because the visible button remains an intentional
-  no-op placeholder.
+- Add Data Sheets was initially left unregistered while its visible button was a no-op. It is
+  now a registered browser-controlled file picker following implementation of the importer.
 - Preserved browser-controlled local file selection and documented browser popup/download
   limitations.
 - Added seven deterministic contracts for future dynamic records, role isolation, and
-  confirmation preservation. The complete deterministic voice suite now contains forty-three
+  confirmation preservation. The complete deterministic voice suite now contains forty-four
   passing tests.
 - Live interpretation passes for representative Employer and Administrator phrases without
   fixture-specific registry values, and the frontend production build passes.
@@ -586,3 +591,64 @@ The complete current architecture, state machine, audio capture mathematics, tra
 - Symfony and React guards continue to decide whether the authenticated user may access the
   loaded data or invoke the existing handler. Dynamic resolution never creates additional
   authority.
+
+## Administrator job-catalogue spreadsheet import
+
+- Activated the Admin Console's Add Data Sheets button with a multi-file `.xlsx` picker.
+- Reused `tools/extract_job_catalogue.py` as the single workbook-normalization implementation;
+  its CLI now supports explicit workbook paths and JSON output for application integration.
+- Added Python and OpenPyXL to the PHP container and mounted the repository tools directory
+  read-only. Symfony executes the trusted extractor with an argument array rather than a shell
+  command.
+- Added an Admin-only `POST /api/admin/job-catalogue/import` endpoint. It accepts one or more
+  workbooks, enforces the `.xlsx` type and a 10 MB per-file limit, and returns an import summary
+  and extractor warnings.
+- Symfony transactionally creates new disabilities when necessary, then inserts job
+  definitions, tasks, and disability/task assessments. Imported tasks default to weight `1`,
+  `mandatory = false`, and imported job definitions default to minimum education `none` for
+  later administrator review.
+- Existing job definitions are never overwritten. A duplicate slug or name rejects the entire
+  batch and rolls the transaction back, protecting tasks already referenced by live job posts.
+- The workflow never invokes Doctrine fixtures and never purges users, profiles, companies,
+  postings, applications, or existing catalogue data.
+- The Admin UI displays progress, success/error feedback, aggregate imported counts, and
+  expandable extractor warnings.
+- Registered `catalogue_workbooks` in the Admin Action Master. Voice may open the browser file
+  picker, but browser security still requires the administrator to select local files.
+- Newly imported jobs and tasks immediately fit the existing dynamic voice-resolution model;
+  their names require no Python voice-registry changes.
+
+## Website Question Master completion
+
+- Implemented the third classifier branch as a bounded reader after completing Navigator and
+  Action Master coverage.
+- React now sends a fresh sanitized snapshot of the current page with each voice request:
+  document title, route, role context, active dashboard view, and up to 12,000 characters of
+  normalized rendered text.
+- The reader does not collect form input values, browse the web, query hidden database state,
+  or use a global knowledge base.
+- Added a schema-constrained Question Master that answers only from the supplied current-page
+  snapshot. Missing information produces an explicit ungrounded answer instead of a guess.
+- Page content is treated as untrusted data, so instructions embedded inside job descriptions
+  or other rendered content are not execution instructions.
+- Question results use the existing speech pipeline but never dispatch a React navigation or
+  action.
+- Added current-page question examples and the grounding boundary to the public voice tutorial.
+- Added deterministic specialist-isolation and context-bounding tests. The complete voice suite
+  now contains forty-six passing tests, the frontend production build passes, and live checks
+  confirm both grounded visible-page answers and refusal of unrelated general questions.
+
+## Delivery documentation and environment templates
+
+- Audited the setup guide against the final five-service architecture and removed the obsolete
+  host-run AI-service instructions.
+- Documented that Docker Compose runs Symfony, PostgreSQL, the scoring engine, and voice
+  assistant while Vite runs the React frontend separately.
+- Added committed `backend/.env.example` and `frontend/.env.example` templates alongside the
+  existing voice-service template.
+- Documented every frontend URL override and every voice variable, including the shared model
+  used by Navigator, Action Master, and Question Master.
+- Added first-time copy commands, secret-handling warnings, rebuild requirements, health checks,
+  and current service URLs.
+- Clarified that Admin spreadsheet upload uses Python/OpenPyXL inside the PHP image and that the
+  direct extraction command is only for regenerating fixture catalogue JSON.

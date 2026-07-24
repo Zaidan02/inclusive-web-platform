@@ -115,6 +115,23 @@ class SpecialistUnavailable(BaseModel):
     action: None = None
 
 
+class WebsiteQuestionAnswer(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    answer: str = Field(min_length=1, max_length=1200)
+    grounded: bool
+
+
+class AnsweredQuestion(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    status: Literal["answered"]
+    category: Literal["WEBSITE_QUESTION"]
+    grounded: bool
+    answer: str = Field(min_length=1, max_length=1200)
+    action: None = None
+
+
 class AuthorizedAction(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -157,6 +174,7 @@ class VoiceTurnResult(BaseModel):
         | PermissionDeniedCommand
         | ClarificationCommand
         | SpecialistUnavailable
+        | AnsweredQuestion
         | AuthorizedAction
         | ActionRejected
     )

@@ -167,6 +167,7 @@
         "role_filter": { "kind": "select", "label": "role filter", "aliases": ["role filter", "filter by role"], "editable": true, "valueType": "enum", "options": ["all", "ADMIN", "EMPLOYER", "USER"], "risk": 0 },
         "verification_filter": { "kind": "select", "label": "verification filter", "aliases": ["verification filter", "verified users"], "editable": true, "valueType": "enum", "options": ["all", "VERIFIED", "UNVERIFIED"], "risk": 0 },
         "admin_application_status": { "kind": "select", "label": "application status filter", "aliases": ["application status", "status filter"], "editable": true, "valueType": "enum", "options": ["all", "pending", "in_review", "accepted", "rejected"], "risk": 0 },
+        "catalogue_workbooks": { "kind": "file", "label": "job catalogue workbooks", "aliases": ["add data sheets", "upload data sheets", "import job catalogue", "add job spreadsheets"], "risk": 1 },
         "admin_user": { "kind": "collection", "label": "user", "aliases": ["user", "account"], "valueType": "text", "risk": 0 },
         "edit_user": { "kind": "collection", "label": "edit user", "aliases": ["edit user", "modify user"], "valueType": "text", "risk": 1 },
         "archive_user": { "kind": "collection", "label": "archive user", "aliases": ["archive user"], "valueType": "text", "risk": 3, "requiresConfirmation": true },
