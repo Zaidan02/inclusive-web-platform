@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getToken, logout } from "../services/authService";
 import { applyToJob, getCandidateApplications, getCandidateMatches } from "../services/candidateApi";
@@ -47,6 +47,26 @@ const globalStyles = `
     background-size: 22px 22px;
   }
 `;
+
+function highlightVoiceControl(controlId) {
+  requestAnimationFrame(() => {
+    const control = document.querySelector(`[data-voice-control="${controlId}"]`);
+    control?.focus?.();
+    control?.classList.add("voice-action-highlight");
+    window.setTimeout(() => control?.classList.remove("voice-action-highlight"), 1800);
+  });
+}
+
+function findSpokenItem(items, spokenValue, labelOf) {
+  if (!items?.length) return null;
+  const normalized = String(spokenValue || "").trim().toLowerCase();
+  const ordinals = { first: 0, "1": 0, "1st": 0, second: 1, "2": 1, "2nd": 1, third: 2, "3": 2, "3rd": 2 };
+  if (normalized in ordinals) return items[ordinals[normalized]] || null;
+  return items.find((item) => {
+    const label = String(labelOf(item) || "").toLowerCase();
+    return label === normalized || label.includes(normalized) || normalized.includes(label);
+  }) || null;
+}
 
 function BriefcaseIcon({ size = 20 }) {
   return (
@@ -181,6 +201,22 @@ function JobResultCard({ result, index, onOpenJob }) {
   const p = palettes[index] || palettes[0];
   const compatibilityBand = getCompatibilityBand(result);
 
+  useEffect(() => {
+    function handleVoiceAction(event) {
+      const action = event.detail.action;
+      if (action?.type !== "open_item" || action.target !== "scoring_explanation") return;
+      const value = String(action.value || "").trim().toLowerCase();
+      const ordinalIndex = { first: 0, "1": 0, "1st": 0, second: 1, "2": 1, "2nd": 1, third: 2, "3": 2, "3rd": 2 }[value];
+      const title = String(result.job_title || "").toLowerCase();
+      if (ordinalIndex !== index && title !== value && !title.includes(value) && !value.includes(title)) return;
+      setExpanded(true);
+      event.detail.handled = true;
+      event.detail.feedback = `Showing the scoring explanation for ${result.job_title}.`;
+    }
+    window.addEventListener("join:voice-action", handleVoiceAction);
+    return () => window.removeEventListener("join:voice-action", handleVoiceAction);
+  }, [index, result.job_title]);
+
   return (
     <div className="result-card-in" style={{ border: `1px solid ${index === 0 ? p.border : "#e8edf5"}`, borderRadius: "16px", padding: "16px", marginBottom: "10px", background: index === 0 ? p.light : "#fafbfc", animationDelay: `${index * 0.1}s` }}>
       <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
@@ -198,7 +234,7 @@ function JobResultCard({ result, index, onOpenJob }) {
           </div>
         </div>
       </div>
-      <button onClick={() => setExpanded(!expanded)} style={{ marginTop: "12px", width: "100%", background: "transparent", border: `1px solid ${p.border}`, borderRadius: "8px", padding: "7px", color: p.color, fontWeight: "500", fontSize: "12px", cursor: "pointer", fontFamily: "Inter, sans-serif", transition: "background 0.15s" }}>
+      <button data-voice-control="scoring_explanation" onClick={() => setExpanded(!expanded)} style={{ marginTop: "12px", width: "100%", background: "transparent", border: `1px solid ${p.border}`, borderRadius: "8px", padding: "7px", color: p.color, fontWeight: "500", fontSize: "12px", cursor: "pointer", fontFamily: "Inter, sans-serif", transition: "background 0.15s" }}>
         {expanded ? "▲ Hide explanation" : "▼ Show scoring explanation"}
       </button>
       {expanded && (
@@ -317,7 +353,7 @@ function AiJobMatchCard({ aiLoading, aiError, aiResults, selectedDisabilities, o
       <p style={{ ...styles.aiDescription, textAlign: "center", width: "100%" }}>
         Use your saved profile to get personalized compatibility scores before exploring opportunities.
       </p>
-      <button onClick={onMatch} disabled={aiLoading} className={aiLoading ? "shimmer-btn" : "ai-btn-idle"} style={{ ...styles.aiButton, opacity: aiLoading ? 0.9 : 1, cursor: aiLoading ? "not-allowed" : "pointer" }}>
+      <button data-voice-control="run_job_match" onClick={onMatch} disabled={aiLoading} className={aiLoading ? "shimmer-btn" : "ai-btn-idle"} style={{ ...styles.aiButton, opacity: aiLoading ? 0.9 : 1, cursor: aiLoading ? "not-allowed" : "pointer" }}>
         {aiLoading ? <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}><SpinnerIcon /> Analyzing your profile...</span> : "Get My Job Match"}
       </button>
       {aiError && <div style={styles.aiErrorBox}>⚠️ {aiError}</div>}
@@ -364,6 +400,8 @@ function CandidateDashboard() {
   const [loadingApplications, setLoadingApplications] = useState(false);
   const [applicationsError, setApplicationsError] = useState("");
   const [applicationStatusFilter, setApplicationStatusFilter] = useState("all");
+  const applicationDocumentRef = useRef(null);
+  const recommendationLetterRef = useRef(null);
 
   useEffect(() => { fetchCandidateProfile(); }, []);
   useEffect(() => {
@@ -531,6 +569,93 @@ function CandidateDashboard() {
   }
 
   function handleLogout() { logout(); navigate("/signin"); }
+
+  useEffect(() => {
+    function handleVoiceAction(event) {
+      const { action } = event.detail;
+      if (!action) return;
+      const basicFieldMap = { first_name: "firstName", last_name: "lastName", location: "location", phone: "phone", about: "about" };
+      const respond = (feedback) => {
+        event.detail.handled = true;
+        event.detail.feedback = feedback;
+      };
+
+      if (action.type === "set_field" || action.type === "clear_field") {
+        const value = action.type === "clear_field" ? "" : action.value;
+        if (basicFieldMap[action.target]) {
+          setActiveTab("PROFILE");
+          setBasicInfo((current) => ({ ...current, [basicFieldMap[action.target]]: value }));
+        } else if (action.target === "disability_search") {
+          setActiveTab("PROFILE");
+          setSearchTerm(value);
+        } else return;
+        respond(`I set ${action.label} to ${value}. Please check it.`);
+        highlightVoiceControl(action.target);
+      } else if (action.type === "select_option") {
+        if (action.target === "education_level") {
+          setActiveTab("PROFILE");
+          setEducationLevel(action.value);
+        } else if (action.target === "application_status") {
+          setActiveTab("APPLICATIONS");
+          setApplicationStatusFilter(action.value);
+        } else if (action.target === "company_view" && selectedCompany) {
+          setCompanyModalTab(action.value);
+        } else return;
+        respond(`I selected ${action.value.replaceAll("_", " ")} for ${action.label}. Please check it.`);
+        highlightVoiceControl(action.target);
+      } else if (action.type === "toggle_option" && action.target === "disabilities") {
+        setActiveTab("PROFILE");
+        handleDisabilityChange(action.value);
+        respond(`I changed the ${action.value} selection. Please check it.`);
+        highlightVoiceControl("disabilities");
+      } else if (action.type === "open_item") {
+        if (action.target === "job") {
+          const job = findSpokenItem(jobs, action.value, (item) => item.title);
+          if (!job) { respond(`I could not find a loaded job matching ${action.value}.`); return; }
+          openJobFromCompany(job);
+          respond(`Opening ${job.title}.`);
+        } else if (action.target === "matched_job") {
+          const result = findSpokenItem(aiResults?.results, action.value, (item) => item.job_title);
+          if (!result) { respond(`I could not find a matching result for ${action.value}.`); return; }
+          openMatchedJob(result);
+          respond(`Opening the matched job ${result.job_title}.`);
+        } else if (action.target === "company") {
+          const company = findSpokenItem(jobs, action.value, (item) => item.companyName);
+          if (!company) { respond(`I could not find a loaded company matching ${action.value}.`); return; }
+          openCompanyProfile(company);
+          respond(`Opening ${company.companyName}.`);
+        } else return;
+      } else if (action.type === "focus_field") {
+        const input = action.target === "application_document" ? applicationDocumentRef.current : action.target === "recommendation_letter" ? recommendationLetterRef.current : null;
+        if (!input) return;
+        input.focus();
+        highlightVoiceControl(action.target);
+        respond(`I focused the ${action.label} picker. Choose the local file using the visible file control.`);
+      } else if (action.type === "press") {
+        if (action.target === "run_job_match") {
+          setActiveTab("JOBS"); setSelectedJob(null); handleGetAiMatch();
+        } else if (action.target === "save_profile") {
+          setActiveTab("PROFILE"); handleSaveProfile();
+        } else if (action.target === "clear_disabilities") {
+          setActiveTab("PROFILE"); setSelectedDisabilities([]);
+        } else if (action.target === "back_to_jobs") {
+          setSelectedJob(null); setActiveTab("JOBS");
+        } else if (action.target === "open_selected_company" && selectedJob) {
+          openCompanyProfile(selectedJob);
+        } else if (action.target === "close_company" && selectedCompany) {
+          setSelectedCompany(null);
+        } else if (action.target === "submit_application" && selectedJob) {
+          handleSubmitApplication();
+        } else if (action.target === "logout") {
+          handleLogout();
+        } else return;
+        respond(`Activated ${action.label}.`);
+        highlightVoiceControl(action.target);
+      }
+    }
+    window.addEventListener("join:voice-action", handleVoiceAction);
+    return () => window.removeEventListener("join:voice-action", handleVoiceAction);
+  }, [aiResults, basicInfo, educationLevel, jobs, selectedCompany, selectedDisabilities, selectedJob]);
   function getUserInitials(name) {
     if (!name) return "C";
     const parts = name.trim().split(" ").filter(Boolean);
@@ -565,7 +690,7 @@ function CandidateDashboard() {
             <p style={styles.userName}>{candidateName}</p>
             <p style={styles.userRole}>Candidate</p>
           </div>
-          <button onClick={handleLogout} style={styles.logoutBtn}>Log out</button>
+          <button data-voice-control="logout" onClick={handleLogout} style={styles.logoutBtn}>Log out</button>
         </div>
       </header>
 
@@ -609,13 +734,13 @@ function CandidateDashboard() {
                 {loadingProfile && <p style={styles.infoText}>Loading...</p>}
                 {errorMessage && <p style={styles.errorText}>{errorMessage}</p>}
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "12px" }}><input value={basicInfo.firstName} onChange={(e) => setBasicInfo((p) => ({ ...p, firstName: e.target.value }))} placeholder="First name" style={{ ...styles.searchInput, paddingLeft: "12px" }} /><input value={basicInfo.lastName} onChange={(e) => setBasicInfo((p) => ({ ...p, lastName: e.target.value }))} placeholder="Last name" style={{ ...styles.searchInput, paddingLeft: "12px" }} /><input value={basicInfo.location} onChange={(e) => setBasicInfo((p) => ({ ...p, location: e.target.value }))} placeholder="City or region" style={{ ...styles.searchInput, paddingLeft: "12px" }} /><input value={basicInfo.phone} onChange={(e) => setBasicInfo((p) => ({ ...p, phone: e.target.value }))} placeholder="Phone (optional)" style={{ ...styles.searchInput, paddingLeft: "12px" }} /></div>
-                <textarea value={basicInfo.about} onChange={(e) => setBasicInfo((p) => ({ ...p, about: e.target.value }))} placeholder="A short introduction or your work goals (optional)" rows="3" style={{ width: "100%", border: "1px solid #e2e8f0", borderRadius: "10px", padding: "10px 12px", resize: "vertical", marginBottom: "12px", fontFamily: "inherit" }} />
-                <label style={{ display: "grid", gap: "6px", marginBottom: "14px", fontSize: "12px", color: "#475569" }}>Highest education level<select value={educationLevel} onChange={(e) => setEducationLevel(e.target.value)} style={{ ...styles.searchInput, paddingLeft: "12px" }}><option value="">Select education level</option><option value="none">No formal education</option><option value="primary">Primary school</option><option value="middle_school">Middle school</option><option value="high_school">High school</option><option value="vocational">Vocational or technical education</option><option value="university">University</option></select></label>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "12px" }}><input data-voice-control="first_name" value={basicInfo.firstName} onChange={(e) => setBasicInfo((p) => ({ ...p, firstName: e.target.value }))} placeholder="First name" style={{ ...styles.searchInput, paddingLeft: "12px" }} /><input data-voice-control="last_name" value={basicInfo.lastName} onChange={(e) => setBasicInfo((p) => ({ ...p, lastName: e.target.value }))} placeholder="Last name" style={{ ...styles.searchInput, paddingLeft: "12px" }} /><input data-voice-control="location" value={basicInfo.location} onChange={(e) => setBasicInfo((p) => ({ ...p, location: e.target.value }))} placeholder="City or region" style={{ ...styles.searchInput, paddingLeft: "12px" }} /><input data-voice-control="phone" value={basicInfo.phone} onChange={(e) => setBasicInfo((p) => ({ ...p, phone: e.target.value }))} placeholder="Phone (optional)" style={{ ...styles.searchInput, paddingLeft: "12px" }} /></div>
+                <textarea data-voice-control="about" value={basicInfo.about} onChange={(e) => setBasicInfo((p) => ({ ...p, about: e.target.value }))} placeholder="A short introduction or your work goals (optional)" rows="3" style={{ width: "100%", border: "1px solid #e2e8f0", borderRadius: "10px", padding: "10px 12px", resize: "vertical", marginBottom: "12px", fontFamily: "inherit" }} />
+                <label style={{ display: "grid", gap: "6px", marginBottom: "14px", fontSize: "12px", color: "#475569" }}>Highest education level<select data-voice-control="education_level" value={educationLevel} onChange={(e) => setEducationLevel(e.target.value)} style={{ ...styles.searchInput, paddingLeft: "12px" }}><option value="">Select education level</option><option value="none">No formal education</option><option value="primary">Primary school</option><option value="middle_school">Middle school</option><option value="high_school">High school</option><option value="vocational">Vocational or technical education</option><option value="university">University</option></select></label>
 
                 <div style={styles.searchWrapper}>
                   <SearchIcon />
-                  <input type="text" placeholder="Search disability..." value={searchTerm}
+                  <input data-voice-control="disability_search" type="text" placeholder="Search disability..." value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)} style={styles.searchInput} />
                 </div>
 
@@ -627,11 +752,11 @@ function CandidateDashboard() {
                         <button onClick={() => handleDisabilityChange(d)} style={styles.chipRemove}>×</button>
                       </span>
                     ))}
-                    <button onClick={() => setSelectedDisabilities([])} style={styles.resetBtn}>Clear all</button>
+                    <button data-voice-control="clear_disabilities" onClick={() => setSelectedDisabilities([])} style={styles.resetBtn}>Clear all</button>
                   </div>
                 )}
 
-                <div style={styles.disabilityGrid}>
+                <div data-voice-control="disabilities" style={styles.disabilityGrid}>
                   {filteredDisabilities.map((disability) => {
                     const isSelected = selectedDisabilities.includes(disability.name);
                     return (
@@ -651,7 +776,7 @@ function CandidateDashboard() {
                 </div>
 
                 <div style={styles.saveRow}>
-                  <button onClick={handleSaveProfile} style={styles.saveButton} disabled={savingProfile}>
+                  <button data-voice-control="save_profile" onClick={handleSaveProfile} style={styles.saveButton} disabled={savingProfile}>
                     {savingProfile ? "Saving..." : "Save Profile"}
                   </button>
                   {successMessage && <span style={styles.successText}>✓ {successMessage}</span>}
@@ -756,14 +881,14 @@ function CandidateDashboard() {
               </>
             ) : (
               <>
-                <button style={styles.backButton} onClick={() => setSelectedJob(null)}>← Back</button>
+                <button data-voice-control="back_to_jobs" style={styles.backButton} onClick={() => setSelectedJob(null)}>← Back</button>
 
                 {/* Job Header */}
                 <div style={styles.jobDetailsHeader}>
                   <CompanyLogo item={selectedJob} size="large" />
                   <div style={{ flex: 1 }}>
                     <h2 style={styles.jobDetailsTitle}>{selectedJob.title}</h2>
-                    <button type="button" style={styles.companyNameLink} onClick={() => openCompanyProfile(selectedJob)}>{selectedJob.companyName}</button>
+                    <button data-voice-control="open_selected_company" type="button" style={styles.companyNameLink} onClick={() => openCompanyProfile(selectedJob)}>{selectedJob.companyName}</button>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "8px" }}>
                       {[selectedJob.location, selectedJob.jobType, selectedJob.workMode].filter(Boolean).map((meta) => (
                         <span key={meta} style={{ background: "#f1f5f9", color: "#475569", padding: "4px 10px", borderRadius: "999px", fontSize: "12px", fontWeight: "400" }}>
@@ -805,12 +930,12 @@ function CandidateDashboard() {
                   {successMessage && <p style={styles.successText}>{successMessage}</p>}
                   {errorMessage && <p style={styles.errorText}>{errorMessage}</p>}
                   <label style={styles.uploadLabel}>Upload Application Document {selectedJob.cvRequired ? "*" : ""}
-                    <input type="file" accept=".pdf,.doc,.docx" style={styles.fileInput} onChange={(e) => setApplicationDocument(e.target.files?.[0] || null)} />
+                    <input ref={applicationDocumentRef} data-voice-control="application_document" type="file" accept=".pdf,.doc,.docx" style={styles.fileInput} onChange={(e) => setApplicationDocument(e.target.files?.[0] || null)} />
                   </label>
                   <label style={styles.uploadLabel}>Upload Recommendation Letter {selectedJob.coverLetterRequired ? "*" : ""}
-                    <input type="file" accept=".pdf,.doc,.docx" style={styles.fileInput} onChange={(e) => setRecommendationLetter(e.target.files?.[0] || null)} />
+                    <input ref={recommendationLetterRef} data-voice-control="recommendation_letter" type="file" accept=".pdf,.doc,.docx" style={styles.fileInput} onChange={(e) => setRecommendationLetter(e.target.files?.[0] || null)} />
                   </label>
-                  <button type="button" style={styles.applyButton} onClick={handleSubmitApplication} disabled={submittingApplication}>
+                  <button data-voice-control="submit_application" type="button" style={styles.applyButton} onClick={handleSubmitApplication} disabled={submittingApplication}>
                     {submittingApplication ? "Submitting..." : "Submit Application"}
                   </button>
                 </div>
@@ -829,7 +954,7 @@ function CandidateDashboard() {
                   <p style={styles.applicationsSubtitle}>Track and manage your job applications</p>
                 </div>
               </div>
-              <select value={applicationStatusFilter} onChange={(e) => setApplicationStatusFilter(e.target.value)} style={styles.statusFilterSelect}>
+              <select data-voice-control="application_status" value={applicationStatusFilter} onChange={(e) => setApplicationStatusFilter(e.target.value)} style={styles.statusFilterSelect}>
                 <option value="all">All Status</option>
                 <option value="pending">Pending</option>
                 <option value="in_review">In Review</option>
@@ -872,7 +997,7 @@ function CandidateDashboard() {
       {selectedCompany && (
         <div style={styles.companyOverlay}>
           <div style={styles.companyModal}>
-            <button type="button" style={styles.companyCloseButton} onClick={() => setSelectedCompany(null)}>×</button>
+            <button data-voice-control="close_company" type="button" style={styles.companyCloseButton} onClick={() => setSelectedCompany(null)}>×</button>
             <div style={{ display: "flex", alignItems: "center", gap: "16px", paddingRight: "40px" }}>
               <CompanyLogo item={selectedCompany} size="large" />
               <div>
@@ -880,7 +1005,7 @@ function CandidateDashboard() {
                 <p style={{ margin: "4px 0 0", color: "#64748b", fontSize: "13px" }}>{selectedCompany.employerProfile?.industry || "Hospitality"}{selectedCompany.employerProfile?.location ? ` · ${selectedCompany.employerProfile.location}` : selectedCompany.location ? ` · ${selectedCompany.location}` : ""}</p>
               </div>
             </div>
-            <div style={styles.companyTabs}>
+            <div data-voice-control="company_view" style={styles.companyTabs}>
               {["PROFILE", "JOBS"].map((t) => (
                 <button key={t} type="button" style={{ ...styles.companyTabButton, ...(companyModalTab === t ? styles.companyTabActive : {}) }} onClick={() => setCompanyModalTab(t)}>
                   {t === "PROFILE" ? "Profile" : "Job Openings"}

@@ -9,22 +9,28 @@ audio upload
 -> deterministic orchestration
    -> navigation specialist
    -> website-question placeholder
-   -> website-action placeholder
+   -> action specialist
 -> deterministic navigation registry validation
--> executable navigation command or bounded specialist-unavailable result
+-> deterministic action registry validation
+-> executable trusted command or bounded rejection
 ```
 
 The classifier decides only whether a transcript is navigation, a website question, or a
 website action. It does not decide whether the request is logical, supported, or permitted.
-Navigation requests reach the navigation specialist. Question and action requests are
-recognized but intentionally not implemented yet.
+Navigation requests reach the navigation specialist. Authentication-form actions reach the
+Action Master. Website questions remain recognized but intentionally unimplemented.
 
 The navigation model interprets. The registry authorizes. Browser code executes only a
 returned fixed action type. Existing React role guards and Symfony API authorization remain
 the project security authority.
 
 The code is separated into `api`, `audio`, `classification`, `core`, `orchestration`, and
-`specialists/navigation` packages.
+`specialists/navigation` and `specialists/actions` packages.
+
+The Action Master proof of concept supports login and signup fields, account-type selection,
+and confirmation-gated form submission. It emits semantic control identifiers only; mounted
+React pages update their own controlled state. Password values are redacted from structured
+diagnostics, browser history, display, and speech.
 
 Navigation registry version 5 also distinguishes route-level destinations from internal React
 views. Candidate Jobs/dashboard, Applications, and Profile all use `/candidate` but return a
@@ -32,6 +38,10 @@ trusted `route_and_tab` action with the appropriate fixed tab identifier.
 
 Registry version 6 extends `route_and_tab` to Employer Post a Job, My Jobs, Applications, and
 Company Profile, plus Administrator Users, Archived Users, Applications, and Candidate Profiles.
+
+Registry version 7 distinguishes known-but-unavailable destinations (`permission_denied`) from
+invented or unresolved destinations (`rejected`/`UNKNOWN`). The model recognizes; the registry
+decides availability; React executes only `authorized` results.
 
 The bounded-audio transcription adapter currently defaults to `whisper-1`. A real browser WebM sample from the target machine was evaluated against multiple configurations: `gpt-4o-transcribe` and `gpt-4o-mini-transcribe` produced incorrect multilingual text, while `whisper-1` correctly recovered the spoken login request. The model remains configurable through `OPENAI_TRANSCRIPTION_MODEL`.
 

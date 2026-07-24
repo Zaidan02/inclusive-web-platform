@@ -27,6 +27,7 @@
 23. [Future calibration and extension points](#23-future-calibration-and-extension-points)
 24. [Operational commands](#24-operational-commands)
 25. [Classifier, orchestrator, and navigation-specialist refactor](#25-classifier-orchestrator-and-navigation-specialist-refactor)
+26. [Action Master authentication-form proof of concept](#26-action-master-authentication-form-proof-of-concept)
 
 ## 1. Purpose and current scope
 
@@ -1009,3 +1010,151 @@ Router state. Employer voice tab changes do not clear form values or editing sta
 Twenty deterministic tests pass. Live model checks resolve representative natural phrases for
 all Employer and Administrator internal destinations to the correct trusted `route_and_tab`
 action.
+
+### Permission denied versus unknown
+
+Registry version 7 separates recognition from permission behavior:
+
+- A globally registered destination that is unavailable in the current context returns
+  `permission_denied`.
+- A destination that does not exist returns `rejected`.
+- Language that cannot be mapped to a registered destination remains `UNKNOWN`.
+
+The navigation interpreter receives all globally registered canonical targets plus a separate
+list of targets allowed in the current context. It may therefore correctly recognize
+`admin_dashboard` from the Candidate context without deciding permission itself. The
+deterministic registry observes that the destination is known but unavailable and returns:
+
+```json
+{
+  "status": "permission_denied",
+  "command": "NAVIGATE",
+  "target": "admin_dashboard",
+  "reason": "You do not have permission to open that destination.",
+  "action": null
+}
+```
+
+React executes only `authorized` results, so no navigation occurs. An invented destination
+continues to produce safe rejection. Twenty-one deterministic tests pass, and both outcomes
+have been verified through live model requests.
+## 26. Action Master authentication-form proof of concept
+
+The first Action Master slice supports the controlled fields and submit controls on `/signin`
+and `/signup`. It deliberately does not attempt arbitrary DOM automation.
+
+### 26.1 Responsibility boundary
+
+The action pipeline is:
+
+```text
+transcript
+-> three-way classifier returns ACTION
+-> Action Interpreter proposes a typed semantic operation
+-> Action Registry validates context, control, operation, value, risk, and confirmation policy
+-> React dispatches the authorized operation to the mounted page
+-> the page updates its real controlled state or submits its real form
+-> JoIn reports the result and asks the user to verify draft changes
+```
+
+The language model is an interpreter, not an execution authority. It cannot supply selectors,
+URLs, JavaScript, or unregistered controls. The registry can return only a fixed action
+containing a registered control identifier. The browser then emits `join:voice-action`; only a
+mounted page handler that recognizes that exact identifier may report the action as handled.
+
+Symfony remains responsible for authentication and authorization. Voice submission invokes
+the same React form and API request as mouse or keyboard submission.
+
+### 26.2 Action registry
+
+`backend/voice_navigation/specialists/actions/registry.json` is versioned separately from the
+navigation registry. Each context declares controls with:
+
+| Property | Meaning |
+|---|---|
+| `kind` | `field`, `select`, or `button` |
+| `label` | Human-readable feedback name |
+| `aliases` | Natural expressions available to the interpreter |
+| `editable` | Whether a field may be changed |
+| `valueType` | Semantic type used to interpret the control; only closed types such as `enum` are registry-validated |
+| `options` | Closed allowlist for enum values |
+| `sensitive` | Prevent value logging, history retention, display, and spoken read-back |
+| `risk` | Registry-owned action risk |
+| `requiresConfirmation` | Whether execution must wait for a separate confirmation turn |
+
+The login context registers `email`, `password`, and `sign_in`. The signup context registers
+`username`, `email`, `password`, `account_type`, and `create_account`.
+
+### 26.3 Canonical action operations
+
+The current schema permits `SET_FIELD`, `CLEAR_FIELD`, `SELECT_OPTION`, `PRESS`, `CONFIRM`,
+`CANCEL_ACTION`, and `UNKNOWN`. A command/control kind mismatch is rejected. Closed enum
+membership is checked deterministically because it determines whether the browser can execute
+the operation. Open draft values such as emails, usernames, and passwords are not judged by
+the Action Master. Their React form and Symfony endpoint retain responsibility for validation.
+A control belonging to another page returns `unavailable`.
+
+`SET_FIELD`, `CLEAR_FIELD`, and `SELECT_OPTION` only update a draft. They never implicitly save
+or submit. The response reads back a non-sensitive value and asks the user to check it. The
+browser focuses the changed control and gives its containing field a temporary visible outline.
+A correction is simply a new field-setting turn.
+
+`PRESS` for sign-in or account creation returns `needs_confirmation` and no browser operation.
+The browser retains only the fixed pending button action. A following `yes`, `confirm`,
+`proceed`, `do it`, or the registered Arabic equivalents is forced into the ACTION branch when
+the immediately preceding turn requires confirmation. `CONFIRM` then executes the retained
+fixed action. `CANCEL_ACTION` discards it.
+
+### 26.4 Password treatment
+
+Passwords remain writable voice fields for this proof-of-concept, as decided for the current
+stage, but they are marked `sensitive` from the beginning. The raw value must reach OpenAI for
+interpretation and the React field for execution; therefore voice entry is not presented as a
+privacy-equivalent replacement for typing. Once classified and routed, the browser:
+
+- replaces the visible transcript with a redaction marker;
+- redacts the proposal and route in console diagnostics;
+- stores only the redaction marker in six-turn browser history;
+- never reads the password value aloud.
+
+The backend trace similarly replaces the structured proposal and authorized action value with
+`[REDACTED]`. This minimizes secondary exposure but does not remove the upstream transcription
+and interpretation exposure.
+
+### 26.5 Current scope and extension rule
+
+This proof of concept covers authentication forms only. The next form or dashboard must first
+declare semantic controls in the action registry and then implement explicit React handlers.
+Adding aliases alone cannot make an action executable. Arbitrary selectors, DOM mutation, and
+model-generated execution instructions remain prohibited.
+
+### 26.6 Candidate Action Master expansion
+
+Action Registry version 2 expands execution across Candidate routes while leaving Employer and
+Administrator actions out of scope. The `candidate` context registers:
+
+- profile draft fields: first name, last name, location, phone, and about;
+- education and application-status closed selections;
+- disability search and the sixteen registered disability options;
+- compatibility matching and profile saving;
+- loaded jobs, matched results, and companies;
+- job-detail back navigation and company-modal controls;
+- application-document and recommendation-letter file controls;
+- confirmation-gated application submission and logout.
+
+The `candidate_setup` context exposes the corresponding setup fields, education, disabilities,
+search, and confirmation-gated completion action.
+
+Candidate dynamic objects are bounded in two stages. The backend may authorize only the fixed
+semantic collection identifiers `job`, `matched_job`, and `company`. React then resolves the
+spoken title, company name, or ordinal such as `first`, `second`, or `third` exclusively against
+the objects already loaded into the authenticated Candidate screen. A failure to find a loaded
+object produces feedback and no action.
+
+File actions use `FOCUS_FIELD`, not file injection. Browser security prevents the assistant from
+choosing a local file path. Voice can focus and highlight the registered picker, but the user
+must select the actual local file.
+
+The Candidate matcher uses the existing `handleGetAiMatch` function, so clicking the button and
+saying “Get my job match” reach the same candidate API and scoring workflow. The voice layer
+does not duplicate or replace matching logic.

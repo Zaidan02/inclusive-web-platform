@@ -1,0 +1,123 @@
+{
+  "version": 2,
+  "contexts": {
+    "login": {
+      "controls": {
+        "email": {
+          "kind": "field",
+          "label": "email",
+          "aliases": ["email", "email address", "mail"],
+          "editable": true,
+          "valueType": "email",
+          "sensitive": false,
+          "risk": 0
+        },
+        "password": {
+          "kind": "field",
+          "label": "password",
+          "aliases": ["password", "passcode"],
+          "editable": true,
+          "valueType": "text",
+          "sensitive": true,
+          "risk": 1
+        },
+        "sign_in": {
+          "kind": "button",
+          "label": "sign in",
+          "aliases": ["sign in", "login", "log in", "submit"],
+          "risk": 2,
+          "requiresConfirmation": true
+        }
+      }
+    },
+    "signup": {
+      "controls": {
+        "username": {
+          "kind": "field",
+          "label": "username",
+          "aliases": ["username", "user name", "name"],
+          "editable": true,
+          "valueType": "text",
+          "sensitive": false,
+          "risk": 0
+        },
+        "email": {
+          "kind": "field",
+          "label": "email",
+          "aliases": ["email", "email address", "mail"],
+          "editable": true,
+          "valueType": "email",
+          "sensitive": false,
+          "risk": 0
+        },
+        "password": {
+          "kind": "field",
+          "label": "password",
+          "aliases": ["password", "passcode"],
+          "editable": true,
+          "valueType": "text",
+          "sensitive": true,
+          "risk": 1
+        },
+        "account_type": {
+          "kind": "select",
+          "label": "account type",
+          "aliases": ["account type", "role"],
+          "editable": true,
+          "valueType": "enum",
+          "options": ["candidate", "employer"],
+          "sensitive": false,
+          "risk": 0
+        },
+        "create_account": {
+          "kind": "button",
+          "label": "create account",
+          "aliases": ["create account", "register", "sign up", "submit"],
+          "risk": 2,
+          "requiresConfirmation": true
+        }
+      }
+    },
+    "candidate": {
+      "controls": {
+        "first_name": { "kind": "field", "label": "first name", "aliases": ["first name", "given name"], "editable": true, "valueType": "text", "risk": 0 },
+        "last_name": { "kind": "field", "label": "last name", "aliases": ["last name", "family name", "surname"], "editable": true, "valueType": "text", "risk": 0 },
+        "location": { "kind": "field", "label": "location", "aliases": ["location", "city", "region"], "editable": true, "valueType": "text", "risk": 0 },
+        "phone": { "kind": "field", "label": "phone", "aliases": ["phone", "phone number"], "editable": true, "valueType": "text", "risk": 0 },
+        "about": { "kind": "field", "label": "about me", "aliases": ["about", "about me", "introduction", "work goals"], "editable": true, "valueType": "text", "risk": 0 },
+        "disability_search": { "kind": "field", "label": "disability search", "aliases": ["disability search", "search disabilities"], "editable": true, "valueType": "text", "risk": 0 },
+        "education_level": { "kind": "select", "label": "education level", "aliases": ["education", "education level", "highest education"], "editable": true, "valueType": "enum", "options": ["none", "primary", "middle_school", "high_school", "vocational", "university"], "risk": 0 },
+        "disabilities": { "kind": "multi_select", "label": "disabilities", "aliases": ["disability", "disabilities", "condition"], "editable": true, "valueType": "registered_option", "options": ["Hand", "Ankle", "Arm", "Both Ankles", "Both Arms", "Both Forearms", "Both Hands", "Both Knees", "Both Legs", "CVA", "Forearm", "Knee", "Leg", "Pelvis Legs Wheelchair", "Waist Wheelchair", "Wheelchair"], "risk": 0 },
+        "application_status": { "kind": "select", "label": "application status filter", "aliases": ["application status", "status filter"], "editable": true, "valueType": "enum", "options": ["all", "pending", "in_review", "accepted", "rejected"], "risk": 0 },
+        "company_view": { "kind": "select", "label": "company view", "aliases": ["company profile tab", "company jobs tab"], "editable": true, "valueType": "enum", "options": ["PROFILE", "JOBS"], "risk": 0 },
+        "job": { "kind": "collection", "label": "job", "aliases": ["job", "job offer", "position"], "valueType": "text", "risk": 0 },
+        "matched_job": { "kind": "collection", "label": "matched job", "aliases": ["match", "matched job", "result"], "valueType": "text", "risk": 0 },
+        "scoring_explanation": { "kind": "collection", "label": "scoring explanation", "aliases": ["scoring explanation", "match explanation", "score details"], "valueType": "text", "risk": 0 },
+        "company": { "kind": "collection", "label": "company", "aliases": ["company", "employer"], "valueType": "text", "risk": 0 },
+        "application_document": { "kind": "file", "label": "application document", "aliases": ["application document", "CV", "resume"], "risk": 0 },
+        "recommendation_letter": { "kind": "file", "label": "recommendation letter", "aliases": ["recommendation letter", "cover letter"], "risk": 0 },
+        "run_job_match": { "kind": "button", "label": "get my job match", "aliases": ["get my job match", "calculate matches", "run matching", "find matches"], "risk": 1 },
+        "save_profile": { "kind": "button", "label": "save profile", "aliases": ["save profile", "save my changes"], "risk": 1 },
+        "clear_disabilities": { "kind": "button", "label": "clear disabilities", "aliases": ["clear disabilities", "clear all disabilities"], "risk": 1 },
+        "back_to_jobs": { "kind": "button", "label": "back to jobs", "aliases": ["back to jobs", "close job"], "risk": 0 },
+        "open_selected_company": { "kind": "button", "label": "open company profile", "aliases": ["open company", "view company", "company profile"], "risk": 0 },
+        "close_company": { "kind": "button", "label": "close company profile", "aliases": ["close company", "close company profile", "close modal"], "risk": 0 },
+        "submit_application": { "kind": "button", "label": "submit application", "aliases": ["submit application", "apply for this job", "send application"], "risk": 2, "requiresConfirmation": true },
+        "logout": { "kind": "button", "label": "log out", "aliases": ["log out", "sign out"], "risk": 2, "requiresConfirmation": true }
+      }
+    },
+    "candidate_setup": {
+      "controls": {
+        "first_name": { "kind": "field", "label": "first name", "aliases": ["first name", "given name"], "editable": true, "valueType": "text", "risk": 0 },
+        "last_name": { "kind": "field", "label": "last name", "aliases": ["last name", "family name", "surname"], "editable": true, "valueType": "text", "risk": 0 },
+        "location": { "kind": "field", "label": "location", "aliases": ["location", "city", "region"], "editable": true, "valueType": "text", "risk": 0 },
+        "phone": { "kind": "field", "label": "phone", "aliases": ["phone", "phone number"], "editable": true, "valueType": "text", "risk": 0 },
+        "about": { "kind": "field", "label": "about me", "aliases": ["about", "about me", "introduction", "work goals"], "editable": true, "valueType": "text", "risk": 0 },
+        "disability_search": { "kind": "field", "label": "disability search", "aliases": ["disability search", "search disabilities"], "editable": true, "valueType": "text", "risk": 0 },
+        "education_level": { "kind": "select", "label": "education level", "aliases": ["education", "education level", "highest education"], "editable": true, "valueType": "enum", "options": ["none", "primary", "middle_school", "high_school", "vocational", "university"], "risk": 0 },
+        "disabilities": { "kind": "multi_select", "label": "disabilities", "aliases": ["disability", "disabilities", "condition"], "editable": true, "valueType": "registered_option", "options": ["Hand", "Ankle", "Arm", "Both Ankles", "Both Arms", "Both Forearms", "Both Hands", "Both Knees", "Both Legs", "CVA", "Forearm", "Knee", "Leg", "Pelvis Legs Wheelchair", "Waist Wheelchair", "Wheelchair"], "risk": 0 },
+        "complete_setup": { "kind": "button", "label": "complete setup", "aliases": ["complete setup", "save setup", "finish profile"], "risk": 2, "requiresConfirmation": true }
+      }
+    }
+  }
+}

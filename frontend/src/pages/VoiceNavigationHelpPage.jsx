@@ -3,6 +3,31 @@ import "../styles/voiceHelp.css";
 
 const commandGroups = [
   {
+    title: "Fill authentication forms",
+    commands: [
+      ["Set my email to name@example.com", "Fill and highlight the current email field"],
+      ["Set my username to Fouad", "Fill the signup username field"],
+      ["Choose employer", "Select the employer signup account type"],
+      ["Sign in", "Ask before submitting the login form"],
+      ["Yes", "Confirm the immediately pending submit action"],
+    ],
+  },
+  {
+    title: "Candidate actions",
+    commands: [
+      ["Get my job match", "Run compatibility matching from the Jobs view"],
+      ["Open the second matched job", "Open a loaded result by rank"],
+      ["Show the second match explanation", "Expand a loaded result's scoring details"],
+      ["Open the Ice Cream Maker job", "Open a loaded job by title"],
+      ["Set my education to high school", "Change a profile selection"],
+      ["Select Wheelchair as my disability", "Toggle a registered disability option"],
+      ["Save my profile", "Save the current candidate profile draft"],
+      ["Filter my applications to accepted", "Change the application-status filter"],
+      ["Upload my CV", "Focus the file picker so you can choose the local file"],
+      ["Submit my application", "Ask before submitting the current application"],
+    ],
+  },
+  {
     title: "Move around",
     commands: [
       ["Take me to the login page", "Open an available page"],
@@ -80,6 +105,14 @@ export default function VoiceNavigationHelpPage() {
             If JoIn asks “Did you mean login or sign up?”, you can answer “the first one,”
             “login,” “no,” or “never mind.” Only the six most recent turns are held temporarily
             in this browser session, and the history is cleared when voice mode is turned off.
+          </p>
+        </aside>
+        <aside className="voice-help__note">
+          <strong>Form actions are drafts until you submit</strong>
+          <p>
+            JoIn reads back ordinary field values and highlights the changed control so you can
+            check it. Passwords are never read aloud or shown in voice diagnostics. Signing in
+            or creating an account always requires a separate confirmation.
           </p>
         </aside>
       </div>

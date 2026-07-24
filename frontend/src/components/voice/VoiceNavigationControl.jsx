@@ -6,6 +6,7 @@ import "./voiceNavigation.css";
 const SILENCE_THRESHOLD = 0.025;
 const SILENCE_AFTER_SPEECH_MS = 1100;
 const EMPTY_TURN_TIMEOUT_MS = 12000;
+const VOICE_ACTION_EVENT = "join:voice-action";
 
 function contextForPath(pathname) {
   if (pathname === "/signin") return "login";
@@ -50,6 +51,7 @@ export default function VoiceNavigationControl() {
   const lastFeedbackRef = useRef("");
   const lastRecordingUrlRef = useRef("");
   const locationRef = useRef(location.pathname);
+  const pendingActionRef = useRef(null);
 
   useEffect(() => {
     locationRef.current = location.pathname;
@@ -140,9 +142,30 @@ export default function VoiceNavigationControl() {
 
   const executeCommand = useCallback((result) => {
     const route = result.route;
-    if (!route || route.status !== "authorized") return result.feedback;
+    if (!route) return result.feedback;
+    if (route.status === "needs_confirmation" && route.action) {
+      pendingActionRef.current = route.action;
+      return result.feedback;
+    }
+    if (route.status !== "authorized") return result.feedback;
     const action = route.action || {};
-    if (action.type === "route" && action.value) {
+    if (result.classification?.category === "ACTION") {
+      let trustedAction = action;
+      if (action.type === "confirm") {
+        if (!pendingActionRef.current) return "There is no pending action to confirm.";
+        trustedAction = pendingActionRef.current;
+        pendingActionRef.current = null;
+      } else if (action.type === "cancel_action") {
+        pendingActionRef.current = null;
+        return "The pending action was cancelled.";
+      } else {
+        pendingActionRef.current = null;
+      }
+      const detail = { action: trustedAction, handled: false, feedback: "" };
+      window.dispatchEvent(new CustomEvent(VOICE_ACTION_EVENT, { detail }));
+      if (!detail.handled) return "That action is registered, but its control is not available right now.";
+      return detail.feedback || result.feedback;
+    } else if (action.type === "route" && action.value) {
       navigate(action.value);
     } else if (action.type === "route_and_tab" && action.value && action.tab) {
       navigate(action.value, {
@@ -171,6 +194,7 @@ export default function VoiceNavigationControl() {
       pendingModeRef.current = "pause";
       return result.feedback;
     } else if (action.type === "cancel") {
+      pendingActionRef.current = null;
       return "Cancelled. What would you like to do next?";
     } else if (action.type === "disable_voice") {
       pendingModeRef.current = "disable";
@@ -204,18 +228,26 @@ export default function VoiceNavigationControl() {
       });
       throw new Error(data.message || "Voice processing failed.");
     }
+    const isSensitive = Boolean(data.route?.sensitive);
+    const safeTranscript = isSensitive ? "[REDACTED SENSITIVE VALUE]" : data.transcript;
+    const safeProposal = isSensitive && data.proposal
+      ? { ...data.proposal, value: "[REDACTED]" }
+      : data.proposal;
+    const safeRoute = isSensitive && data.route?.action
+      ? { ...data.route, action: { ...data.route.action, value: "[REDACTED]" } }
+      : data.route;
     console.groupCollapsed(`[VOICE] Turn ${data.request_id || "unknown"}`);
-    console.info("[VOICE STT] Transcript:", data.transcript);
+    console.info("[VOICE STT] Transcript:", safeTranscript);
     console.info("[VOICE CLASSIFIER] Category:", data.classification);
-    console.info("[VOICE INTENT] Proposal:", data.proposal);
-    console.info("[VOICE ROUTER] Decision:", data.route);
+    console.info("[VOICE INTENT] Proposal:", safeProposal);
+    console.info("[VOICE ROUTER] Decision:", safeRoute);
     console.info("[VOICE FEEDBACK] Text:", data.feedback);
     console.groupEnd();
-    setTranscript(data.transcript || "");
+    setTranscript(safeTranscript || "");
     historyRef.current = [
       ...historyRef.current,
       {
-        transcript: data.transcript || "",
+        transcript: safeTranscript || "",
         command: data.proposal?.command || "UNKNOWN",
         target: data.proposal?.target ?? null,
         status: data.route?.status || "rejected",

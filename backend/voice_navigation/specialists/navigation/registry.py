@@ -4,7 +4,13 @@ import json
 from pathlib import Path
 from typing import Any
 
-from core.schemas import AuthorizedCommand, ClarificationCommand, IntentProposal, RejectedCommand
+from core.schemas import (
+    AuthorizedCommand,
+    ClarificationCommand,
+    IntentProposal,
+    PermissionDeniedCommand,
+    RejectedCommand,
+)
 
 
 class NavigationRegistry:
@@ -21,17 +27,18 @@ class NavigationRegistry:
         return {
             "context": current_context,
             "commands": context["commands"],
-            "navigationTargets": context["navigationTargets"],
+            "allowedNavigationTargets": context["navigationTargets"],
+            "allNavigationTargets": list(self._data["pages"]),
             "targetDescriptions": {
-                target: self._data["pages"][target]
-                for target in context["navigationTargets"]
+                target: page
+                for target, page in self._data["pages"].items()
             },
             "sectionTargets": context["sectionTargets"],
         }
 
     def route(
         self, proposal: IntentProposal, current_context: str
-    ) -> AuthorizedCommand | RejectedCommand | ClarificationCommand:
+    ) -> AuthorizedCommand | RejectedCommand | PermissionDeniedCommand | ClarificationCommand:
         context = self._context(current_context)
         command = proposal.command
         target = proposal.target
@@ -62,8 +69,15 @@ class NavigationRegistry:
             return self._reject(proposal, "Only clarification proposals may include choices or a question.")
 
         if command == "NAVIGATE":
-            if target not in context["navigationTargets"] or target not in self._data["pages"]:
-                return self._reject(proposal, "Navigation target is not allowed in the current context.")
+            if target not in self._data["pages"]:
+                return self._reject(proposal, "Navigation target does not exist.")
+            if target not in context["navigationTargets"]:
+                return PermissionDeniedCommand(
+                    status="permission_denied",
+                    command="NAVIGATE",
+                    target=target,
+                    reason="You do not have permission to open that destination.",
+                )
             page = self._data["pages"][target]
             action = page.get("action") or {"type": "route", "value": page["path"]}
         elif command == "READ_SECTION":

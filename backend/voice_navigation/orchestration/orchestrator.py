@@ -4,7 +4,9 @@ from uuid import uuid4
 
 from audio.transcription import OpenAITranscriber
 from classification.classifier import OpenAIRequestClassifier
-from core.schemas import SpecialistUnavailable, VoiceTurnResult
+from core.schemas import RequestClassification, SpecialistUnavailable, VoiceTurnResult
+from specialists.actions.interpreter import OpenAIActionInterpreter
+from specialists.actions.registry import ActionRegistry
 from specialists.navigation.feedback import build_feedback
 from specialists.navigation.interpreter import OpenAINavigationInterpreter
 from specialists.navigation.registry import NavigationRegistry
@@ -17,12 +19,16 @@ class VoiceOrchestrator:
         classifier: OpenAIRequestClassifier,
         navigation_registry: NavigationRegistry,
         navigation_interpreter: OpenAINavigationInterpreter,
+        action_registry: ActionRegistry,
+        action_interpreter: OpenAIActionInterpreter,
         max_transcript_chars: int,
     ) -> None:
         self._transcriber = transcriber
         self._classifier = classifier
         self._navigation_registry = navigation_registry
         self._navigation_interpreter = navigation_interpreter
+        self._action_registry = action_registry
+        self._action_interpreter = action_interpreter
         self._max_transcript_chars = max_transcript_chars
 
     def interpret_text(
@@ -38,14 +44,18 @@ class VoiceOrchestrator:
             raise ValueError(f"Transcript exceeds {self._max_transcript_chars} characters.")
 
         history = self._sanitize_history(recent_history or [])
-        classification = self._classifier.classify(normalized)
-
-        if classification.category != "NAVIGATION":
-            label = (
-                "Website questions"
-                if classification.category == "WEBSITE_QUESTION"
-                else "Website actions"
+        if self._is_pending_action_reply(normalized, history):
+            classification = RequestClassification(
+                category="ACTION", confidence=1, language="ar" if self._contains_arabic(normalized) else "en"
             )
+        else:
+            classification = self._classifier.classify(
+                normalized,
+                self._action_registry.context_for_prompt(current_context),
+            )
+
+        if classification.category == "WEBSITE_QUESTION":
+            label = "Website questions"
             request_kind = classification.category.lower().replace("_", " ")
             article = "an" if request_kind[0] in "aeiou" else "a"
             feedback = (
@@ -65,6 +75,21 @@ class VoiceOrchestrator:
                 feedback=feedback,
             )
 
+        if classification.category == "ACTION":
+            action_context = self._action_registry.context_for_prompt(current_context)
+            proposal = self._action_interpreter.interpret(normalized, action_context, history)
+            route = self._action_registry.route(proposal, current_context)
+            feedback = self._action_feedback(route)
+            return VoiceTurnResult(
+                request_id=str(uuid4()),
+                transcript=normalized,
+                language=proposal.language,
+                classification=classification,
+                proposal=proposal,
+                route=route,
+                feedback=feedback,
+            )
+
         allowed_context = self._navigation_registry.context_for_prompt(current_context)
         proposal = self._navigation_interpreter.interpret(normalized, allowed_context, history)
         route = self._navigation_registry.route(proposal, current_context)
@@ -78,6 +103,31 @@ class VoiceOrchestrator:
             route=route,
             feedback=feedback,
         )
+
+    @staticmethod
+    def _action_feedback(route) -> str:
+        if route.status == "needs_confirmation":
+            return route.reason
+        if route.status != "authorized":
+            return route.reason
+        if route.command == "CONFIRM":
+            return "Confirmed."
+        if route.command == "CANCEL_ACTION":
+            return "The pending action was cancelled."
+        action = route.action
+        if route.command == "PRESS":
+            return f"Activating {action['label']}."
+        if route.command == "OPEN_ITEM":
+            return f"Opening {action['value']}."
+        if route.command == "FOCUS_FIELD":
+            return f"I focused the {action['label']} control. Use the file picker to choose a local file."
+        if route.command == "TOGGLE_OPTION":
+            return f"I changed the {action['value']} selection. Is that correct?"
+        if route.command == "CLEAR_FIELD":
+            return f"I cleared the {action['label']} field. Is that correct?"
+        if route.sensitive:
+            return f"I updated the {action['label']} field without reading it aloud. Is that correct?"
+        return f"I set {action['label']} to {action['value']}. Is that correct?"
 
     def process_audio(
         self,
@@ -116,3 +166,32 @@ class VoiceOrchestrator:
                 }
             )
         return safe
+
+    @staticmethod
+    def _is_pending_action_reply(transcript: str, history: list[dict]) -> bool:
+        if not history or history[-1].get("status") != "needs_confirmation":
+            return False
+        normalized = transcript.strip().casefold().rstrip(".!?")
+        return normalized in {
+            "yes",
+            "confirm",
+            "proceed",
+            "do it",
+            "نعم",
+            "أجل",
+            "اكد",
+            "أكد",
+            "تابع",
+            "no",
+            "cancel",
+            "never mind",
+            "don't",
+            "do not",
+            "لا",
+            "الغاء",
+            "إلغاء",
+        }
+
+    @staticmethod
+    def _contains_arabic(text: str) -> bool:
+        return any("\u0600" <= character <= "\u06ff" for character in text)

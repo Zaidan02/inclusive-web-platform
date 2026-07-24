@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { registerUser } from "../services/authApi";
 import "../styles/authPages.css";
@@ -65,6 +65,48 @@ function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState("");
   const [success, setSuccess] = useState("");
+  const formRef = useRef(null);
+
+  useEffect(() => {
+    function handleVoiceAction(event) {
+      const { action } = event.detail;
+      if (!action) return;
+      if (action.type === "set_field" || action.type === "clear_field") {
+        if (!["username", "email", "password"].includes(action.target)) return;
+        const value = action.type === "clear_field" ? "" : action.value;
+        setFormData((current) => ({ ...current, [action.target]: value }));
+        setServerError("");
+        event.detail.handled = true;
+        event.detail.feedback = action.sensitive
+          ? `I updated the ${action.label} field without reading it aloud. Please check it.`
+          : `I set ${action.label} to ${value}. Please check it.`;
+        requestAnimationFrame(() => {
+          const field = document.getElementById(action.target);
+          field?.focus();
+          field?.closest(".auth-field")?.classList.add("voice-action-highlight");
+          window.setTimeout(
+            () => field?.closest(".auth-field")?.classList.remove("voice-action-highlight"),
+            1800,
+          );
+        });
+      } else if (action.type === "select_option" && action.target === "account_type") {
+        setFormData((current) => ({ ...current, accountType: action.value }));
+        event.detail.handled = true;
+        event.detail.feedback = `I selected ${action.value} as the account type. Please check it.`;
+        document.querySelector(".account-type-options")?.classList.add("voice-action-highlight");
+        window.setTimeout(
+          () => document.querySelector(".account-type-options")?.classList.remove("voice-action-highlight"),
+          1800,
+        );
+      } else if (action.type === "press" && action.target === "create_account") {
+        event.detail.handled = true;
+        event.detail.feedback = "Creating the account with the values currently in the form.";
+        formRef.current?.requestSubmit();
+      }
+    }
+    window.addEventListener("join:voice-action", handleVoiceAction);
+    return () => window.removeEventListener("join:voice-action", handleVoiceAction);
+  }, []);
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -186,7 +228,7 @@ function SignUpPage() {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="auth-form signup-form" noValidate>
+        <form ref={formRef} onSubmit={handleSubmit} className="auth-form signup-form" noValidate>
 
           {/* Username */}
           <div className="auth-field">

@@ -12,7 +12,7 @@ class OpenAIRequestClassifier:
         self._client = client
         self._model = model
 
-    def classify(self, transcript: str) -> RequestClassification:
+    def classify(self, transcript: str, current_context: dict | None = None) -> RequestClassification:
         response = self._client.responses.parse(
             model=self._model,
             instructions=(
@@ -25,9 +25,12 @@ class OpenAIRequestClassifier:
                 "item, run matching, save, submit, publish, update, upload, download, accept, reject, "
                 "archive, restore, or delete. Classify only intent type. Do not judge whether the "
                 "request is logical, supported, safe, authorized, or possible. Return the transcript "
-                "language as a short BCP 47 tag."
+                "language as a short BCP 47 tag. Context matters when words overlap: if the user is "
+                "already on a page and refers to one of its supplied action controls, classify it as "
+                "ACTION. For example, 'sign in' on the login page means pressing the sign-in button, "
+                "while 'take me to sign in' from another page means NAVIGATION."
             ),
-            input=transcript,
+            input=f"Current page controls: {current_context or {}}\nTranscript: {transcript}",
             text_format=RequestClassification,
         )
         if response.output_parsed is None:

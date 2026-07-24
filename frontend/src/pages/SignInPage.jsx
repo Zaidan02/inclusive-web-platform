@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logoImage from "../assets/john-logo.png";
 import { loginUser } from "../services/authApi";
@@ -53,6 +53,39 @@ function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const formRef = useRef(null);
+
+  useEffect(() => {
+    function handleVoiceAction(event) {
+      const { action } = event.detail;
+      if (!action) return;
+      if (action.type === "set_field" || action.type === "clear_field") {
+        if (!["email", "password"].includes(action.target)) return;
+        const value = action.type === "clear_field" ? "" : action.value;
+        setFormData((current) => ({ ...current, [action.target]: value }));
+        setError("");
+        event.detail.handled = true;
+        event.detail.feedback = action.sensitive
+          ? `I updated the ${action.label} field without reading it aloud. Please check it.`
+          : `I set ${action.label} to ${value}. Please check it.`;
+        requestAnimationFrame(() => {
+          const field = document.getElementById(action.target);
+          field?.focus();
+          field?.closest(".auth-field")?.classList.add("voice-action-highlight");
+          window.setTimeout(
+            () => field?.closest(".auth-field")?.classList.remove("voice-action-highlight"),
+            1800,
+          );
+        });
+      } else if (action.type === "press" && action.target === "sign_in") {
+        event.detail.handled = true;
+        event.detail.feedback = "Signing in with the values currently in the form.";
+        formRef.current?.requestSubmit();
+      }
+    }
+    window.addEventListener("join:voice-action", handleVoiceAction);
+    return () => window.removeEventListener("join:voice-action", handleVoiceAction);
+  }, []);
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -104,7 +137,7 @@ function SignInPage() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="auth-form signin-form" noValidate>
+          <form ref={formRef} onSubmit={handleSubmit} className="auth-form signin-form" noValidate>
 
             {/* Email */}
             <div className="auth-field">

@@ -12,6 +12,8 @@ from audio.transcription import OpenAITranscriber
 from classification.classifier import OpenAIRequestClassifier
 from config import Settings
 from orchestration.orchestrator import VoiceOrchestrator
+from specialists.actions.interpreter import OpenAIActionInterpreter
+from specialists.actions.registry import ActionRegistry
 from specialists.navigation.interpreter import OpenAINavigationInterpreter
 from specialists.navigation.registry import NavigationRegistry
 
@@ -23,6 +25,7 @@ def create_app(settings: Settings | None = None) -> Flask:
     CORS(app, origins=[active_settings.allowed_origin])
 
     registry = NavigationRegistry()
+    action_registry = ActionRegistry()
     client = OpenAI(api_key=active_settings.openai_api_key) if active_settings.openai_configured else None
 
     def require_client() -> OpenAI:
@@ -37,6 +40,7 @@ def create_app(settings: Settings | None = None) -> Flask:
                 "status": "ok",
                 "service": "voice-navigation",
                 "registryVersion": registry.version,
+                "actionRegistryVersion": action_registry.version,
                 "openaiConfigured": active_settings.openai_configured,
             }
         ), 200
@@ -47,7 +51,7 @@ def create_app(settings: Settings | None = None) -> Flask:
         history = data.get("history", [])
         if not isinstance(history, list):
             raise ValueError("History must be a list.")
-        service = _service(require_client(), active_settings, registry)
+        service = _service(require_client(), active_settings, registry, action_registry)
         result = service.interpret_text(
             str(data.get("transcript", "")),
             str(data.get("currentContext", "home")),
@@ -78,7 +82,7 @@ def create_app(settings: Settings | None = None) -> Flask:
             raise ValueError("History must be valid JSON.") from error
         if not isinstance(history, list):
             raise ValueError("History must be a list.")
-        service = _service(require_client(), active_settings, registry)
+        service = _service(require_client(), active_settings, registry, action_registry)
         result = service.process_audio(
             audio,
             uploaded.filename,
@@ -123,7 +127,10 @@ def create_app(settings: Settings | None = None) -> Flask:
 
 
 def _service(
-    client: OpenAI, settings: Settings, registry: NavigationRegistry
+    client: OpenAI,
+    settings: Settings,
+    registry: NavigationRegistry,
+    action_registry: ActionRegistry,
 ) -> VoiceOrchestrator:
     return VoiceOrchestrator(
         transcriber=OpenAITranscriber(
@@ -134,11 +141,19 @@ def _service(
         classifier=OpenAIRequestClassifier(client, settings.classifier_model),
         navigation_registry=registry,
         navigation_interpreter=OpenAINavigationInterpreter(client, settings.intent_model),
+        action_registry=action_registry,
+        action_interpreter=OpenAIActionInterpreter(client, settings.intent_model),
         max_transcript_chars=settings.max_transcript_chars,
     )
 
 
 def _trace_result(result, current_context: str) -> None:
+    proposal = result.proposal.model_dump() if result.proposal else None
+    route = result.route.model_dump()
+    if proposal and route.get("sensitive"):
+        proposal["value"] = "[REDACTED]"
+    if route.get("sensitive") and isinstance(route.get("action"), dict):
+        route["action"]["value"] = "[REDACTED]"
     print(
         "[VOICE PIPELINE] "
         + json.dumps(
@@ -148,8 +163,8 @@ def _trace_result(result, current_context: str) -> None:
                 "transcript": result.transcript,
                 "language": result.language,
                 "classification": result.classification.model_dump(),
-                "proposal": result.proposal.model_dump() if result.proposal else None,
-                "route": result.route.model_dump(),
+                "proposal": proposal,
+                "route": route,
                 "feedback": result.feedback,
             },
             ensure_ascii=False,

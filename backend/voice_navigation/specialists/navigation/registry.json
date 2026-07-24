@@ -1,5 +1,5 @@
 {
-  "version": 6,
+  "version": 7,
   "commands": {
     "NAVIGATE": { "risk": 1 },
     "READ_SECTION": { "risk": 0 },

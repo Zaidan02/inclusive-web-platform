@@ -1,6 +1,12 @@
 from __future__ import annotations
 
-from core.schemas import AuthorizedCommand, ClarificationCommand, IntentProposal, RejectedCommand
+from core.schemas import (
+    AuthorizedCommand,
+    ClarificationCommand,
+    IntentProposal,
+    PermissionDeniedCommand,
+    RejectedCommand,
+)
 
 
 _MESSAGES = {
@@ -45,12 +51,14 @@ _MESSAGES = {
 
 def build_feedback(
     proposal: IntentProposal,
-    route: AuthorizedCommand | RejectedCommand | ClarificationCommand,
+    route: AuthorizedCommand | RejectedCommand | PermissionDeniedCommand | ClarificationCommand,
 ) -> str:
     language = proposal.language.split("-")[0].lower()
     messages = _MESSAGES.get(language, _MESSAGES["en"])
     if isinstance(route, RejectedCommand):
         return messages["rejected"]
+    if isinstance(route, PermissionDeniedCommand):
+        return route.reason
     if isinstance(route, ClarificationCommand):
         return route.question
     template = messages.get(route.command, _MESSAGES["en"].get(route.command, "Done."))

@@ -449,3 +449,53 @@ The complete current architecture, state machine, audio capture mathematics, tra
 - Employer tab navigation does not clear a partially completed or edited job form.
 - Navigation registry version 6 contains fixed internal tab identifiers for all three role dashboards.
 - Twenty deterministic tests and representative live model phrases pass.
+
+## Voice-navigation permission-result correction
+
+- Corrected known-but-unavailable navigation requests being reported as `UNKNOWN`.
+- The navigation interpreter can now recognize all globally registered destinations while receiving the current context allowlist separately.
+- The deterministic registry—not the model—distinguishes a known unavailable destination from an invented destination.
+- Known unavailable destinations return `permission_denied` with no executable action.
+- Invented or unresolved destinations remain rejected as `UNKNOWN`.
+- React continues to execute only `authorized` results.
+- A live Candidate-context request for the Admin panel returns `permission_denied`; a fabricated console remains safely rejected.
+- Navigation registry version 7 and twenty-one deterministic tests pass.
+
+## Voice Action Master authentication proof of concept
+
+- Added a separate, schema-constrained Action Interpreter and deterministic Action Registry.
+- Implemented controlled voice draft updates for login email/password and signup username,
+  email, password, and candidate/employer account type.
+- Added temporary visual highlighting and spoken verification for changed fields.
+- Kept form submission separate from field entry. Sign in and Create Account require a second
+  confirmation turn before the browser submits the existing React form.
+- React pages consume fixed semantic actions through `join:voice-action`; the model cannot
+  mutate the DOM or invent selectors.
+- Symfony remains the authentication and authorization authority.
+- Password values are supported for the proof of concept but are marked sensitive and redacted
+  from browser diagnostics, displayed transcripts, short-term history, backend structured
+  traces, and spoken feedback.
+- Added six deterministic Action Registry tests and one pending-confirmation dispatch test.
+  The complete voice suite now contains twenty-eight passing tests, and the frontend production
+  build passes.
+- Corrected the initial Action Registry boundary by removing email-format validation. The Action
+  Master transfers open draft values; the existing React form and Symfony endpoint validate
+  them. Registry validation remains only where execution requires a closed choice, such as the
+  candidate/employer account-type allowlist.
+
+## Candidate Action Master expansion
+
+- Expanded Action Registry version 2 across Candidate dashboard and profile-setup controls.
+- Connected “Get my job match” to the existing matching handler and API workflow.
+- Added candidate profile draft fields, education, registered disability toggles, search, save,
+  and setup completion.
+- Added loaded job, matched-result, and company resolution by visible title/name or first,
+  second, and third ordinal.
+- Added application-status filtering, job-detail navigation, company-modal controls, and
+  confirmation-gated application submission and logout.
+- File voice commands focus and highlight the registered browser picker; they cannot silently
+  choose a local file.
+- Employer and Administrator action execution remain intentionally outside this change.
+- Thirty-three deterministic voice tests and the frontend production build pass. Live
+  interpretation checks pass for matching, disability selection, ranked-result opening,
+  application filtering, and profile saving.

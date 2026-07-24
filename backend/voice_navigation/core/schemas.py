@@ -21,6 +21,19 @@ CommandName = Literal[
 
 RequestCategory = Literal["NAVIGATION", "WEBSITE_QUESTION", "ACTION"]
 
+ActionCommandName = Literal[
+    "SET_FIELD",
+    "CLEAR_FIELD",
+    "SELECT_OPTION",
+    "TOGGLE_OPTION",
+    "OPEN_ITEM",
+    "FOCUS_FIELD",
+    "PRESS",
+    "CONFIRM",
+    "CANCEL_ACTION",
+    "UNKNOWN",
+]
+
 
 class RequestClassification(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -41,6 +54,16 @@ class IntentProposal(BaseModel):
     question: str | None = Field(default=None, max_length=300)
 
 
+class ActionProposal(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    command: ActionCommandName
+    target: str | None = Field(default=None, max_length=80)
+    value: str | None = Field(default=None, max_length=500)
+    language: str = Field(default="und", min_length=2, max_length=16)
+    confidence: float = Field(ge=0, le=1)
+
+
 class AuthorizedCommand(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -58,6 +81,16 @@ class RejectedCommand(BaseModel):
     command: CommandName
     target: str | None
     reason: str
+
+
+class PermissionDeniedCommand(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    status: Literal["permission_denied"]
+    command: Literal["NAVIGATE"]
+    target: str
+    reason: str
+    action: None = None
 
 
 class ClarificationCommand(BaseModel):
@@ -80,6 +113,34 @@ class SpecialistUnavailable(BaseModel):
     action: None = None
 
 
+class AuthorizedAction(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    status: Literal["authorized"]
+    command: ActionCommandName
+    target: str | None
+    risk: int = Field(ge=0, le=5)
+    requires_confirmation: bool = False
+    sensitive: bool = False
+    action: dict[str, Any]
+
+
+class ActionRejected(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    status: Literal[
+        "rejected",
+        "needs_confirmation",
+        "invalid_value",
+        "read_only",
+        "unavailable",
+    ]
+    command: ActionCommandName
+    target: str | None
+    reason: str
+    action: dict[str, Any] | None = None
+
+
 class VoiceTurnResult(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -87,6 +148,14 @@ class VoiceTurnResult(BaseModel):
     transcript: str
     language: str
     classification: RequestClassification
-    proposal: IntentProposal | None = None
-    route: AuthorizedCommand | RejectedCommand | ClarificationCommand | SpecialistUnavailable
+    proposal: IntentProposal | ActionProposal | None = None
+    route: (
+        AuthorizedCommand
+        | RejectedCommand
+        | PermissionDeniedCommand
+        | ClarificationCommand
+        | SpecialistUnavailable
+        | AuthorizedAction
+        | ActionRejected
+    )
     feedback: str

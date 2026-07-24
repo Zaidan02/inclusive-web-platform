@@ -20,8 +20,10 @@ class OpenAINavigationInterpreter:
             model=self._model,
             instructions=(
                 "You translate multilingual website-navigation requests into one canonical command. "
-                "Use only the commands and targets in the supplied context. Never invent a target, "
-                "route, selector, URL, or action. Return UNKNOWN with target null when ambiguous or "
+                "Use only the globally registered targets in allNavigationTargets. A globally registered "
+                "target may be proposed even when it is absent from allowedNavigationTargets; deterministic "
+                "code, not you, decides whether access is permitted. Never invent a target, route, selector, "
+                "URL, or action. Return UNKNOWN with target null when ambiguous or "
                 "unsupported. Understand ordinary synonyms: home, homepage, main page, landing page, "
                 "start page, and front page all mean the canonical home target. Sign in and log in mean "
                 "login; register and create an account mean signup. You may freely understand linguistic "

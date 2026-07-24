@@ -2,7 +2,13 @@ from __future__ import annotations
 
 import unittest
 
-from core.schemas import AuthorizedCommand, ClarificationCommand, IntentProposal, RejectedCommand
+from core.schemas import (
+    AuthorizedCommand,
+    ClarificationCommand,
+    IntentProposal,
+    PermissionDeniedCommand,
+    RejectedCommand,
+)
 from specialists.navigation.registry import NavigationRegistry
 
 
@@ -99,6 +105,15 @@ class NavigationRegistryTest(unittest.TestCase):
             "home",
         )
         self.assertIsInstance(result, RejectedCommand)
+
+    def test_known_but_unavailable_destination_returns_permission_denied(self) -> None:
+        result = self.registry.route(
+            IntentProposal(command="NAVIGATE", target="admin_dashboard", language="en", confidence=1),
+            "candidate",
+        )
+        self.assertIsInstance(result, PermissionDeniedCommand)
+        self.assertEqual("permission_denied", result.status)
+        self.assertIn("permission", result.reason.lower())
 
     def test_section_is_restricted_to_current_context(self) -> None:
         result = self.registry.route(

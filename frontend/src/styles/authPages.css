@@ -1497,3 +1497,9 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+.voice-action-highlight {
+  border-radius: 12px;
+  outline: 3px solid rgba(37, 99, 235, 0.45);
+  outline-offset: 5px;
+  transition: outline-color 180ms ease;
+}
