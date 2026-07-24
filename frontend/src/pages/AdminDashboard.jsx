@@ -20,6 +20,17 @@ const globalStyles = `
   .row-hover:hover { background: #f8fafc !important; }
 `;
 
+function findAdminItem(items, spokenValue, labels) {
+  if (!items?.length) return null;
+  const value = String(spokenValue || "").trim().toLowerCase();
+  const ordinal = { first: 0, "1": 0, "1st": 0, second: 1, "2": 1, "2nd": 1, third: 2, "3": 2, "3rd": 2 }[value];
+  if (ordinal !== undefined) return items[ordinal] || null;
+  return items.find((item) => labels(item).some((label) => {
+    const normalized = String(label || "").toLowerCase();
+    return normalized && (normalized === value || normalized.includes(value) || value.includes(normalized));
+  })) || null;
+}
+
 function UsersIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -173,16 +184,17 @@ function AdminDashboard() {
     } catch (err) { alert(err.message); } finally { setEditingUser(false); setActionLoadingId(null); }
   }
 
-  async function handleArchiveUser() {
-    if (!userToArchive) return;
+  async function handleArchiveUser(userOverride = null) {
+    const targetUser = userOverride?.id ? userOverride : userToArchive;
+    if (!targetUser) return;
     try {
-      setArchivingUser(true); setActionLoadingId(userToArchive.id);
+      setArchivingUser(true); setActionLoadingId(targetUser.id);
       const token = getToken();
       if (!token) { navigate("/signin"); return; }
-      const res = await fetch(`${API_BASE_URL}/admin/users/${userToArchive.id}/archive`, { method: "PATCH", headers: { "X-Auth-Token": token } });
+      const res = await fetch(`${API_BASE_URL}/admin/users/${targetUser.id}/archive`, { method: "PATCH", headers: { "X-Auth-Token": token } });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to archive user.");
-      setUsers((prev) => prev.filter((u) => u.id !== userToArchive.id));
+      setUsers((prev) => prev.filter((u) => u.id !== targetUser.id));
       setUserToArchive(null);
     } catch (err) { alert(err.message); } finally { setArchivingUser(false); setActionLoadingId(null); }
   }
@@ -199,16 +211,17 @@ function AdminDashboard() {
     } catch (err) { alert(err.message); } finally { setActionLoadingId(null); }
   }
 
-  async function handleDeleteUser() {
-    if (!userToDelete) return;
+  async function handleDeleteUser(userOverride = null) {
+    const targetUser = userOverride?.id ? userOverride : userToDelete;
+    if (!targetUser) return;
     try {
       setDeletingUser(true);
       const token = getToken();
       if (!token) { navigate("/signin"); return; }
-      const res = await fetch(`${API_BASE_URL}/admin/users/${userToDelete.id}`, { method: "DELETE", headers: { "X-Auth-Token": token } });
+      const res = await fetch(`${API_BASE_URL}/admin/users/${targetUser.id}`, { method: "DELETE", headers: { "X-Auth-Token": token } });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to delete user.");
-      setUsers((prev) => prev.filter((u) => u.id !== userToDelete.id));
+      setUsers((prev) => prev.filter((u) => u.id !== targetUser.id));
       setUserToDelete(null);
     } catch (err) { alert(err.message); } finally { setDeletingUser(false); }
   }
@@ -237,6 +250,80 @@ function AdminDashboard() {
     if (isNaN(date.getTime())) return d;
     return date.toLocaleDateString("en-GB");
   }
+
+  useEffect(() => {
+    function handleVoiceAction(event) {
+      const action = event.detail.action;
+      if (!action) return;
+      const respond = (feedback) => {
+        event.detail.handled = true;
+        event.detail.feedback = feedback;
+      };
+      const findUser = () => findAdminItem(users, action.value, (user) => [user.username, user.email]);
+      const findProfile = () => findAdminItem(candidateProfiles, action.value, (profile) => [profile.username, profile.email]);
+      const visibleApplications = selectedProfile && showProfileApplications
+        ? selectedProfile.applications || []
+        : adminApplications;
+      const findApplication = () => findAdminItem(visibleApplications, action.value, (app) => [app.candidateName, app.candidateEmail, app.jobTitle]);
+
+      if (action.type === "set_field" || action.type === "clear_field") {
+        const value = action.type === "clear_field" ? "" : action.value;
+        if (action.target === "admin_search") setSearchTerm(value);
+        else if (action.target === "edit_username" && userToEdit) setEditFormData((current) => ({ ...current, username: value }));
+        else if (action.target === "edit_email" && userToEdit) setEditFormData((current) => ({ ...current, email: value }));
+        else if (action.target === "edit_password" && userToEdit) {
+          setShowPasswordField(true);
+          setEditFormData((current) => ({ ...current, password: value }));
+        } else return;
+        respond(action.sensitive ? `I updated ${action.label} without reading it aloud. Please check it.` : `I set ${action.label} to ${value}. Please check it.`);
+      } else if (action.type === "select_option") {
+        const value = action.value === "all" ? "" : action.value;
+        if (action.target === "role_filter") setRoleFilter(value);
+        else if (action.target === "verification_filter") setVerificationFilter(value);
+        else if (action.target === "admin_application_status") setAppStatusFilter(value);
+        else return;
+        respond(`I selected ${action.value.replaceAll("_", " ")} for ${action.label}.`);
+      } else if (action.type === "open_item") {
+        if (["edit_user", "archive_user", "restore_user", "delete_user"].includes(action.target)) {
+          const user = findUser();
+          if (!user) { respond(`I could not find a loaded user matching ${action.value}.`); return; }
+          if (action.target === "edit_user") openEditModal(user);
+          if (action.target === "archive_user") handleArchiveUser(user);
+          if (action.target === "restore_user") handleRestoreUser(user);
+          if (action.target === "delete_user") handleDeleteUser(user);
+          respond(`Activated ${action.label} for ${user.username}.`);
+        } else if (action.target === "candidate_profile") {
+          const profile = findProfile();
+          if (!profile) { respond(`I could not find a loaded candidate profile matching ${action.value}.`); return; }
+          setSelectedProfile(profile); setShowProfileApplications(false);
+          respond(`Opening the candidate profile for ${profile.username}.`);
+        } else if (["view_admin_application_document", "download_admin_application_document", "view_admin_recommendation", "download_admin_recommendation"].includes(action.target)) {
+          const app = findApplication();
+          if (!app) { respond(`I could not find a loaded application matching ${action.value}.`); return; }
+          const recommendation = action.target.includes("recommendation");
+          const download = action.target.includes("download");
+          const url = getAdminApplicationFileUrl(app.id, recommendation ? "recommendation" : "application", download);
+          window.open(url, "_blank", "noopener,noreferrer");
+          respond(`Opening ${action.label} for ${app.candidateName || app.jobTitle}.`);
+        } else return;
+      } else if (action.type === "press") {
+        if (action.target === "toggle_password" && userToEdit) {
+          setShowPasswordField((current) => !current);
+          setEditFormData((current) => ({ ...current, password: "" }));
+        } else if (action.target === "save_user" && userToEdit) handleEditUser({ preventDefault() {} });
+        else if (action.target === "close_modal") {
+          setUserToEdit(null); setUserToArchive(null); setUserToDelete(null);
+          setSelectedProfile(null); setShowProfileApplications(false); setShowPasswordField(false);
+        } else if (action.target === "toggle_profile_applications" && selectedProfile) {
+          setShowProfileApplications((current) => !current);
+        } else if (action.target === "logout") handleLogout();
+        else return;
+        respond(`Activated ${action.label}.`);
+      }
+    }
+    window.addEventListener("join:voice-action", handleVoiceAction);
+    return () => window.removeEventListener("join:voice-action", handleVoiceAction);
+  }, [adminApplications, candidateProfiles, editFormData, selectedProfile, showProfileApplications, userToEdit, users]);
 
   function renderApplicationFileButtons(application, type) {
     const hasFile = type === "application" ? application.hasApplicationDocument : application.hasRecommendationLetter;
@@ -371,7 +458,7 @@ function AdminDashboard() {
   ];
 
   return (
-    <div className="dashboard-screen dashboard-screen--admin" style={{ minHeight: "100vh", display: "flex", fontFamily: '"Inter", -apple-system, sans-serif', background: "#f8fafc", color: "#0f172a" }} data-voice-section="admin-dashboard">
+    <div className="dashboard-screen dashboard-screen--admin" style={{ minHeight: "100vh", display: "flex", fontFamily: '"Inter", -apple-system, sans-serif', background: "#f8fafc", color: "#0f172a" }} data-voice-section="admin-dashboard" data-voice-view={activeTab}>
       <style>{globalStyles}</style>
 
       {/* SIDEBAR */}

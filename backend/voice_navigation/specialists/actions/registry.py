@@ -98,16 +98,24 @@ class ActionRegistry:
         elif command == "PRESS":
             if value is not None:
                 return self._reject(proposal, "rejected", "Pressing a button does not accept a value.")
-            if spec.get("requiresConfirmation", False):
-                return ActionRejected(
-                    status="needs_confirmation",
-                    command=command,
-                    target=proposal.target,
-                    reason=f"Please confirm that you want to {spec['label']}.",
-                    action={"type": "press", "target": proposal.target, "label": spec["label"]},
-                )
 
         sensitive = bool(spec.get("sensitive", False))
+        if spec.get("requiresConfirmation", False):
+            return ActionRejected(
+                status="needs_confirmation",
+                command=command,
+                target=proposal.target,
+                reason=f"Please confirm that you want to {spec['label']}"
+                + (f" for {value}" if value else "")
+                + ".",
+                action={
+                    "type": command.lower(),
+                    "target": proposal.target,
+                    "value": value,
+                    "label": spec["label"],
+                    "sensitive": sensitive,
+                },
+            )
         return AuthorizedAction(
             status="authorized",
             command=command,

@@ -217,6 +217,7 @@ export default function VoiceNavigationControl() {
     const body = new FormData();
     body.append("audio", blob, blob.type.includes("ogg") ? "utterance.ogg" : "utterance.webm");
     body.append("currentContext", contextForPath(locationRef.current));
+    body.append("currentView", document.querySelector("[data-voice-view]")?.dataset.voiceView || "");
     body.append("spokenLanguage", spokenLanguage);
     body.append("history", JSON.stringify(historyRef.current));
     const controller = new AbortController();

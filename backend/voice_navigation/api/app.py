@@ -56,6 +56,7 @@ def create_app(settings: Settings | None = None) -> Flask:
             str(data.get("transcript", "")),
             str(data.get("currentContext", "home")),
             history,
+            str(data.get("currentView", "")) or None,
         )
         _trace_result(result, str(data.get("currentContext", "home")))
         return jsonify(result.model_dump()), 200
@@ -89,6 +90,7 @@ def create_app(settings: Settings | None = None) -> Flask:
             request.form.get("currentContext", "home"),
             spoken_language,
             history,
+            request.form.get("currentView") or None,
         )
         _trace_result(result, request.form.get("currentContext", "home"))
         return jsonify(result.model_dump()), 200

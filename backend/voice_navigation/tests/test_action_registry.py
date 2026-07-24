@@ -91,6 +91,60 @@ class ActionRegistryTest(unittest.TestCase):
         self.assertEqual("authorized", result.status)
         self.assertEqual("focus_field", result.action["type"])
 
+    def test_employer_job_definition_is_dynamic_not_hard_coded(self) -> None:
+        result = self.registry.route(
+            self.proposal("OPEN_ITEM", "job_definition", "A Future Job Added Later"),
+            "employer",
+        )
+        self.assertEqual("authorized", result.status)
+        self.assertEqual("A Future Job Added Later", result.action["value"])
+
+    def test_employer_task_is_dynamic_not_hard_coded(self) -> None:
+        result = self.registry.route(
+            self.proposal("TOGGLE_OPTION", "job_task", "A newly imported task"),
+            "employer",
+        )
+        self.assertEqual("authorized", result.status)
+
+    def test_employer_delete_job_preserves_dynamic_target_in_confirmation(self) -> None:
+        result = self.registry.route(
+            self.proposal("OPEN_ITEM", "delete_job", "Night Receptionist"),
+            "employer",
+        )
+        self.assertEqual("needs_confirmation", result.status)
+        self.assertEqual("Night Receptionist", result.action["value"])
+        self.assertEqual("open_item", result.action["type"])
+
+    def test_employer_application_status_change_requires_confirmation(self) -> None:
+        result = self.registry.route(
+            self.proposal("OPEN_ITEM", "accept_application", "candidate@example.com"),
+            "employer",
+        )
+        self.assertEqual("needs_confirmation", result.status)
+
+    def test_admin_user_is_dynamic_not_hard_coded(self) -> None:
+        result = self.registry.route(
+            self.proposal("OPEN_ITEM", "edit_user", "future.user@example.com"),
+            "admin",
+        )
+        self.assertEqual("authorized", result.status)
+        self.assertEqual("future.user@example.com", result.action["value"])
+
+    def test_admin_delete_user_requires_high_risk_confirmation(self) -> None:
+        result = self.registry.route(
+            self.proposal("OPEN_ITEM", "delete_user", "future-user"),
+            "admin",
+        )
+        self.assertEqual("needs_confirmation", result.status)
+        self.assertEqual("future-user", result.action["value"])
+
+    def test_employer_control_is_unavailable_in_admin_context(self) -> None:
+        result = self.registry.route(
+            self.proposal("PRESS", "submit_job"),
+            "admin",
+        )
+        self.assertEqual("unavailable", result.status)
+
 
 if __name__ == "__main__":
     unittest.main()

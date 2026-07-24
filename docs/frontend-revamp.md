@@ -528,3 +528,61 @@ The complete current architecture, state machine, audio capture mathematics, tra
   controls remain future work.
 - Added voice tests and voice-service health to the complete verification sequence in
   `docs/run-project-commands.md`.
+
+## Employer and Administrator Action Master completion
+
+- Audited all Employer and Administrator routes, internal views, forms, filters, dynamic lists,
+  dialogs, documents, and consequential controls.
+- Confirmed that Navigator route-and-tab coverage already distinguishes every Employer and
+  Administrator internal view.
+- Expanded Action Registry version 3 with Employer posting/profile/application capabilities and
+  Administrator search/filter/user/profile/application capabilities.
+- Kept job definitions, job tasks, posted jobs, applications, users, and candidate profiles
+  dynamic. Python registers only collection capabilities; React resolves spoken names,
+  addresses, titles, and ordinals against current authorized API data.
+- New jobs and tasks therefore require no voice-backend registry change.
+- Added the active internal React view to interpretation context so overlapping labels such as
+  Employer job location versus company location resolve to the visible form; deterministic
+  role registries remain authoritative.
+- Added confirmation to posting/updating jobs, deleting jobs/applications, application decisions,
+  saving administrator user changes, archive/restore/delete operations, and logout.
+- Kept Symfony and existing React route guards as authentication/authorization authorities.
+- Left Admin Add Data Sheets unregistered because the visible button remains an intentional
+  no-op placeholder.
+- Preserved browser-controlled local file selection and documented browser popup/download
+  limitations.
+- Added seven deterministic contracts for future dynamic records, role isolation, and
+  confirmation preservation. The complete deterministic voice suite now contains forty-three
+  passing tests.
+- Live interpretation passes for representative Employer and Administrator phrases without
+  fixture-specific registry values, and the frontend production build passes.
+
+## Hybrid static and dynamic voice-resolution boundary
+
+- Formalized the voice assistant as a hybrid system rather than making either the complete
+  dataset or the complete browser behavior dynamic.
+- Kept website capabilities static and deterministic. The registries define the pages, internal
+  dashboard views, semantic form fields, supported operations, role availability, risk levels,
+  confirmation requirements, fixed enum choices, and safe phrase aliases.
+- Kept business records dynamic. Jobs, job definitions, job tasks, companies, applications,
+  users, and candidate profiles are resolved by React from the currently loaded and authorized
+  API data.
+- The interpreter therefore returns a stable semantic collection such as `job_task`,
+  `edit_job`, or `admin_user` together with the user's spoken reference. It does not return a
+  database identifier, CSS selector, or executable browser instruction.
+- React resolves the reference by visible title, name, email, or ordinal and calls the same
+  existing handler used by the graphical interface. If no unique loaded record can be resolved,
+  no operation is performed.
+- This boundary is required because the full jobs and tasks dataset is not yet available.
+  Importing another valid job or task automatically makes it voice-addressable after it is
+  returned by the API; no Python registry edit is required.
+- A registry and frontend-handler change is required only when the website gains a genuinely
+  new capability, field, page, operation, fixed option, or permission rule. Adding another
+  record to an already registered collection is data growth, not a new voice capability.
+- A fully static dataset would require code changes after every import and would become stale.
+  Fully dynamic execution would allow the model or rendered DOM to define behavior and would
+  weaken predictability, permissions, confirmation policy, and testability. The hybrid boundary
+  permits the dataset to grow while keeping executable behavior bounded.
+- Symfony and React guards continue to decide whether the authenticated user may access the
+  loaded data or invoke the existing handler. Dynamic resolution never creates additional
+  authority.

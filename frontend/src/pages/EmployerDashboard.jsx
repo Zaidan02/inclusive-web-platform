@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
   createEmployerJob,
@@ -36,6 +36,17 @@ const emptyForm = {
   assistanceAvailable: false,
 };
 const emptyProfile = { companyName: "", industry: "", location: "", website: "", description: "", accessibilityStatement: "" };
+
+function findLoadedItem(items, spokenValue, labels) {
+  if (!items?.length) return null;
+  const value = String(spokenValue || "").trim().toLowerCase();
+  const ordinal = { first: 0, "1": 0, "1st": 0, second: 1, "2": 1, "2nd": 1, third: 2, "3": 2, "3rd": 2 }[value];
+  if (ordinal !== undefined) return items[ordinal] || null;
+  return items.find((item) => labels(item).some((label) => {
+    const normalized = String(label || "").toLowerCase();
+    return normalized && (normalized === value || normalized.includes(value) || value.includes(normalized));
+  })) || null;
+}
 
 function PostJobIcon() {
   return <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>;
@@ -84,6 +95,7 @@ function EmployerDashboard() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [selectedProfile, setSelectedProfile] = useState(null);
+  const logoInputRef = useRef(null);
 
   useEffect(() => {
     const requestedTab = location.state?.voiceTab;
@@ -174,8 +186,8 @@ function EmployerDashboard() {
     setHighlightedTaskIds((current) => current.includes(taskId) ? current.filter((id) => id !== taskId) : [...current, taskId]);
   }
 
-  async function handleDeleteJob(jobId) {
-    if (!window.confirm("Delete this job?")) return;
+  async function handleDeleteJob(jobId, confirmed = false) {
+    if (!confirmed && !window.confirm("Delete this job?")) return;
     try { setError(""); setMessage(""); await deleteEmployerJob(jobId); setMessage("Job deleted."); await fetchMyJobs(); }
     catch (err) { setError(err.message); }
   }
@@ -185,8 +197,8 @@ function EmployerDashboard() {
     catch (err) { setError(err.message); }
   }
 
-  async function handleDeleteApplication(appId) {
-    if (!window.confirm("Remove this application?")) return;
+  async function handleDeleteApplication(appId, confirmed = false) {
+    if (!confirmed && !window.confirm("Remove this application?")) return;
     try { setError(""); setMessage(""); await deleteEmployerApplication(appId); setApplications((prev) => prev.filter((a) => a.id !== appId)); setMessage("Application removed."); setTimeout(() => setMessage(""), 3000); }
     catch (err) { setError(err.message); }
   }
@@ -236,6 +248,107 @@ function EmployerDashboard() {
     window.location.href = "/signin";
   }
 
+  useEffect(() => {
+    function handleVoiceAction(event) {
+      const action = event.detail.action;
+      if (!action) return;
+      const respond = (feedback) => {
+        event.detail.handled = true;
+        event.detail.feedback = feedback;
+      };
+      const jobFields = {
+        job_location: "location",
+        application_deadline: "applicationDeadline",
+        job_description: "description",
+      };
+      const profileFields = {
+        company_name: "companyName",
+        industry: "industry",
+        company_location: "location",
+        website: "website",
+        company_description: "description",
+        accessibility_statement: "accessibilityStatement",
+      };
+      const findJob = () => findLoadedItem(myJobs, action.value, (job) => [job.title, job.jobDefinitionName, job.location]);
+      const findApplication = () => findLoadedItem(applications, action.value, (app) => [app.candidateName, app.candidateEmail, app.jobTitle]);
+
+      if (action.type === "set_field" || action.type === "clear_field") {
+        const value = action.type === "clear_field" ? "" : action.value;
+        if (jobFields[action.target]) {
+          switchTab("POST_JOB");
+          setFormData((current) => ({ ...current, [jobFields[action.target]]: value }));
+        } else if (action.target === "task_search") {
+          switchTab("POST_JOB"); setTaskSearch(value);
+        } else if (profileFields[action.target]) {
+          switchTab("PROFILE");
+          setEmployerProfile((current) => ({ ...current, [profileFields[action.target]]: value }));
+        } else return;
+        respond(`I set ${action.label} to ${value}. Please check it.`);
+      } else if (action.type === "select_option") {
+        if (["job_type", "work_mode"].includes(action.target)) {
+          const key = action.target === "job_type" ? "jobType" : "workMode";
+          switchTab("POST_JOB");
+          setFormData((current) => ({ ...current, [key]: action.value }));
+        } else if (["cv_required", "cover_letter_required", "assistance_available"].includes(action.target)) {
+          const key = { cv_required: "cvRequired", cover_letter_required: "coverLetterRequired", assistance_available: "assistanceAvailable" }[action.target];
+          switchTab("POST_JOB");
+          setFormData((current) => ({ ...current, [key]: action.value === "yes" }));
+        } else return;
+        respond(`I set ${action.label} to ${action.value}. Please check it.`);
+      } else if (action.type === "toggle_option" && action.target === "job_task") {
+        const task = findLoadedItem(catalogueTasks, action.value, (item) => [item.taskName, item.name]);
+        if (!task) { respond(`I could not find a currently loaded task matching ${action.value}.`); return; }
+        toggleHighlightedTask(task.id);
+        respond(`I changed the task selection for ${task.taskName}.`);
+      } else if (action.type === "open_item") {
+        if (action.target === "job_definition") {
+          const definition = findLoadedItem(jobDefinitions, action.value, (item) => [item.name]);
+          if (!definition) { respond(`I could not find a loaded job position matching ${action.value}.`); return; }
+          switchTab("POST_JOB");
+          handleJobDefinitionChange({ target: { value: String(definition.id) } });
+          respond(`Selected ${definition.name}.`);
+        } else if (action.target === "edit_job") {
+          const job = findJob();
+          if (!job) { respond(`I could not find a loaded job matching ${action.value}.`); return; }
+          handleEditJob(job); respond(`Opening ${job.title || "the job"} for editing.`);
+        } else if (action.target === "delete_job") {
+          const job = findJob();
+          if (!job) { respond(`I could not find a loaded job matching ${action.value}.`); return; }
+          handleDeleteJob(job.id, true); respond(`Deleting ${job.title || "the selected job"}.`);
+        } else if (["view_candidate_profile", "accept_application", "reject_application", "review_application", "delete_application", "view_application_document", "download_application_document", "view_recommendation", "download_recommendation"].includes(action.target)) {
+          const app = findApplication();
+          if (!app) { respond(`I could not find a loaded application matching ${action.value}.`); return; }
+          if (action.target === "view_candidate_profile") handleViewProfile(app);
+          if (action.target === "accept_application") handleStatusChange(app.id, "accepted");
+          if (action.target === "reject_application") handleStatusChange(app.id, "rejected");
+          if (action.target === "review_application") handleStatusChange(app.id, "in_review");
+          if (action.target === "delete_application") handleDeleteApplication(app.id, true);
+          if (action.target === "view_application_document") handleView(app.id, "application");
+          if (action.target === "download_application_document") handleDownload(app.id, "application", app.applicationOriginalName);
+          if (action.target === "view_recommendation") handleView(app.id, "recommendation");
+          if (action.target === "download_recommendation") handleDownload(app.id, "recommendation", app.recommendationOriginalName);
+          respond(`Activated ${action.label} for ${app.candidateName || app.jobTitle}.`);
+        } else return;
+      } else if (action.type === "focus_field" && action.target === "company_logo") {
+        switchTab("PROFILE");
+        logoInputRef.current?.focus();
+        respond("I focused the company logo picker. Choose the local image using the visible control.");
+      } else if (action.type === "press") {
+        if (action.target === "select_all_tasks") setHighlightedTaskIds(catalogueTasks.map((task) => task.id));
+        else if (action.target === "clear_tasks") setHighlightedTaskIds([]);
+        else if (action.target === "reset_job_form") resetForm();
+        else if (action.target === "submit_job") handleSubmit({ preventDefault() {} });
+        else if (action.target === "save_company_profile") handleSaveProfile();
+        else if (action.target === "close_candidate_profile") setSelectedProfile(null);
+        else if (action.target === "logout") handleLogout();
+        else return;
+        respond(`Activated ${action.label}.`);
+      }
+    }
+    window.addEventListener("join:voice-action", handleVoiceAction);
+    return () => window.removeEventListener("join:voice-action", handleVoiceAction);
+  }, [applications, catalogueTasks, employerProfile, formData, jobDefinitions, myJobs, selectedProfile]);
+
   const today = new Date().toISOString().split("T")[0];
 
   const navItems = [
@@ -249,7 +362,7 @@ function EmployerDashboard() {
   const textareaStyle = { ...inputStyle, minHeight: "100px", resize: "vertical", padding: "10px 12px" };
 
   return (
-    <div className="dashboard-screen dashboard-screen--employer" style={{ minHeight: "100vh", display: "flex", fontFamily: '"Inter", -apple-system, sans-serif', background: "#f8fafc", color: "#0f172a" }} data-voice-section="employer-dashboard">
+    <div className="dashboard-screen dashboard-screen--employer" style={{ minHeight: "100vh", display: "flex", fontFamily: '"Inter", -apple-system, sans-serif', background: "#f8fafc", color: "#0f172a" }} data-voice-section="employer-dashboard" data-voice-view={activeTab}>
       <style>{globalStyles}</style>
 
       {/* SIDEBAR */}
@@ -493,7 +606,7 @@ function EmployerDashboard() {
               </div>
               <label style={{ border: "none", background: "#2563eb", color: "#fff", padding: "9px 16px", borderRadius: "9px", cursor: "pointer", fontSize: "12px", fontWeight: "500", fontFamily: "Inter, sans-serif" }}>
                 Upload Logo
-                <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" style={{ display: "none" }} onChange={handleLogoChange} />
+                <input ref={logoInputRef} data-voice-control="company_logo" type="file" accept="image/png,image/jpeg,image/webp,image/gif" style={{ display: "none" }} onChange={handleLogoChange} />
               </label>
               <p style={{ margin: 0, fontSize: "11px", color: "#94a3b8", textAlign: "center" }}>PNG, JPG, WebP or GIF. Max 3MB.</p>
             </div>

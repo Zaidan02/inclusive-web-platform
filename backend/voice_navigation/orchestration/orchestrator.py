@@ -36,6 +36,7 @@ class VoiceOrchestrator:
         transcript: str,
         current_context: str,
         recent_history: list[dict] | None = None,
+        current_view: str | None = None,
     ) -> VoiceTurnResult:
         normalized = " ".join(transcript.split())
         if not normalized:
@@ -77,6 +78,7 @@ class VoiceOrchestrator:
 
         if classification.category == "ACTION":
             action_context = self._action_registry.context_for_prompt(current_context)
+            action_context["currentView"] = current_view
             proposal = self._action_interpreter.interpret(normalized, action_context, history)
             route = self._action_registry.route(proposal, current_context)
             feedback = self._action_feedback(route)
@@ -136,9 +138,10 @@ class VoiceOrchestrator:
         current_context: str,
         spoken_language: str | None = None,
         recent_history: list[dict] | None = None,
+        current_view: str | None = None,
     ) -> VoiceTurnResult:
         transcript = self._transcriber.transcribe(audio, filename, spoken_language)
-        return self.interpret_text(transcript, current_context, recent_history)
+        return self.interpret_text(transcript, current_context, recent_history, current_view)
 
     @staticmethod
     def _sanitize_history(history: list[dict]) -> list[dict]:

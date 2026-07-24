@@ -35,6 +35,9 @@ class OpenAIActionInterpreter:
                 "A correction such as 'no, my email is x' is another SET_FIELD. "
                 "Do not decide safety or permission. Preserve the user's field value exactly "
                 "apart from removing surrounding filler. Never invent a value."
+                " Use currentView to resolve controls whose labels overlap across internal views; "
+                "for example location in POST_JOB means job_location, while location in PROFILE "
+                "means company_location. The registry still decides whether the proposal is allowed."
             ),
             input=(
                 f"Registry context:\n{json.dumps(context, ensure_ascii=False)}\n"

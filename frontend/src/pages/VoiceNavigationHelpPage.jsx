@@ -28,6 +28,31 @@ const commandGroups = [
     ],
   },
   {
+    title: "Employer actions",
+    commands: [
+      ["Select the Pastry Chef position", "Resolve a currently loaded job definition"],
+      ["Select the task Clean work surfaces", "Toggle a task loaded for the selected position"],
+      ["Set accommodation to yes", "Change a registered posting option"],
+      ["Post this job", "Ask before publishing or updating the job"],
+      ["Edit the Ice Cream Maker job", "Open a loaded employer job for editing"],
+      ["Delete the Ice Cream Maker job", "Ask before deleting a loaded job"],
+      ["Accept the application from Fouad", "Ask before changing a loaded application"],
+      ["Open the candidate profile for Fouad", "Inspect a loaded applicant"],
+    ],
+  },
+  {
+    title: "Administrator actions",
+    commands: [
+      ["Search users for Fouad", "Filter the currently loaded administration view"],
+      ["Edit the user candidate@join.local", "Open a loaded user in the edit dialog"],
+      ["Archive the user candidate@join.local", "Ask before archiving the loaded account"],
+      ["Restore the user candidate@join.local", "Ask before restoring the loaded account"],
+      ["Delete the user candidate@join.local", "Ask before permanent deletion"],
+      ["Open the candidate profile for candidate@join.local", "Open a loaded candidate profile"],
+      ["Set the role filter to employer", "Filter loaded active users"],
+    ],
+  },
+  {
     title: "Move around",
     commands: [
       ["Take me to the login page", "Open an available page"],

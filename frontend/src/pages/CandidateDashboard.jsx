@@ -676,7 +676,7 @@ function CandidateDashboard() {
   const companyJobs = selectedCompany ? getCompanyJobs(selectedCompany) : [];
 
   return (
-    <div className="dashboard-screen dashboard-screen--candidate" style={styles.page} data-voice-section="candidate-dashboard">
+    <div className="dashboard-screen dashboard-screen--candidate" style={styles.page} data-voice-section="candidate-dashboard" data-voice-view={activeTab}>
       <style>{globalStyles}</style>
 
       {/* HEADER */}

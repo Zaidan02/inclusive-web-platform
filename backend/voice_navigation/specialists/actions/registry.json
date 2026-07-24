@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "contexts": {
     "login": {
       "controls": {
@@ -117,6 +117,75 @@
         "education_level": { "kind": "select", "label": "education level", "aliases": ["education", "education level", "highest education"], "editable": true, "valueType": "enum", "options": ["none", "primary", "middle_school", "high_school", "vocational", "university"], "risk": 0 },
         "disabilities": { "kind": "multi_select", "label": "disabilities", "aliases": ["disability", "disabilities", "condition"], "editable": true, "valueType": "registered_option", "options": ["Hand", "Ankle", "Arm", "Both Ankles", "Both Arms", "Both Forearms", "Both Hands", "Both Knees", "Both Legs", "CVA", "Forearm", "Knee", "Leg", "Pelvis Legs Wheelchair", "Waist Wheelchair", "Wheelchair"], "risk": 0 },
         "complete_setup": { "kind": "button", "label": "complete setup", "aliases": ["complete setup", "save setup", "finish profile"], "risk": 2, "requiresConfirmation": true }
+      }
+    },
+    "employer": {
+      "controls": {
+        "job_location": { "kind": "field", "label": "job location", "aliases": ["job location", "location"], "editable": true, "valueType": "text", "risk": 0 },
+        "application_deadline": { "kind": "field", "label": "application deadline", "aliases": ["application deadline", "deadline"], "editable": true, "valueType": "text", "risk": 0 },
+        "job_description": { "kind": "field", "label": "job description", "aliases": ["job description", "description"], "editable": true, "valueType": "text", "risk": 0 },
+        "task_search": { "kind": "field", "label": "task search", "aliases": ["task search", "search tasks"], "editable": true, "valueType": "text", "risk": 0 },
+        "job_type": { "kind": "select", "label": "job type", "aliases": ["job type", "employment type"], "editable": true, "valueType": "enum", "options": ["Full-time", "Part-time", "Contract"], "risk": 0 },
+        "work_mode": { "kind": "select", "label": "work mode", "aliases": ["work mode", "working mode"], "editable": true, "valueType": "enum", "options": ["On-site", "Remote", "Hybrid"], "risk": 0 },
+        "cv_required": { "kind": "select", "label": "CV requirement", "aliases": ["CV required", "resume required"], "editable": true, "valueType": "enum", "options": ["yes", "no"], "risk": 0 },
+        "cover_letter_required": { "kind": "select", "label": "cover-letter requirement", "aliases": ["cover letter required", "recommendation required"], "editable": true, "valueType": "enum", "options": ["yes", "no"], "risk": 0 },
+        "assistance_available": { "kind": "select", "label": "accommodation availability", "aliases": ["accommodation", "assistance available", "help offered"], "editable": true, "valueType": "enum", "options": ["yes", "no"], "risk": 0 },
+        "job_definition": { "kind": "collection", "label": "job position", "aliases": ["job position", "position", "job definition"], "valueType": "text", "risk": 0 },
+        "job_task": { "kind": "multi_select", "label": "highlighted task", "aliases": ["task", "job task", "highlighted task", "important task"], "editable": true, "valueType": "text", "risk": 0 },
+        "employer_job": { "kind": "collection", "label": "job", "aliases": ["my job", "posted job", "job"], "valueType": "text", "risk": 0 },
+        "edit_job": { "kind": "collection", "label": "edit job", "aliases": ["edit job", "modify job"], "valueType": "text", "risk": 1 },
+        "delete_job": { "kind": "collection", "label": "delete job", "aliases": ["delete job", "remove job"], "valueType": "text", "risk": 4, "requiresConfirmation": true },
+        "candidate_application": { "kind": "collection", "label": "candidate application", "aliases": ["application", "candidate application", "applicant"], "valueType": "text", "risk": 0 },
+        "view_candidate_profile": { "kind": "collection", "label": "view candidate profile", "aliases": ["view candidate", "candidate profile", "applicant profile"], "valueType": "text", "risk": 0 },
+        "accept_application": { "kind": "collection", "label": "accept application", "aliases": ["accept application", "approve application"], "valueType": "text", "risk": 2, "requiresConfirmation": true },
+        "reject_application": { "kind": "collection", "label": "reject application", "aliases": ["reject application"], "valueType": "text", "risk": 3, "requiresConfirmation": true },
+        "review_application": { "kind": "collection", "label": "mark application in review", "aliases": ["review application", "mark in review"], "valueType": "text", "risk": 2, "requiresConfirmation": true },
+        "delete_application": { "kind": "collection", "label": "delete application", "aliases": ["delete application", "remove application"], "valueType": "text", "risk": 4, "requiresConfirmation": true },
+        "view_application_document": { "kind": "collection", "label": "view application document", "aliases": ["view CV", "open resume", "view application document"], "valueType": "text", "risk": 0 },
+        "download_application_document": { "kind": "collection", "label": "download application document", "aliases": ["download CV", "download resume", "download application document"], "valueType": "text", "risk": 1 },
+        "view_recommendation": { "kind": "collection", "label": "view recommendation", "aliases": ["view recommendation", "open recommendation letter"], "valueType": "text", "risk": 0 },
+        "download_recommendation": { "kind": "collection", "label": "download recommendation", "aliases": ["download recommendation", "download recommendation letter"], "valueType": "text", "risk": 1 },
+        "company_name": { "kind": "field", "label": "company name", "aliases": ["company name"], "editable": true, "valueType": "text", "risk": 0 },
+        "industry": { "kind": "field", "label": "industry", "aliases": ["industry"], "editable": true, "valueType": "text", "risk": 0 },
+        "company_location": { "kind": "field", "label": "company location", "aliases": ["company location"], "editable": true, "valueType": "text", "risk": 0 },
+        "website": { "kind": "field", "label": "website", "aliases": ["website", "company website"], "editable": true, "valueType": "text", "risk": 0 },
+        "company_description": { "kind": "field", "label": "company description", "aliases": ["company description", "about company"], "editable": true, "valueType": "text", "risk": 0 },
+        "accessibility_statement": { "kind": "field", "label": "accessibility statement", "aliases": ["accessibility statement"], "editable": true, "valueType": "text", "risk": 0 },
+        "company_logo": { "kind": "file", "label": "company logo", "aliases": ["company logo", "upload logo"], "risk": 0 },
+        "select_all_tasks": { "kind": "button", "label": "select all tasks", "aliases": ["select all tasks"], "risk": 0 },
+        "clear_tasks": { "kind": "button", "label": "clear task selection", "aliases": ["clear tasks", "clear task selection"], "risk": 0 },
+        "reset_job_form": { "kind": "button", "label": "reset job form", "aliases": ["reset job form", "cancel job edit", "clear job form"], "risk": 1 },
+        "submit_job": { "kind": "button", "label": "post or update job", "aliases": ["post job", "publish job", "save job", "update job"], "risk": 2, "requiresConfirmation": true },
+        "save_company_profile": { "kind": "button", "label": "save company profile", "aliases": ["save company profile", "save company"], "risk": 1 },
+        "close_candidate_profile": { "kind": "button", "label": "close candidate profile", "aliases": ["close candidate profile", "close profile"], "risk": 0 },
+        "logout": { "kind": "button", "label": "log out", "aliases": ["log out", "sign out"], "risk": 2, "requiresConfirmation": true }
+      }
+    },
+    "admin": {
+      "controls": {
+        "admin_search": { "kind": "field", "label": "admin search", "aliases": ["search", "search users", "search profiles", "search applications"], "editable": true, "valueType": "text", "risk": 0 },
+        "role_filter": { "kind": "select", "label": "role filter", "aliases": ["role filter", "filter by role"], "editable": true, "valueType": "enum", "options": ["all", "ADMIN", "EMPLOYER", "USER"], "risk": 0 },
+        "verification_filter": { "kind": "select", "label": "verification filter", "aliases": ["verification filter", "verified users"], "editable": true, "valueType": "enum", "options": ["all", "VERIFIED", "UNVERIFIED"], "risk": 0 },
+        "admin_application_status": { "kind": "select", "label": "application status filter", "aliases": ["application status", "status filter"], "editable": true, "valueType": "enum", "options": ["all", "pending", "in_review", "accepted", "rejected"], "risk": 0 },
+        "admin_user": { "kind": "collection", "label": "user", "aliases": ["user", "account"], "valueType": "text", "risk": 0 },
+        "edit_user": { "kind": "collection", "label": "edit user", "aliases": ["edit user", "modify user"], "valueType": "text", "risk": 1 },
+        "archive_user": { "kind": "collection", "label": "archive user", "aliases": ["archive user"], "valueType": "text", "risk": 3, "requiresConfirmation": true },
+        "restore_user": { "kind": "collection", "label": "restore user", "aliases": ["restore user"], "valueType": "text", "risk": 3, "requiresConfirmation": true },
+        "delete_user": { "kind": "collection", "label": "delete user", "aliases": ["delete user", "permanently delete user"], "valueType": "text", "risk": 5, "requiresConfirmation": true },
+        "candidate_profile": { "kind": "collection", "label": "candidate profile", "aliases": ["candidate profile", "profile"], "valueType": "text", "risk": 0 },
+        "admin_application": { "kind": "collection", "label": "application", "aliases": ["application"], "valueType": "text", "risk": 0 },
+        "view_admin_application_document": { "kind": "collection", "label": "view application document", "aliases": ["view application document", "view CV"], "valueType": "text", "risk": 0 },
+        "download_admin_application_document": { "kind": "collection", "label": "download application document", "aliases": ["download application document", "download CV"], "valueType": "text", "risk": 1 },
+        "view_admin_recommendation": { "kind": "collection", "label": "view recommendation", "aliases": ["view recommendation"], "valueType": "text", "risk": 0 },
+        "download_admin_recommendation": { "kind": "collection", "label": "download recommendation", "aliases": ["download recommendation"], "valueType": "text", "risk": 1 },
+        "edit_username": { "kind": "field", "label": "username", "aliases": ["username"], "editable": true, "valueType": "text", "risk": 0 },
+        "edit_email": { "kind": "field", "label": "email", "aliases": ["email"], "editable": true, "valueType": "text", "risk": 0 },
+        "edit_password": { "kind": "field", "label": "new password", "aliases": ["new password", "password"], "editable": true, "valueType": "text", "sensitive": true, "risk": 1 },
+        "toggle_password": { "kind": "button", "label": "password field", "aliases": ["change password", "cancel password change"], "risk": 0 },
+        "save_user": { "kind": "button", "label": "save user changes", "aliases": ["save user", "save changes"], "risk": 3, "requiresConfirmation": true },
+        "close_modal": { "kind": "button", "label": "close dialog", "aliases": ["close dialog", "cancel dialog", "close modal"], "risk": 0 },
+        "toggle_profile_applications": { "kind": "button", "label": "toggle profile applications", "aliases": ["show profile applications", "hide profile applications"], "risk": 0 },
+        "logout": { "kind": "button", "label": "log out", "aliases": ["log out", "sign out"], "risk": 2, "requiresConfirmation": true }
       }
     }
   }

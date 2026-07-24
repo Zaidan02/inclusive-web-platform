@@ -28,6 +28,8 @@
 24. [Operational commands](#24-operational-commands)
 25. [Classifier, orchestrator, and navigation-specialist refactor](#25-classifier-orchestrator-and-navigation-specialist-refactor)
 26. [Action Master authentication-form proof of concept](#26-action-master-authentication-form-proof-of-concept)
+    - [Employer and Administrator coverage](#268-employer-and-administrator-action-master-coverage)
+    - [Static capabilities and dynamic records](#269-static-capabilities-and-dynamic-records)
 
 ## 1. Purpose and current scope
 
@@ -42,7 +44,7 @@ The voice-navigation subsystem is an accessibility proof of concept for controll
 - six-turn, in-memory conversational context;
 - deterministic command and target authorization;
 - controlled React navigation, internal-view switching, section reading, and bounded scrolling;
-- authentication-form and Candidate-dashboard actions through a separate deterministic Action Registry;
+- authentication-form, Candidate, Employer, and Administrator actions through a separate deterministic Action Registry;
 - contextual field corrections, registered selections, dynamic loaded-item resolution, and confirmation-gated consequential actions;
 - generated spoken feedback with browser speech fallback;
 - pause, cancel, stop-speaking, repeat, help, and full-disable controls;
@@ -741,7 +743,7 @@ Production deployment still requires a formal privacy notice, retention review, 
 
 ## 21. Validation and test coverage
 
-The deterministic voice suite currently contains 36 passing tests. Coverage includes:
+The deterministic voice suite currently contains 43 passing tests. Coverage includes:
 
 1. registered routes, internal dashboard views, and role-context permission results;
 2. rejection of invented destinations, controls, clarification choices, and scroll amounts;
@@ -752,6 +754,8 @@ The deterministic voice suite currently contains 36 passing tests. Coverage incl
 7. Candidate matching, profile actions, registered disability options, loaded jobs, file-picker
    focusing, and confirmation-gated applications;
 8. short confirmation replies after a pending action.
+9. dynamic Employer job definitions, tasks, jobs, applications, and confirmation policies;
+10. dynamic Administrator users, role isolation, and high-risk confirmation policies.
 
 Live integration checks have also verified:
 
@@ -792,8 +796,8 @@ routing. Deterministic tests do not call OpenAI; live checks do.
 
 - Only English and Arabic may currently be selected as transcription languages.
 - Language/accent/microphone calibration remains device dependent.
-- Employer and Administrator navigation is supported, but their form/button actions are not yet
-  registered in the Action Master.
+- Admin Add Data Sheets remains a visual no-op placeholder and is intentionally not registered
+  as an executable voice action.
 - Silence detection uses fixed constants rather than adaptive calibration.
 - There is no local wake word.
 - Paused mode cannot hear a spoken resume command because the microphone is off.
@@ -815,8 +819,8 @@ Recommended next stages are:
 2. Measure transcription word error rate and command success rate separately.
 3. Tune or adapt silence thresholds without hiding transcription failures.
 4. Add more explicit language options only after testing each language.
-5. Expand the Action Registry and trusted React handlers to Employer and, where useful,
-   Administrator controls.
+5. Calibrate Employer and Administrator Action Master phrasing with representative users and
+   newly imported dynamic data.
 6. Add action clarification for ambiguous loaded objects without weakening deterministic
    execution.
 7. Continue introducing new parameterized operations through strict schemas rather than
@@ -1158,8 +1162,9 @@ instructions remain prohibited.
 
 ### 26.6 Candidate Action Master expansion
 
-Action Registry version 2 expands execution across Candidate routes while leaving Employer and
-Administrator actions out of scope. The `candidate` context registers:
+Action Registry version 2 introduced execution across Candidate routes. Action Registry version
+3 subsequently adds Employer and Administrator actions in Section 26.8. The `candidate`
+context registers:
 
 - profile draft fields: first name, last name, location, phone, and about;
 - education and application-status closed selections;
@@ -1204,3 +1209,120 @@ When compatibility results are visible, an ordinal request such as “select the
 prefers the visible ranked match list. A title request still resolves against the loaded job
 objects. This prevents the first item in the general jobs array from silently replacing the
 first result the user can currently see.
+
+### 26.8 Employer and Administrator Action Master coverage
+
+Action Registry version 3 extends the same bounded execution model to Employer and
+Administrator screens.
+
+Employer capabilities include posting fields, closed job type/work mode/requirement selections,
+company-profile fields, task search, company-logo picker focus, save/reset/submit controls,
+loaded job editing/deletion, loaded applicant profiles, confirmation-gated application status
+changes, application deletion, and registered document view/download operations.
+
+Administrator capabilities include search, role/verification/application-status filters,
+loaded user editing, sensitive password-field updates, confirmation-gated save/archive/restore/
+delete operations, loaded candidate profiles, profile-application visibility, and registered
+application document operations. The Add Data Sheets button remains unregistered because its
+underlying import behavior is still intentionally a no-op placeholder.
+
+#### Dynamic-data invariant
+
+The Python registry contains capability identifiers, never database job, task, user, company,
+or application names. For example, it registers `job_definition`, `job_task`, `edit_job`,
+`candidate_application`, `admin_user`, and `candidate_profile`. The interpreter preserves the
+spoken object reference, while the mounted authorized React page resolves it against its
+currently loaded API data by visible name/email/title or ordinal.
+
+The frontend also supplies the current internal React view, such as `POST_JOB`, `PROFILE`,
+`APPLICATIONS`, or `ARCHIVED_USERS`, as interpretation context. This resolves overlapping
+language such as “location” without treating the view label as execution authority. The
+role-level deterministic registry still authorizes the resulting canonical control.
+
+Consequently:
+
+- newly imported job definitions and tasks require no Python registry update;
+- newly posted jobs and received applications become addressable when React loads them;
+- newly created users and candidate profiles work without backend voice changes;
+- failure to resolve a spoken object in the current authorized list produces feedback and no
+  operation;
+- a control registered for one role is unavailable in the other role's context.
+
+Persistent and destructive operations retain confirmation. The pending action contains only
+the fixed semantic capability plus the spoken object reference. After confirmation, React
+resolves the object again against current state before calling the existing Symfony-backed
+handler. Symfony remains the final authentication and authorization authority.
+
+File selection remains browser-controlled. Voice may focus or identify a registered picker,
+but it cannot silently choose a local file. Document view/download behavior may also remain
+subject to the browser's popup and download policies.
+
+### 26.9 Static capabilities and dynamic records
+
+The Action Master deliberately uses a hybrid resolution model. “Static” and “dynamic” refer to
+different layers and must not be interpreted as competing implementations.
+
+| Concern | Resolution | Examples | Reason |
+|---|---|---|---|
+| Website destinations | Static registry | login, Candidate dashboard, Employer applications, Admin archived users | A model must not invent routes |
+| Internal dashboard views | Static registry | `POST_JOB`, `PROFILE`, `APPLICATIONS`, `USERS` | The set of executable views is application behavior |
+| Form-field identities | Static registry | email, job description, company location, deadline | Fields require explicit React handlers |
+| Operations | Static registry | set, select, open, save, submit, archive, delete | Only implemented operations may execute |
+| Role availability | Static registry | Candidate, Employer, and Admin control sets | Voice must not grant capabilities across roles |
+| Risk and confirmation | Static registry | job submission, application decisions, archive/delete, logout | Safety policy cannot be chosen by the model or dataset |
+| Closed choices | Static registry | job type, work mode, role/status filters | Only application-supported enum values are valid |
+| Jobs and job definitions | Dynamic loaded data | current and future job titles | Dataset growth must not require Python changes |
+| Job tasks | Dynamic loaded data | every task returned for a selected job definition | The complete task dataset is not yet available |
+| Companies | Dynamic loaded data | companies returned by the authorized API | Company records are business data |
+| Applications | Dynamic loaded data | applications currently loaded for a Candidate or Employer | Records change continuously |
+| Users and profiles | Dynamic loaded data | Admin users and Candidate profiles | New accounts are records, not new capabilities |
+| Spoken object reference | Dynamic frontend matching | title, name, email, first/second/third | The mounted UI knows the current authorized objects |
+
+The end-to-end contract is:
+
+1. The classifier identifies an action request.
+2. The interpreter selects only a statically registered semantic command and collection.
+3. The registry validates the role context, control kind, operation, value type, risk, and
+   confirmation policy.
+4. For a dynamic object, the proposal preserves the spoken reference rather than guessing a
+   database identifier.
+5. The mounted React page searches only its currently loaded API data by normalized visible
+   title, name, email, or ordinal.
+6. React rejects a missing or ambiguous match and performs no operation.
+7. If resolved, React invokes the same existing handler used by the visual control.
+8. The existing frontend guard and Symfony endpoint retain final authentication,
+   authorization, validation, and persistence responsibility.
+
+For example, the registry statically declares that an Employer may select a `job_definition`.
+It does not list “Pastry Chef” or “Ice Cream Maker.” When the user says “Select the Pastry Chef
+position,” the interpreter returns the registered `job_definition` capability and the open
+text reference “Pastry Chef.” React resolves that text against job definitions already loaded
+from the API. A job definition imported later follows the identical path.
+
+The same rule applies to `job_task`, posted jobs, applications, companies, Admin users, and
+Candidate profiles. Dynamic data changes do not expand the operation vocabulary. A new record
+can be selected, opened, or modified only through operations already registered for the
+current role.
+
+#### Change-impact rule
+
+No voice-backend registry update is required when:
+
+- a new job definition or task is imported in the existing schema;
+- a new job is posted;
+- a company, application, user, or profile is created;
+- the visible order of loaded records changes.
+
+A registry and matching React-handler update is required when:
+
+- a new page or internal view is introduced;
+- a new semantic field or control is added;
+- a new operation becomes possible;
+- a fixed enum gains a supported value;
+- risk, confirmation, or role-permission policy changes.
+
+This separation is particularly important while the full dataset is incomplete. Making record
+names static would couple releases to every dataset import. Making execution fully dynamic
+would let model output or arbitrary DOM structure define behavior, which would make the system
+less predictable, less testable, and easier to misuse. Static capabilities plus dynamic
+authorized records provide extensibility without surrendering deterministic execution.
