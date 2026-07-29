@@ -6,6 +6,7 @@ import {
 } from "../services/adminApi";
 import { getToken, logout } from "../services/authService";
 import { API_BASE_URL } from "../config";
+import useDialogFocus from "../hooks/useDialogFocus";
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -102,6 +103,16 @@ function AdminDashboard() {
   const [catalogueImporting, setCatalogueImporting] = useState(false);
   const [catalogueImportResult, setCatalogueImportResult] = useState(null);
   const catalogueInputRef = useRef(null);
+  const anyDialogOpen = Boolean(selectedProfile || userToEdit || userToArchive || userToDelete);
+  const closeActiveDialog = () => {
+    setSelectedProfile(null);
+    setShowProfileApplications(false);
+    setUserToEdit(null);
+    setUserToArchive(null);
+    setUserToDelete(null);
+    setShowPasswordField(false);
+  };
+  const adminDialogRef = useDialogFocus(anyDialogOpen, closeActiveDialog);
 
   const isArchivedView = activeTab === "ARCHIVED_USERS";
   const isUserProfilesView = activeTab === "USER_PROFILES";
@@ -391,10 +402,10 @@ function AdminDashboard() {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)" }}>
               <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
             </svg>
-            <input type="text" placeholder="Search by candidate, job or status..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
+            <input aria-label="Search applications" type="search" placeholder="Search by candidate, job or status..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
               style={{ width: "100%", padding: "9px 12px 9px 34px", borderRadius: "10px", border: "1px solid #e2e8f0", fontSize: "13px", outline: "none", background: "#f8fafc", fontFamily: "Inter, sans-serif", color: "#0f172a", boxSizing: "border-box" }} />
           </div>
-          <select value={appStatusFilter} onChange={(e) => setAppStatusFilter(e.target.value)}
+          <select aria-label="Filter applications by status" value={appStatusFilter} onChange={(e) => setAppStatusFilter(e.target.value)}
             style={{ padding: "9px 12px", borderRadius: "10px", border: "1px solid #e2e8f0", fontSize: "13px", background: "#f8fafc", color: "#475569", cursor: "pointer", outline: "none", fontFamily: "Inter, sans-serif" }}>
             <option value="">All statuses</option>
             <option value="pending">Pending</option>
@@ -501,13 +512,15 @@ function AdminDashboard() {
           <h2 style={{ margin: "4px 0 0", fontSize: "18px", fontWeight: "600", color: "#ffffff", letterSpacing: "-0.3px" }}>Admin Console</h2>
         </div>
 
-        <nav style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+        <nav aria-label="Admin dashboard sections" style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
           {navItems.map(({ tab, label, icon }) => {
             const isActive = activeTab === tab;
             return (
               <button
                 key={tab}
+                type="button"
                 className="nav-btn"
+                aria-current={isActive ? "page" : undefined}
                 onClick={() => handleTabChange(tab)}
                 onMouseEnter={() => setHoveredTab(tab)}
                 onMouseLeave={() => setHoveredTab(null)}
@@ -530,7 +543,7 @@ function AdminDashboard() {
         </nav>
 
         <div style={{ marginTop: "auto", paddingTop: "20px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-          <button onClick={handleLogout} style={{ display: "flex", alignItems: "center", gap: "8px", background: "transparent", border: "none", color: "#64748b", cursor: "pointer", fontSize: "13px", fontWeight: "400", padding: "8px 12px", borderRadius: "8px", fontFamily: "Inter, sans-serif", width: "100%" }}>
+          <button type="button" onClick={handleLogout} style={{ display: "flex", alignItems: "center", gap: "8px", background: "transparent", border: "none", color: "#64748b", cursor: "pointer", fontSize: "13px", fontWeight: "400", padding: "8px 12px", borderRadius: "8px", fontFamily: "Inter, sans-serif", width: "100%" }}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
               <polyline points="16 17 21 12 16 7" />
@@ -623,12 +636,12 @@ function AdminDashboard() {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)" }}>
                   <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
                 </svg>
-                <input type="text" placeholder={isUserProfilesView ? "Search profiles..." : "Search users..."} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
+                <input aria-label={isUserProfilesView ? "Search user profiles" : "Search users"} type="search" placeholder={isUserProfilesView ? "Search profiles..." : "Search users..."} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
                   style={{ width: "100%", padding: "9px 12px 9px 34px", borderRadius: "10px", border: "1px solid #e2e8f0", fontSize: "13px", outline: "none", boxSizing: "border-box", background: "#f8fafc", fontFamily: "Inter, sans-serif", color: "#0f172a" }} />
               </div>
               {!isUserProfilesView && !isArchivedView && (
                 <>
-                  <select value={roleFilter} onChange={(e) => e.target.value === "RESET" ? setRoleFilter("") : setRoleFilter(e.target.value)}
+                  <select aria-label="Filter users by role" value={roleFilter} onChange={(e) => e.target.value === "RESET" ? setRoleFilter("") : setRoleFilter(e.target.value)}
                     style={{ padding: "9px 12px", borderRadius: "10px", border: "1px solid #e2e8f0", fontSize: "13px", background: "#f8fafc", color: "#475569", cursor: "pointer", outline: "none", fontFamily: "Inter, sans-serif" }}>
                     <option value="" disabled hidden>Role</option>
                     <option value="RESET">All roles</option>
@@ -636,7 +649,7 @@ function AdminDashboard() {
                     <option value="USER">User</option>
                     <option value="EMPLOYER">Employer</option>
                   </select>
-                  <select value={verificationFilter} onChange={(e) => e.target.value === "RESET" ? setVerificationFilter("") : setVerificationFilter(e.target.value)}
+                  <select aria-label="Filter users by verification status" value={verificationFilter} onChange={(e) => e.target.value === "RESET" ? setVerificationFilter("") : setVerificationFilter(e.target.value)}
                     style={{ padding: "9px 12px", borderRadius: "10px", border: "1px solid #e2e8f0", fontSize: "13px", background: "#f8fafc", color: "#475569", cursor: "pointer", outline: "none", fontFamily: "Inter, sans-serif" }}>
                     <option value="" disabled hidden>Email status</option>
                     <option value="RESET">All statuses</option>
@@ -742,9 +755,9 @@ function AdminDashboard() {
       {/* PROFILE MODAL */}
       {selectedProfile && (
         <div style={S.overlay}>
-          <div style={{ width: "100%", maxWidth: "860px", maxHeight: "88vh", background: "#ffffff", borderRadius: "20px", boxShadow: "0 20px 60px rgba(15,23,42,0.2)", overflow: "hidden", display: "flex", flexDirection: "column" }}>
+          <div ref={adminDialogRef} role="dialog" aria-modal="true" aria-labelledby="admin-profile-dialog-title" tabIndex={-1} style={{ width: "100%", maxWidth: "860px", maxHeight: "88vh", background: "#ffffff", borderRadius: "20px", boxShadow: "0 20px 60px rgba(15,23,42,0.2)", overflow: "hidden", display: "flex", flexDirection: "column" }}>
             <div style={{ flex: 1, overflowY: "auto", padding: "28px" }}>
-              <h2 style={{ margin: "0 0 4px", fontSize: "20px", fontWeight: "600", color: "#0f172a" }}>Candidate Profile</h2>
+              <h2 id="admin-profile-dialog-title" style={{ margin: "0 0 4px", fontSize: "20px", fontWeight: "600", color: "#0f172a" }}>Candidate Profile</h2>
               <p style={{ margin: "0 0 20px", fontSize: "13px", color: "#94a3b8" }}>Detailed candidate information</p>
               <div style={{ display: "flex", alignItems: "center", gap: "14px", background: "#f8fafc", border: "1px solid #e8edf5", borderRadius: "14px", padding: "16px", marginBottom: "18px" }}>
                 <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "linear-gradient(135deg, #1d4ed8, #3b82f6)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "19px", fontWeight: "600", flexShrink: 0 }}>
@@ -803,14 +816,14 @@ function AdminDashboard() {
       {/* EDIT MODAL */}
       {userToEdit && (
         <div style={S.overlay}>
-          <div style={{ width: "100%", maxWidth: "460px", background: "#fff", borderRadius: "18px", padding: "28px", boxShadow: "0 20px 60px rgba(15,23,42,0.18)" }}>
-            <h2 style={{ margin: "0 0 4px", fontSize: "18px", fontWeight: "600", color: "#0f172a" }}>Edit User</h2>
+          <div ref={adminDialogRef} role="dialog" aria-modal="true" aria-labelledby="edit-user-dialog-title" tabIndex={-1} style={{ width: "100%", maxWidth: "460px", background: "#fff", borderRadius: "18px", padding: "28px", boxShadow: "0 20px 60px rgba(15,23,42,0.18)" }}>
+            <h2 id="edit-user-dialog-title" style={{ margin: "0 0 4px", fontSize: "18px", fontWeight: "600", color: "#0f172a" }}>Edit User</h2>
             <p style={{ margin: "0 0 20px", fontSize: "13px", color: "#64748b" }}>Update {userToEdit.username}&apos;s account information.</p>
             <form onSubmit={handleEditUser} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
               {[{ label: "Username", name: "username", type: "text" }, { label: "Email", name: "email", type: "email" }].map(({ label, name, type }) => (
                 <div key={name}>
-                  <label style={{ display: "block", fontSize: "12px", fontWeight: "500", color: "#475569", marginBottom: "5px", textTransform: "uppercase", letterSpacing: "0.4px" }}>{label}</label>
-                  <input type={type} name={name} value={editFormData[name]} onChange={handleEditFormChange}
+                  <label htmlFor={`edit-user-${name}`} style={{ display: "block", fontSize: "12px", fontWeight: "500", color: "#475569", marginBottom: "5px", textTransform: "uppercase", letterSpacing: "0.4px" }}>{label}</label>
+                  <input id={`edit-user-${name}`} type={type} name={name} value={editFormData[name]} onChange={handleEditFormChange}
                     style={{ width: "100%", padding: "10px 12px", borderRadius: "9px", border: "1px solid #e2e8f0", fontSize: "13px", outline: "none", boxSizing: "border-box", fontFamily: "Inter, sans-serif" }} />
                 </div>
               ))}
@@ -824,8 +837,8 @@ function AdminDashboard() {
                 </button>
                 {showPasswordField && (
                   <div>
-                    <label style={{ display: "block", fontSize: "12px", fontWeight: "500", color: "#475569", marginBottom: "5px", textTransform: "uppercase", letterSpacing: "0.4px" }}>New Password</label>
-                    <input type="password" name="password" value={editFormData.password} onChange={handleEditFormChange}
+                    <label htmlFor="edit-user-password" style={{ display: "block", fontSize: "12px", fontWeight: "500", color: "#475569", marginBottom: "5px", textTransform: "uppercase", letterSpacing: "0.4px" }}>New Password</label>
+                    <input id="edit-user-password" type="password" name="password" value={editFormData.password} onChange={handleEditFormChange}
                       style={{ width: "100%", padding: "10px 12px", borderRadius: "9px", border: "1px solid #e2e8f0", fontSize: "13px", outline: "none", boxSizing: "border-box", fontFamily: "Inter, sans-serif" }} />
                   </div>
                 )}
@@ -846,11 +859,11 @@ function AdminDashboard() {
       {/* ARCHIVE MODAL */}
       {userToArchive && (
         <div style={S.overlay}>
-          <div style={{ width: "100%", maxWidth: "400px", background: "#fff", borderRadius: "18px", padding: "28px", boxShadow: "0 20px 60px rgba(15,23,42,0.18)", textAlign: "center" }}>
+          <div ref={adminDialogRef} role="dialog" aria-modal="true" aria-labelledby="archive-user-dialog-title" tabIndex={-1} style={{ width: "100%", maxWidth: "400px", background: "#fff", borderRadius: "18px", padding: "28px", boxShadow: "0 20px 60px rgba(15,23,42,0.18)", textAlign: "center" }}>
             <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "#fffbeb", color: "#d97706", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
               <ArchiveIcon />
             </div>
-            <h2 style={{ margin: "0 0 8px", fontSize: "17px", fontWeight: "600", color: "#0f172a" }}>Archive user?</h2>
+            <h2 id="archive-user-dialog-title" style={{ margin: "0 0 8px", fontSize: "17px", fontWeight: "600", color: "#0f172a" }}>Archive user?</h2>
             <p style={{ margin: "0 0 6px", fontSize: "13px", color: "#64748b" }}>You are about to archive <strong>{userToArchive.username}</strong>.</p>
             <p style={{ margin: "0 0 22px", fontSize: "12px", color: "#d97706" }}>This user will be moved to Archived Users.</p>
             <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
@@ -868,9 +881,9 @@ function AdminDashboard() {
       {/* DELETE MODAL */}
       {userToDelete && (
         <div style={S.overlay}>
-          <div style={{ width: "100%", maxWidth: "400px", background: "#fff", borderRadius: "18px", padding: "28px", boxShadow: "0 20px 60px rgba(15,23,42,0.18)", textAlign: "center" }}>
+          <div ref={adminDialogRef} role="dialog" aria-modal="true" aria-labelledby="delete-user-dialog-title" tabIndex={-1} style={{ width: "100%", maxWidth: "400px", background: "#fff", borderRadius: "18px", padding: "28px", boxShadow: "0 20px 60px rgba(15,23,42,0.18)", textAlign: "center" }}>
             <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "#fef2f2", color: "#dc2626", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px", fontSize: "18px", fontWeight: "600" }}>!</div>
-            <h2 style={{ margin: "0 0 8px", fontSize: "17px", fontWeight: "600", color: "#0f172a" }}>Delete user?</h2>
+            <h2 id="delete-user-dialog-title" style={{ margin: "0 0 8px", fontSize: "17px", fontWeight: "600", color: "#0f172a" }}>Delete user?</h2>
             <p style={{ margin: "0 0 6px", fontSize: "13px", color: "#64748b" }}>You are about to permanently delete <strong>{userToDelete.username}</strong>.</p>
             <p style={{ margin: "0 0 22px", fontSize: "12px", color: "#dc2626" }}>This action cannot be undone.</p>
             <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>

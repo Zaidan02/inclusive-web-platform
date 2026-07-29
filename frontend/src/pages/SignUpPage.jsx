@@ -162,9 +162,17 @@ function SignUpPage() {
 
   function validateForm() {
     setTouched({ username: true, email: true, password: true });
-    if (!formData.username.trim()) return false;
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) return false;
-    if (passwordScore < 4) return false;
+    const firstInvalidField = !formData.username.trim()
+      ? "username"
+      : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+      ? "email"
+      : passwordScore < 4
+      ? "password"
+      : null;
+    if (firstInvalidField) {
+      window.requestAnimationFrame(() => document.getElementById(firstInvalidField)?.focus());
+      return false;
+    }
     return true;
   }
 
@@ -187,7 +195,7 @@ function SignUpPage() {
   }
 
   return (
-    <div className="auth-page signup-page">
+    <main className="auth-page signup-page">
       <div className="signup-card">
 
         {/* Card header shimmer stripe */}
@@ -207,6 +215,7 @@ function SignUpPage() {
         <div className="account-type-options">
           <button
             type="button"
+            aria-pressed={formData.accountType === "candidate"}
             className={formData.accountType === "candidate" ? "account-type-card selected" : "account-type-card"}
             onClick={() => handleAccountTypeChange("candidate")}
           >
@@ -218,6 +227,7 @@ function SignUpPage() {
 
           <button
             type="button"
+            aria-pressed={formData.accountType === "employer"}
             className={formData.accountType === "employer" ? "account-type-card selected" : "account-type-card"}
             onClick={() => handleAccountTypeChange("employer")}
           >
@@ -239,6 +249,7 @@ function SignUpPage() {
                 id="username"
                 type="text"
                 name="username"
+                autoComplete="username"
                 placeholder="Choose a username"
                 value={formData.username}
                 onChange={handleChange}
@@ -258,6 +269,7 @@ function SignUpPage() {
                 id="email"
                 type="email"
                 name="email"
+                autoComplete="email"
                 placeholder="name@example.com"
                 value={formData.email}
                 onChange={handleChange}
@@ -277,6 +289,7 @@ function SignUpPage() {
                 id="password"
                 type={showPassword ? "text" : "password"}
                 name="password"
+                autoComplete="new-password"
                 placeholder="Create a secure password"
                 value={formData.password}
                 onChange={handleChange}
@@ -330,8 +343,8 @@ function SignUpPage() {
             </div>
           </div>
 
-          {serverError && <p className="auth-error">{serverError}</p>}
-          {success && <p className="auth-success">{success}</p>}
+          {serverError && <p className="auth-error" role="alert">{serverError}</p>}
+          {success && <p className="auth-success" role="status">{success}</p>}
 
           <button type="submit" className="primary-btn primary-btn--full" disabled={loading}>
             {loading ? (
@@ -353,7 +366,7 @@ function SignUpPage() {
         </Link>
 
       </div>
-    </div>
+    </main>
   );
 }
 

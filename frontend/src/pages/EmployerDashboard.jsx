@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { Children, cloneElement, isValidElement, useEffect, useId, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
   createEmployerJob,
@@ -18,6 +18,7 @@ import {
   logout,
 } from "../services/authService";
 import { API_BASE_URL, BACKEND_BASE_URL } from "../config";
+import useDialogFocus from "../hooks/useDialogFocus";
 
 const globalStyles = `
   * { box-sizing: border-box; }
@@ -65,11 +66,27 @@ function LogoutIcon() {
 }
 
 function Field({ label, children, hint }) {
+  const generatedId = useId();
+  const childList = Children.toArray(children);
+  const controlIndex = childList.findIndex(
+    (child) => isValidElement(child)
+      && typeof child.type === "string"
+      && ["input", "select", "textarea"].includes(child.type),
+  );
+  const control = controlIndex >= 0 ? childList[controlIndex] : null;
+  const inputId = control?.props.id || generatedId;
+  const hintId = hint ? `${inputId}-hint` : undefined;
+  const describedBy = [control?.props["aria-describedby"], hintId].filter(Boolean).join(" ") || undefined;
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "5px", marginBottom: "16px" }}>
-      <label style={{ fontSize: "12px", fontWeight: "500", color: "#475569", textTransform: "uppercase", letterSpacing: "0.4px" }}>{label}</label>
-      {hint && <p style={{ margin: 0, fontSize: "11px", color: "#94a3b8" }}>{hint}</p>}
-      {children}
+      <label htmlFor={inputId} style={{ fontSize: "12px", fontWeight: "500", color: "#475569", textTransform: "uppercase", letterSpacing: "0.4px" }}>{label}</label>
+      {hint && <p id={hintId} style={{ margin: 0, fontSize: "11px", color: "#64748b" }}>{hint}</p>}
+      {childList.map((child, index) => (
+        index === controlIndex
+          ? cloneElement(child, { id: inputId, "aria-describedby": describedBy })
+          : child
+      ))}
     </div>
   );
 }
@@ -96,6 +113,8 @@ function EmployerDashboard() {
   const [error, setError] = useState("");
   const [selectedProfile, setSelectedProfile] = useState(null);
   const logoInputRef = useRef(null);
+  const logoButtonRef = useRef(null);
+  const candidateDialogRef = useDialogFocus(Boolean(selectedProfile), () => setSelectedProfile(null));
 
   useEffect(() => {
     const requestedTab = location.state?.voiceTab;
@@ -331,7 +350,7 @@ function EmployerDashboard() {
         } else return;
       } else if (action.type === "focus_field" && action.target === "company_logo") {
         switchTab("PROFILE");
-        logoInputRef.current?.focus();
+        window.requestAnimationFrame(() => logoButtonRef.current?.focus());
         respond("I focused the company logo picker. Choose the local image using the visible control.");
       } else if (action.type === "press") {
         if (action.target === "select_all_tasks") setHighlightedTaskIds(catalogueTasks.map((task) => task.id));
@@ -371,11 +390,11 @@ function EmployerDashboard() {
           <p style={{ margin: 0, fontSize: "10px", fontWeight: "500", color: "#475569", textTransform: "uppercase", letterSpacing: "1px" }}>Platform</p>
           <h2 style={{ margin: "4px 0 0", fontSize: "18px", fontWeight: "600", color: "#ffffff", letterSpacing: "-0.3px" }}>Employer Console</h2>
         </div>
-        <nav style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+        <nav aria-label="Employer dashboard sections" style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
           {navItems.map(({ tab, label, icon }) => {
             const isActive = activeTab === tab;
             return (
-              <button key={tab} className="nav-btn"
+              <button type="button" key={tab} className="nav-btn" aria-current={isActive ? "page" : undefined}
                 onClick={() => { if (tab === "POST_JOB") resetForm(); switchTab(tab); }}
                 style={{ display: "flex", alignItems: "center", gap: "10px", background: isActive ? "rgba(59,130,246,0.15)" : "transparent", color: isActive ? "#60a5fa" : "#94a3b8", border: "none", textAlign: "left", padding: "10px 12px", borderRadius: "10px", cursor: "pointer", fontSize: "13px", fontWeight: isActive ? "600" : "400", transition: "all 0.15s", fontFamily: "Inter, sans-serif", borderLeft: isActive ? "2px solid #3b82f6" : "2px solid transparent" }}>
                 {icon}{label}
@@ -384,7 +403,7 @@ function EmployerDashboard() {
           })}
         </nav>
         <div style={{ marginTop: "auto", paddingTop: "20px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-          <button onClick={handleLogout}
+          <button type="button" onClick={handleLogout}
             style={{ display: "flex", alignItems: "center", gap: "8px", background: "transparent", border: "none", color: "#64748b", cursor: "pointer", fontSize: "13px", fontWeight: "400", padding: "8px 12px", borderRadius: "8px", fontFamily: "Inter, sans-serif", width: "100%" }}>
             <LogoutIcon />Log out
           </button>
@@ -458,7 +477,7 @@ function EmployerDashboard() {
                 <input className="input-field" style={inputStyle} value={taskSearch} onChange={(e) => setTaskSearch(e.target.value)} placeholder={formData.jobDefinitionId ? "Search tasks…" : "Select a job position first"} disabled={!formData.jobDefinitionId} />
                 {formData.jobDefinitionId && catalogueTasks.length > 0 && <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}><button type="button" onClick={() => setHighlightedTaskIds(catalogueTasks.map((task) => task.id))} style={{ border: "1px solid #bfdbfe", borderRadius: "8px", padding: "6px 10px", background: "#eff6ff", color: "#1d4ed8", cursor: "pointer", fontSize: "11px", fontWeight: "600" }}>Select all tasks</button><button type="button" onClick={() => setHighlightedTaskIds([])} style={{ border: "1px solid #e2e8f0", borderRadius: "8px", padding: "6px 10px", background: "#fff", color: "#64748b", cursor: "pointer", fontSize: "11px", fontWeight: "600" }}>Clear selection</button></div>}
                 {highlightedTaskIds.length > 0 && <div style={{ display: "flex", flexWrap: "wrap", gap: "7px", marginTop: "9px" }}>{highlightedTaskIds.map((id) => { const task = catalogueTasks.find((item) => item.id === id); return task ? <button type="button" key={id} onClick={() => toggleHighlightedTask(id)} style={{ border: "none", borderRadius: "999px", padding: "6px 10px", color: "#1d4ed8", background: "#eff6ff", cursor: "pointer" }}>{task.taskName} ×</button> : null; })}</div>}
-                {formData.jobDefinitionId && <div role="listbox" aria-label="Available job tasks" style={{ marginTop: "8px", maxHeight: "210px", overflowY: "auto", border: "1px solid #e2e8f0", borderRadius: "12px", padding: "6px", background: "#fff" }}>{catalogueTasks.filter((task) => task.taskName.toLowerCase().includes(taskSearch.toLowerCase())).map((task) => { const selected = highlightedTaskIds.includes(task.id); return <button type="button" role="option" aria-selected={selected} key={task.id} onClick={() => toggleHighlightedTask(task.id)} style={{ width: "100%", display: "flex", alignItems: "center", gap: "9px", textAlign: "left", border: "none", borderRadius: "8px", padding: "9px 10px", marginBottom: "2px", background: selected ? "#eff6ff" : "transparent", color: selected ? "#1d4ed8" : "#334155", cursor: "pointer" }}><span aria-hidden="true">{selected ? "✓" : "○"}</span>{task.taskName}</button>; })}</div>}
+                {formData.jobDefinitionId && <div aria-label="Available job tasks" style={{ marginTop: "8px", maxHeight: "210px", overflowY: "auto", border: "1px solid #e2e8f0", borderRadius: "12px", padding: "6px", background: "#fff" }}>{catalogueTasks.filter((task) => task.taskName.toLowerCase().includes(taskSearch.toLowerCase())).map((task) => { const selected = highlightedTaskIds.includes(task.id); return <button type="button" aria-pressed={selected} key={task.id} onClick={() => toggleHighlightedTask(task.id)} style={{ width: "100%", display: "flex", alignItems: "center", gap: "9px", textAlign: "left", border: "none", borderRadius: "8px", padding: "9px 10px", marginBottom: "2px", background: selected ? "#eff6ff" : "transparent", color: selected ? "#1d4ed8" : "#334155", cursor: "pointer" }}><span aria-hidden="true">{selected ? "✓" : "○"}</span>{task.taskName}</button>; })}</div>}
                 <span style={{ fontSize: "11px", color: "#64748b", marginTop: "6px" }}>{highlightedTaskIds.length}/{catalogueTasks.length} catalogue tasks marked important</span>
               </Field>
               <div style={{ display: "flex", gap: "20px", marginTop: "4px" }}>
@@ -556,7 +575,7 @@ function EmployerDashboard() {
                           <button onClick={() => handleViewProfile(app)} style={{ border: "none", background: "#f1f5f9", color: "#475569", padding: "5px 10px", borderRadius: "7px", cursor: "pointer", fontSize: "11px", fontWeight: "500", fontFamily: "Inter, sans-serif" }}>View</button>
                         </td>
                         <td style={{ padding: "13px 12px", borderBottom: "1px solid #f1f5f9", textAlign: "center" }}>
-                          <select value={app.status} onChange={(e) => handleStatusChange(app.id, e.target.value)}
+                          <select aria-label={`Application status for ${app.candidateName || app.jobTitle}`} value={app.status} onChange={(e) => handleStatusChange(app.id, e.target.value)}
                             style={{ padding: "5px 8px", borderRadius: "7px", border: "1px solid #e2e8f0", fontSize: "11px", background: "#f8fafc", color: "#0f172a", cursor: "pointer", outline: "none", fontFamily: "Inter, sans-serif", ...getStatusStyle(app.status) }}>
                             <option value="pending">Pending</option>
                             <option value="in_review">In Review</option>
@@ -604,10 +623,16 @@ function EmployerDashboard() {
                   <p style={{ color: "#94a3b8", fontSize: "12px", textAlign: "center", margin: 0 }}>No logo uploaded</p>
                 )}
               </div>
-              <label style={{ border: "none", background: "#2563eb", color: "#fff", padding: "9px 16px", borderRadius: "9px", cursor: "pointer", fontSize: "12px", fontWeight: "500", fontFamily: "Inter, sans-serif" }}>
+              <button
+                ref={logoButtonRef}
+                data-voice-control="company_logo"
+                type="button"
+                onClick={() => logoInputRef.current?.click()}
+                style={{ border: "none", background: "#2563eb", color: "#fff", padding: "9px 16px", borderRadius: "9px", cursor: "pointer", fontSize: "12px", fontWeight: "500", fontFamily: "Inter, sans-serif" }}
+              >
                 Upload Logo
-                <input ref={logoInputRef} data-voice-control="company_logo" type="file" accept="image/png,image/jpeg,image/webp,image/gif" style={{ display: "none" }} onChange={handleLogoChange} />
-              </label>
+              </button>
+              <input ref={logoInputRef} type="file" accept="image/png,image/jpeg,image/webp,image/gif" style={{ display: "none" }} onChange={handleLogoChange} tabIndex={-1} aria-hidden="true" />
               <p style={{ margin: 0, fontSize: "11px", color: "#94a3b8", textAlign: "center" }}>PNG, JPG, WebP or GIF. Max 3MB.</p>
             </div>
 
@@ -639,9 +664,9 @@ function EmployerDashboard() {
       {/* CANDIDATE PROFILE MODAL */}
       {selectedProfile && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(15,23,42,0.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999, padding: "20px", backdropFilter: "blur(3px)" }}>
-          <div style={{ width: "100%", maxWidth: "500px", background: "#fff", borderRadius: "18px", padding: "28px", boxShadow: "0 20px 60px rgba(15,23,42,0.2)", position: "relative" }}>
-            <button onClick={() => setSelectedProfile(null)} style={{ position: "absolute", top: "14px", right: "16px", width: "30px", height: "30px", borderRadius: "999px", border: "none", background: "#f1f5f9", color: "#64748b", fontSize: "18px", cursor: "pointer" }}>×</button>
-            <h2 style={{ margin: "0 0 4px", fontSize: "18px", fontWeight: "600", color: "#0f172a" }}>Candidate Profile</h2>
+          <div ref={candidateDialogRef} role="dialog" aria-modal="true" aria-labelledby="candidate-profile-dialog-title" tabIndex={-1} style={{ width: "100%", maxWidth: "500px", background: "#fff", borderRadius: "18px", padding: "28px", boxShadow: "0 20px 60px rgba(15,23,42,0.2)", position: "relative" }}>
+            <button type="button" aria-label="Close candidate profile" onClick={() => setSelectedProfile(null)} style={{ position: "absolute", top: "14px", right: "16px", width: "30px", height: "30px", borderRadius: "999px", border: "none", background: "#f1f5f9", color: "#64748b", fontSize: "18px", cursor: "pointer" }}>×</button>
+            <h2 id="candidate-profile-dialog-title" style={{ margin: "0 0 4px", fontSize: "18px", fontWeight: "600", color: "#0f172a" }}>Candidate Profile</h2>
             <p style={{ margin: "0 0 18px", fontSize: "13px", color: "#94a3b8" }}>Detailed candidate information</p>
             <div style={{ background: "#f8fafc", border: "1px solid #e8edf5", borderRadius: "12px", padding: "14px", marginBottom: "16px" }}>
               <p style={{ margin: "0 0 4px", fontSize: "14px", fontWeight: "600", color: "#0f172a" }}>{selectedProfile.name || "Not specified"}</p>

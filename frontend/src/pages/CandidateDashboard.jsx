@@ -6,6 +6,7 @@ import { getCandidateProfile, updateCandidateProfile } from "../services/candida
 import { isCandidateProfileComplete } from "../features/candidate/profile/profileCompletion";
 import { disabilityOptions } from "../features/candidate/profile/profileOptions";
 import { API_BASE_URL, BACKEND_BASE_URL } from "../config";
+import useDialogFocus from "../hooks/useDialogFocus";
 
 const globalStyles = `
   @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -402,6 +403,7 @@ function CandidateDashboard() {
   const [applicationStatusFilter, setApplicationStatusFilter] = useState("all");
   const applicationDocumentRef = useRef(null);
   const recommendationLetterRef = useRef(null);
+  const companyDialogRef = useDialogFocus(Boolean(selectedCompany), () => setSelectedCompany(null));
 
   useEffect(() => { fetchCandidateProfile(); }, []);
   useEffect(() => {
@@ -466,60 +468,6 @@ function CandidateDashboard() {
       const data = await getCandidateApplications();
       setCandidateApplications(data.applications || []);
     } catch (err) { setApplicationsError(err.message); } finally { setLoadingApplications(false); }
-  }
-
-  function getTaskRequiredAbilities(task) {
-    // If requiredAbilities is a clean array
-    if (Array.isArray(task.requiredAbilities) && task.requiredAbilities.length > 0) {
-      return task.requiredAbilities.map((i) => String(i).trim()).filter(Boolean);
-    }
-    // If requiredAbilities is a string (possibly with dashes)
-    if (typeof task.requiredAbilities === "string" && task.requiredAbilities.trim()) {
-      return task.requiredAbilities
-        .split(/\s*-\s*|,|\n/)
-        .map((i) => i.trim())
-        .filter((i) => i.length > 2);
-    }
-    // Infer from task name and description
-    const text = `${task.taskName || ""} ${task.description || ""}`.toLowerCase();
-    const inf = [];
-    if (text.includes("stock") || text.includes("inventory") || text.includes("check")) inf.push("Can read", "Can count", "Can handle lightweight materials");
-    if (text.includes("customer") || text.includes("sale") || text.includes("payment") || text.includes("service")) inf.push("Can communicate with customers", "Can count", "Can handle money");
-    if (text.includes("package") || text.includes("label") || text.includes("wrap")) inf.push("Can package finished products", "Can handle lightweight materials", "Can use one hand");
-    if (text.includes("clean") || text.includes("hygiene") || text.includes("sanitize")) inf.push("Can follow hygiene rules", "Can perform light cleaning tasks", "Can use one hand");
-    if (text.includes("chocolate") || text.includes("mold") || text.includes("coat") || text.includes("prepare") || text.includes("mix") || text.includes("ingredient")) inf.push("Can use one hand", "Can perform repetitive hand movements", "Can handle lightweight materials", "Can work seated", "Can follow instructions");
-    if (text.includes("display") || text.includes("arrange")) inf.push("Can read", "Can handle lightweight materials", "Can move around while seated");
-    if (text.includes("coat") || text.includes("decoration") || text.includes("finish")) inf.push("Can use one hand", "Can perform precise hand movements", "Can work seated");
-    return [...new Set(inf)];
-  }
-
-  function calculateTaskFeasibility(task) {
-    const req = getTaskRequiredAbilities(task);
-    if (!req.length) return { label: "Not calculated", score: 0, status: "not_calculated" };
-    if (!selectedDisabilities.length) return { label: "Select disabilities first", score: 0, status: "not_calculated" };
-    let total = 0;
-    req.forEach((ab) => {
-      const n = ab.toLowerCase(); let s = 1;
-      selectedDisabilities.forEach((dis) => {
-        const r = disabilityFeasibilityRules[dis];
-        if (!r) return;
-        if (r.notFeasible.some((k) => n.includes(k))) s = Math.min(s, 0);
-        else if (r.difficult.some((k) => n.includes(k))) s = Math.min(s, 0.5);
-      });
-      total += s;
-    });
-    const score = total / req.length;
-    const pct = Math.round(score * 100);
-    if (score >= 0.75) return { label: "Feasible", score: pct, status: "feasible" };
-    if (score >= 0.4) return { label: "Feasible with assistance", score: pct, status: "assistance" };
-    return { label: "Not feasible", score: pct, status: "not_feasible" };
-  }
-
-  function getFeasibilityBadgeStyle(s) {
-    if (s === "feasible") return { ...styles.feasibilityBadge, background: "#dcfce7", color: "#166534" };
-    if (s === "assistance") return { ...styles.feasibilityBadge, background: "#fef3c7", color: "#92400e" };
-    if (s === "not_feasible") return { ...styles.feasibilityBadge, background: "#fee2e2", color: "#991b1b" };
-    return { ...styles.feasibilityBadge, background: "#e5e7eb", color: "#374151" };
   }
 
   function getStatusLabel(s) { if (!s) return "Pending"; return s.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase()); }
@@ -704,11 +652,11 @@ function CandidateDashboard() {
       </header>
 
       {/* TABS */}
-      <nav style={styles.tabs}>
-        {["JOBS", "APPLICATIONS"].map((tab) => (
-          <button key={tab} onClick={() => { setActiveTab(tab); if (tab === "JOBS") setSelectedJob(null); }}
+      <nav style={styles.tabs} aria-label="Candidate dashboard sections">
+        {["JOBS", "APPLICATIONS", "PROFILE"].map((tab) => (
+          <button type="button" key={tab} aria-current={activeTab === tab ? "page" : undefined} onClick={() => { setActiveTab(tab); if (tab === "JOBS") setSelectedJob(null); }}
             style={{ ...styles.tabButton, ...(activeTab === tab ? styles.activeTab : {}) }}>
-            {tab === "JOBS" ? "Jobs" : "My Applications"}
+            {tab === "JOBS" ? "Jobs" : tab === "APPLICATIONS" ? "My Applications" : "My Profile"}
           </button>
         ))}
       </nav>
@@ -743,13 +691,18 @@ function CandidateDashboard() {
                 {loadingProfile && <p style={styles.infoText}>Loading...</p>}
                 {errorMessage && <p style={styles.errorText}>{errorMessage}</p>}
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "12px" }}><input data-voice-control="first_name" value={basicInfo.firstName} onChange={(e) => setBasicInfo((p) => ({ ...p, firstName: e.target.value }))} placeholder="First name" style={{ ...styles.searchInput, paddingLeft: "12px" }} /><input data-voice-control="last_name" value={basicInfo.lastName} onChange={(e) => setBasicInfo((p) => ({ ...p, lastName: e.target.value }))} placeholder="Last name" style={{ ...styles.searchInput, paddingLeft: "12px" }} /><input data-voice-control="location" value={basicInfo.location} onChange={(e) => setBasicInfo((p) => ({ ...p, location: e.target.value }))} placeholder="City or region" style={{ ...styles.searchInput, paddingLeft: "12px" }} /><input data-voice-control="phone" value={basicInfo.phone} onChange={(e) => setBasicInfo((p) => ({ ...p, phone: e.target.value }))} placeholder="Phone (optional)" style={{ ...styles.searchInput, paddingLeft: "12px" }} /></div>
-                <textarea data-voice-control="about" value={basicInfo.about} onChange={(e) => setBasicInfo((p) => ({ ...p, about: e.target.value }))} placeholder="A short introduction or your work goals (optional)" rows="3" style={{ width: "100%", border: "1px solid #e2e8f0", borderRadius: "10px", padding: "10px 12px", resize: "vertical", marginBottom: "12px", fontFamily: "inherit" }} />
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "12px" }}>
+                  <label style={styles.profileFieldLabel}>First name<input autoComplete="given-name" data-voice-control="first_name" value={basicInfo.firstName} onChange={(e) => setBasicInfo((p) => ({ ...p, firstName: e.target.value }))} style={{ ...styles.searchInput, paddingLeft: "12px" }} /></label>
+                  <label style={styles.profileFieldLabel}>Last name<input autoComplete="family-name" data-voice-control="last_name" value={basicInfo.lastName} onChange={(e) => setBasicInfo((p) => ({ ...p, lastName: e.target.value }))} style={{ ...styles.searchInput, paddingLeft: "12px" }} /></label>
+                  <label style={styles.profileFieldLabel}>Location<input autoComplete="address-level2" data-voice-control="location" value={basicInfo.location} onChange={(e) => setBasicInfo((p) => ({ ...p, location: e.target.value }))} style={{ ...styles.searchInput, paddingLeft: "12px" }} /></label>
+                  <label style={styles.profileFieldLabel}>Phone <span>(optional)</span><input type="tel" autoComplete="tel" data-voice-control="phone" value={basicInfo.phone} onChange={(e) => setBasicInfo((p) => ({ ...p, phone: e.target.value }))} style={{ ...styles.searchInput, paddingLeft: "12px" }} /></label>
+                </div>
+                <label style={{ ...styles.profileFieldLabel, marginBottom: "12px" }}>About you <span>(optional)</span><textarea data-voice-control="about" value={basicInfo.about} onChange={(e) => setBasicInfo((p) => ({ ...p, about: e.target.value }))} rows="3" style={{ width: "100%", border: "1px solid #e2e8f0", borderRadius: "10px", padding: "10px 12px", resize: "vertical", fontFamily: "inherit" }} /></label>
                 <label style={{ display: "grid", gap: "6px", marginBottom: "14px", fontSize: "12px", color: "#475569" }}>Highest education level<select data-voice-control="education_level" value={educationLevel} onChange={(e) => setEducationLevel(e.target.value)} style={{ ...styles.searchInput, paddingLeft: "12px" }}><option value="">Select education level</option><option value="none">No formal education</option><option value="primary">Primary school</option><option value="middle_school">Middle school</option><option value="high_school">High school</option><option value="vocational">Vocational or technical education</option><option value="university">University</option></select></label>
 
                 <div style={styles.searchWrapper}>
                   <SearchIcon />
-                  <input data-voice-control="disability_search" type="text" placeholder="Search disability..." value={searchTerm}
+                  <input aria-label="Search disabilities" data-voice-control="disability_search" type="search" placeholder="Search disability..." value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)} style={styles.searchInput} />
                 </div>
 
@@ -758,10 +711,10 @@ function CandidateDashboard() {
                     {selectedDisabilities.map((d) => (
                       <span key={d} style={styles.selectedChip}>
                         {d}
-                        <button onClick={() => handleDisabilityChange(d)} style={styles.chipRemove}>×</button>
+                        <button type="button" aria-label={`Remove ${d}`} onClick={() => handleDisabilityChange(d)} style={styles.chipRemove}>×</button>
                       </span>
                     ))}
-                    <button data-voice-control="clear_disabilities" onClick={() => setSelectedDisabilities([])} style={styles.resetBtn}>Clear all</button>
+                    <button type="button" data-voice-control="clear_disabilities" onClick={() => setSelectedDisabilities([])} style={styles.resetBtn}>Clear all</button>
                   </div>
                 )}
 
@@ -769,7 +722,7 @@ function CandidateDashboard() {
                   {filteredDisabilities.map((disability) => {
                     const isSelected = selectedDisabilities.includes(disability.name);
                     return (
-                      <button key={disability.name} className="disability-card"
+                      <button type="button" key={disability.name} className="disability-card" aria-pressed={isSelected}
                         onClick={() => handleDisabilityChange(disability.name)}
                         style={{ ...styles.disabilityCard, ...(isSelected ? styles.selectedDisabilityCard : {}) }}>
                         {isSelected && <div style={styles.selectedCheck}>✓</div>}
@@ -873,18 +826,23 @@ function CandidateDashboard() {
                 {!loadingJobs && jobs.length === 0 && <div style={styles.emptyBox}>No jobs have been posted yet.</div>}
                 <div style={styles.jobsGrid}>
                   {jobs.map((job) => (
-                    <button key={job.id} style={styles.jobCard} onClick={() => { setSelectedJob(job); setApplicationDocument(null); setRecommendationLetter(null); setSuccessMessage(""); setErrorMessage(""); }}>
+                    <article key={job.id} style={styles.jobCard}>
                       <CompanyLogo item={job} />
                       <div style={styles.jobCardContent}>
-                        <h3 style={styles.jobTitle}>{job.title}</h3>
-                        <span role="button" tabIndex={0} style={styles.companyNameButton}
-                          onClick={(e) => { e.stopPropagation(); openCompanyProfile(job); }}
-                          onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); openCompanyProfile(job); } }}>
+                        <button
+                          type="button"
+                          aria-label={`View details for ${job.title}`}
+                          style={styles.jobTitleButton}
+                          onClick={() => { setSelectedJob(job); setApplicationDocument(null); setRecommendationLetter(null); setSuccessMessage(""); setErrorMessage(""); }}
+                        >
+                          {job.title}
+                        </button>
+                        <button type="button" style={styles.companyNameButton} onClick={() => openCompanyProfile(job)}>
                           {job.companyName}
-                        </span>
+                        </button>
                         {job.assistanceAvailable && <AccommodationBadge compact />}
                       </div>
-                    </button>
+                    </article>
                   ))}
                 </div>
               </>
@@ -963,7 +921,7 @@ function CandidateDashboard() {
                   <p style={styles.applicationsSubtitle}>Track and manage your job applications</p>
                 </div>
               </div>
-              <select data-voice-control="application_status" value={applicationStatusFilter} onChange={(e) => setApplicationStatusFilter(e.target.value)} style={styles.statusFilterSelect}>
+              <select aria-label="Filter applications by status" data-voice-control="application_status" value={applicationStatusFilter} onChange={(e) => setApplicationStatusFilter(e.target.value)} style={styles.statusFilterSelect}>
                 <option value="all">All Status</option>
                 <option value="pending">Pending</option>
                 <option value="in_review">In Review</option>
@@ -1005,18 +963,25 @@ function CandidateDashboard() {
 
       {selectedCompany && (
         <div style={styles.companyOverlay}>
-          <div style={styles.companyModal}>
-            <button data-voice-control="close_company" type="button" style={styles.companyCloseButton} onClick={() => setSelectedCompany(null)}>×</button>
+          <div
+            ref={companyDialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="company-dialog-title"
+            tabIndex={-1}
+            style={styles.companyModal}
+          >
+            <button aria-label="Close company profile" data-voice-control="close_company" type="button" style={styles.companyCloseButton} onClick={() => setSelectedCompany(null)}>×</button>
             <div style={{ display: "flex", alignItems: "center", gap: "16px", paddingRight: "40px" }}>
               <CompanyLogo item={selectedCompany} size="large" />
               <div>
-                <h2 style={{ margin: 0, color: "#0f172a", fontSize: "20px", fontWeight: "700" }}>{selectedCompany.employerProfile?.companyName || selectedCompany.companyName || "Company Profile"}</h2>
+                <h2 id="company-dialog-title" style={{ margin: 0, color: "#0f172a", fontSize: "20px", fontWeight: "700" }}>{selectedCompany.employerProfile?.companyName || selectedCompany.companyName || "Company Profile"}</h2>
                 <p style={{ margin: "4px 0 0", color: "#64748b", fontSize: "13px" }}>{selectedCompany.employerProfile?.industry || "Hospitality"}{selectedCompany.employerProfile?.location ? ` · ${selectedCompany.employerProfile.location}` : selectedCompany.location ? ` · ${selectedCompany.location}` : ""}</p>
               </div>
             </div>
             <div data-voice-control="company_view" style={styles.companyTabs}>
               {["PROFILE", "JOBS"].map((t) => (
-                <button key={t} type="button" style={{ ...styles.companyTabButton, ...(companyModalTab === t ? styles.companyTabActive : {}) }} onClick={() => setCompanyModalTab(t)}>
+                <button key={t} type="button" aria-pressed={companyModalTab === t} style={{ ...styles.companyTabButton, ...(companyModalTab === t ? styles.companyTabActive : {}) }} onClick={() => setCompanyModalTab(t)}>
                   {t === "PROFILE" ? "Profile" : "Job Openings"}
                 </button>
               ))}
@@ -1090,6 +1055,7 @@ const styles = {
   sectionTitle: { margin: "0 0 4px", fontSize: "17px", fontWeight: "600", color: "#0f172a", letterSpacing: "-0.2px", textAlign: "center" },
   text: { color: "#64748b", fontSize: "13px", lineHeight: "1.5", margin: 0, textAlign: "center" },
   selectedPill: { background: "#eff6ff", color: "#2563eb", border: "1px solid #bfdbfe", borderRadius: "999px", padding: "4px 11px", fontSize: "12px", fontWeight: "500", whiteSpace: "nowrap" },
+  profileFieldLabel: { display: "grid", gap: "5px", color: "#475569", fontSize: "12px", fontWeight: "500" },
   searchWrapper: { position: "relative", marginBottom: "12px" },
   searchInput: { width: "100%", padding: "10px 12px 10px 34px", borderRadius: "9px", border: "1px solid #e2e8f0", fontSize: "13px", outline: "none", boxSizing: "border-box", background: "#f8fafc", color: "#0f172a", fontFamily: "Inter, sans-serif" },
   selectedChipsRow: { display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "12px", alignItems: "center" },
@@ -1124,7 +1090,8 @@ const styles = {
   companyLogoImage: { width: "100%", height: "100%", objectFit: "cover" },
   jobCardContent: { minWidth: 0 },
   jobTitle: { margin: "0 0 3px", fontSize: "14px", color: "#0f172a", fontWeight: "600" },
-  companyNameButton: { color: "#64748b", fontSize: "12px", fontWeight: "400", textDecoration: "underline", textUnderlineOffset: "2px", cursor: "pointer" },
+  jobTitleButton: { display: "block", margin: "0 0 3px", padding: 0, border: "none", background: "transparent", color: "#0f172a", fontSize: "14px", fontWeight: "600", textAlign: "left", cursor: "pointer", fontFamily: "Inter, sans-serif" },
+  companyNameButton: { display: "block", margin: 0, padding: 0, border: "none", background: "transparent", color: "#64748b", fontSize: "12px", fontWeight: "400", textDecoration: "underline", textUnderlineOffset: "2px", cursor: "pointer", fontFamily: "Inter, sans-serif", textAlign: "left" },
   companyNameLink: { border: "none", background: "transparent", padding: 0, margin: 0, color: "#2563eb", fontSize: "14px", fontWeight: "500", textDecoration: "underline", textUnderlineOffset: "2px", cursor: "pointer", fontFamily: "Inter, sans-serif" },
   companyWebsiteLink: { color: "#2563eb", fontWeight: "400", textDecoration: "underline", wordBreak: "break-word" },
   emptyBox: { marginTop: "14px", border: "1.5px dashed #e2e8f0", borderRadius: "12px", padding: "24px", textAlign: "center", color: "#94a3b8", fontWeight: "400", fontSize: "13px" },

@@ -97,6 +97,9 @@ function SignInPage() {
 
     if (!formData.email || !formData.password) {
       setError("Please enter your email and password.");
+      window.requestAnimationFrame(() => {
+        document.getElementById(!formData.email ? "email" : "password")?.focus();
+      });
       return;
     }
 
@@ -121,7 +124,7 @@ function SignInPage() {
   }
 
   return (
-    <div className="auth-page">
+    <main className="auth-page">
       <div className="auth-shell">
 
         {/* LEFT */}
@@ -148,6 +151,7 @@ function SignInPage() {
                   id="email"
                   type="email"
                   name="email"
+                  autoComplete="email"
                   placeholder="name@example.com"
                   value={formData.email}
                   onChange={handleChange}
@@ -170,6 +174,7 @@ function SignInPage() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   name="password"
+                  autoComplete="current-password"
                   placeholder="Enter your password"
                   value={formData.password}
                   onChange={handleChange}
@@ -186,7 +191,7 @@ function SignInPage() {
               </div>
             </div>
 
-            {error && <p className="auth-error">{error}</p>}
+            {error && <p className="auth-error" role="alert">{error}</p>}
 
             <button type="submit" className="primary-btn primary-btn--full" disabled={loading}>
               {loading ? (
@@ -220,7 +225,7 @@ function SignInPage() {
         </div>
 
       </div>
-    </div>
+    </main>
   );
 }
 

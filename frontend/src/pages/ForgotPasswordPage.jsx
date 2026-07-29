@@ -27,6 +27,7 @@ function ForgotPasswordPage() {
 
     if (!email) {
       setError("Please enter your email address.");
+      window.requestAnimationFrame(() => document.getElementById("email")?.focus());
       return;
     }
 
@@ -43,7 +44,7 @@ function ForgotPasswordPage() {
   }
 
   return (
-    <div className="auth-page">
+    <main className="auth-page">
       <div className="auth-shell">
 
         {/* LEFT */}
@@ -69,6 +70,7 @@ function ForgotPasswordPage() {
                     id="email"
                     type="email"
                     name="email"
+                    autoComplete="email"
                     placeholder="name@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -77,7 +79,7 @@ function ForgotPasswordPage() {
                 </div>
               </div>
 
-              {error && <p className="auth-error">{error}</p>}
+              {error && <p className="auth-error" role="alert">{error}</p>}
 
               <button type="submit" className="primary-btn primary-btn--full" disabled={loading}>
                 {loading ? (
@@ -94,7 +96,7 @@ function ForgotPasswordPage() {
               </button>
             </form>
           ) : (
-            <div className="reset-success-card">
+            <div className="reset-success-card" role="status">
               <div className="reset-success-icon">
                 <svg viewBox="0 0 24 24" fill="none" width="26" height="26">
                   <rect x="3" y="5" width="18" height="14" rx="3" stroke="#1a4fa0" strokeWidth="1.8" />
@@ -137,7 +139,7 @@ function ForgotPasswordPage() {
         </div>
 
       </div>
-    </div>
+    </main>
   );
 }
 
