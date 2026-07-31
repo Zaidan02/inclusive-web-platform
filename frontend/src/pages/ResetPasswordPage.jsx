@@ -39,11 +39,15 @@ function ResetPasswordPage() {
 
     if (!formData.newPassword || !formData.confirmPassword) {
       setError("Please fill in both password fields.");
+      window.requestAnimationFrame(() => {
+        document.getElementById(!formData.newPassword ? "newPassword" : "confirmPassword")?.focus();
+      });
       return;
     }
 
     if (formData.newPassword !== formData.confirmPassword) {
       setError("Passwords do not match.");
+      window.requestAnimationFrame(() => document.getElementById("confirmPassword")?.focus());
       return;
     }
 
@@ -64,7 +68,7 @@ function ResetPasswordPage() {
   }
 
   return (
-    <div className="auth-page">
+    <main className="auth-page">
       <div className="auth-shell">
         <div className="auth-left">
           <span className="auth-badge">Reset Password</span>
@@ -83,6 +87,7 @@ function ResetPasswordPage() {
                   id="newPassword"
                   type={showPassword ? "text" : "password"}
                   name="newPassword"
+                  autoComplete="new-password"
                   placeholder="Enter new password"
                   value={formData.newPassword}
                   onChange={handleChange}
@@ -106,6 +111,7 @@ function ResetPasswordPage() {
                 id="confirmPassword"
                 type={showPassword ? "text" : "password"}
                 name="confirmPassword"
+                autoComplete="new-password"
                 placeholder="Confirm new password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
@@ -113,10 +119,11 @@ function ResetPasswordPage() {
               />
             </div>
 
-            {error && <p className="auth-error">{error}</p>}
+            {error && <p className="auth-error" role="alert">{error}</p>}
 
             {message && (
               <p
+                role="status"
                 style={{
                   color: "#166534",
                   background: "#dcfce7",
@@ -150,7 +157,7 @@ function ResetPasswordPage() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 

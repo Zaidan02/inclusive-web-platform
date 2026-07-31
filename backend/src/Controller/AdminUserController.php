@@ -80,7 +80,7 @@ final class AdminUserController extends AbstractController
 
     private function sendVerificationEmail(User $user, MailerInterface $mailer): void
     {
-        $baseUrl = $_ENV['VERIFICATION_BASE_URL'] ?? 'http://127.0.0.1:8000';
+        $baseUrl = $_ENV['VERIFICATION_BASE_URL'] ?? 'http://127.0.0.1:8081';
         $verificationLink = $baseUrl . '/api/verify-email?token=' . $user->getVerificationToken();
 
         $email = (new Email())

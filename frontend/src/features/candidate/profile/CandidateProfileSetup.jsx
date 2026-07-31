@@ -45,6 +45,18 @@ export default function CandidateProfileSetup() {
   async function completeSetup() {
     if (!selected.length || !educationLevel || !basicInfo.firstName.trim() || !basicInfo.lastName.trim() || !basicInfo.location.trim()) {
       setError("Add your name, location, education level, and at least one disability.");
+      const missingControl = !basicInfo.firstName.trim()
+        ? "first_name"
+        : !basicInfo.lastName.trim()
+        ? "last_name"
+        : !basicInfo.location.trim()
+        ? "location"
+        : !educationLevel
+        ? "education_level"
+        : "disability_search";
+      window.requestAnimationFrame(() => {
+        document.querySelector(`[data-voice-control="${missingControl}"]`)?.focus();
+      });
       return;
     }
     try {
