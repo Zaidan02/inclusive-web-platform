@@ -24,6 +24,11 @@ class CandidateProfile
     #[ORM\JoinTable(name: 'candidate_profile_disability')]
     private Collection $disabilities;
 
+    /** @var Collection<int, CandidateTaskSkill> */
+    #[ORM\OneToMany(mappedBy: 'candidateProfile', targetEntity: CandidateTaskSkill::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['confirmedAt' => 'DESC'])]
+    private Collection $taskSkills;
+
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
@@ -48,6 +53,7 @@ class CandidateProfile
     public function __construct()
     {
         $this->disabilities = new ArrayCollection();
+        $this->taskSkills = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -88,6 +94,35 @@ class CandidateProfile
                 $this->disabilities->add($disability);
             }
         }
+        return $this;
+    }
+
+    public function addDisability(Disability $disability): static
+    {
+        if (!$this->disabilities->contains($disability)) {
+            $this->disabilities->add($disability);
+        }
+        return $this;
+    }
+
+    /** @return Collection<int, CandidateTaskSkill> */
+    public function getTaskSkills(): Collection
+    {
+        return $this->taskSkills;
+    }
+
+    public function addTaskSkill(CandidateTaskSkill $taskSkill): static
+    {
+        if (!$this->taskSkills->contains($taskSkill)) {
+            $this->taskSkills->add($taskSkill);
+            $taskSkill->setCandidateProfile($this);
+        }
+        return $this;
+    }
+
+    public function removeTaskSkill(CandidateTaskSkill $taskSkill): static
+    {
+        $this->taskSkills->removeElement($taskSkill);
         return $this;
     }
 

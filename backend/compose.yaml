@@ -8,7 +8,10 @@ services:
       APP_ENV: prod
       APP_DEBUG: 0
       SCORING_ENGINE_URL: http://scoring-engine:5001
+      PROFILE_AI_URL: http://voice-navigation:5002
+      PROFILE_AI_TOKEN: ${PROFILE_AI_TOKEN:-}
     working_dir: /app
+    command: ["sh", "-c", "php bin/console cache:clear --env=prod --no-warmup && php bin/console cache:warmup --env=prod && exec apache2-foreground"]
     volumes:
       - .:/app
       - ../tools:/tools:ro
@@ -20,6 +23,8 @@ services:
       database:
         condition: service_healthy
       scoring-engine:
+        condition: service_healthy
+      voice-navigation:
         condition: service_healthy
 
   scoring-engine:
@@ -44,7 +49,8 @@ services:
     environment:
       VOICE_HOST: 0.0.0.0
       VOICE_PORT: 5002
-      VOICE_ALLOWED_ORIGIN: http://localhost:5173
+      VOICE_ALLOWED_ORIGIN: http://localhost:5173,http://127.0.0.1:5173
+      PROFILE_AI_TOKEN: ${PROFILE_AI_TOKEN:-}
     ports:
       - "5002:5002"
     healthcheck:

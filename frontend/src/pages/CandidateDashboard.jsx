@@ -5,6 +5,7 @@ import { applyToJob, getCandidateApplications, getCandidateMatches } from "../se
 import { getCandidateProfile, updateCandidateProfile } from "../services/candidateProfileApi";
 import { isCandidateProfileComplete } from "../features/candidate/profile/profileCompletion";
 import { disabilityOptions } from "../features/candidate/profile/profileOptions";
+import AiProfileBuilder from "../features/candidate/profile/AiProfileBuilder";
 import { API_BASE_URL, BACKEND_BASE_URL } from "../config";
 import useDialogFocus from "../hooks/useDialogFocus";
 
@@ -380,6 +381,7 @@ function CandidateDashboard() {
   const [selectedDisabilities, setSelectedDisabilities] = useState([]);
   const [educationLevel, setEducationLevel] = useState("");
   const [basicInfo, setBasicInfo] = useState({ firstName: "", lastName: "", phone: "", location: "", about: "" });
+  const [confirmedTaskSkills, setConfirmedTaskSkills] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -449,6 +451,7 @@ function CandidateDashboard() {
       setSelectedDisabilities(profile.selectedDisabilities || []);
       setEducationLevel(profile.educationLevel || "");
       setBasicInfo({ firstName: profile.firstName || "", lastName: profile.lastName || "", phone: profile.phone || "", location: profile.location || "", about: profile.about || "" });
+      setConfirmedTaskSkills(profile.confirmedTaskSkills || []);
     } catch (err) { setErrorMessage(err.message); } finally { setLoadingProfile(false); }
   }
 
@@ -481,6 +484,22 @@ function CandidateDashboard() {
   function handleDisabilityChange(name) {
     setSuccessMessage(""); setErrorMessage("");
     setSelectedDisabilities((prev) => prev.includes(name) ? prev.filter((i) => i !== name) : [...prev, name]);
+  }
+
+  function applyConfirmedProfile(profile) {
+    if (!profile) return;
+    setSelectedDisabilities(profile.selectedDisabilities || []);
+    setEducationLevel(profile.educationLevel || "");
+    setBasicInfo({
+      firstName: profile.firstName || "",
+      lastName: profile.lastName || "",
+      phone: profile.phone || "",
+      location: profile.location || "",
+      about: profile.about || "",
+    });
+    setConfirmedTaskSkills(profile.confirmedTaskSkills || []);
+    setSuccessMessage("Confirmed AI suggestions were added to your profile.");
+    setErrorMessage("");
   }
 
   async function handleGetAiMatch() {
@@ -674,6 +693,11 @@ function CandidateDashboard() {
                 </div>
               ))}
             </div>
+
+            <AiProfileBuilder
+              currentProfile={{ ...basicInfo, educationLevel, selectedDisabilities, confirmedTaskSkills }}
+              onProfileConfirmed={applyConfirmedProfile}
+            />
 
             <section style={styles.profileGrid}>
               {/* LEFT CARD */}

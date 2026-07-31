@@ -14,6 +14,37 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class CandidateProfileController extends AbstractController
 {
+    private function serializeProfile(User $user, ?CandidateProfile $profile): array
+    {
+        return [
+            'username' => $user->getUsername(),
+            'email' => $user->getEmail(),
+            'selectedDisabilities' => $profile ? $profile->getSelectedDisabilities() : [],
+            'educationLevel' => $profile?->getEducationLevel(),
+            'firstName' => $profile?->getFirstName(),
+            'lastName' => $profile?->getLastName(),
+            'phone' => $profile?->getPhone(),
+            'location' => $profile?->getLocation(),
+            'about' => $profile?->getAbout(),
+            'confirmedTaskSkills' => $profile
+                ? $profile->getTaskSkills()->map(static function ($skill): array {
+                    $task = $skill->getTask();
+                    return [
+                        'taskId' => $task?->getId(),
+                        'taskName' => $task?->getName(),
+                        'jobName' => $task?->getJobDefinition()?->getName(),
+                        'note' => $skill->getNote(),
+                        'source' => $skill->getSource(),
+                        'confirmedAt' => $skill->getConfirmedAt()->format(\DateTimeInterface::ATOM),
+                    ];
+                })->toArray()
+                : [],
+            'updatedAt' => $profile && $profile->getUpdatedAt()
+                ? $profile->getUpdatedAt()->format('Y-m-d H:i:s')
+                : null,
+        ];
+    }
+
     private function getUserFromToken(
         Request $request,
         JWTEncoderInterface $jwtEncoder,
@@ -68,22 +99,7 @@ class CandidateProfileController extends AbstractController
 
         $profile = $user->getCandidateProfile();
 
-        return $this->json([
-            'profile' => [
-                'username' => $user->getUsername(),
-                'email' => $user->getEmail(),
-                'selectedDisabilities' => $profile ? $profile->getSelectedDisabilities() : [],
-                'educationLevel' => $profile?->getEducationLevel(),
-                'firstName' => $profile?->getFirstName(),
-                'lastName' => $profile?->getLastName(),
-                'phone' => $profile?->getPhone(),
-                'location' => $profile?->getLocation(),
-                'about' => $profile?->getAbout(),
-                'updatedAt' => $profile && $profile->getUpdatedAt()
-                    ? $profile->getUpdatedAt()->format('Y-m-d H:i:s')
-                    : null,
-            ],
-        ]);
+        return $this->json(['profile' => $this->serializeProfile($user, $profile)]);
     }
 
     #[Route('/api/candidate/profile', name: 'candidate_profile_update', methods: ['PATCH'])]
@@ -148,18 +164,7 @@ class CandidateProfileController extends AbstractController
 
         return $this->json([
             'message' => 'Profile saved successfully.',
-            'profile' => [
-                'username' => $user->getUsername(),
-                'email' => $user->getEmail(),
-                'selectedDisabilities' => $profile->getSelectedDisabilities(),
-                'educationLevel' => $profile->getEducationLevel(),
-                'firstName' => $profile->getFirstName(),
-                'lastName' => $profile->getLastName(),
-                'phone' => $profile->getPhone(),
-                'location' => $profile->getLocation(),
-                'about' => $profile->getAbout(),
-                'updatedAt' => $profile->getUpdatedAt()->format('Y-m-d H:i:s'),
-            ],
+            'profile' => $this->serializeProfile($user, $profile),
         ]);
     }
 }
