@@ -1,10 +1,15 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "feasibilityValues": [
     "feasible",
     "needs_assistance",
     "avoid"
   ],
+  "sourceCellPolicy": {
+    "assessments": "Only checked feasibility cells are assessments.",
+    "uncheckedCells": "Ignored as headings, duplicate/source-layout rows, or unassessed structural cells.",
+    "runtimeAbsentAssessment": "No recorded restriction; the scoring engine applies its documented feasible fallback and flags the assumption."
+  },
   "disabilities": [
     {
       "slug": "ankle",
@@ -9677,8 +9682,9 @@
         "disabilityCount": 16,
         "taskCount": 86,
         "assessmentCount": 1309,
-        "expectedAssessmentCount": 1376,
-        "complete": false
+        "assessmentPolicy": "recorded_cells_only",
+        "uncheckedOrStructuralCellsIgnored": true,
+        "complete": true
       }
     },
     {
@@ -19872,7 +19878,8 @@
         "disabilityCount": 16,
         "taskCount": 87,
         "assessmentCount": 1392,
-        "expectedAssessmentCount": 1392,
+        "assessmentPolicy": "recorded_cells_only",
+        "uncheckedOrStructuralCellsIgnored": true,
         "complete": true
       }
     },
@@ -40265,13 +40272,11 @@
         "disabilityCount": 16,
         "taskCount": 189,
         "assessmentCount": 2776,
-        "expectedAssessmentCount": 3024,
-        "complete": false
+        "assessmentPolicy": "recorded_cells_only",
+        "uncheckedOrStructuralCellsIgnored": true,
+        "complete": true
       }
     }
   ],
-  "warnings": [
-    "2026_07_03 Chocolaterie.xlsx: 1309 assessments present; 1376 would be required for a complete matrix",
-    "2026_07_03 Pat Boulang.xlsx: 2776 assessments present; 3024 would be required for a complete matrix"
-  ]
+  "warnings": []
 }

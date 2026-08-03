@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\JobApplication;
 use App\Entity\JobPost;
 use App\Entity\User;
+use App\Service\ApplicationDocumentStorage;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,26 +56,13 @@ class CandidateApplicationController extends AbstractController
         return $user;
     }
 
-    private function saveUploadedFile(UploadedFile $file, string $uploadDir): string
-    {
-        $extension = strtolower($file->guessExtension() ?: $file->getClientOriginalExtension());
-
-        if (!in_array($extension, ['pdf', 'doc', 'docx'], true)) {
-            throw new \RuntimeException('Only PDF, DOC, and DOCX files are allowed.');
-        }
-
-        $fileName = uniqid('application_', true) . '.' . $extension;
-        $file->move($uploadDir, $fileName);
-
-        return $fileName;
-    }
-
     #[Route('/api/candidate/jobs/{id}/apply', name: 'candidate_apply_job', methods: ['POST'])]
     public function apply(
         int $id,
         Request $request,
         EntityManagerInterface $entityManager,
-        JWTEncoderInterface $jwtEncoder
+        JWTEncoderInterface $jwtEncoder,
+        ApplicationDocumentStorage $documentStorage
     ): JsonResponse {
         $candidate = $this->getUserFromToken($request, $jwtEncoder, $entityManager);
 
@@ -108,33 +96,39 @@ class CandidateApplicationController extends AbstractController
             return $this->json(['message' => 'Recommendation letter is required.'], 400);
         }
 
-        $uploadDir = $this->getParameter('kernel.project_dir') . '/public/uploads/applications';
-
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0775, true);
-        }
-
         $application = new JobApplication();
         $application->setCandidate($candidate);
         $application->setJobPost($job);
         $application->setStatus('pending');
 
+        $storedNames = [];
         try {
             if ($applicationDocument instanceof UploadedFile) {
-                $application->setApplicationFileName($this->saveUploadedFile($applicationDocument, $uploadDir));
-                $application->setApplicationOriginalName($applicationDocument->getClientOriginalName());
+                $stored = $documentStorage->store($applicationDocument);
+                $storedNames[] = $stored['storedName'];
+                $application->setApplicationFileName($stored['storedName']);
+                $application->setApplicationOriginalName($stored['originalName']);
             }
 
             if ($recommendationLetter instanceof UploadedFile) {
-                $application->setRecommendationFileName($this->saveUploadedFile($recommendationLetter, $uploadDir));
-                $application->setRecommendationOriginalName($recommendationLetter->getClientOriginalName());
+                $stored = $documentStorage->store($recommendationLetter);
+                $storedNames[] = $stored['storedName'];
+                $application->setRecommendationFileName($stored['storedName']);
+                $application->setRecommendationOriginalName($stored['originalName']);
             }
-        } catch (\RuntimeException $e) {
+            $entityManager->persist($application);
+            $entityManager->flush();
+        } catch (\InvalidArgumentException $e) {
+            foreach ($storedNames as $storedName) {
+                $documentStorage->delete($storedName);
+            }
             return $this->json(['message' => $e->getMessage()], 400);
+        } catch (\Throwable) {
+            foreach ($storedNames as $storedName) {
+                $documentStorage->delete($storedName);
+            }
+            return $this->json(['message' => 'The application could not be stored securely. Please try again.'], 500);
         }
-
-        $entityManager->persist($application);
-        $entityManager->flush();
 
         return $this->json([
             'message' => 'Application submitted successfully.',

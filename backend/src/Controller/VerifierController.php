@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\CandidateVerificationRequest;
+use App\Entity\CandidateVerificationAccessEvent;
 use App\Entity\User;
+use App\Privacy\PrivacyPolicy;
 use App\Service\CandidateCardStorage;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
@@ -76,6 +78,9 @@ final class VerifierController extends AbstractController
                 'originalName' => $verification->getDocumentOriginalName(),
                 'mimeType' => $verification->getDocumentMimeType(),
                 'size' => $verification->getDocumentSize(),
+                'available' => $verification->hasDocument(),
+                'retentionUntil' => $verification->getDocumentRetentionUntil()?->format(DATE_ATOM),
+                'deletedAt' => $verification->getDocumentDeletedAt()?->format(DATE_ATOM),
             ],
             'status' => $verification->getStatus(),
             'reviewer' => $verification->getReviewer()?->getUsername(),
@@ -128,15 +133,31 @@ final class VerifierController extends AbstractController
             return $access;
         }
 
+        $actor = $this->findActor($access, $entityManager);
+        if (!$actor instanceof User) {
+            return $this->json(['message' => 'Verifier account not found.'], 401);
+        }
+
         $verification = $entityManager->getRepository(CandidateVerificationRequest::class)->find($id);
         if (!$verification instanceof CandidateVerificationRequest) {
             return $this->json(['message' => 'Verification request not found.'], 404);
         }
 
+        if (!$verification->hasDocument()) {
+            return $this->json(['message' => 'The verification document has reached the end of its retention period and was deleted.'], 410);
+        }
         $path = $storage->path((string) $verification->getDocumentStoredName());
         if (!is_file($path)) {
             return $this->json(['message' => 'The private verification document is unavailable.'], 404);
         }
+
+        $entityManager->persist(
+            (new CandidateVerificationAccessEvent())
+                ->setVerificationRequest($verification)
+                ->setActor($actor)
+                ->setAction($request->query->getBoolean('download') ? 'download' : 'view')
+        );
+        $entityManager->flush();
 
         $response = new BinaryFileResponse($path);
         $response->headers->set('Content-Type', (string) $verification->getDocumentMimeType());
@@ -189,11 +210,15 @@ final class VerifierController extends AbstractController
             return $this->json(['message' => 'The reviewer note must be 2,000 characters or fewer.'], 400);
         }
 
+        $reviewedAt = new \DateTimeImmutable();
         $verification
             ->setStatus($status)
             ->setReviewer($actor)
             ->setReviewerNote($note !== '' ? $note : null)
-            ->setReviewedAt(new \DateTimeImmutable());
+            ->setReviewedAt($reviewedAt)
+            ->setDocumentRetentionUntil(
+                $reviewedAt->add(new \DateInterval('P' . PrivacyPolicy::CARD_RETENTION_DAYS_AFTER_REVIEW . 'D'))
+            );
         $entityManager->flush();
 
         $candidate = $verification->getCandidate();

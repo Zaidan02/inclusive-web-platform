@@ -24,7 +24,7 @@ class CandidateVerificationRequest
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $candidate = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 100, nullable: true)]
     private ?string $documentStoredName = null;
 
     #[ORM\Column(length: 255)]
@@ -52,11 +52,17 @@ class CandidateVerificationRequest
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $reviewedAt = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $documentRetentionUntil = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $documentDeletedAt = null;
+
     public function getId(): ?int { return $this->id; }
     public function getCandidate(): ?User { return $this->candidate; }
     public function setCandidate(User $candidate): static { $this->candidate = $candidate; return $this; }
     public function getDocumentStoredName(): ?string { return $this->documentStoredName; }
-    public function setDocumentStoredName(string $name): static { $this->documentStoredName = $name; return $this; }
+    public function setDocumentStoredName(?string $name): static { $this->documentStoredName = $name; return $this; }
     public function getDocumentOriginalName(): ?string { return $this->documentOriginalName; }
     public function setDocumentOriginalName(string $name): static { $this->documentOriginalName = $name; return $this; }
     public function getDocumentMimeType(): ?string { return $this->documentMimeType; }
@@ -81,4 +87,9 @@ class CandidateVerificationRequest
     public function setSubmittedAt(\DateTimeImmutable $at): static { $this->submittedAt = $at; return $this; }
     public function getReviewedAt(): ?\DateTimeImmutable { return $this->reviewedAt; }
     public function setReviewedAt(?\DateTimeImmutable $at): static { $this->reviewedAt = $at; return $this; }
+    public function getDocumentRetentionUntil(): ?\DateTimeImmutable { return $this->documentRetentionUntil; }
+    public function setDocumentRetentionUntil(?\DateTimeImmutable $at): static { $this->documentRetentionUntil = $at; return $this; }
+    public function getDocumentDeletedAt(): ?\DateTimeImmutable { return $this->documentDeletedAt; }
+    public function setDocumentDeletedAt(?\DateTimeImmutable $at): static { $this->documentDeletedAt = $at; return $this; }
+    public function hasDocument(): bool { return $this->documentStoredName !== null && $this->documentDeletedAt === null; }
 }

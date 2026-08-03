@@ -146,13 +146,15 @@ export default function VerifierDashboard() {
                 <dl className="verification-meta">
                   <div><dt>Email</dt><dd>{item.candidate.emailVerified ? "Verified" : "Not verified yet"}</dd></div>
                   <div><dt>Submitted</dt><dd>{formatDate(item.submittedAt)}</dd></div>
-                  <div><dt>Document</dt><dd>{item.document.originalName} · {formatBytes(item.document.size)}</dd></div>
+                  <div><dt>Document</dt><dd>{item.document.originalName} · {formatBytes(item.document.size)} · {item.document.available ? "available" : "deleted after retention"}</dd></div>
                   {item.reviewedAt && <div><dt>Last review</dt><dd>{formatDate(item.reviewedAt)} by {item.reviewer}</dd></div>}
+                  {item.document.retentionUntil && item.document.available && <div><dt>Scheduled deletion</dt><dd>{formatDate(item.document.retentionUntil)}</dd></div>}
+                  {item.document.deletedAt && <div><dt>Document deleted</dt><dd>{formatDate(item.document.deletedAt)}</dd></div>}
                 </dl>
 
                 <div className="document-actions">
-                  <button type="button" onClick={() => openDocument(item)}>Open document</button>
-                  <button type="button" onClick={() => openDocument(item, true)}>Download</button>
+                  <button type="button" onClick={() => openDocument(item)} disabled={!item.document.available}>Open document</button>
+                  <button type="button" onClick={() => openDocument(item, true)} disabled={!item.document.available}>Download</button>
                 </div>
 
                 <label htmlFor={`note-${item.id}`}>Reviewer note {item.status !== "approved" && "(required to reject)"}</label>

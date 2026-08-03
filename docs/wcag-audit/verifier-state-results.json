@@ -1,0 +1,156 @@
+{
+  "generatedAt": "2026-08-03T12:03:39.801Z",
+  "standard": "WCAG 2.1 Level A and AA",
+  "browser": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+  "notes": [
+    "The zoom-200 scenario uses CSS zoom in headless Chromium and requires manual browser-zoom confirmation.",
+    "Automated findings are evidence, not a complete conformance determination.",
+    "Keyboard automation records tab stops; focus visibility and interaction quality require manual review."
+  ],
+  "routes": [
+    {
+      "path": "/verifier",
+      "name": "Approved verifications",
+      "area": "verifier",
+      "role": "verifier",
+      "activateLabel": "Approved",
+      "activateExact": false
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "width-375",
+      "width": 375,
+      "height": 812
+    },
+    {
+      "name": "width-1440",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "results": [
+    {
+      "route": {
+        "path": "/verifier",
+        "name": "Approved verifications",
+        "area": "verifier",
+        "role": "verifier",
+        "activateLabel": "Approved",
+        "activateExact": false
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/verifier",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 16
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 1
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/verifier",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/verifier",
+        "name": "Approved verifications",
+        "area": "verifier",
+        "role": "verifier",
+        "activateLabel": "Approved",
+        "activateExact": false
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/verifier",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 16
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 1
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/verifier",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    }
+  ]
+}

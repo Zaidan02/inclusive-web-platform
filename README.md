@@ -13,6 +13,7 @@ JoIn is a Final Year Project focused on accessible, task-based employment for pe
 - Keyboard navigation in addition to mouse interaction.
 - Voice navigation, website questions, form actions, and generated spoken feedback.
 - AI-assisted profile building in English, French, and Arabic with editable transcripts, explicit consent, evidence, confidence, and per-suggestion confirmation.
+- Versioned privacy consent, private document storage, audited verifier access, scheduled card-retention cleanup, candidate data export, consent withdrawal, and account deletion.
 
 ## Architecture
 
@@ -107,7 +108,7 @@ Confirmed task skills enrich the profile but are deliberately excluded from the 
 
 New candidate registration requires a PDF, JPEG, or PNG disability card no larger than 5 MB. The card is MIME-validated, assigned a random server filename, and stored under Symfony's private `var` directory rather than the public web root. A candidate can sign in only after both email verification and approval by an authorized verifier. The verifier dashboard is available at `/verifier`; review documents are fetched through authenticated API requests and approval or rejection is recorded with the reviewer and time.
 
-The fixture verifier is `verifier@join.local` and uses the shared development password `Pass123!@#`. Existing candidate records created before this migration remain usable; every candidate created by the updated registration endpoint receives the new verification gate. See [candidate verification workflow](docs/CANDIDATE_VERIFICATION.md).
+The fixture verifier is `verifier@join.local` and uses the shared development password `Pass123!@#`. Existing candidate records created before this migration remain usable; every candidate created by the updated registration endpoint receives the new verification gate. Reviewed disability-card files are retained for 30 days and then removed by the scheduled purge command. See [candidate verification workflow](docs/CANDIDATE_VERIFICATION.md).
 
 ## Validation
 
@@ -135,9 +136,12 @@ docker compose -f backend\compose.yaml run --rm scoring-engine python -m unittes
 - [AI-assisted profile workflow](docs/AI_PROFILE_WORKFLOW.md)
 - [Candidate verification workflow](docs/CANDIDATE_VERIFICATION.md)
 - [Authentication and route authorization](docs/AUTHORIZATION_SECURITY.md)
+- [Consent, private storage, and privacy controls](docs/PRIVACY_CONTROLS.md)
 - [Scoring engine specification](docs/scoring-engine-technical-specification.md)
 - [Voice navigation specification](docs/voice-navigation-technical-specification.md)
 - [Keyboard navigation test plan](docs/keyboard-navigation-test-plan.md)
+- [Responsive and WCAG 2.1 AA baseline audit](docs/wcag-audit/BASELINE_AUDIT.md)
+- [WCAG baseline issue matrix](docs/wcag-audit/ISSUE_MATRIX.md)
 - [Frontend accessibility revamp](docs/frontend-revamp.md)
 
 ## Important operational notes

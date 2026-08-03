@@ -13,6 +13,7 @@ import RoleRoute from "./components/auth/RoleRoute";
 import CandidateProfileSetup from "./features/candidate/profile/CandidateProfileSetup";
 import VoiceNavigationControl from "./components/voice/VoiceNavigationControl";
 import VoiceNavigationHelpPage from "./pages/VoiceNavigationHelpPage";
+import PrivacyPage from "./pages/PrivacyPage";
 import RouteAccessibility from "./components/accessibility/RouteAccessibility";
 import SkipLink from "./components/accessibility/SkipLink";
 import ArrowKeyFocusNavigation from "./components/accessibility/ArrowKeyFocusNavigation";
@@ -34,6 +35,7 @@ function App() {
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/employers" element={<EmployersPage />} />
           <Route path="/voice-help" element={<VoiceNavigationHelpPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/candidate" element={<RoleRoute role="ROLE_CANDIDATE"><CandidateDashboard /></RoleRoute>} />
           <Route path="/candidate/setup" element={<RoleRoute role="ROLE_CANDIDATE"><CandidateProfileSetup /></RoleRoute>} />
           <Route path="/employer" element={<RoleRoute role="ROLE_EMPLOYER"><EmployerDashboard /></RoleRoute>} />

@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\CandidateVerificationRequest;
+use App\Entity\ConsentRecord;
 use App\Entity\User;
+use App\Privacy\PrivacyPolicy;
 use App\Service\CandidateCardStorage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -61,6 +63,18 @@ final class AuthController extends AbstractController
         $password = $data['password'];
         $accountType = $data['accountType'];
 
+        $privacyAccepted = filter_var(
+            $data['privacyAccepted'] ?? false,
+            FILTER_VALIDATE_BOOL,
+            FILTER_NULL_ON_FAILURE
+        ) === true;
+        if (($data['privacyVersion'] ?? null) !== PrivacyPolicy::VERSION || !$privacyAccepted) {
+            return $this->json([
+                'message' => 'You must review and accept the current privacy notice before registering.',
+                'privacyVersion' => PrivacyPolicy::VERSION,
+            ], 400);
+        }
+
         if (!in_array($accountType, ['candidate', 'employer'], true)) {
             return $this->json([
                 'message' => 'Invalid account type.'
@@ -68,6 +82,16 @@ final class AuthController extends AbstractController
         }
 
         $card = $request->files->get('disabilityCard');
+        $verificationConsent = filter_var(
+            $data['disabilityVerificationConsent'] ?? false,
+            FILTER_VALIDATE_BOOL,
+            FILTER_NULL_ON_FAILURE
+        ) === true;
+        if ($accountType === 'candidate' && !$verificationConsent) {
+            return $this->json([
+                'message' => 'Consent to process the disability card is required for candidate verification.',
+            ], 400);
+        }
         if ($accountType === 'candidate' && !$card instanceof UploadedFile) {
             return $this->json([
                 'message' => 'A disability card is required for candidate registration.'
@@ -154,6 +178,25 @@ final class AuthController extends AbstractController
                 ->setSubmittedAt(new \DateTimeImmutable());
             $user->setCandidateVerificationRequest($verificationRequest);
             $entityManager->persist($verificationRequest);
+        }
+
+        $privacyConsent = (new ConsentRecord())
+            ->setCandidate($user)
+            ->setPurpose(PrivacyPolicy::PURPOSE_PRIVACY_NOTICE)
+            ->setPolicyVersion(PrivacyPolicy::VERSION)
+            ->setDetails(['accountType' => $accountType]);
+        $entityManager->persist($privacyConsent);
+
+        if ($accountType === 'candidate') {
+            $verificationConsentRecord = (new ConsentRecord())
+                ->setCandidate($user)
+                ->setPurpose(PrivacyPolicy::PURPOSE_DISABILITY_VERIFICATION)
+                ->setPolicyVersion(PrivacyPolicy::VERSION)
+                ->setDetails([
+                    'dataCategories' => ['disability_card', 'verification_status'],
+                    'retentionDaysAfterReview' => PrivacyPolicy::CARD_RETENTION_DAYS_AFTER_REVIEW,
+                ]);
+            $entityManager->persist($verificationConsentRecord);
         }
 
         try {

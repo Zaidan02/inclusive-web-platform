@@ -14,9 +14,10 @@ The account cannot sign in until both gates pass. Email verification and documen
 1. Select **Candidate** on the signup page.
 2. Enter username, email, and password.
 3. Upload one disability card in PDF, JPEG, or PNG format, up to 5 MB.
-4. Submit registration and follow the email verification link.
-5. Wait for the verifier decision email.
-6. Sign in only after the card has been approved and the email has been verified.
+4. Review the privacy notice and explicitly consent to disability-card processing.
+5. Submit registration and follow the email verification link.
+6. Wait for the verifier decision email.
+7. Sign in only after the card has been approved and the email has been verified.
 
 Employer registration does not request a disability card and continues to require email verification only.
 
@@ -72,11 +73,13 @@ The frontend sends the JWT in `X-Auth-Token`. Tokens are not placed in document 
 - Server-detected MIME type, not the browser filename extension, controls accepted file types.
 - Files over 5 MB and empty uploads are rejected.
 - Document responses use `private, no-store` caching and `X-Content-Type-Options: nosniff`.
+- Each document view or download records the authorized actor, action, request, and timestamp.
+- A review decision schedules the disability-card file for deletion after 30 days; the status remains after the source file is purged.
 - Only verifier or administrator JWT roles can list requests, access documents, or save decisions.
 - Rejection requires a reason so the decision remains understandable and actionable.
 - The UI exposes the file only to reviewers and includes keyboard-visible focus states and status announcements.
 
-Operationally, the private `symfony_var` Docker volume contains these sensitive files. Production backups, retention rules, deletion handling, access logs, and authorized-verifier assignment must follow the project's privacy policy and applicable local law.
+Operationally, the private `symfony_var` Docker volume contains these sensitive files. Schedule `php bin/console app:purge-expired-private-data` at least daily. Production backups, backup erasure, incident response, authorized-verifier assignment, and local-law review remain deployment responsibilities.
 
 ## Database and deployment
 
@@ -86,6 +89,8 @@ After pulling this feature, run:
 cd backend
 docker compose up -d --build
 docker compose exec php php bin/console doctrine:migrations:migrate --no-interaction
+docker compose exec php php bin/console app:migrate-private-application-documents
+docker compose exec php php bin/console app:purge-expired-private-data
 ```
 
 Migration `Version20260803000100` creates `candidate_verification_request`. Legacy candidate accounts without a request are intentionally grandfathered to avoid unexpectedly locking existing users; every candidate created through the updated registration endpoint receives a pending request and is gated.

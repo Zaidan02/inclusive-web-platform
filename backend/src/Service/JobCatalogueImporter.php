@@ -61,7 +61,7 @@ final class JobCatalogueImporter
             $process->mustRun();
 
             $catalogue = json_decode($process->getOutput(), true, flags: JSON_THROW_ON_ERROR);
-            if (($catalogue['schemaVersion'] ?? null) !== 1 || !is_array($catalogue['jobs'] ?? null)) {
+            if (($catalogue['schemaVersion'] ?? null) !== 2 || !is_array($catalogue['jobs'] ?? null)) {
                 throw new \RuntimeException('The workbook extractor returned an unsupported catalogue.');
             }
         } finally {

@@ -6,6 +6,8 @@ import { getCandidateProfile, updateCandidateProfile } from "../services/candida
 import { isCandidateProfileComplete } from "../features/candidate/profile/profileCompletion";
 import { disabilityOptions } from "../features/candidate/profile/profileOptions";
 import AiProfileBuilder from "../features/candidate/profile/AiProfileBuilder";
+import CandidatePrivacyPanel from "../features/candidate/privacy/CandidatePrivacyPanel";
+import "../features/candidate/privacy/candidatePrivacy.css";
 import { API_BASE_URL, BACKEND_BASE_URL } from "../config";
 import useDialogFocus from "../hooks/useDialogFocus";
 
@@ -410,7 +412,7 @@ function CandidateDashboard() {
   useEffect(() => { fetchCandidateProfile(); }, []);
   useEffect(() => {
     const requestedTab = location.state?.voiceTab;
-    if (!["JOBS", "APPLICATIONS", "PROFILE"].includes(requestedTab)) return;
+    if (!["JOBS", "APPLICATIONS", "PROFILE", "PRIVACY"].includes(requestedTab)) return;
     setActiveTab(requestedTab);
     if (requestedTab === "JOBS") setSelectedJob(null);
   }, [location.state?.voiceNavigationTurn, location.state?.voiceTab]);
@@ -672,10 +674,10 @@ function CandidateDashboard() {
 
       {/* TABS */}
       <nav style={styles.tabs} aria-label="Candidate dashboard sections">
-        {["JOBS", "APPLICATIONS", "PROFILE"].map((tab) => (
+        {["JOBS", "APPLICATIONS", "PROFILE", "PRIVACY"].map((tab) => (
           <button type="button" key={tab} aria-current={activeTab === tab ? "page" : undefined} onClick={() => { setActiveTab(tab); if (tab === "JOBS") setSelectedJob(null); }}
             style={{ ...styles.tabButton, ...(activeTab === tab ? styles.activeTab : {}) }}>
-            {tab === "JOBS" ? "Jobs" : tab === "APPLICATIONS" ? "My Applications" : "My Profile"}
+            {tab === "JOBS" ? "Jobs" : tab === "APPLICATIONS" ? "My Applications" : tab === "PROFILE" ? "My Profile" : "Privacy & data"}
           </button>
         ))}
       </nav>
@@ -983,6 +985,8 @@ function CandidateDashboard() {
             </div>
           </section>
         )}
+
+        {activeTab === "PRIVACY" && <CandidatePrivacyPanel onAccountDeleted={handleLogout} />}
       </main>
 
       {selectedCompany && (

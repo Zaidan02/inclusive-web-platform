@@ -10,6 +10,8 @@ parameters:
     env(PROFILE_AI_URL): 'http://127.0.0.1:5002'
     env(PROFILE_AI_TOKEN): ''
     candidate_card_directory: '%kernel.project_dir%/var/private/disability_cards'
+    application_document_directory: '%kernel.project_dir%/var/private/application_documents'
+    legacy_application_document_directory: '%kernel.project_dir%/public/uploads/applications'
 
 services:
     # default configuration for services in *this* file
@@ -21,6 +23,8 @@ services:
             $profileAiUrl: '%env(PROFILE_AI_URL)%'
             $profileAiToken: '%env(PROFILE_AI_TOKEN)%'
             $candidateCardDirectory: '%candidate_card_directory%'
+            $applicationDocumentDirectory: '%application_document_directory%'
+            $legacyApplicationDocumentDirectory: '%legacy_application_document_directory%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

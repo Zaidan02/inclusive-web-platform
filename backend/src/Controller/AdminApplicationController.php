@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\JobApplication;
 use App\Entity\User;
+use App\Service\ApplicationDocumentStorage;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -137,7 +138,8 @@ class AdminApplicationController extends AbstractController
         string $type,
         Request $request,
         EntityManagerInterface $entityManager,
-        JWTEncoderInterface $jwtEncoder
+        JWTEncoderInterface $jwtEncoder,
+        ApplicationDocumentStorage $documentStorage
     ): BinaryFileResponse|JsonResponse {
         $adminCheck = $this->verifyAdmin($request, $jwtEncoder);
 
@@ -167,9 +169,8 @@ class AdminApplicationController extends AbstractController
             return $this->json(['message' => 'File not provided.'], 404);
         }
 
-        $filePath = $this->getParameter('kernel.project_dir') . '/public/uploads/applications/' . $storedName;
-
-        if (!file_exists($filePath)) {
+        $filePath = $documentStorage->locate($storedName);
+        if ($filePath === null) {
             return $this->json(['message' => 'File not found on server.'], 404);
         }
 
@@ -180,6 +181,8 @@ class AdminApplicationController extends AbstractController
             : ResponseHeaderBag::DISPOSITION_INLINE;
 
         $response->setContentDisposition($disposition, $originalName);
+        $response->headers->set('Cache-Control', 'private, no-store, max-age=0');
+        $response->headers->set('X-Content-Type-Options', 'nosniff');
 
         return $response;
     }

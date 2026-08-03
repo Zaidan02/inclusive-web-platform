@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { registerUser } from "../services/authApi";
+import { PRIVACY_VERSION } from "../privacy";
 import "../styles/authPages.css";
 
 function EyeIcon({ hidden }) {
@@ -62,6 +63,8 @@ function SignUpPage() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [disabilityCard, setDisabilityCard] = useState(null);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [disabilityVerificationConsent, setDisabilityVerificationConsent] = useState(false);
   const [touched, setTouched] = useState({});
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState("");
@@ -181,7 +184,7 @@ function SignUpPage() {
   };
 
   function validateForm() {
-    setTouched({ username: true, email: true, password: true, disabilityCard: true });
+    setTouched({ username: true, email: true, password: true, disabilityCard: true, privacy: true, verificationConsent: true });
     const firstInvalidField = !formData.username.trim()
       ? "username"
       : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
@@ -194,6 +197,10 @@ function SignUpPage() {
           || !["application/pdf", "image/jpeg", "image/png"].includes(disabilityCard.type)
         )
       ? "disabilityCard"
+      : !privacyAccepted
+      ? "privacyAccepted"
+      : formData.accountType === "candidate" && !disabilityVerificationConsent
+      ? "disabilityVerificationConsent"
       : null;
     if (firstInvalidField) {
       window.requestAnimationFrame(() => document.getElementById(firstInvalidField)?.focus());
@@ -212,6 +219,9 @@ function SignUpPage() {
       setLoading(true);
       const registration = new FormData();
       Object.entries(formData).forEach(([key, value]) => registration.append(key, value));
+      registration.append("privacyVersion", PRIVACY_VERSION);
+      registration.append("privacyAccepted", String(privacyAccepted));
+      registration.append("disabilityVerificationConsent", String(disabilityVerificationConsent));
       if (formData.accountType === "candidate" && disabilityCard) {
         registration.append("disabilityCard", disabilityCard);
       }
@@ -404,6 +414,38 @@ function SignUpPage() {
               {errors.disabilityCard && <p id="disability-card-error" className="field-error">{errors.disabilityCard}</p>}
             </div>
           )}
+
+          <div className="auth-field privacy-consent-group">
+            <label className="privacy-consent-option" htmlFor="privacyAccepted">
+              <input
+                id="privacyAccepted"
+                type="checkbox"
+                checked={privacyAccepted}
+                onChange={(event) => { setPrivacyAccepted(event.target.checked); setServerError(""); }}
+                onBlur={() => setTouched((current) => ({ ...current, privacy: true }))}
+                required
+              />
+              <span>I have read and accept the <Link to="/privacy" target="_blank">privacy notice</Link> (version {PRIVACY_VERSION}).</span>
+            </label>
+            {touched.privacy && !privacyAccepted && <p className="field-error">Accept the privacy notice to continue.</p>}
+
+            {formData.accountType === "candidate" && (
+              <>
+                <label className="privacy-consent-option" htmlFor="disabilityVerificationConsent">
+                  <input
+                    id="disabilityVerificationConsent"
+                    type="checkbox"
+                    checked={disabilityVerificationConsent}
+                    onChange={(event) => { setDisabilityVerificationConsent(event.target.checked); setServerError(""); }}
+                    onBlur={() => setTouched((current) => ({ ...current, verificationConsent: true }))}
+                    required
+                  />
+                  <span>I consent to authorized verifiers processing my disability card solely to confirm candidate eligibility. The file is removed 30 days after review.</span>
+                </label>
+                {touched.verificationConsent && !disabilityVerificationConsent && <p className="field-error">Consent is required to verify your candidate status.</p>}
+              </>
+            )}
+          </div>
 
           {serverError && <p className="auth-error" role="alert">{serverError}</p>}
           {success && <p className="auth-success" role="status">{success}</p>}

@@ -4,10 +4,12 @@ namespace App\Controller;
 
 use App\Entity\CandidateProfile;
 use App\Entity\CandidateProfileAiEvent;
+use App\Entity\ConsentRecord;
 use App\Entity\CandidateTaskSkill;
 use App\Entity\Disability;
 use App\Entity\JobDefinitionTask;
 use App\Entity\User;
+use App\Privacy\PrivacyPolicy;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -59,6 +61,12 @@ class CandidateProfileAiController extends AbstractController
         }
         if (($data['consent'] ?? false) !== true) {
             return $this->json(['message' => 'Consent is required before AI profile analysis.'], 400);
+        }
+        if (($data['consentVersion'] ?? null) !== PrivacyPolicy::VERSION) {
+            return $this->json([
+                'message' => 'Please review and accept the current AI privacy notice.',
+                'privacyVersion' => PrivacyPolicy::VERSION,
+            ], 400);
         }
 
         $narrative = trim((string) ($data['narrative'] ?? ''));
@@ -116,8 +124,20 @@ class CandidateProfileAiController extends AbstractController
 
         $this->recordEvent($entityManager, $user, 'analysis_requested', $language, [
             'consent' => true,
+            'consentVersion' => PrivacyPolicy::VERSION,
             'narrativeCharacters' => mb_strlen($narrative),
         ]);
+        $entityManager->persist(
+            (new ConsentRecord())
+                ->setCandidate($user)
+                ->setPurpose(PrivacyPolicy::PURPOSE_AI_PROFILE)
+                ->setPolicyVersion(PrivacyPolicy::VERSION)
+                ->setDetails([
+                    'language' => $language,
+                    'dataCategories' => ['editable_profile_transcript'],
+                    'transcriptStoredByPlatform' => false,
+                ])
+        );
         $entityManager->flush();
 
         try {

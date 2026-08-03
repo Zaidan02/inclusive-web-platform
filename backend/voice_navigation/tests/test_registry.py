@@ -61,6 +61,14 @@ class NavigationRegistryTest(unittest.TestCase):
         self.assertIsInstance(result, AuthorizedCommand)
         self.assertEqual("PROFILE", result.action["tab"])
 
+    def test_candidate_privacy_resolves_to_internal_tab(self) -> None:
+        result = self.registry.route(
+            IntentProposal(command="NAVIGATE", target="candidate_privacy", language="en", confidence=1),
+            "candidate",
+        )
+        self.assertIsInstance(result, AuthorizedCommand)
+        self.assertEqual("PRIVACY", result.action["tab"])
+
     def test_employer_jobs_resolves_to_internal_tab(self) -> None:
         result = self.registry.route(
             IntentProposal(command="NAVIGATE", target="employer_jobs", language="en", confidence=1),

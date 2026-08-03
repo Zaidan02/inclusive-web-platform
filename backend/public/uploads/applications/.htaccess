@@ -1,0 +1,3 @@
+# Defense in depth for deployments that still contain legacy files here.
+# Application documents must be served only by authenticated controller routes.
+Require all denied

@@ -4,13 +4,13 @@ namespace App\Controller;
 
 use App\Entity\JobApplication;
 use App\Entity\User;
+use App\Service\ApplicationDocumentStorage;
+use App\Service\CandidateCardStorage;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -205,81 +205,6 @@ final class AdminUserController extends AbstractController
         ]);
     }
 
-    #[Route('/api/admin/applications', name: 'api_admin_applications', methods: ['GET'])]
-    public function listAllApplications(
-        Request $request,
-        EntityManagerInterface $entityManager,
-        JWTEncoderInterface $jwtEncoder
-    ): JsonResponse {
-        $adminCheck = $this->verifyAdmin($request, $jwtEncoder);
-
-        if ($adminCheck instanceof JsonResponse) {
-            return $adminCheck;
-        }
-
-        $applications = $entityManager
-            ->getRepository(JobApplication::class)
-            ->findBy([], ['id' => 'DESC']);
-
-        return $this->json([
-            'applications' => array_map(
-                fn(JobApplication $application) => $this->formatApplication($application),
-                $applications
-            ),
-        ]);
-    }
-
-    #[Route('/api/admin/applications/{id}/download/{type}', name: 'api_admin_application_download', methods: ['GET'])]
-    public function downloadApplicationFile(
-        int $id,
-        string $type,
-        Request $request,
-        EntityManagerInterface $entityManager,
-        JWTEncoderInterface $jwtEncoder
-    ): BinaryFileResponse|JsonResponse {
-        $adminCheck = $this->verifyAdmin($request, $jwtEncoder);
-
-        if ($adminCheck instanceof JsonResponse) {
-            return $adminCheck;
-        }
-
-        $application = $entityManager->getRepository(JobApplication::class)->find($id);
-
-        if (!$application) {
-            return $this->json(['message' => 'Application not found.'], 404);
-        }
-
-        if ($type === 'application') {
-            $storedName = $application->getApplicationFileName();
-            $originalName = $application->getApplicationOriginalName() ?: 'application-document';
-        } elseif ($type === 'recommendation') {
-            $storedName = $application->getRecommendationFileName();
-            $originalName = $application->getRecommendationOriginalName() ?: 'recommendation-letter';
-        } else {
-            return $this->json(['message' => 'Invalid file type.'], 400);
-        }
-
-        if (!$storedName) {
-            return $this->json(['message' => 'File not provided.'], 404);
-        }
-
-        $filePath = $this->getParameter('kernel.project_dir') . '/public/uploads/applications/' . $storedName;
-
-        if (!file_exists($filePath)) {
-            return $this->json(['message' => 'File not found on server.'], 404);
-        }
-
-        $response = new BinaryFileResponse($filePath);
-
-        $disposition = $request->query->get('download') === '1'
-            ? ResponseHeaderBag::DISPOSITION_ATTACHMENT
-            : ResponseHeaderBag::DISPOSITION_INLINE;
-
-        $response->setContentDisposition($disposition, $originalName);
-
-        return $response;
-    }
-
     #[Route('/api/admin/users/{id<\d+>}', name: 'api_admin_users_update', methods: ['PATCH'])]
     public function updateUser(
         int $id,
@@ -458,7 +383,9 @@ final class AdminUserController extends AbstractController
         int $id,
         Request $request,
         EntityManagerInterface $entityManager,
-        JWTEncoderInterface $jwtEncoder
+        JWTEncoderInterface $jwtEncoder,
+        CandidateCardStorage $cardStorage,
+        ApplicationDocumentStorage $documentStorage
     ): JsonResponse {
         $adminCheck = $this->verifyAdmin($request, $jwtEncoder);
 
@@ -480,6 +407,19 @@ final class AdminUserController extends AbstractController
             return $this->json(['message' => 'You cannot delete your own admin account.'], 400);
         }
 
+        foreach ($entityManager->getRepository(JobApplication::class)->findBy(['candidate' => $user]) as $application) {
+            if ($application->getApplicationFileName()) {
+                $documentStorage->delete($application->getApplicationFileName());
+            }
+            if ($application->getRecommendationFileName()) {
+                $documentStorage->delete($application->getRecommendationFileName());
+            }
+            $entityManager->remove($application);
+        }
+        $verification = $user->getCandidateVerificationRequest();
+        if ($verification?->hasDocument()) {
+            $cardStorage->delete((string) $verification->getDocumentStoredName());
+        }
         $entityManager->remove($user);
         $entityManager->flush();
 

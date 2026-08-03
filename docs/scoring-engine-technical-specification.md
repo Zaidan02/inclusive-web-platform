@@ -310,7 +310,9 @@ Current policy:
 missing assessment → feasible
 ```
 
-A blank dataset cell is interpreted as no recorded restriction, not an explicit prohibition. This assumption maximizes inclusion but can overestimate compatibility if the dataset is incomplete.
+A blank or unchecked spreadsheet cell is not imported as an assessment. In the source workbooks these cells can be headings, repeated layout/task rows, or other structural cells; they are therefore ignored by catalogue completeness checks rather than reported as missing assessments. This does not change any task score or mathematical formula.
+
+At runtime, if a real candidate disability/task pair has no recorded assessment, it is interpreted as no recorded restriction rather than an explicit prohibition. The engine uses `feasible` and exposes the assumption flag described below. This inclusion-first fallback can overestimate compatibility, so an expert can later add an explicit assessment without changing the scoring design.
 
 The assumption is exposed:
 

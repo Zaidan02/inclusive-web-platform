@@ -44,6 +44,7 @@ final class CandidateCardStorage
 
         $storedName = bin2hex(random_bytes(24)) . '.' . $extension;
         $file->move($this->candidateCardDirectory, $storedName);
+        @chmod($this->path($storedName), 0600);
 
         return [
             'storedName' => $storedName,

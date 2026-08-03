@@ -4,6 +4,7 @@ import {
   requestAiProfileSuggestions,
   transcribeProfileAudio,
 } from "../../../services/candidateProfileApi";
+import { PRIVACY_VERSION } from "../../../privacy";
 import "./aiProfileBuilder.css";
 
 const FIELD_LABELS = {
@@ -118,6 +119,7 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
         narrative: narrative.trim(),
         language,
         consent: true,
+        consentVersion: PRIVACY_VERSION,
       });
       const next = data.suggestions || {};
       setSuggestions(next);
@@ -238,7 +240,7 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
           checked={consent}
           onChange={(event) => setConsent(event.target.checked)}
         />
-        <span>I agree to send this text to the AI assistant to create reviewable profile suggestions. It will not change my profile automatically.</span>
+        <span>I agree to send this text to the AI assistant to create reviewable profile suggestions. It will not change my profile automatically. See the <a href="/privacy" target="_blank" rel="noreferrer">privacy notice</a>.</span>
       </label>
 
       <button
