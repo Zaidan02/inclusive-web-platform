@@ -2,12 +2,11 @@ import { API_BASE_URL } from "../config";
 import { clearToken, decodeJwt, getPrimaryRole, getToken, saveToken } from "./tokenService";
 
 export async function registerUser(userData) {
+  const isFormData = userData instanceof FormData;
   const response = await fetch(`${API_BASE_URL}/register`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(userData),
+    headers: isFormData ? undefined : { "Content-Type": "application/json" },
+    body: isFormData ? userData : JSON.stringify(userData),
   });
 
   const data = await response.json().catch(() => ({}));
@@ -275,11 +274,6 @@ export async function updateApplicationStatus(applicationId, status) {
   return data;
 }
 
-export function getEmployerApplicationDownloadUrl(applicationId, type) {
-  const token = getToken();
-  return `${API_BASE_URL}/employer/applications/${applicationId}/download/${type}?token=${token}`;
-}
-
 export async function deleteEmployerApplication(applicationId) {
   const token = getToken();
 
@@ -357,18 +351,11 @@ export async function getAdminApplications() {
   return data;
 }
 
-export function getAdminApplicationFileUrl(applicationId, type, download = false) {
-  const token = getToken();
-  const downloadParam = download ? "&download=1" : "";
-
-  return `${API_BASE_URL}/admin/applications/${applicationId}/download/${type}?token=${token}${downloadParam}`;
-}
-
-export async function openAdminApplicationFile(applicationId, type) {
+export async function openAdminApplicationFile(applicationId, type, download = false) {
   const token = getToken();
 
   const response = await fetch(
-    `${API_BASE_URL}/admin/applications/${applicationId}/download/${type}`,
+    `${API_BASE_URL}/admin/applications/${applicationId}/download/${type}${download ? "?download=1" : ""}`,
     {
       method: "GET",
       headers: {
@@ -384,5 +371,11 @@ export async function openAdminApplicationFile(applicationId, type) {
 
   const blob = await response.blob();
   const fileUrl = window.URL.createObjectURL(blob);
-  window.open(fileUrl, "_blank");
+  const link = document.createElement("a");
+  link.href = fileUrl;
+  link.target = download ? "_self" : "_blank";
+  link.rel = "noopener noreferrer";
+  if (download) link.download = "application-document";
+  link.click();
+  window.setTimeout(() => window.URL.revokeObjectURL(fileUrl), 60_000);
 }

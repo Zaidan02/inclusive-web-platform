@@ -17,7 +17,7 @@ class AdminApplicationController extends AbstractController
 {
     private function verifyAdmin(Request $request, JWTEncoderInterface $jwtEncoder): array|JsonResponse
     {
-        $token = $request->headers->get('X-Auth-Token') ?: $request->query->get('token');
+        $token = $request->headers->get('X-Auth-Token');
 
         if (!$token) {
             return $this->json(['message' => 'Missing authentication token.'], 401);

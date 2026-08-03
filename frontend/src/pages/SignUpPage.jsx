@@ -61,6 +61,7 @@ function SignUpPage() {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [disabilityCard, setDisabilityCard] = useState(null);
   const [touched, setTouched] = useState({});
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState("");
@@ -119,6 +120,17 @@ function SignUpPage() {
 
   function handleAccountTypeChange(accountType) {
     setFormData({ ...formData, accountType });
+    if (accountType === "employer") {
+      setDisabilityCard(null);
+      setTouched((current) => ({ ...current, disabilityCard: false }));
+    }
+    setServerError("");
+  }
+
+  function handleCardChange(e) {
+    setDisabilityCard(e.target.files?.[0] || null);
+    setTouched((current) => ({ ...current, disabilityCard: true }));
+    setServerError("");
   }
 
   const passwordChecks = {
@@ -158,16 +170,30 @@ function SignUpPage() {
         : touched.password && passwordScore < 4
         ? "Your password must meet all requirements below."
         : "",
+    disabilityCard:
+      formData.accountType === "candidate" && touched.disabilityCard && !disabilityCard
+        ? "Upload your disability card to continue."
+        : formData.accountType === "candidate" && disabilityCard && disabilityCard.size > 5 * 1024 * 1024
+        ? "The disability card must be no larger than 5 MB."
+        : formData.accountType === "candidate" && disabilityCard && !["application/pdf", "image/jpeg", "image/png"].includes(disabilityCard.type)
+        ? "Choose a PDF, JPEG, or PNG file."
+        : "",
   };
 
   function validateForm() {
-    setTouched({ username: true, email: true, password: true });
+    setTouched({ username: true, email: true, password: true, disabilityCard: true });
     const firstInvalidField = !formData.username.trim()
       ? "username"
       : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
       ? "email"
       : passwordScore < 4
       ? "password"
+      : formData.accountType === "candidate" && (
+          !disabilityCard
+          || disabilityCard.size > 5 * 1024 * 1024
+          || !["application/pdf", "image/jpeg", "image/png"].includes(disabilityCard.type)
+        )
+      ? "disabilityCard"
       : null;
     if (firstInvalidField) {
       window.requestAnimationFrame(() => document.getElementById(firstInvalidField)?.focus());
@@ -184,9 +210,18 @@ function SignUpPage() {
 
     try {
       setLoading(true);
-      await registerUser(formData);
-      setSuccess("Account created successfully. Please check your email to verify your account before signing in.");
-      setTimeout(() => navigate("/signin"), 2000);
+      const registration = new FormData();
+      Object.entries(formData).forEach(([key, value]) => registration.append(key, value));
+      if (formData.accountType === "candidate" && disabilityCard) {
+        registration.append("disabilityCard", disabilityCard);
+      }
+      await registerUser(registration);
+      setSuccess(
+        formData.accountType === "candidate"
+          ? "Registration submitted. Verify your email, then wait for an authorized verifier to approve your disability card before signing in."
+          : "Account created successfully. Please check your email to verify your account before signing in."
+      );
+      setTimeout(() => navigate("/signin"), 4500);
     } catch (err) {
       setServerError(err.message || "We could not create your account. Please try again.");
     } finally {
@@ -342,6 +377,33 @@ function SignUpPage() {
               ))}
             </div>
           </div>
+
+          {formData.accountType === "candidate" && (
+            <div className="auth-field candidate-card-field">
+              <label htmlFor="disabilityCard">
+                Disability card <span aria-hidden="true">*</span>
+              </label>
+              <p id="disability-card-help" className="field-help">
+                Required for candidate verification. Upload a PDF, JPEG, or PNG up to 5 MB. Only authorized verifiers can access it.
+              </p>
+              <input
+                id="disabilityCard"
+                name="disabilityCard"
+                type="file"
+                accept="application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png"
+                required
+                onChange={handleCardChange}
+                onBlur={() => setTouched((current) => ({ ...current, disabilityCard: true }))}
+                aria-describedby={`disability-card-help${errors.disabilityCard ? " disability-card-error" : ""}`}
+                aria-invalid={Boolean(errors.disabilityCard)}
+                className={errors.disabilityCard ? "auth-file-input input-error" : "auth-file-input"}
+              />
+              {disabilityCard && !errors.disabilityCard && (
+                <p className="selected-file" role="status">Selected: {disabilityCard.name}</p>
+              )}
+              {errors.disabilityCard && <p id="disability-card-error" className="field-error">{errors.disabilityCard}</p>}
+            </div>
+          )}
 
           {serverError && <p className="auth-error" role="alert">{serverError}</p>}
           {success && <p className="auth-success" role="status">{success}</p>}

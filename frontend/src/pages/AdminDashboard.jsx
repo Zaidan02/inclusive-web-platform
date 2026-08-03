@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   getAdminApplications,
-  getAdminApplicationFileUrl,
+  openAdminApplicationFile,
 } from "../services/adminApi";
 import { getToken, logout } from "../services/authService";
 import { API_BASE_URL } from "../config";
@@ -343,9 +343,9 @@ function AdminDashboard() {
           if (!app) { respond(`I could not find a loaded application matching ${action.value}.`); return; }
           const recommendation = action.target.includes("recommendation");
           const download = action.target.includes("download");
-          const url = getAdminApplicationFileUrl(app.id, recommendation ? "recommendation" : "application", download);
-          window.open(url, "_blank", "noopener,noreferrer");
-          respond(`Opening ${action.label} for ${app.candidateName || app.jobTitle}.`);
+          openAdminApplicationFile(app.id, recommendation ? "recommendation" : "application", download)
+            .then(() => respond(`Opening ${action.label} for ${app.candidateName || app.jobTitle}.`))
+            .catch((fileError) => setError(fileError.message));
         } else return;
       } else if (action.type === "focus_field" && action.target === "catalogue_workbooks") {
         catalogueInputRef.current?.click();
@@ -377,8 +377,8 @@ function AdminDashboard() {
       <div style={{ display: "flex", flexDirection: "column", gap: "4px", alignItems: "center" }}>
         <span style={{ fontSize: "11px", color: "#64748b", maxWidth: "100px", wordBreak: "break-word", textAlign: "center", lineHeight: "1.3" }}>{label}</span>
         <div style={{ display: "flex", gap: "4px" }}>
-          <a href={getAdminApplicationFileUrl(application.id, type, false)} target="_blank" rel="noreferrer" style={{ textDecoration: "none", background: "#eff6ff", color: "#1d4ed8", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", fontWeight: "500" }}>View</a>
-          <a href={getAdminApplicationFileUrl(application.id, type, true)} target="_blank" rel="noreferrer" style={{ textDecoration: "none", background: "#f0fdf4", color: "#16a34a", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", fontWeight: "500" }}>Download</a>
+          <button type="button" onClick={() => openAdminApplicationFile(application.id, type, false).catch((fileError) => setError(fileError.message))} style={{ border: 0, background: "#eff6ff", color: "#1d4ed8", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", fontWeight: "500", cursor: "pointer" }}>View</button>
+          <button type="button" onClick={() => openAdminApplicationFile(application.id, type, true).catch((fileError) => setError(fileError.message))} style={{ border: 0, background: "#f0fdf4", color: "#16a34a", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", fontWeight: "500", cursor: "pointer" }}>Download</button>
         </div>
       </div>
     );

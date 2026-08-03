@@ -82,6 +82,13 @@ class CandidateProfileController extends AbstractController
             return $this->json(['message' => 'User not found.'], 404);
         }
 
+        $roles = $user->getRoles();
+        if (in_array('ROLE_EMPLOYER', $roles, true)
+            || in_array('ROLE_ADMIN', $roles, true)
+            || in_array('ROLE_VERIFIER', $roles, true)) {
+            return $this->json(['message' => 'Candidate access is required.'], 403);
+        }
+
         return $user;
     }
 

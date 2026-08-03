@@ -60,7 +60,7 @@ final class CandidateMatchController extends AbstractController
         $user = $identifier ? $em->getRepository(User::class)->findOneBy(['email' => $identifier]) : null;
         $user ??= $identifier ? $em->getRepository(User::class)->findOneBy(['username' => $identifier]) : null;
         if (!$user) return $this->json(['message' => 'Candidate user not found.'], 404);
-        if (in_array('ROLE_EMPLOYER', $user->getRoles(), true) || in_array('ROLE_ADMIN', $user->getRoles(), true)) return $this->json(['message' => 'Candidate role required.'], 403);
+        if (in_array('ROLE_EMPLOYER', $user->getRoles(), true) || in_array('ROLE_ADMIN', $user->getRoles(), true) || in_array('ROLE_VERIFIER', $user->getRoles(), true)) return $this->json(['message' => 'Candidate role required.'], 403);
         return $user;
     }
 

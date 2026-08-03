@@ -18,11 +18,30 @@ export function getRolesFromToken(token) {
 
 export function getPrimaryRole(token) {
   const roles = getRolesFromToken(token);
-  if (roles.includes("ROLE_ADMIN")) return "ROLE_ADMIN";
-  if (roles.includes("ROLE_EMPLOYER")) return "ROLE_EMPLOYER";
-  return roles[0] || null;
+  return getPrimaryRoleFromRoles(roles);
 }
 
-export function saveToken(token) { localStorage.setItem("token", token); }
-export function getToken() { return localStorage.getItem("token"); }
-export function clearToken() { localStorage.removeItem("token"); }
+export function getPrimaryRoleFromRoles(roles) {
+  if (roles.includes("ROLE_ADMIN")) return "ROLE_ADMIN";
+  if (roles.includes("ROLE_VERIFIER")) return "ROLE_VERIFIER";
+  if (roles.includes("ROLE_EMPLOYER")) return "ROLE_EMPLOYER";
+  if (roles.includes("ROLE_CANDIDATE")) return "ROLE_CANDIDATE";
+  return null;
+}
+
+export function saveToken(token) {
+  localStorage.removeItem("token");
+  sessionStorage.setItem("token", token);
+}
+
+export function getToken() {
+  // Remove tokens created by older builds; persistent browser storage made a
+  // reopened dashboard look like an unauthenticated bypass.
+  localStorage.removeItem("token");
+  return sessionStorage.getItem("token");
+}
+
+export function clearToken() {
+  sessionStorage.removeItem("token");
+  localStorage.removeItem("token");
+}

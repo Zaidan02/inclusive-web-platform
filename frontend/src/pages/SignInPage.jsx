@@ -114,6 +114,7 @@ function SignInPage() {
       const role = getRoleFromToken(token);
 
       if (role === "ROLE_ADMIN") navigate("/admin");
+      else if (role === "ROLE_VERIFIER") navigate("/verifier");
       else if (role === "ROLE_EMPLOYER") navigate("/employer");
       else navigate("/candidate");
     } catch (err) {

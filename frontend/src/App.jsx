@@ -7,6 +7,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import CandidateDashboard from "./pages/CandidateDashboard";
 import EmployerDashboard from "./pages/EmployerDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import VerifierDashboard from "./pages/VerifierDashboard";
 import EmployersPage from "./pages/EmployersPage";
 import RoleRoute from "./components/auth/RoleRoute";
 import CandidateProfileSetup from "./features/candidate/profile/CandidateProfileSetup";
@@ -33,10 +34,11 @@ function App() {
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/employers" element={<EmployersPage />} />
           <Route path="/voice-help" element={<VoiceNavigationHelpPage />} />
-          <Route path="/candidate" element={<RoleRoute role="ROLE_USER"><CandidateDashboard /></RoleRoute>} />
-          <Route path="/candidate/setup" element={<RoleRoute role="ROLE_USER"><CandidateProfileSetup /></RoleRoute>} />
+          <Route path="/candidate" element={<RoleRoute role="ROLE_CANDIDATE"><CandidateDashboard /></RoleRoute>} />
+          <Route path="/candidate/setup" element={<RoleRoute role="ROLE_CANDIDATE"><CandidateProfileSetup /></RoleRoute>} />
           <Route path="/employer" element={<RoleRoute role="ROLE_EMPLOYER"><EmployerDashboard /></RoleRoute>} />
           <Route path="/admin" element={<RoleRoute role="ROLE_ADMIN"><AdminDashboard /></RoleRoute>} />
+          <Route path="/verifier" element={<RoleRoute role="ROLE_VERIFIER"><VerifierDashboard /></RoleRoute>} />
         </Routes>
       </div>
     </BrowserRouter>

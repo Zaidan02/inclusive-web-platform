@@ -1,1 +1,1 @@
-export { getAdminApplications, getAdminApplicationFileUrl, openAdminApplicationFile } from "./authService";
+export { getAdminApplications, openAdminApplicationFile } from "./authService";

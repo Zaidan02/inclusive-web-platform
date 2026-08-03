@@ -24,11 +24,12 @@ final class AppFixtures extends Fixture
         $employerUsers = [];
         $accounts = [
             ['username' => 'admin', 'email' => 'admin@join.local', 'roles' => ['ROLE_ADMIN']],
+            ['username' => 'verifier', 'email' => 'verifier@join.local', 'roles' => ['ROLE_VERIFIER']],
             ['username' => 'employer', 'email' => 'employer@join.local', 'roles' => ['ROLE_EMPLOYER'], 'company' => ['name' => 'JoIn Hospitality Demo', 'industry' => 'Food and Beverage', 'location' => 'Beirut, Lebanon', 'website' => 'https://example.com', 'logo' => '/join-hospitality-logo.png.jpeg']],
             ['username' => 'cedar_sweets', 'email' => 'cedar.sweets@join.local', 'roles' => ['ROLE_EMPLOYER'], 'company' => ['name' => 'Cedar Sweets', 'industry' => 'Confectionery', 'location' => 'Jounieh, Lebanon', 'website' => 'https://example.com/cedar-sweets', 'logo' => null]],
             ['username' => 'north_scoop', 'email' => 'north.scoop@join.local', 'roles' => ['ROLE_EMPLOYER'], 'company' => ['name' => 'North Scoop', 'industry' => 'Ice Cream Production', 'location' => 'Tripoli, Lebanon', 'website' => 'https://example.com/north-scoop', 'logo' => null]],
             ['username' => 'artisan_bakery', 'email' => 'artisan.bakery@join.local', 'roles' => ['ROLE_EMPLOYER'], 'company' => ['name' => 'Beirut Artisan Bakery', 'industry' => 'Bakery and Pastry', 'location' => 'Beirut, Lebanon', 'website' => 'https://example.com/artisan-bakery', 'logo' => null]],
-            ['username' => 'candidate', 'email' => 'candidate@join.local', 'roles' => ['ROLE_USER']],
+            ['username' => 'candidate', 'email' => 'candidate@join.local', 'roles' => ['ROLE_CANDIDATE']],
         ];
 
         foreach ($accounts as $account) {

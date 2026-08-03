@@ -306,6 +306,7 @@ class CandidateProfileAiController extends AbstractController
         if (
             in_array('ROLE_EMPLOYER', $user->getRoles(), true)
             || in_array('ROLE_ADMIN', $user->getRoles(), true)
+            || in_array('ROLE_VERIFIER', $user->getRoles(), true)
         ) {
             return $this->json(['message' => 'Candidate access is required.'], 403);
         }

@@ -215,6 +215,7 @@ docker compose exec php php bin/console doctrine:fixtures:load --no-interaction 
 This command intentionally purges existing rows. The current fixtures create:
 
 - One verified administrator
+- One verified authorized verifier
 - One verified candidate
 - Four verified employer/company accounts
 - Three job definitions
@@ -233,6 +234,7 @@ Primary fixture emails:
 
 ```text
 admin@join.local
+verifier@join.local
 candidate@join.local
 employer@join.local
 cedar.sweets@join.local

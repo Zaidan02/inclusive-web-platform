@@ -2,11 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\CandidateVerificationRequest;
 use App\Entity\User;
+use App\Service\CandidateCardStorage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -27,9 +30,13 @@ final class AuthController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher,
-        MailerInterface $mailer
+        MailerInterface $mailer,
+        CandidateCardStorage $cardStorage
     ): JsonResponse {
-        $data = json_decode($request->getContent(), true);
+        $contentType = (string) $request->headers->get('Content-Type', '');
+        $data = str_contains($contentType, 'multipart/form-data')
+            ? $request->request->all()
+            : json_decode($request->getContent(), true);
 
         if (
             !$data ||
@@ -43,7 +50,11 @@ final class AuthController extends AbstractController
             ], 400);
         }
 
-        $sendVerificationEmail = $data['sendVerificationEmail'] ?? true;
+        $sendVerificationEmail = filter_var(
+            $data['sendVerificationEmail'] ?? true,
+            FILTER_VALIDATE_BOOL,
+            FILTER_NULL_ON_FAILURE
+        ) ?? true;
 
         $username = trim($data['username']);
         $emailAddress = trim($data['email']);
@@ -53,6 +64,13 @@ final class AuthController extends AbstractController
         if (!in_array($accountType, ['candidate', 'employer'], true)) {
             return $this->json([
                 'message' => 'Invalid account type.'
+            ], 400);
+        }
+
+        $card = $request->files->get('disabilityCard');
+        if ($accountType === 'candidate' && !$card instanceof UploadedFile) {
+            return $this->json([
+                'message' => 'A disability card is required for candidate registration.'
             ], 400);
         }
 
@@ -95,6 +113,19 @@ final class AuthController extends AbstractController
         }
 
         $verificationToken = bin2hex(random_bytes(32));
+        $storedCard = null;
+
+        if ($accountType === 'candidate') {
+            try {
+                $storedCard = $cardStorage->store($card);
+            } catch (\InvalidArgumentException $e) {
+                return $this->json(['message' => $e->getMessage()], 400);
+            } catch (\Throwable) {
+                return $this->json([
+                    'message' => 'The disability card could not be stored securely. Please try again.'
+                ], 500);
+            }
+        }
 
         $user = new User();
         $user->setUsername($username);
@@ -103,7 +134,7 @@ final class AuthController extends AbstractController
         if ($accountType === 'employer') {
             $user->setRoles(['ROLE_EMPLOYER']);
         } else {
-            $user->setRoles(['ROLE_USER']);
+            $user->setRoles(['ROLE_CANDIDATE']);
         }
 
         $user->setIsVerified(false);
@@ -112,8 +143,28 @@ final class AuthController extends AbstractController
             $passwordHasher->hashPassword($user, $password)
         );
 
-        $entityManager->persist($user);
-        $entityManager->flush();
+        if ($storedCard !== null) {
+            $verificationRequest = (new CandidateVerificationRequest())
+                ->setCandidate($user)
+                ->setDocumentStoredName($storedCard['storedName'])
+                ->setDocumentOriginalName($storedCard['originalName'])
+                ->setDocumentMimeType($storedCard['mimeType'])
+                ->setDocumentSize($storedCard['size'])
+                ->setStatus(CandidateVerificationRequest::STATUS_PENDING)
+                ->setSubmittedAt(new \DateTimeImmutable());
+            $user->setCandidateVerificationRequest($verificationRequest);
+            $entityManager->persist($verificationRequest);
+        }
+
+        try {
+            $entityManager->persist($user);
+            $entityManager->flush();
+        } catch (\Throwable $e) {
+            if ($storedCard !== null) {
+                $cardStorage->delete($storedCard['storedName']);
+            }
+            throw $e;
+        }
 
         if ($sendVerificationEmail) {
             $baseUrl = $_ENV['VERIFICATION_BASE_URL'] ?? 'http://localhost:8081';
@@ -127,6 +178,9 @@ final class AuthController extends AbstractController
                     "Welcome {$user->getUsername()}!\n\n" .
                     "Please verify your email by clicking this link:\n" .
                     $verificationLink . "\n\n" .
+                    ($accountType === 'candidate'
+                        ? "After email verification, an authorized verifier must also approve your disability card before you can sign in.\n\n"
+                        : '') .
                     "If you did not create this account, you can ignore this email."
                 );
 
@@ -134,7 +188,10 @@ final class AuthController extends AbstractController
         }
 
         return $this->json([
-            'message' => 'User registered successfully. Please check your email to verify your account.'
+            'message' => $accountType === 'candidate'
+                ? 'Registration submitted. Verify your email and wait for disability-card approval before signing in.'
+                : 'User registered successfully. Please check your email to verify your account.',
+            'verificationStatus' => $accountType === 'candidate' ? 'pending' : null,
         ], 201);
     }
 
@@ -166,8 +223,12 @@ final class AuthController extends AbstractController
 
         $entityManager->flush();
 
+        $cardRequest = $user->getCandidateVerificationRequest();
+
         return $this->json([
-            'message' => 'Email verified successfully. You can now log in.'
+            'message' => $cardRequest !== null && !$cardRequest->isApproved()
+                ? 'Email verified successfully. Your disability card is still awaiting approval.'
+                : 'Email verified successfully. You can now log in.'
         ], 200);
     }
 

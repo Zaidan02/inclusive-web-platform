@@ -50,6 +50,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: EmployerProfile::class, cascade: ['persist', 'remove'])]
     private ?EmployerProfile $employerProfile = null;
 
+    #[ORM\OneToOne(mappedBy: 'candidate', targetEntity: CandidateVerificationRequest::class, cascade: ['persist', 'remove'])]
+    private ?CandidateVerificationRequest $candidateVerificationRequest = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -191,6 +194,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         $this->employerProfile = $employerProfile;
 
+        return $this;
+    }
+
+    public function getCandidateVerificationRequest(): ?CandidateVerificationRequest
+    {
+        return $this->candidateVerificationRequest;
+    }
+
+    public function setCandidateVerificationRequest(?CandidateVerificationRequest $request): static
+    {
+        if ($request !== null && $request->getCandidate() !== $this) {
+            $request->setCandidate($this);
+        }
+
+        $this->candidateVerificationRequest = $request;
         return $this;
     }
 

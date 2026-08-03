@@ -20,7 +20,7 @@ final class AdminUserController extends AbstractController
 {
     private function verifyAdmin(Request $request, JWTEncoderInterface $jwtEncoder): array|JsonResponse
     {
-        $token = $request->headers->get('X-Auth-Token') ?: $request->query->get('token');
+        $token = $request->headers->get('X-Auth-Token');
 
         if (!$token) {
             return $this->json(['message' => 'Missing authentication token.'], 401);
@@ -168,7 +168,7 @@ final class AdminUserController extends AbstractController
         foreach ($users as $user) {
             $roles = $user->getRoles();
 
-            if (in_array('ROLE_ADMIN', $roles, true) || in_array('ROLE_EMPLOYER', $roles, true)) {
+            if (in_array('ROLE_ADMIN', $roles, true) || in_array('ROLE_EMPLOYER', $roles, true) || in_array('ROLE_VERIFIER', $roles, true)) {
                 continue;
             }
 

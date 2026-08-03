@@ -1503,3 +1503,49 @@
   outline-offset: 5px;
   transition: outline-color 180ms ease;
 }
+
+.candidate-card-field {
+  padding: 16px;
+  border: 1px solid #cbdaf2;
+  border-radius: 14px;
+  background: #f7faff;
+}
+
+.field-help,
+.selected-file {
+  margin: 5px 0 10px;
+  color: #52627d;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.selected-file {
+  margin-bottom: 0;
+  color: #1b5e3a;
+  overflow-wrap: anywhere;
+}
+
+.auth-file-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #aebfda;
+  border-radius: 10px;
+  color: #263957;
+  background: #fff;
+}
+
+.auth-file-input::file-selector-button {
+  margin-right: 12px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 8px;
+  color: #fff;
+  background: #1d55d4;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.auth-file-input:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.42);
+  outline-offset: 2px;
+}
