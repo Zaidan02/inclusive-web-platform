@@ -34,7 +34,16 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
   const recorderRef = useRef(null);
   const streamRef = useRef(null);
   const chunksRef = useRef([]);
+  const narrativeRef = useRef(null);
+  const consentRef = useRef(null);
+  const errorRef = useRef(null);
   const resultsHeadingRef = useRef(null);
+
+  function showError(message, controlRef) {
+    setError(message);
+    setStatus("");
+    requestAnimationFrame(() => (controlRef?.current || errorRef.current)?.focus());
+  }
 
   useEffect(() => () => {
     if (recorderRef.current?.state === "recording") recorderRef.current.stop();
@@ -50,7 +59,7 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
     setError("");
     setStatus("");
     if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
-      setError("Audio recording is not supported by this browser. You can type your description instead.");
+      showError("Audio recording is not supported by this browser. You can type your description instead.");
       return;
     }
     try {
@@ -104,11 +113,11 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
 
   async function analyseNarrative() {
     if (!consent) {
-      setError("Confirm consent before sending your description to the AI profile assistant.");
+      showError("Confirm consent before sending your description to the AI profile assistant.", consentRef);
       return;
     }
     if (narrative.trim().length < 10) {
-      setError("Enter at least 10 characters about yourself.");
+      showError("Enter at least 10 characters about yourself.", narrativeRef);
       return;
     }
     try {
@@ -157,7 +166,7 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
         note: item.note || item.evidence || "",
       }));
     if (!Object.keys(profileFields).length && !educationLevel && !disabilities.length && !taskSkills.length) {
-      setError("Select at least one suggestion to add to your profile.");
+      showError("Select at least one suggestion to add to your profile.", resultsHeadingRef);
       return;
     }
 
@@ -224,23 +233,30 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
       <label className="ai-profile-builder__narrative">
         <span>Your editable description or transcript</span>
         <textarea
+          ref={narrativeRef}
           rows="7"
           maxLength="4000"
+          aria-describedby="ai-profile-narrative-help ai-profile-narrative-count"
+          aria-invalid={Boolean(error && narrative.trim().length < 10)}
           dir={language === "ar" ? "rtl" : "ltr"}
           value={narrative}
           onChange={(event) => setNarrative(event.target.value)}
           placeholder="For example: where you live, your education, the tasks you can do, your experience, and your work goals."
         />
-        <small>{narrative.length} / 4000 characters</small>
+        <small id="ai-profile-narrative-count">{narrative.length} / 4000 characters</small>
       </label>
+      <p id="ai-profile-narrative-help" className="ai-profile-builder__sr-only">You can edit the transcript before requesting suggestions.</p>
 
       <label className="ai-profile-builder__consent">
         <input
+          ref={consentRef}
           type="checkbox"
           checked={consent}
+          aria-invalid={Boolean(error && !consent)}
+          aria-describedby="ai-profile-consent-help"
           onChange={(event) => setConsent(event.target.checked)}
         />
-        <span>I agree to send this text to the AI assistant to create reviewable profile suggestions. It will not change my profile automatically. See the <a href="/privacy" target="_blank" rel="noreferrer">privacy notice</a>.</span>
+        <span id="ai-profile-consent-help">I agree to send this text to the AI assistant to create reviewable profile suggestions. It will not change my profile automatically. See the <a href="/privacy" target="_blank" rel="noreferrer">privacy notice</a>.</span>
       </label>
 
       <button
@@ -253,8 +269,8 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
       </button>
 
       <div className="ai-profile-builder__messages" aria-live="polite" aria-atomic="true">
-        {status && <p className="ai-profile-builder__status">{status}</p>}
-        {error && <p className="ai-profile-builder__error" role="alert">{error}</p>}
+        {status && <p className="ai-profile-builder__status" role="status">{status}</p>}
+        {error && <p ref={errorRef} tabIndex="-1" className="ai-profile-builder__error" role="alert">{error}</p>}
       </div>
 
       {suggestions && (

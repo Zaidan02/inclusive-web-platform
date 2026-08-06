@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { clearToken } from "../services/tokenService";
+import AccessibleNotice from "../components/accessibility/AccessibleNotice";
 import {
   getVerificationRequests,
   openVerificationDocument,
@@ -32,6 +33,12 @@ export default function VerifierDashboard() {
   const [workingId, setWorkingId] = useState(null);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const errorRef = useRef(null);
+  const messageRef = useRef(null);
+
+  function focusNotice(kind) {
+    requestAnimationFrame(() => (kind === "error" ? errorRef.current : messageRef.current)?.focus());
+  }
 
   const loadRequests = useCallback(async () => {
     setLoading(true);
@@ -42,6 +49,7 @@ export default function VerifierDashboard() {
       setCounts(data.counts || {});
     } catch (err) {
       setError(err.message);
+      focusNotice("error");
     } finally {
       setLoading(false);
     }
@@ -67,8 +75,10 @@ export default function VerifierDashboard() {
       setMessage(`${data.message}${data.notificationSent ? " The candidate was notified by email." : " The decision was saved; email delivery was unavailable."}`);
       setNotes((current) => ({ ...current, [item.id]: "" }));
       await loadRequests();
+      focusNotice("message");
     } catch (err) {
       setError(err.message);
+      focusNotice("error");
     } finally {
       setWorkingId(null);
     }
@@ -80,6 +90,7 @@ export default function VerifierDashboard() {
       await openVerificationDocument(item.id, item.document.originalName, download);
     } catch (err) {
       setError(err.message);
+      focusNotice("error");
     }
   }
 
@@ -99,7 +110,7 @@ export default function VerifierDashboard() {
         <button type="button" className="verifier-signout" onClick={signOut}>Sign out</button>
       </header>
 
-      <section className="verifier-content" aria-labelledby="request-heading">
+      <section className="verifier-content" aria-labelledby="request-heading" aria-busy={loading}>
         <div className="verifier-toolbar">
           <h2 id="request-heading">Signup requests</h2>
           <button type="button" className="verifier-refresh" onClick={loadRequests} disabled={loading}>
@@ -107,7 +118,7 @@ export default function VerifierDashboard() {
           </button>
         </div>
 
-        <div className="verifier-filters" aria-label="Filter verification requests">
+        <div className="verifier-filters" aria-label="Filter verification requests" role="group">
           {FILTERS.map((status) => (
             <button
               key={status}
@@ -122,15 +133,15 @@ export default function VerifierDashboard() {
           ))}
         </div>
 
-        <div className="verifier-announcements" aria-live="polite">
-          {error && <p className="verifier-error" role="alert">{error}</p>}
-          {message && <p className="verifier-success">{message}</p>}
+        <div className="verifier-announcements">
+          <AccessibleNotice noticeRef={errorRef} tone="error" message={error} />
+          <AccessibleNotice noticeRef={messageRef} tone="success" message={message} />
         </div>
 
         {loading ? (
           <p className="verifier-empty" role="status">Loading verification requests…</p>
         ) : requests.length === 0 ? (
-          <p className="verifier-empty">No {filter === "all" ? "" : `${filter} `}requests found.</p>
+          <p className="verifier-empty" role="status">No {filter === "all" ? "" : `${filter} `}requests found.</p>
         ) : (
           <div className="verification-list">
             {requests.map((item) => (
@@ -140,7 +151,7 @@ export default function VerifierDashboard() {
                     <h3>{item.candidate.username}</h3>
                     <a href={`mailto:${item.candidate.email}`}>{item.candidate.email}</a>
                   </div>
-                  <span className={`verification-status status-${item.status}`}>{item.status}</span>
+                  <span className={`verification-status status-${item.status}`} aria-label={`Verification status: ${item.status}`}>{item.status}</span>
                 </div>
 
                 <dl className="verification-meta">
@@ -153,8 +164,8 @@ export default function VerifierDashboard() {
                 </dl>
 
                 <div className="document-actions">
-                  <button type="button" onClick={() => openDocument(item)} disabled={!item.document.available}>Open document</button>
-                  <button type="button" onClick={() => openDocument(item, true)} disabled={!item.document.available}>Download</button>
+                  <button type="button" aria-label={`Open disability card for ${item.candidate.username}`} onClick={() => openDocument(item)} disabled={!item.document.available}>Open document</button>
+                  <button type="button" aria-label={`Download disability card for ${item.candidate.username}`} onClick={() => openDocument(item, true)} disabled={!item.document.available}>Download</button>
                 </div>
 
                 <label htmlFor={`note-${item.id}`}>Reviewer note {item.status !== "approved" && "(required to reject)"}</label>
@@ -163,11 +174,14 @@ export default function VerifierDashboard() {
                   rows="3"
                   maxLength="2000"
                   value={notes[item.id] ?? item.reviewerNote ?? ""}
+                  aria-describedby={`note-help-${item.id}`}
+                  aria-invalid={Boolean(error && item.status !== "approved" && !(notes[item.id] || "").trim())}
                   onChange={(event) => setNotes((current) => ({ ...current, [item.id]: event.target.value }))}
                   placeholder="Give a concise reason or internal review note."
                 />
+                <p id={`note-help-${item.id}`} className="verifier-note-help">Maximum 2,000 characters. A reason is required before rejection.</p>
 
-                <div className="review-actions">
+                <div className="review-actions" aria-busy={workingId === item.id}>
                   <button type="button" className="approve-button" disabled={workingId === item.id} onClick={() => review(item, "approved")}>Approve</button>
                   <button type="button" className="reject-button" disabled={workingId === item.id} onClick={() => review(item, "rejected")}>Reject</button>
                 </div>

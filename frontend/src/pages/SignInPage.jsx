@@ -4,6 +4,7 @@ import logoImage from "../assets/john-logo.png";
 import { loginUser } from "../services/authApi";
 import { getRoleFromToken } from "../services/authService";
 import { saveToken } from "../services/tokenService";
+import { isValidEmail } from "../utils/authValidation";
 import "../styles/authPages.css";
 
 function EyeIcon({ hidden }) {
@@ -53,7 +54,9 @@ function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({ email: "", password: "" });
   const formRef = useRef(null);
+  const errorRef = useRef(null);
 
   useEffect(() => {
     function handleVoiceAction(event) {
@@ -63,6 +66,7 @@ function SignInPage() {
         if (!["email", "password"].includes(action.target)) return;
         const value = action.type === "clear_field" ? "" : action.value;
         setFormData((current) => ({ ...current, [action.target]: value }));
+        setFieldErrors((current) => ({ ...current, [action.target]: "" }));
         setError("");
         event.detail.handled = true;
         event.detail.feedback = action.sensitive
@@ -89,16 +93,27 @@ function SignInPage() {
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFieldErrors((current) => ({ ...current, [e.target.name]: "" }));
+    setError("");
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
 
-    if (!formData.email || !formData.password) {
-      setError("Please enter your email and password.");
+    const nextFieldErrors = {
+      email: !formData.email.trim()
+        ? "Please enter your email address."
+        : !isValidEmail(formData.email)
+        ? "Enter a valid email address, like name@example.com."
+        : "",
+      password: !formData.password ? "Please enter your password." : "",
+    };
+    setFieldErrors(nextFieldErrors);
+    const firstInvalidField = Object.keys(nextFieldErrors).find((field) => nextFieldErrors[field]);
+    if (firstInvalidField) {
       window.requestAnimationFrame(() => {
-        document.getElementById(!formData.email ? "email" : "password")?.focus();
+        document.getElementById(firstInvalidField)?.focus();
       });
       return;
     }
@@ -119,6 +134,7 @@ function SignInPage() {
       else navigate("/candidate");
     } catch (err) {
       setError(err.message || "Invalid credentials or email not verified.");
+      window.requestAnimationFrame(() => errorRef.current?.focus());
     } finally {
       setLoading(false);
     }
@@ -141,7 +157,7 @@ function SignInPage() {
             </p>
           </div>
 
-          <form ref={formRef} onSubmit={handleSubmit} className="auth-form signin-form" noValidate>
+          <form ref={formRef} onSubmit={handleSubmit} className="auth-form signin-form" noValidate aria-busy={loading}>
 
             {/* Email */}
             <div className="auth-field">
@@ -156,9 +172,13 @@ function SignInPage() {
                   placeholder="name@example.com"
                   value={formData.email}
                   onChange={handleChange}
-                  className="auth-input auth-input--icon"
+                  required
+                  aria-invalid={Boolean(fieldErrors.email)}
+                  aria-describedby={fieldErrors.email ? "signin-email-error" : undefined}
+                  className={fieldErrors.email ? "auth-input auth-input--icon input-error" : "auth-input auth-input--icon"}
                 />
               </div>
+              {fieldErrors.email && <p id="signin-email-error" className="field-error">{fieldErrors.email}</p>}
             </div>
 
             {/* Password */}
@@ -179,20 +199,26 @@ function SignInPage() {
                   placeholder="Enter your password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="auth-input auth-input--icon password-input"
+                  required
+                  aria-invalid={Boolean(fieldErrors.password)}
+                  aria-describedby={fieldErrors.password ? "signin-password-error" : undefined}
+                  className={fieldErrors.password ? "auth-input auth-input--icon password-input input-error" : "auth-input auth-input--icon password-input"}
                 />
                 <button
                   type="button"
                   className="password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-controls="password"
+                  aria-pressed={showPassword}
                 >
                   <EyeIcon hidden={showPassword} />
                 </button>
               </div>
+              {fieldErrors.password && <p id="signin-password-error" className="field-error">{fieldErrors.password}</p>}
             </div>
 
-            {error && <p className="auth-error" role="alert">{error}</p>}
+            {error && <p ref={errorRef} className="auth-error" role="alert" tabIndex={-1}>{error}</p>}
 
             <button type="submit" className="primary-btn primary-btn--full" disabled={loading}>
               {loading ? (

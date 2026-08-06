@@ -9,10 +9,12 @@ const pageTitles = {
   "/reset-password": "Reset password | JoIn Hospitality",
   "/employers": "For employers | JoIn Hospitality",
   "/voice-help": "Voice navigation help | JoIn Hospitality",
+  "/privacy": "Privacy notice | JoIn Hospitality",
   "/candidate": "Candidate dashboard | JoIn Hospitality",
   "/candidate/setup": "Candidate profile setup | JoIn Hospitality",
   "/employer": "Employer dashboard | JoIn Hospitality",
   "/admin": "Admin dashboard | JoIn Hospitality",
+  "/verifier": "Verifier dashboard | JoIn Hospitality",
 };
 
 export default function RouteAccessibility() {

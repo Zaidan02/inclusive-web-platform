@@ -112,7 +112,7 @@ export default function VoiceNavigationHelpPage() {
           <article><b>3</b><h2>Listen or interrupt</h2><p>Use the visible controls whenever speech or processing is active.</p></article>
         </section>
 
-        <section className="voice-help__commands">
+        <section className="voice-help__commands" aria-label="Available voice commands">
           {commandGroups.map((group) => (
             <article key={group.title}>
               <h2>{group.title}</h2>
@@ -128,32 +128,32 @@ export default function VoiceNavigationHelpPage() {
           ))}
         </section>
 
-        <aside className="voice-help__note">
-          <strong>Questions are grounded in the current page</strong>
+        <aside className="voice-help__note" aria-labelledby="voice-grounding-heading">
+          <h2 id="voice-grounding-heading">Questions are grounded in the current page</h2>
           <p>
             JoIn can summarize and explain readable content currently rendered on the website.
             It does not answer general-knowledge questions or invent information that is not
             available on the current page.
           </p>
         </aside>
-        <aside className="voice-help__note">
-          <strong>Important for this version</strong>
+        <aside className="voice-help__note" aria-labelledby="voice-version-heading">
+          <h2 id="voice-version-heading">Important for this version</h2>
           <p>
             When listening is paused, the microphone is genuinely stopped and cannot hear
             “resume.” Use the visible Resume button. While the system is speaking or processing,
             use the displayed Stop talking or Cancel button for an immediate interruption.
           </p>
         </aside>
-        <aside className="voice-help__note voice-help__note--conversation">
-          <strong>Short conversational follow-ups</strong>
+        <aside className="voice-help__note voice-help__note--conversation" aria-labelledby="voice-follow-up-heading">
+          <h2 id="voice-follow-up-heading">Short conversational follow-ups</h2>
           <p>
             If JoIn asks “Did you mean login or sign up?”, you can answer “the first one,”
             “login,” “no,” or “never mind.” Only the six most recent turns are held temporarily
             in this browser session, and the history is cleared when voice mode is turned off.
           </p>
         </aside>
-        <aside className="voice-help__note">
-          <strong>Form actions are drafts until you submit</strong>
+        <aside className="voice-help__note" aria-labelledby="voice-form-heading">
+          <h2 id="voice-form-heading">Form actions are drafts until you submit</h2>
           <p>
             JoIn reads back ordinary field values and highlights the changed control so you can
             check it. Passwords are never read aloud or shown in voice diagnostics. Signing in

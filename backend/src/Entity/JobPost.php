@@ -38,8 +38,8 @@ class JobPost
     #[ORM\Column]
     private ?\DateTimeImmutable $applicationDeadline = null;
 
-    #[ORM\Column(options: ['default' => true])]
-    private bool $cvRequired = true;
+    #[ORM\Column(options: ['default' => false])]
+    private bool $cvRequired = false;
 
     #[ORM\Column(options: ['default' => false])]
     private bool $coverLetterRequired = false;

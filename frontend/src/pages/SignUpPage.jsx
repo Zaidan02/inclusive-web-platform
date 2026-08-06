@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { registerUser } from "../services/authApi";
 import { PRIVACY_VERSION } from "../privacy";
+import { getPasswordChecks, isValidEmail } from "../utils/authValidation";
 import "../styles/authPages.css";
 
 function EyeIcon({ hidden }) {
@@ -50,7 +51,6 @@ function LockIcon() {
 }
 
 function SignUpPage() {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const requestedRole = searchParams.get("role");
 
@@ -70,6 +70,7 @@ function SignUpPage() {
   const [serverError, setServerError] = useState("");
   const [success, setSuccess] = useState("");
   const formRef = useRef(null);
+  const successRef = useRef(null);
 
   useEffect(() => {
     function handleVoiceAction(event) {
@@ -136,12 +137,7 @@ function SignUpPage() {
     setServerError("");
   }
 
-  const passwordChecks = {
-    length: formData.password.length >= 8,
-    lowercase: /[a-z]/.test(formData.password),
-    uppercase: /[A-Z]/.test(formData.password),
-    symbol: /[\W_]/.test(formData.password),
-  };
+  const passwordChecks = getPasswordChecks(formData.password);
 
   const passwordScore = Object.values(passwordChecks).filter(Boolean).length;
 
@@ -164,7 +160,7 @@ function SignUpPage() {
     email:
       touched.email && !formData.email.trim()
         ? "Please enter your email address."
-        : touched.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+        : touched.email && !isValidEmail(formData.email)
         ? "Please enter a valid email address, like name@example.com."
         : "",
     password:
@@ -187,7 +183,7 @@ function SignUpPage() {
     setTouched({ username: true, email: true, password: true, disabilityCard: true, privacy: true, verificationConsent: true });
     const firstInvalidField = !formData.username.trim()
       ? "username"
-      : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+      : !isValidEmail(formData.email)
       ? "email"
       : passwordScore < 4
       ? "password"
@@ -231,7 +227,7 @@ function SignUpPage() {
           ? "Registration submitted. Verify your email, then wait for an authorized verifier to approve your disability card before signing in."
           : "Account created successfully. Please check your email to verify your account before signing in."
       );
-      setTimeout(() => navigate("/signin"), 4500);
+      window.requestAnimationFrame(() => successRef.current?.focus());
     } catch (err) {
       setServerError(err.message || "We could not create your account. Please try again.");
     } finally {
@@ -257,9 +253,12 @@ function SignUpPage() {
         </div>
 
         {/* Account type selector */}
-        <div className="account-type-options">
+        <fieldset className="account-type-fieldset">
+          <legend>Choose an account type</legend>
+          <div className="account-type-options">
           <button
             type="button"
+            aria-label="Candidate account type"
             aria-pressed={formData.accountType === "candidate"}
             className={formData.accountType === "candidate" ? "account-type-card selected" : "account-type-card"}
             onClick={() => handleAccountTypeChange("candidate")}
@@ -272,6 +271,7 @@ function SignUpPage() {
 
           <button
             type="button"
+            aria-label="Employer account type"
             aria-pressed={formData.accountType === "employer"}
             className={formData.accountType === "employer" ? "account-type-card selected" : "account-type-card"}
             onClick={() => handleAccountTypeChange("employer")}
@@ -281,9 +281,10 @@ function SignUpPage() {
             <small>Hiring for my business</small>
             {formData.accountType === "employer" && <span className="account-type-check">✓</span>}
           </button>
-        </div>
+          </div>
+        </fieldset>
 
-        <form ref={formRef} onSubmit={handleSubmit} className="auth-form signup-form" noValidate>
+        <form ref={formRef} onSubmit={handleSubmit} className="auth-form signup-form" noValidate aria-busy={loading}>
 
           {/* Username */}
           <div className="auth-field">
@@ -299,10 +300,13 @@ function SignUpPage() {
                 value={formData.username}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                required
+                aria-invalid={Boolean(errors.username)}
+                aria-describedby={errors.username ? "username-error" : undefined}
                 className={errors.username ? "auth-input auth-input--icon input-error" : "auth-input auth-input--icon"}
               />
             </div>
-            {errors.username && <p className="field-error">{errors.username}</p>}
+            {errors.username && <p id="username-error" className="field-error">{errors.username}</p>}
           </div>
 
           {/* Email */}
@@ -319,10 +323,13 @@ function SignUpPage() {
                 value={formData.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                required
+                aria-invalid={Boolean(errors.email)}
+                aria-describedby={errors.email ? "signup-email-error" : undefined}
                 className={errors.email ? "auth-input auth-input--icon input-error" : "auth-input auth-input--icon"}
               />
             </div>
-            {errors.email && <p className="field-error">{errors.email}</p>}
+            {errors.email && <p id="signup-email-error" className="field-error">{errors.email}</p>}
           </div>
 
           {/* Password */}
@@ -339,6 +346,9 @@ function SignUpPage() {
                 value={formData.password}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                required
+                aria-invalid={Boolean(errors.password)}
+                aria-describedby={`password-requirements${errors.password ? " password-error" : ""}`}
                 className={errors.password ? "auth-input auth-input--icon password-input input-error" : "auth-input auth-input--icon password-input"}
               />
               <button
@@ -346,16 +356,18 @@ function SignUpPage() {
                 className="password-toggle"
                 onClick={() => setShowPassword(!showPassword)}
                 aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-controls="password"
+                aria-pressed={showPassword}
               >
                 <EyeIcon hidden={showPassword} />
               </button>
             </div>
-            {errors.password && <p className="field-error">{errors.password}</p>}
+            {errors.password && <p id="password-error" className="field-error">{errors.password}</p>}
 
             {/* Password strength bar */}
             {formData.password.length > 0 && (
-              <div className="strength-row">
-                <div className="strength-track">
+              <div className="strength-row" role="status" aria-live="polite" aria-atomic="true">
+                <div className="strength-track" aria-hidden="true">
                   <div
                     className="strength-fill"
                     style={{
@@ -364,14 +376,14 @@ function SignUpPage() {
                     }}
                   />
                 </div>
-                <span className="strength-label" style={{ color: passwordStrength.color }}>
-                  {passwordStrength.label}
+                <span className="strength-label">
+                  Strength: {passwordStrength.label}
                 </span>
               </div>
             )}
 
             {/* Password rules compact */}
-            <div className="password-hints-compact">
+            <div id="password-requirements" className="password-hints-compact" aria-label="Password requirements">
               {[
                 { key: "length", label: "8+ chars" },
                 { key: "lowercase", label: "a–z" },
@@ -381,6 +393,7 @@ function SignUpPage() {
                 <span
                   key={key}
                   className={passwordChecks[key] ? "hint-pill hint-pill--valid" : "hint-pill"}
+                  aria-label={`${passwordChecks[key] ? "Met" : "Not met"}: ${label}`}
                 >
                   {passwordChecks[key] ? "✓" : "○"} {label}
                 </span>
@@ -424,10 +437,12 @@ function SignUpPage() {
                 onChange={(event) => { setPrivacyAccepted(event.target.checked); setServerError(""); }}
                 onBlur={() => setTouched((current) => ({ ...current, privacy: true }))}
                 required
+                aria-invalid={touched.privacy && !privacyAccepted}
+                aria-describedby={touched.privacy && !privacyAccepted ? "privacy-accepted-error" : undefined}
               />
-              <span>I have read and accept the <Link to="/privacy" target="_blank">privacy notice</Link> (version {PRIVACY_VERSION}).</span>
+              <span>I have read and accept the <Link to="/privacy" target="_blank" rel="noreferrer">privacy notice</Link> (version {PRIVACY_VERSION}).</span>
             </label>
-            {touched.privacy && !privacyAccepted && <p className="field-error">Accept the privacy notice to continue.</p>}
+            {touched.privacy && !privacyAccepted && <p id="privacy-accepted-error" className="field-error">Accept the privacy notice to continue.</p>}
 
             {formData.accountType === "candidate" && (
               <>
@@ -439,18 +454,20 @@ function SignUpPage() {
                     onChange={(event) => { setDisabilityVerificationConsent(event.target.checked); setServerError(""); }}
                     onBlur={() => setTouched((current) => ({ ...current, verificationConsent: true }))}
                     required
+                    aria-invalid={touched.verificationConsent && !disabilityVerificationConsent}
+                    aria-describedby={touched.verificationConsent && !disabilityVerificationConsent ? "verification-consent-error" : undefined}
                   />
                   <span>I consent to authorized verifiers processing my disability card solely to confirm candidate eligibility. The file is removed 30 days after review.</span>
                 </label>
-                {touched.verificationConsent && !disabilityVerificationConsent && <p className="field-error">Consent is required to verify your candidate status.</p>}
+                {touched.verificationConsent && !disabilityVerificationConsent && <p id="verification-consent-error" className="field-error">Consent is required to verify your candidate status.</p>}
               </>
             )}
           </div>
 
           {serverError && <p className="auth-error" role="alert">{serverError}</p>}
-          {success && <p className="auth-success" role="status">{success}</p>}
+          {success && <p ref={successRef} className="auth-success" role="status" tabIndex={-1}>{success} Use the Sign in link below when you are ready.</p>}
 
-          <button type="submit" className="primary-btn primary-btn--full" disabled={loading}>
+          <button type="submit" className="primary-btn primary-btn--full" disabled={loading || Boolean(success)}>
             {loading ? (
               <span className="btn-spinner-wrap">
                 <span className="btn-spinner"></span>

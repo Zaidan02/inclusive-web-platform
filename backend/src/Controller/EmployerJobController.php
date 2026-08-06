@@ -90,8 +90,8 @@ final class EmployerJobController extends AbstractController
         try { $deadline = new \DateTimeImmutable($data['applicationDeadline']); } catch (\Throwable) { return $this->json(['message' => 'Invalid application deadline.'], 400); }
         $job->setJobDefinition($definition)->setLocation(trim($data['location']))
             ->setJobType(trim($data['jobType']))->setWorkMode(trim($data['workMode']))->setDescription(trim($data['description']))
-            ->setApplicationDeadline($deadline)->setCvRequired((bool) ($data['cvRequired'] ?? true))
-            ->setCoverLetterRequired((bool) ($data['coverLetterRequired'] ?? false))
+            ->setApplicationDeadline($deadline)->setCvRequired(false)
+            ->setCoverLetterRequired(false)
             ->setAssistanceAvailable((bool) ($data['assistanceAvailable'] ?? false))->setUpdatedAt(new \DateTimeImmutable());
         $job->clearHighlightedTasks();
         foreach ($taskIds as $position => $taskId) {

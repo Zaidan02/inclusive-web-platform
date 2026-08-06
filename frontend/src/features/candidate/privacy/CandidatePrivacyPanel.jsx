@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   deleteCandidateAccount,
   exportCandidateData,
@@ -15,8 +15,17 @@ export default function CandidatePrivacyPanel({ onAccountDeleted }) {
   const [busy, setBusy] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [deleteError, setDeleteError] = useState("");
   const [password, setPassword] = useState("");
   const [confirmation, setConfirmation] = useState("");
+  const messageRef = useRef(null);
+  const errorRef = useRef(null);
+  const passwordRef = useRef(null);
+  const confirmationRef = useRef(null);
+
+  function focusMessage(type) {
+    requestAnimationFrame(() => (type === "error" ? errorRef.current : messageRef.current)?.focus());
+  }
 
   async function load() {
     try {
@@ -33,10 +42,14 @@ export default function CandidatePrivacyPanel({ onAccountDeleted }) {
     try {
       setBusy(name); setError(""); setMessage("");
       const result = await action();
-      if (result?.message) setMessage(result.message);
+      if (result?.message) {
+        setMessage(result.message);
+        focusMessage("message");
+      }
       await load();
     } catch (err) {
       setError(err.message);
+      focusMessage("error");
     } finally {
       setBusy("");
     }
@@ -44,8 +57,15 @@ export default function CandidatePrivacyPanel({ onAccountDeleted }) {
 
   async function handleDelete(event) {
     event.preventDefault();
+    setDeleteError("");
+    if (!password) {
+      setDeleteError("Enter your password to confirm account deletion.");
+      requestAnimationFrame(() => passwordRef.current?.focus());
+      return;
+    }
     if (confirmation !== "DELETE") {
-      setError("Type DELETE exactly to confirm permanent account deletion.");
+      setDeleteError("Type DELETE exactly to confirm permanent account deletion.");
+      requestAnimationFrame(() => confirmationRef.current?.focus());
       return;
     }
     try {
@@ -54,6 +74,7 @@ export default function CandidatePrivacyPanel({ onAccountDeleted }) {
       onAccountDeleted?.();
     } catch (err) {
       setError(err.message);
+      focusMessage("error");
       setBusy("");
     }
   }
@@ -63,8 +84,8 @@ export default function CandidatePrivacyPanel({ onAccountDeleted }) {
     <section className="candidate-privacy" aria-labelledby="candidate-privacy-title">
       <h2 id="candidate-privacy-title">Privacy and your data</h2>
       <p>Review what the platform processes, download a copy of your data, or delete your account. Privacy notice version: {summary?.policy?.version || "loading"}.</p>
-      {error && <p className="candidate-privacy__error" role="alert">{error}</p>}
-      {message && <p className="candidate-privacy__success" role="status">{message}</p>}
+      {error && <p ref={errorRef} tabIndex="-1" className="candidate-privacy__error" role="alert">{error}</p>}
+      {message && <p ref={messageRef} tabIndex="-1" className="candidate-privacy__success" role="status">{message}</p>}
 
       <div className="candidate-privacy__grid">
         <article>
@@ -95,11 +116,12 @@ export default function CandidatePrivacyPanel({ onAccountDeleted }) {
         </article>
       </div>
 
-      <form className="candidate-privacy__delete" onSubmit={handleDelete}>
+      <form className="candidate-privacy__delete" onSubmit={handleDelete} aria-busy={busy === "delete"}>
         <h3>Delete account</h3>
         <p>This permanently deletes your account and privately stored application and verification documents. This cannot be undone.</p>
-        <label>Password<input type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} required /></label>
-        <label>Type DELETE<input value={confirmation} onChange={(event) => setConfirmation(event.target.value)} required /></label>
+        {deleteError && <p id="candidate-delete-error" className="candidate-privacy__error" role="alert">{deleteError}</p>}
+        <label>Password<input ref={passwordRef} type="password" autoComplete="current-password" value={password} onChange={(event) => { setPassword(event.target.value); setDeleteError(""); }} required aria-invalid={Boolean(deleteError && !password)} aria-describedby={deleteError ? "candidate-delete-error" : undefined} /></label>
+        <label>Type DELETE<input ref={confirmationRef} value={confirmation} onChange={(event) => { setConfirmation(event.target.value); setDeleteError(""); }} required aria-invalid={Boolean(deleteError && confirmation !== "DELETE")} aria-describedby={deleteError ? "candidate-delete-error" : undefined} /></label>
         <button type="submit" disabled={Boolean(busy)}>{busy === "delete" ? "Deleting…" : "Permanently delete my account"}</button>
       </form>
     </section>

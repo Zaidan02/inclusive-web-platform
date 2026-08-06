@@ -34,7 +34,7 @@ export default function WelcomePage() {
               </div>
               <div className="hero-trust"><span><b>✓</b> Ability-led profiles</span><span><b>✓</b> Task-based matching</span><span><b>✓</b> Inclusive by design</span></div>
             </div>
-            <div className="hero-visual" aria-label="Inclusive hospitality illustration">
+            <div className="hero-visual">
               <div className="hero-visual__glow" />
               <div className="hero-visual__frame"><img src={heroImage} alt="People connecting through inclusive employment" /></div>
               <div className="floating-card floating-card--top"><span className="floating-icon">✦</span><div><strong>Strengths recognized</strong><small>Potential made visible</small></div></div>

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import logoImage from "../assets/john-logo.png";
 import { requestPasswordReset } from "../services/authApi";
+import { isValidEmail } from "../utils/authValidation";
 import "../styles/authPages.css";
 
 function EmailIcon() {
@@ -18,15 +19,18 @@ function ForgotPasswordPage() {
   const [sentEmail, setSentEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [fieldError, setFieldError] = useState("");
   const [loading, setLoading] = useState(false);
+  const successRef = useRef(null);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setMessage("");
     setError("");
+    setFieldError("");
 
-    if (!email) {
-      setError("Please enter your email address.");
+    if (!email.trim() || !isValidEmail(email)) {
+      setFieldError(!email.trim() ? "Please enter your email address." : "Enter a valid email address, like name@example.com.");
       window.requestAnimationFrame(() => document.getElementById("email")?.focus());
       return;
     }
@@ -36,6 +40,7 @@ function ForgotPasswordPage() {
       const data = await requestPasswordReset(email);
       setSentEmail(email);
       setMessage(data.message || "We sent a reset link to your email.");
+      window.requestAnimationFrame(() => successRef.current?.focus());
     } catch (err) {
       setError(err.message || "Failed to request password reset.");
     } finally {
@@ -61,7 +66,7 @@ function ForgotPasswordPage() {
           </div>
 
           {!message ? (
-            <form onSubmit={handleSubmit} className="auth-form" noValidate>
+            <form onSubmit={handleSubmit} className="auth-form" noValidate aria-busy={loading}>
               <div className="auth-field">
                 <label htmlFor="email">Email</label>
                 <div className="input-icon-wrapper">
@@ -73,10 +78,14 @@ function ForgotPasswordPage() {
                     autoComplete="email"
                     placeholder="name@example.com"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="auth-input auth-input--icon"
+                    onChange={(e) => { setEmail(e.target.value); setFieldError(""); setError(""); }}
+                    required
+                    aria-invalid={Boolean(fieldError)}
+                    aria-describedby={fieldError ? "forgot-email-error" : undefined}
+                    className={fieldError ? "auth-input auth-input--icon input-error" : "auth-input auth-input--icon"}
                   />
                 </div>
+                {fieldError && <p id="forgot-email-error" className="field-error">{fieldError}</p>}
               </div>
 
               {error && <p className="auth-error" role="alert">{error}</p>}
@@ -96,14 +105,14 @@ function ForgotPasswordPage() {
               </button>
             </form>
           ) : (
-            <div className="reset-success-card" role="status">
+            <div ref={successRef} className="reset-success-card" role="status" tabIndex={-1}>
               <div className="reset-success-icon">
                 <svg viewBox="0 0 24 24" fill="none" width="26" height="26">
                   <rect x="3" y="5" width="18" height="14" rx="3" stroke="#1a4fa0" strokeWidth="1.8" />
                   <path d="M3 8l9 6 9-6" stroke="#1a4fa0" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
-              <h3>Check your inbox</h3>
+              <h2>Check your inbox</h2>
               <p>
                 We sent a reset link to <strong>{sentEmail}</strong>. It expires in 1 hour.
               </p>
@@ -114,6 +123,8 @@ function ForgotPasswordPage() {
                   onClick={() => {
                     setMessage("");
                     setError("");
+                    setFieldError("");
+                    window.requestAnimationFrame(() => document.getElementById("email")?.focus());
                   }}
                 >
                   try again

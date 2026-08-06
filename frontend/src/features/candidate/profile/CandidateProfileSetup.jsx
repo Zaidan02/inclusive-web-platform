@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Brand from "../../../components/common/Brand";
 import { getCandidateProfile, updateCandidateProfile } from "../../../services/candidateProfileApi";
@@ -17,6 +17,14 @@ export default function CandidateProfileSetup() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [attemptedSave, setAttemptedSave] = useState(false);
+  const firstNameRef = useRef(null);
+  const lastNameRef = useRef(null);
+  const locationRef = useRef(null);
+  const educationRef = useRef(null);
+  const searchRef = useRef(null);
+  const errorRef = useRef(null);
+  const voiceActionHandlerRef = useRef(null);
 
   useEffect(() => {
     let active = true;
@@ -42,6 +50,7 @@ export default function CandidateProfileSetup() {
 
   function toggleOption(name) {
     setError("");
+    setAttemptedSave(false);
     setSelected((current) => current.includes(name) ? current.filter((item) => item !== name) : [...current, name]);
   }
 
@@ -62,18 +71,15 @@ export default function CandidateProfileSetup() {
 
   async function completeSetup() {
     if (!selected.length || !educationLevel || !basicInfo.firstName.trim() || !basicInfo.lastName.trim() || !basicInfo.location.trim()) {
+      setAttemptedSave(true);
       setError("Add your name, location, education level, and at least one disability.");
-      const missingControl = !basicInfo.firstName.trim()
-        ? "first_name"
-        : !basicInfo.lastName.trim()
-        ? "last_name"
-        : !basicInfo.location.trim()
-        ? "location"
-        : !educationLevel
-        ? "education_level"
-        : "disability_search";
+      const missingControl = !basicInfo.firstName.trim() ? firstNameRef
+        : !basicInfo.lastName.trim() ? lastNameRef
+        : !basicInfo.location.trim() ? locationRef
+        : !educationLevel ? educationRef
+        : searchRef;
       window.requestAnimationFrame(() => {
-        document.querySelector(`[data-voice-control="${missingControl}"]`)?.focus();
+        missingControl.current?.focus();
       });
       return;
     }
@@ -84,13 +90,13 @@ export default function CandidateProfileSetup() {
       navigate("/candidate", { replace: true });
     } catch (err) {
       setError(err.message);
+      window.requestAnimationFrame(() => errorRef.current?.focus());
     } finally {
       setSaving(false);
     }
   }
 
-  useEffect(() => {
-    function handleVoiceAction(event) {
+  voiceActionHandlerRef.current = (event) => {
       const { action } = event.detail;
       if (!action) return;
       const fieldMap = { first_name: "firstName", last_name: "lastName", location: "location", phone: "phone", about: "about" };
@@ -124,10 +130,15 @@ export default function CandidateProfileSetup() {
         completeSetup();
         respond("Completing the candidate profile setup.");
       }
+  };
+
+  useEffect(() => {
+    function handleVoiceAction(event) {
+      voiceActionHandlerRef.current?.(event);
     }
     window.addEventListener("join:voice-action", handleVoiceAction);
     return () => window.removeEventListener("join:voice-action", handleVoiceAction);
-  }, [basicInfo, educationLevel, loading, saving, selected]);
+  }, []);
 
   return (
     <main className="profile-setup">
@@ -145,17 +156,17 @@ export default function CandidateProfileSetup() {
             onProfileConfirmed={applyConfirmedProfile}
           />
           <div className="profile-setup__card-header"><div><span className="profile-setup__eyebrow">Profile information</span><h2>Select your disabilities</h2><p>Choose all that apply.</p></div><span className="profile-setup__count">{selected.length} selected</span></div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "14px" }}><label style={{ display: "grid", gap: "6px" }}><strong>First name</strong><input data-voice-control="first_name" value={basicInfo.firstName} onChange={(e) => setBasicInfo((p) => ({ ...p, firstName: e.target.value }))} style={{ padding: "12px", border: "1px solid #dbe3ef", borderRadius: "10px" }} /></label><label style={{ display: "grid", gap: "6px" }}><strong>Last name</strong><input data-voice-control="last_name" value={basicInfo.lastName} onChange={(e) => setBasicInfo((p) => ({ ...p, lastName: e.target.value }))} style={{ padding: "12px", border: "1px solid #dbe3ef", borderRadius: "10px" }} /></label><label style={{ display: "grid", gap: "6px" }}><strong>Location</strong><input data-voice-control="location" value={basicInfo.location} onChange={(e) => setBasicInfo((p) => ({ ...p, location: e.target.value }))} placeholder="City, region" style={{ padding: "12px", border: "1px solid #dbe3ef", borderRadius: "10px" }} /></label><label style={{ display: "grid", gap: "6px" }}><strong>Phone <small>(optional)</small></strong><input data-voice-control="phone" value={basicInfo.phone} onChange={(e) => setBasicInfo((p) => ({ ...p, phone: e.target.value }))} style={{ padding: "12px", border: "1px solid #dbe3ef", borderRadius: "10px" }} /></label></div>
+          <div className="profile-setup__fields"><label><strong>First name</strong><input ref={firstNameRef} data-voice-control="first_name" value={basicInfo.firstName} required aria-invalid={attemptedSave && !basicInfo.firstName.trim()} aria-describedby={attemptedSave && !basicInfo.firstName.trim() ? "profile-setup-error" : undefined} onChange={(e) => { setBasicInfo((p) => ({ ...p, firstName: e.target.value })); setAttemptedSave(false); }} /></label><label><strong>Last name</strong><input ref={lastNameRef} data-voice-control="last_name" value={basicInfo.lastName} required aria-invalid={attemptedSave && !basicInfo.lastName.trim()} aria-describedby={attemptedSave && !basicInfo.lastName.trim() ? "profile-setup-error" : undefined} onChange={(e) => { setBasicInfo((p) => ({ ...p, lastName: e.target.value })); setAttemptedSave(false); }} /></label><label><strong>Location</strong><input ref={locationRef} data-voice-control="location" value={basicInfo.location} required aria-invalid={attemptedSave && !basicInfo.location.trim()} aria-describedby={attemptedSave && !basicInfo.location.trim() ? "profile-setup-error" : undefined} onChange={(e) => { setBasicInfo((p) => ({ ...p, location: e.target.value })); setAttemptedSave(false); }} placeholder="City, region" /></label><label><strong>Phone <small>(optional)</small></strong><input type="tel" data-voice-control="phone" value={basicInfo.phone} onChange={(e) => setBasicInfo((p) => ({ ...p, phone: e.target.value }))} /></label></div>
           <label style={{ display: "grid", gap: "6px", marginBottom: "14px" }}><strong>About you <small>(optional)</small></strong><textarea data-voice-control="about" value={basicInfo.about} onChange={(e) => setBasicInfo((p) => ({ ...p, about: e.target.value }))} rows="3" placeholder="A short introduction, interests, or work goals" style={{ padding: "12px", border: "1px solid #dbe3ef", borderRadius: "10px", resize: "vertical" }} /></label>
-          <label style={{ display: "grid", gap: "6px", marginBottom: "18px" }}><strong>Highest education level</strong><select data-voice-control="education_level" value={educationLevel} onChange={(event) => setEducationLevel(event.target.value)} style={{ padding: "12px", border: "1px solid #dbe3ef", borderRadius: "10px" }}><option value="">Select education level</option><option value="none">No formal education</option><option value="primary">Primary school</option><option value="middle_school">Middle school</option><option value="high_school">High school</option><option value="vocational">Vocational or technical education</option><option value="university">University</option></select></label>
-          <label className="profile-setup__search"><span aria-hidden="true">⌕</span><input data-voice-control="disability_search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search options" aria-label="Search disability options" /></label>
+          <label className="profile-setup__education"><strong>Highest education level</strong><select ref={educationRef} data-voice-control="education_level" value={educationLevel} required aria-invalid={attemptedSave && !educationLevel} aria-describedby={attemptedSave && !educationLevel ? "profile-setup-error" : undefined} onChange={(event) => { setEducationLevel(event.target.value); setAttemptedSave(false); }}><option value="">Select education level</option><option value="none">No formal education</option><option value="primary">Primary school</option><option value="middle_school">Middle school</option><option value="high_school">High school</option><option value="vocational">Vocational or technical education</option><option value="university">University</option></select></label>
+          <label className="profile-setup__search"><span aria-hidden="true">⌕</span><input ref={searchRef} data-voice-control="disability_search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search options" aria-label="Search disability options" aria-describedby={attemptedSave && !selected.length ? "profile-setup-error" : undefined} /></label>
           {loading ? <div className="profile-setup__state">Loading your profile…</div> : (
             <div className="profile-options" data-voice-control="disabilities">{filteredOptions.map((option) => {
               const checked = selected.includes(option.name);
               return <button type="button" className={`profile-option ${checked ? "profile-option--selected" : ""}`} aria-pressed={checked} onClick={() => toggleOption(option.name)} key={option.name}><span className="profile-option__check">{checked ? "✓" : ""}</span><img src={option.image} alt="" /><strong>{option.name}</strong></button>;
             })}</div>
           )}
-          {error && <p className="profile-setup__error" role="alert">{error}</p>}
+          {error && <p ref={errorRef} id="profile-setup-error" tabIndex="-1" className="profile-setup__error" role="alert">{error}</p>}
           <div className="profile-setup__footer"><span>You can change this later.</span><button data-voice-control="complete_setup" type="button" onClick={completeSetup} disabled={loading || saving}>{saving ? "Saving profile…" : "Complete setup"}<span aria-hidden="true">→</span></button></div>
         </div>
       </section>

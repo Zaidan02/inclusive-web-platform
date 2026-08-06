@@ -8,6 +8,12 @@ Standard: WCAG 2.1 Level AA
 
 Status: Baseline findings; no remediation is claimed by this document.
 
+> Historical baseline only: the issue rows below record the pre-remediation
+> findings. The current correction and retest status is maintained in the
+> [final WCAG 2.1 AA audit report](WCAG_2_1_AA_FINAL_AUDIT_REPORT.md). That
+> report deliberately marks rendered retests as pending until a new live
+> browser/axe run and manual verification have been completed.
+
 Severity uses the following project scale:
 
 - **Critical**: prevents a core task for a significant user group or at a required test condition.

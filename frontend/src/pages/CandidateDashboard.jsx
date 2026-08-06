@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getToken, logout } from "../services/authService";
 import { applyToJob, getCandidateApplications, getCandidateMatches } from "../services/candidateApi";
@@ -10,6 +10,7 @@ import CandidatePrivacyPanel from "../features/candidate/privacy/CandidatePrivac
 import "../features/candidate/privacy/candidatePrivacy.css";
 import { API_BASE_URL, BACKEND_BASE_URL } from "../config";
 import useDialogFocus from "../hooks/useDialogFocus";
+import AccessibleNotice from "../components/accessibility/AccessibleNotice";
 
 const globalStyles = `
   @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -141,8 +142,8 @@ function CompanySmallIcon({ size = 13 }) {
 function SearchIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ position: "absolute", left: "13px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
-      <circle cx="11" cy="11" r="7" stroke="#94a3b8" strokeWidth="2" />
-      <path d="M16.5 16.5L21 21" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="11" cy="11" r="7" stroke="#64748b" strokeWidth="2" />
+      <path d="M16.5 16.5L21 21" stroke="#64748b" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }
@@ -174,13 +175,13 @@ function CircleProgress({ percent, size = 80, color = "#2563eb" }) {
   const circ = 2 * Math.PI * r;
   const offset = circ - (percent / 100) * circ;
   return (
-    <svg width={size} height={size} viewBox="0 0 80 80">
+    <svg width={size} height={size} viewBox="0 0 80 80" role="img" aria-label={`${percent}% compatibility`}>
       <circle cx="40" cy="40" r={r} fill="none" stroke="#e8edf5" strokeWidth="6" />
       <circle cx="40" cy="40" r={r} fill="none" stroke={color} strokeWidth="6"
         strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round"
         transform="rotate(-90 40 40)" style={{ transition: "stroke-dashoffset 1.2s ease" }} />
       <text x="40" y="36" textAnchor="middle" fontSize="14" fontWeight="600" fill={color} fontFamily="Inter, sans-serif">{percent}%</text>
-      <text x="40" y="50" textAnchor="middle" fontSize="8" fill="#94a3b8" fontWeight="400" fontFamily="Inter, sans-serif">match</text>
+      <text x="40" y="50" textAnchor="middle" fontSize="8" fill="#64748b" fontWeight="400" fontFamily="Inter, sans-serif">match</text>
     </svg>
   );
 }
@@ -227,7 +228,7 @@ function JobResultCard({ result, index, onOpenJob }) {
         <CircleProgress percent={result.score ?? 0} size={76} color={result.eligible ? p.color : "#dc2626"} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "3px" }}>
-            <span style={{ fontSize: "10px", fontWeight: "500", color: "#94a3b8" }}>#{index + 1}</span>
+            <span style={{ fontSize: "10px", fontWeight: "500", color: "#64748b" }}>#{index + 1}</span>
             {index === 0 && result.eligible && <span style={{ background: p.color, color: "#fff", fontSize: "9px", fontWeight: "600", padding: "2px 7px", borderRadius: "999px", letterSpacing: "0.4px" }}>HIGHEST-RANKED OFFER</span>}
             <span style={{ background: compatibilityBand.background, color: compatibilityBand.color, border: `1px solid ${compatibilityBand.border}`, fontSize: "9px", fontWeight: "600", padding: "2px 7px", borderRadius: "999px", letterSpacing: "0.2px" }}>{compatibilityBand.label}</span>
           </div>
@@ -238,11 +239,11 @@ function JobResultCard({ result, index, onOpenJob }) {
           </div>
         </div>
       </div>
-      <button data-voice-control="scoring_explanation" onClick={() => setExpanded(!expanded)} style={{ marginTop: "12px", width: "100%", background: "transparent", border: `1px solid ${p.border}`, borderRadius: "8px", padding: "7px", color: p.color, fontWeight: "500", fontSize: "12px", cursor: "pointer", fontFamily: "Inter, sans-serif", transition: "background 0.15s" }}>
+      <button type="button" data-voice-control="scoring_explanation" aria-expanded={expanded} aria-controls={`scoring-explanation-${result.job_id}`} onClick={() => setExpanded(!expanded)} style={{ marginTop: "12px", width: "100%", background: "transparent", border: `1px solid ${p.border}`, borderRadius: "8px", padding: "7px", color: p.color, fontWeight: "500", fontSize: "12px", cursor: "pointer", fontFamily: "Inter, sans-serif", transition: "background 0.15s" }}>
         {expanded ? "▲ Hide explanation" : "▼ Show scoring explanation"}
       </button>
       {expanded && (
-        <div style={{ marginTop: "10px", display: "flex", flexWrap: "wrap", gap: "5px", animation: "fadeIn 0.2s ease" }}>
+        <div id={`scoring-explanation-${result.job_id}`} style={{ marginTop: "10px", display: "flex", flexWrap: "wrap", gap: "5px", animation: "fadeIn 0.2s ease" }}>
           <p style={{ width: "100%", margin: "0 0 6px", fontSize: "12px", color: "#475569", lineHeight: 1.5 }}>{result.summary}</p>
           {(result.task_results || []).slice(0, 8).map((task) => <span key={task.task_id} style={{ background: `${p.color}10`, color: task.effective_feasibility === "avoid" ? "#b91c1c" : p.color, padding: "4px 9px", borderRadius: "999px", fontSize: "11px", fontWeight: "500", border: `1px solid ${p.color}20` }}>{task.task_name}: {task.effective_feasibility.replaceAll("_", " ")}</span>)}
         </div>
@@ -269,7 +270,7 @@ function TaskCard({ task, index, feasibility, borderColor, abilities, getFeasibi
             {index + 1}. {task.taskName}
           </p>
           {task.description && (
-            <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#94a3b8", lineHeight: "1.5", fontWeight: "400", textAlign: "left" }}>
+            <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#64748b", lineHeight: "1.5", fontWeight: "400", textAlign: "left" }}>
               {task.description}
             </p>
           )}
@@ -291,12 +292,12 @@ function TaskCard({ task, index, feasibility, borderColor, abilities, getFeasibi
             </span>
           ))}
           {hiddenCount > 0 && !showAll && (
-            <button onClick={() => setShowAll(true)} style={{ background: "none", border: "1px solid #e2e8f0", color: "#94a3b8", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", cursor: "pointer", fontFamily: "Inter, sans-serif" }}>
+            <button type="button" onClick={() => setShowAll(true)} style={{ background: "none", border: "1px solid #e2e8f0", color: "#64748b", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", cursor: "pointer", fontFamily: "Inter, sans-serif" }}>
               +{hiddenCount} more
             </button>
           )}
           {showAll && hiddenCount > 0 && (
-            <button onClick={() => setShowAll(false)} style={{ background: "none", border: "1px solid #e2e8f0", color: "#94a3b8", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", cursor: "pointer", fontFamily: "Inter, sans-serif" }}>
+            <button type="button" onClick={() => setShowAll(false)} style={{ background: "none", border: "1px solid #e2e8f0", color: "#64748b", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", cursor: "pointer", fontFamily: "Inter, sans-serif" }}>
               Show less
             </button>
           )}
@@ -340,7 +341,7 @@ function AccommodationBadge({ compact = false }) {
   );
 }
 
-function AiJobMatchCard({ aiLoading, aiError, aiResults, selectedDisabilities, onMatch, onOpenJob }) {
+function AiJobMatchCard({ aiLoading, aiError, aiResults, selectedDisabilities, onMatch, onOpenJob, resultsRef }) {
   return (
     <div style={{ ...styles.aiCard, marginBottom: "18px" }}>
       <div style={styles.aiCardHeader}>
@@ -360,12 +361,12 @@ function AiJobMatchCard({ aiLoading, aiError, aiResults, selectedDisabilities, o
       <button data-voice-control="run_job_match" onClick={onMatch} disabled={aiLoading} className={aiLoading ? "shimmer-btn" : "ai-btn-idle"} style={{ ...styles.aiButton, opacity: aiLoading ? 0.9 : 1, cursor: aiLoading ? "not-allowed" : "pointer" }}>
         {aiLoading ? <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}><SpinnerIcon /> Analyzing your profile...</span> : "Get My Job Match"}
       </button>
-      {aiError && <div style={styles.aiErrorBox}>⚠️ {aiError}</div>}
+      {aiError && <div style={styles.aiErrorBox} role="alert">⚠️ {aiError}</div>}
       {aiResults && (
-        <div style={{ marginTop: "20px" }}>
+        <div ref={resultsRef} tabIndex="-1" style={{ marginTop: "20px" }} role="status">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
             <span style={{ fontSize: "13px", fontWeight: "600", color: "#0f172a" }}>Your results</span>
-            <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: "400" }}>{selectedDisabilities.length} condition{selectedDisabilities.length !== 1 ? "s" : ""} analyzed</span>
+            <span style={{ fontSize: "11px", color: "#64748b", fontWeight: "400" }}>{selectedDisabilities.length} condition{selectedDisabilities.length !== 1 ? "s" : ""} analyzed</span>
           </div>
           {aiResults.results.map((result, index) => <JobResultCard key={result.job_id} result={result} index={index} onOpenJob={onOpenJob} />)}
         </div>
@@ -405,11 +406,22 @@ function CandidateDashboard() {
   const [loadingApplications, setLoadingApplications] = useState(false);
   const [applicationsError, setApplicationsError] = useState("");
   const [applicationStatusFilter, setApplicationStatusFilter] = useState("all");
+  const [profileErrors, setProfileErrors] = useState({});
+  const [applicationErrors, setApplicationErrors] = useState({});
   const applicationDocumentRef = useRef(null);
   const recommendationLetterRef = useRef(null);
+  const profileFirstNameRef = useRef(null);
+  const profileLastNameRef = useRef(null);
+  const profileLocationRef = useRef(null);
+  const profileEducationRef = useRef(null);
+  const disabilitySearchRef = useRef(null);
+  const profileErrorRef = useRef(null);
+  const applicationErrorRef = useRef(null);
+  const applicationStatusRef = useRef(null);
+  const aiResultsRef = useRef(null);
+  const voiceActionHandlerRef = useRef(null);
   const companyDialogRef = useDialogFocus(Boolean(selectedCompany), () => setSelectedCompany(null));
 
-  useEffect(() => { fetchCandidateProfile(); }, []);
   useEffect(() => {
     const requestedTab = location.state?.voiceTab;
     if (!["JOBS", "APPLICATIONS", "PROFILE", "PRIVACY"].includes(requestedTab)) return;
@@ -427,7 +439,7 @@ function CandidateDashboard() {
   function getCompanyKey(item) { return item?.employerProfile?.companyName || item?.companyName || item?.company || ""; }
   function getCompanyJobs(ci) { const k = getCompanyKey(ci).toLowerCase(); return jobs.filter((j) => getCompanyKey(j).toLowerCase() === k); }
   function openCompanyProfile(item) { setSelectedCompany(item); setCompanyModalTab("PROFILE"); }
-  function openJobFromCompany(job) { setSelectedJob(job); setSelectedCompany(null); setApplicationDocument(null); setRecommendationLetter(null); setSuccessMessage(""); setErrorMessage(""); setActiveTab("JOBS"); }
+  function openJobFromCompany(job) { setSelectedJob(job); setSelectedCompany(null); setApplicationDocument(null); setRecommendationLetter(null); setApplicationErrors({}); setSuccessMessage(""); setErrorMessage(""); setActiveTab("JOBS"); }
   function openMatchedJob(result) {
     const job = jobs.find((item) => String(item.id) === String(result.job_id));
     if (!job) {
@@ -438,7 +450,7 @@ function CandidateDashboard() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  async function fetchCandidateProfile() {
+  const fetchCandidateProfile = useCallback(async () => {
     try {
       setLoadingProfile(true);
       const token = getToken();
@@ -455,7 +467,7 @@ function CandidateDashboard() {
       setBasicInfo({ firstName: profile.firstName || "", lastName: profile.lastName || "", phone: profile.phone || "", location: profile.location || "", about: profile.about || "" });
       setConfirmedTaskSkills(profile.confirmedTaskSkills || []);
     } catch (err) { setErrorMessage(err.message); } finally { setLoadingProfile(false); }
-  }
+  }, [navigate]);
 
   async function fetchJobs() {
     try {
@@ -485,8 +497,11 @@ function CandidateDashboard() {
 
   function handleDisabilityChange(name) {
     setSuccessMessage(""); setErrorMessage("");
+    setProfileErrors((current) => ({ ...current, disabilities: "" }));
     setSelectedDisabilities((prev) => prev.includes(name) ? prev.filter((i) => i !== name) : [...prev, name]);
   }
+
+  useEffect(() => { fetchCandidateProfile(); }, [fetchCandidateProfile]);
 
   function applyConfirmedProfile(profile) {
     if (!profile) return;
@@ -505,17 +520,37 @@ function CandidateDashboard() {
   }
 
   async function handleGetAiMatch() {
-    if (!selectedDisabilities.length) { setAiError("Please select at least one disability first."); return; }
+    if (!selectedDisabilities.length) {
+      setAiError("Please select at least one disability first.");
+      requestAnimationFrame(() => disabilitySearchRef.current?.focus());
+      return;
+    }
     try {
       setAiResults(null); setAiLoading(true); setAiError("");
       const data = await getCandidateMatches();
       setAiResults({ results: data.results || [] });
+      requestAnimationFrame(() => aiResultsRef.current?.focus());
     } catch (err) { setAiError(err.message); } finally { setAiLoading(false); }
   }
 
   async function handleSaveProfile() {
-    if (!selectedDisabilities.length || !educationLevel || !basicInfo.firstName.trim() || !basicInfo.lastName.trim() || !basicInfo.location.trim()) {
+    const nextErrors = {
+      firstName: basicInfo.firstName.trim() ? "" : "Enter your first name.",
+      lastName: basicInfo.lastName.trim() ? "" : "Enter your last name.",
+      location: basicInfo.location.trim() ? "" : "Enter your location.",
+      education: educationLevel ? "" : "Choose your highest education level.",
+      disabilities: selectedDisabilities.length ? "" : "Select at least one disability.",
+    };
+    const firstInvalid = nextErrors.firstName ? profileFirstNameRef
+      : nextErrors.lastName ? profileLastNameRef
+      : nextErrors.location ? profileLocationRef
+      : nextErrors.education ? profileEducationRef
+      : nextErrors.disabilities ? disabilitySearchRef
+      : null;
+    setProfileErrors(nextErrors);
+    if (firstInvalid) {
       setErrorMessage("Add your name, location, education level, and at least one disability.");
+      requestAnimationFrame(() => firstInvalid.current?.focus());
       return;
     }
     try {
@@ -523,24 +558,37 @@ function CandidateDashboard() {
       const data = await updateCandidateProfile({ selectedDisabilities, educationLevel, ...basicInfo });
       setSelectedDisabilities(data.profile?.selectedDisabilities || []);
       setSuccessMessage("Profile saved.");
-    } catch (err) { setErrorMessage(err.message); } finally { setSavingProfile(false); }
+    } catch (err) {
+      setErrorMessage(err.message);
+      requestAnimationFrame(() => profileErrorRef.current?.focus());
+    } finally { setSavingProfile(false); }
   }
 
-  async function handleSubmitApplication() {
+  async function handleSubmitApplication(event) {
+    event?.preventDefault();
     if (!selectedJob) return;
+    const nextErrors = { applicationDocument: "", recommendationLetter: "" };
+    setApplicationErrors(nextErrors);
+    if (nextErrors.applicationDocument || nextErrors.recommendationLetter) {
+      requestAnimationFrame(() => (nextErrors.applicationDocument ? applicationDocumentRef : recommendationLetterRef).current?.focus());
+      return;
+    }
     try {
       setSubmittingApplication(true); setErrorMessage(""); setSuccessMessage("");
       await applyToJob(selectedJob.id, applicationDocument, recommendationLetter);
       setSuccessMessage("Application submitted successfully.");
       setApplicationDocument(null); setRecommendationLetter(null);
       setActiveTab("APPLICATIONS"); setSelectedJob(null);
-    } catch (err) { setErrorMessage(err.message); } finally { setSubmittingApplication(false); }
+      requestAnimationFrame(() => applicationStatusRef.current?.focus());
+    } catch (err) {
+      setErrorMessage(err.message);
+      requestAnimationFrame(() => applicationErrorRef.current?.focus());
+    } finally { setSubmittingApplication(false); }
   }
 
   function handleLogout() { logout(); navigate("/signin"); }
 
-  useEffect(() => {
-    function handleVoiceAction(event) {
+  voiceActionHandlerRef.current = (event) => {
       const { action } = event.detail;
       if (!action) return;
       const basicFieldMap = { first_name: "firstName", last_name: "lastName", location: "location", phone: "phone", about: "about" };
@@ -630,10 +678,15 @@ function CandidateDashboard() {
         respond(`Activated ${action.label}.`);
         highlightVoiceControl(action.target);
       }
+  };
+
+  useEffect(() => {
+    function handleVoiceAction(event) {
+      voiceActionHandlerRef.current?.(event);
     }
     window.addEventListener("join:voice-action", handleVoiceAction);
     return () => window.removeEventListener("join:voice-action", handleVoiceAction);
-  }, [aiResults, basicInfo, educationLevel, jobs, selectedCompany, selectedDisabilities, selectedJob]);
+  }, []);
   function getUserInitials(name) {
     if (!name) return "C";
     const parts = name.trim().split(" ").filter(Boolean);
@@ -649,12 +702,12 @@ function CandidateDashboard() {
       <style>{globalStyles}</style>
 
       {/* HEADER */}
-      <header style={styles.header} className="header-pattern">
+      <header style={styles.header} className="header-pattern candidate-dashboard__header">
         <div>
           <p style={styles.headerGreeting}>Hello, {candidateName} 👋</p>
           <h1 style={styles.headerTitle}>Find your best job match ✦</h1>
         </div>
-        <div style={styles.userBox}>
+        <div style={styles.userBox} className="candidate-dashboard__user">
           <button
             type="button"
             style={styles.userAvatar}
@@ -673,7 +726,7 @@ function CandidateDashboard() {
       </header>
 
       {/* TABS */}
-      <nav style={styles.tabs} aria-label="Candidate dashboard sections">
+      <nav style={styles.tabs} className="candidate-dashboard__tabs" aria-label="Candidate dashboard sections">
         {["JOBS", "APPLICATIONS", "PROFILE", "PRIVACY"].map((tab) => (
           <button type="button" key={tab} aria-current={activeTab === tab ? "page" : undefined} onClick={() => { setActiveTab(tab); if (tab === "JOBS") setSelectedJob(null); }}
             style={{ ...styles.tabButton, ...(activeTab === tab ? styles.activeTab : {}) }}>
@@ -682,15 +735,15 @@ function CandidateDashboard() {
         ))}
       </nav>
 
-      <main style={styles.main}>
+      <main style={styles.main} className="candidate-dashboard__main" aria-busy={loadingProfile}>
         {activeTab === "PROFILE" && (
           <div>
             {/* STEP INDICATOR */}
-            <div style={styles.stepRow}>
+            <div style={styles.stepRow} className="candidate-dashboard__steps">
               {["Complete your profile", "Calculate matches", "Apply to jobs"].map((step, i) => (
                 <div key={step} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                   <div style={{ ...styles.stepDot, background: i === 0 ? "#2563eb" : i === 1 && aiResults ? "#2563eb" : "#cbd5e1", transition: "background 0.4s" }} />
-                  <span style={{ ...styles.stepLabel, color: i === 0 ? "#2563eb" : i === 1 && aiResults ? "#2563eb" : "#94a3b8", transition: "color 0.4s" }}>{step}</span>
+                  <span style={{ ...styles.stepLabel, color: i === 0 ? "#2563eb" : i === 1 && aiResults ? "#2563eb" : "#64748b", transition: "color 0.4s" }}>{step}</span>
                   {i < 2 && <div style={styles.stepLine} />}
                 </div>
               ))}
@@ -701,12 +754,12 @@ function CandidateDashboard() {
               onProfileConfirmed={applyConfirmedProfile}
             />
 
-            <section style={styles.profileGrid}>
+            <section style={styles.profileGrid} aria-labelledby="candidate-profile-title">
               {/* LEFT CARD */}
               <div style={styles.card}>
-                <div style={styles.cardHeader}>
+                <div style={styles.cardHeader} className="candidate-dashboard__card-header">
                   <div style={{ flex: 1, textAlign: "center" }}>
-                    <h2 style={styles.sectionTitle}>Select Your Disabilities</h2>
+                    <h2 id="candidate-profile-title" style={styles.sectionTitle}>Select Your Disabilities</h2>
                     <p style={styles.text}>Choose all that apply to get accurate recommendations.</p>
                   </div>
                   {selectedDisabilities.length > 0 && (
@@ -714,21 +767,21 @@ function CandidateDashboard() {
                   )}
                 </div>
 
-                {loadingProfile && <p style={styles.infoText}>Loading...</p>}
-                {errorMessage && <p style={styles.errorText}>{errorMessage}</p>}
+                {loadingProfile && <p style={styles.infoText} role="status">Loading profile…</p>}
+                {errorMessage && <p ref={profileErrorRef} tabIndex="-1" style={styles.errorText} role="alert">{errorMessage}</p>}
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "12px" }}>
-                  <label style={styles.profileFieldLabel}>First name<input autoComplete="given-name" data-voice-control="first_name" value={basicInfo.firstName} onChange={(e) => setBasicInfo((p) => ({ ...p, firstName: e.target.value }))} style={{ ...styles.searchInput, paddingLeft: "12px" }} /></label>
-                  <label style={styles.profileFieldLabel}>Last name<input autoComplete="family-name" data-voice-control="last_name" value={basicInfo.lastName} onChange={(e) => setBasicInfo((p) => ({ ...p, lastName: e.target.value }))} style={{ ...styles.searchInput, paddingLeft: "12px" }} /></label>
-                  <label style={styles.profileFieldLabel}>Location<input autoComplete="address-level2" data-voice-control="location" value={basicInfo.location} onChange={(e) => setBasicInfo((p) => ({ ...p, location: e.target.value }))} style={{ ...styles.searchInput, paddingLeft: "12px" }} /></label>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "12px" }} className="candidate-dashboard__profile-fields">
+                  <label style={styles.profileFieldLabel}>First name<input ref={profileFirstNameRef} autoComplete="given-name" data-voice-control="first_name" value={basicInfo.firstName} required aria-invalid={Boolean(profileErrors.firstName)} aria-describedby={profileErrors.firstName ? "candidate-profile-first-name-error" : undefined} onChange={(e) => { setBasicInfo((p) => ({ ...p, firstName: e.target.value })); setProfileErrors((current) => ({ ...current, firstName: "" })); }} style={{ ...styles.searchInput, paddingLeft: "12px" }} />{profileErrors.firstName && <span id="candidate-profile-first-name-error" style={styles.fieldError}>{profileErrors.firstName}</span>}</label>
+                  <label style={styles.profileFieldLabel}>Last name<input ref={profileLastNameRef} autoComplete="family-name" data-voice-control="last_name" value={basicInfo.lastName} required aria-invalid={Boolean(profileErrors.lastName)} aria-describedby={profileErrors.lastName ? "candidate-profile-last-name-error" : undefined} onChange={(e) => { setBasicInfo((p) => ({ ...p, lastName: e.target.value })); setProfileErrors((current) => ({ ...current, lastName: "" })); }} style={{ ...styles.searchInput, paddingLeft: "12px" }} />{profileErrors.lastName && <span id="candidate-profile-last-name-error" style={styles.fieldError}>{profileErrors.lastName}</span>}</label>
+                  <label style={styles.profileFieldLabel}>Location<input ref={profileLocationRef} autoComplete="address-level2" data-voice-control="location" value={basicInfo.location} required aria-invalid={Boolean(profileErrors.location)} aria-describedby={profileErrors.location ? "candidate-profile-location-error" : undefined} onChange={(e) => { setBasicInfo((p) => ({ ...p, location: e.target.value })); setProfileErrors((current) => ({ ...current, location: "" })); }} style={{ ...styles.searchInput, paddingLeft: "12px" }} />{profileErrors.location && <span id="candidate-profile-location-error" style={styles.fieldError}>{profileErrors.location}</span>}</label>
                   <label style={styles.profileFieldLabel}>Phone <span>(optional)</span><input type="tel" autoComplete="tel" data-voice-control="phone" value={basicInfo.phone} onChange={(e) => setBasicInfo((p) => ({ ...p, phone: e.target.value }))} style={{ ...styles.searchInput, paddingLeft: "12px" }} /></label>
                 </div>
                 <label style={{ ...styles.profileFieldLabel, marginBottom: "12px" }}>About you <span>(optional)</span><textarea data-voice-control="about" value={basicInfo.about} onChange={(e) => setBasicInfo((p) => ({ ...p, about: e.target.value }))} rows="3" style={{ width: "100%", border: "1px solid #e2e8f0", borderRadius: "10px", padding: "10px 12px", resize: "vertical", fontFamily: "inherit" }} /></label>
-                <label style={{ display: "grid", gap: "6px", marginBottom: "14px", fontSize: "12px", color: "#475569" }}>Highest education level<select data-voice-control="education_level" value={educationLevel} onChange={(e) => setEducationLevel(e.target.value)} style={{ ...styles.searchInput, paddingLeft: "12px" }}><option value="">Select education level</option><option value="none">No formal education</option><option value="primary">Primary school</option><option value="middle_school">Middle school</option><option value="high_school">High school</option><option value="vocational">Vocational or technical education</option><option value="university">University</option></select></label>
+                <label style={{ display: "grid", gap: "6px", marginBottom: "14px", fontSize: "12px", color: "#475569" }}>Highest education level<select ref={profileEducationRef} data-voice-control="education_level" value={educationLevel} required aria-invalid={Boolean(profileErrors.education)} aria-describedby={profileErrors.education ? "candidate-profile-education-error" : undefined} onChange={(e) => { setEducationLevel(e.target.value); setProfileErrors((current) => ({ ...current, education: "" })); }} style={{ ...styles.searchInput, paddingLeft: "12px" }}><option value="">Select education level</option><option value="none">No formal education</option><option value="primary">Primary school</option><option value="middle_school">Middle school</option><option value="high_school">High school</option><option value="vocational">Vocational or technical education</option><option value="university">University</option></select>{profileErrors.education && <span id="candidate-profile-education-error" style={styles.fieldError}>{profileErrors.education}</span>}</label>
 
                 <div style={styles.searchWrapper}>
                   <SearchIcon />
-                  <input aria-label="Search disabilities" data-voice-control="disability_search" type="search" placeholder="Search disability..." value={searchTerm}
+                  <input ref={disabilitySearchRef} aria-label="Search disabilities" data-voice-control="disability_search" type="search" placeholder="Search disabilities" value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)} style={styles.searchInput} />
                 </div>
 
@@ -744,7 +797,7 @@ function CandidateDashboard() {
                   </div>
                 )}
 
-                <div data-voice-control="disabilities" style={styles.disabilityGrid}>
+                <div data-voice-control="disabilities" style={styles.disabilityGrid} className="candidate-dashboard__disability-grid">
                   {filteredDisabilities.map((disability) => {
                     const isSelected = selectedDisabilities.includes(disability.name);
                     return (
@@ -763,11 +816,13 @@ function CandidateDashboard() {
                   })}
                 </div>
 
+                {profileErrors.disabilities && <p id="candidate-profile-disabilities-error" style={styles.fieldError} role="alert">{profileErrors.disabilities}</p>}
+
                 <div style={styles.saveRow}>
-                  <button data-voice-control="save_profile" onClick={handleSaveProfile} style={styles.saveButton} disabled={savingProfile}>
+                  <button type="button" data-voice-control="save_profile" onClick={handleSaveProfile} style={styles.saveButton} disabled={savingProfile} aria-busy={savingProfile}>
                     {savingProfile ? "Saving..." : "Save Profile"}
                   </button>
-                  {successMessage && <span style={styles.successText}>✓ {successMessage}</span>}
+                  {successMessage && <span style={styles.successText} role="status">✓ {successMessage}</span>}
                 </div>
               </div>
 
@@ -810,7 +865,7 @@ function CandidateDashboard() {
                   <div style={{ marginTop: "20px" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
                       <span style={{ fontSize: "13px", fontWeight: "600", color: "#0f172a" }}>Your results</span>
-                      <span style={{ fontSize: "11px", color: "#94a3b8", fontWeight: "400" }}>
+                      <span style={{ fontSize: "11px", color: "#64748b", fontWeight: "400" }}>
                         {selectedDisabilities.length} condition{selectedDisabilities.length !== 1 ? "s" : ""} analyzed
                       </span>
                     </div>
@@ -841,16 +896,17 @@ function CandidateDashboard() {
                 selectedDisabilities={selectedDisabilities}
                 onMatch={handleGetAiMatch}
                 onOpenJob={openMatchedJob}
+                resultsRef={aiResultsRef}
               />
             )}
             {!selectedJob ? (
               <>
                 <h2 style={styles.sectionTitle}>Available Jobs</h2>
                 <p style={styles.text}>Browse posted jobs and click a card to view full details.</p>
-                {loadingJobs && <p style={styles.infoText}>Loading jobs...</p>}
-                {jobsError && <p style={styles.errorText}>{jobsError}</p>}
-                {!loadingJobs && jobs.length === 0 && <div style={styles.emptyBox}>No jobs have been posted yet.</div>}
-                <div style={styles.jobsGrid}>
+                {loadingJobs && <p style={styles.infoText} role="status">Loading jobs…</p>}
+                {jobsError && <p style={styles.errorText} role="alert">{jobsError}</p>}
+                {!loadingJobs && jobs.length === 0 && <div style={styles.emptyBox} role="status">No jobs have been posted yet.</div>}
+                <div style={styles.jobsGrid} className="candidate-dashboard__jobs-grid">
                   {jobs.map((job) => (
                     <article key={job.id} style={styles.jobCard}>
                       <CompanyLogo item={job} />
@@ -859,7 +915,7 @@ function CandidateDashboard() {
                           type="button"
                           aria-label={`View details for ${job.title}`}
                           style={styles.jobTitleButton}
-                          onClick={() => { setSelectedJob(job); setApplicationDocument(null); setRecommendationLetter(null); setSuccessMessage(""); setErrorMessage(""); }}
+                          onClick={() => { setSelectedJob(job); setApplicationDocument(null); setRecommendationLetter(null); setApplicationErrors({}); setSuccessMessage(""); setErrorMessage(""); }}
                         >
                           {job.title}
                         </button>
@@ -918,32 +974,35 @@ function CandidateDashboard() {
                 <div style={{ display: "grid", gap: "8px", marginBottom: "24px" }}>
                   {(selectedJob.highlightedTasks || []).map((task) => <div key={task.id} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "11px 13px", borderRadius: "11px", background: "#f8fafc", border: "1px solid #e8edf5", color: "#334155", fontSize: "13px" }}><span aria-hidden="true" style={{ color: "#2563eb", fontWeight: 700 }}>✓</span>{task.name}</div>)}
                 </div>
-                <div style={styles.applicationBox}>
+                <form style={styles.applicationBox} onSubmit={handleSubmitApplication} aria-busy={submittingApplication}>
                   <h3 style={styles.detailsSectionTitle}>Application Documents</h3>
-                  {successMessage && <p style={styles.successText}>{successMessage}</p>}
-                  {errorMessage && <p style={styles.errorText}>{errorMessage}</p>}
-                  <label style={styles.uploadLabel}>Upload Application Document {selectedJob.cvRequired ? "*" : ""}
-                    <input ref={applicationDocumentRef} data-voice-control="application_document" type="file" accept=".pdf,.doc,.docx" style={styles.fileInput} onChange={(e) => setApplicationDocument(e.target.files?.[0] || null)} />
+                  {successMessage && <p style={styles.successText} role="status">{successMessage}</p>}
+                  <AccessibleNotice noticeRef={applicationErrorRef} tone="error" message={errorMessage} />
+                  {(applicationErrors.applicationDocument || applicationErrors.recommendationLetter) && <p ref={applicationErrorRef} tabIndex="-1" id="application-upload-error" style={styles.errorText} role="alert">{applicationErrors.applicationDocument || applicationErrors.recommendationLetter}</p>}
+                  <label style={styles.uploadLabel}>Application document (optional)
+                    <input ref={applicationDocumentRef} data-voice-control="application_document" type="file" accept=".pdf,.doc,.docx" aria-invalid={Boolean(applicationErrors.applicationDocument)} aria-describedby={`application-document-help${applicationErrors.applicationDocument ? " application-upload-error" : ""}`} style={styles.fileInput} onChange={(e) => { setApplicationDocument(e.target.files?.[0] || null); setApplicationErrors((current) => ({ ...current, applicationDocument: "" })); }} />
                   </label>
-                  <label style={styles.uploadLabel}>Upload Recommendation Letter {selectedJob.coverLetterRequired ? "*" : ""}
-                    <input ref={recommendationLetterRef} data-voice-control="recommendation_letter" type="file" accept=".pdf,.doc,.docx" style={styles.fileInput} onChange={(e) => setRecommendationLetter(e.target.files?.[0] || null)} />
+                  <p id="application-document-help" style={styles.fileHelp}>{applicationDocument ? `Selected: ${applicationDocument.name}` : "Accepted formats: PDF, DOC, or DOCX."}</p>
+                  <label style={styles.uploadLabel}>Recommendation letter (optional)
+                    <input ref={recommendationLetterRef} data-voice-control="recommendation_letter" type="file" accept=".pdf,.doc,.docx" aria-invalid={Boolean(applicationErrors.recommendationLetter)} aria-describedby={`recommendation-letter-help${applicationErrors.recommendationLetter ? " application-upload-error" : ""}`} style={styles.fileInput} onChange={(e) => { setRecommendationLetter(e.target.files?.[0] || null); setApplicationErrors((current) => ({ ...current, recommendationLetter: "" })); }} />
                   </label>
-                  <button data-voice-control="submit_application" type="button" style={styles.applyButton} onClick={handleSubmitApplication} disabled={submittingApplication}>
+                  <p id="recommendation-letter-help" style={styles.fileHelp}>{recommendationLetter ? `Selected: ${recommendationLetter.name}` : "Accepted formats: PDF, DOC, or DOCX."}</p>
+                  <button data-voice-control="submit_application" type="submit" style={styles.applyButton} disabled={submittingApplication}>
                     {submittingApplication ? "Submitting..." : "Submit Application"}
                   </button>
-                </div>
+                </form>
               </>
             )}
           </section>
         )}
 
         {activeTab === "APPLICATIONS" && (
-          <section style={styles.applicationsShell}>
+          <section style={styles.applicationsShell} aria-labelledby="candidate-applications-title" aria-busy={loadingApplications}>
             <div style={styles.applicationsHeader}>
               <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
                 <div style={styles.applicationsIcon}><BriefcaseIcon size={20} /></div>
                 <div>
-                  <h2 style={styles.applicationsTitle}>My Applications</h2>
+                  <h2 id="candidate-applications-title" style={styles.applicationsTitle}>My Applications</h2>
                   <p style={styles.applicationsSubtitle}>Track and manage your job applications</p>
                 </div>
               </div>
@@ -955,10 +1014,11 @@ function CandidateDashboard() {
                 <option value="rejected">Rejected</option>
               </select>
             </div>
-            {loadingApplications && <p style={styles.infoText}>Loading...</p>}
-            {applicationsError && <p style={styles.errorText}>{applicationsError}</p>}
-            {!loadingApplications && candidateApplications.length === 0 && <div style={styles.emptyBox}>You have not submitted any applications yet.</div>}
-            {!loadingApplications && candidateApplications.length > 0 && filteredApplications.length === 0 && <div style={styles.emptyBox}>No applications match this status.</div>}
+            <AccessibleNotice noticeRef={applicationStatusRef} tone="success" message={successMessage} />
+            {loadingApplications && <p style={styles.infoText} role="status">Loading applications…</p>}
+            <AccessibleNotice tone="error" message={applicationsError} />
+            {!loadingApplications && candidateApplications.length === 0 && <div style={styles.emptyBox} role="status">You have not submitted any applications yet.</div>}
+            {!loadingApplications && candidateApplications.length > 0 && filteredApplications.length === 0 && <div style={styles.emptyBox} role="status">No applications match this status.</div>}
             <div style={styles.applicationCards}>
               {filteredApplications.map((application) => (
                 <div key={application.id} style={styles.applicationCard}>
@@ -979,7 +1039,7 @@ function CandidateDashboard() {
                     </div>
                   </div>
                   <span style={getStatusBadgeStyle(application.status)}>{getStatusLabel(application.status)}</span>
-                  <span style={{ color: "#cbd5e1", fontSize: "20px" }}>›</span>
+                  <span aria-hidden="true" style={{ color: "#cbd5e1", fontSize: "20px" }}>›</span>
                 </div>
               ))}
             </div>
@@ -990,7 +1050,7 @@ function CandidateDashboard() {
       </main>
 
       {selectedCompany && (
-        <div style={styles.companyOverlay}>
+        <div style={styles.companyOverlay} className="candidate-dashboard__dialog-overlay">
           <div
             ref={companyDialogRef}
             role="dialog"
@@ -998,6 +1058,7 @@ function CandidateDashboard() {
             aria-labelledby="company-dialog-title"
             tabIndex={-1}
             style={styles.companyModal}
+            className="candidate-dashboard__dialog"
           >
             <button aria-label="Close company profile" data-voice-control="close_company" type="button" style={styles.companyCloseButton} onClick={() => setSelectedCompany(null)}>×</button>
             <div style={{ display: "flex", alignItems: "center", gap: "16px", paddingRight: "40px" }}>
@@ -1007,38 +1068,38 @@ function CandidateDashboard() {
                 <p style={{ margin: "4px 0 0", color: "#64748b", fontSize: "13px" }}>{selectedCompany.employerProfile?.industry || "Hospitality"}{selectedCompany.employerProfile?.location ? ` · ${selectedCompany.employerProfile.location}` : selectedCompany.location ? ` · ${selectedCompany.location}` : ""}</p>
               </div>
             </div>
-            <div data-voice-control="company_view" style={styles.companyTabs}>
+            <div data-voice-control="company_view" style={styles.companyTabs} role="tablist" aria-label="Company information">
               {["PROFILE", "JOBS"].map((t) => (
-                <button key={t} type="button" aria-pressed={companyModalTab === t} style={{ ...styles.companyTabButton, ...(companyModalTab === t ? styles.companyTabActive : {}) }} onClick={() => setCompanyModalTab(t)}>
+                <button key={t} id={`company-tab-${t.toLowerCase()}`} type="button" role="tab" aria-selected={companyModalTab === t} aria-controls={`company-panel-${t.toLowerCase()}`} tabIndex={companyModalTab === t ? 0 : -1} style={{ ...styles.companyTabButton, ...(companyModalTab === t ? styles.companyTabActive : {}) }} onClick={() => setCompanyModalTab(t)}>
                   {t === "PROFILE" ? "Profile" : "Job Openings"}
                 </button>
               ))}
             </div>
             {companyModalTab === "PROFILE" && (
-              <div style={{ marginTop: "20px", display: "flex", flexDirection: "column", gap: "12px" }}>
+              <div id="company-panel-profile" role="tabpanel" aria-labelledby="company-tab-profile" style={{ marginTop: "20px", display: "flex", flexDirection: "column", gap: "12px" }}>
                 <div style={styles.companyInfoBox}><h3 style={styles.companyInfoTitle}>About</h3><p style={styles.companyInfoText}>{selectedCompanyProfile.description || "No description added yet."}</p></div>
                 <div style={styles.companyInfoBox}><h3 style={styles.companyInfoTitle}>Accessibility Statement</h3><p style={styles.companyInfoText}>{selectedCompanyProfile.accessibilityStatement || "No accessibility statement added yet."}</p></div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px" }} className="candidate-dashboard__company-meta">
                   {[
                     { label: "Location", value: selectedCompanyProfile.location || selectedCompany.location || "Not specified" },
                     { label: "Open Jobs", value: companyJobs.length },
                   ].map((item) => (
                     <div key={item.label} style={styles.companyMiniBox}>
-                      <strong style={{ fontSize: "10px", color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.5px" }}>{item.label}</strong>
+                      <strong style={{ fontSize: "10px", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.5px" }}>{item.label}</strong>
                       <span style={{ fontSize: "14px", color: "#0f172a", fontWeight: "500" }}>{item.value}</span>
                     </div>
                   ))}
                   <div style={styles.companyMiniBox}>
-                    <strong style={{ fontSize: "10px", color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.5px" }}>Website</strong>
+                    <strong style={{ fontSize: "10px", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.5px" }}>Website</strong>
                     {selectedCompanyProfile.website ? (
                       <a href={selectedCompanyProfile.website.startsWith("http") ? selectedCompanyProfile.website : `https://${selectedCompanyProfile.website}`} target="_blank" rel="noreferrer" style={{ color: "#2563eb", fontWeight: "500", fontSize: "13px" }}>{selectedCompanyProfile.website}</a>
-                    ) : <span style={{ fontSize: "13px", color: "#94a3b8" }}>Not specified</span>}
+                    ) : <span style={{ fontSize: "13px", color: "#64748b" }}>Not specified</span>}
                   </div>
                 </div>
               </div>
             )}
             {companyModalTab === "JOBS" && (
-              <div style={{ marginTop: "20px", display: "flex", flexDirection: "column", gap: "10px" }}>
+              <div id="company-panel-jobs" role="tabpanel" aria-labelledby="company-tab-jobs" style={{ marginTop: "20px", display: "flex", flexDirection: "column", gap: "10px" }}>
                 {companyJobs.length === 0 && <div style={styles.emptyBox}>No open jobs currently available.</div>}
                 {companyJobs.map((job) => (
                   <div key={job.id} style={{ border: "1px solid #e8edf5", borderRadius: "12px", padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "14px", background: "#fafbfc" }}>
@@ -1084,12 +1145,13 @@ const styles = {
   text: { color: "#64748b", fontSize: "13px", lineHeight: "1.5", margin: 0, textAlign: "center" },
   selectedPill: { background: "#eff6ff", color: "#2563eb", border: "1px solid #bfdbfe", borderRadius: "999px", padding: "4px 11px", fontSize: "12px", fontWeight: "500", whiteSpace: "nowrap" },
   profileFieldLabel: { display: "grid", gap: "5px", color: "#475569", fontSize: "12px", fontWeight: "500" },
+  fieldError: { color: "#b91c1c", fontSize: "12px", fontWeight: "600", lineHeight: "1.35" },
   searchWrapper: { position: "relative", marginBottom: "12px" },
   searchInput: { width: "100%", padding: "10px 12px 10px 34px", borderRadius: "9px", border: "1px solid #e2e8f0", fontSize: "13px", outline: "none", boxSizing: "border-box", background: "#f8fafc", color: "#0f172a", fontFamily: "Inter, sans-serif" },
   selectedChipsRow: { display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "12px", alignItems: "center" },
   selectedChip: { display: "inline-flex", alignItems: "center", gap: "5px", background: "#eff6ff", color: "#2563eb", padding: "4px 9px", borderRadius: "999px", fontSize: "11px", fontWeight: "500", border: "1px solid #bfdbfe" },
   chipRemove: { background: "none", border: "none", color: "#93c5fd", cursor: "pointer", fontSize: "13px", padding: "0", lineHeight: "1", fontFamily: "Inter, sans-serif" },
-  resetBtn: { background: "none", border: "1px solid #e2e8f0", color: "#94a3b8", cursor: "pointer", fontSize: "11px", fontWeight: "400", padding: "4px 9px", borderRadius: "999px", fontFamily: "Inter, sans-serif" },
+  resetBtn: { background: "none", border: "1px solid #e2e8f0", color: "#64748b", cursor: "pointer", fontSize: "11px", fontWeight: "400", padding: "4px 9px", borderRadius: "999px", fontFamily: "Inter, sans-serif" },
   disabilityGrid: { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px" },
   disabilityCard: { position: "relative", border: "1px solid #e8edf5", background: "#fafbfc", borderRadius: "13px", padding: "10px", cursor: "pointer", minHeight: "175px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-between", transition: "all 0.15s ease", outline: "none" },
   selectedDisabilityCard: { border: "1.5px solid #2563eb", background: "#eff6ff", boxShadow: "0 4px 14px rgba(37,99,235,0.1)", transform: "translateY(-1px)" },
@@ -1101,17 +1163,17 @@ const styles = {
   saveButton: { border: "none", background: "#2563eb", color: "#ffffff", padding: "9px 18px", borderRadius: "9px", cursor: "pointer", fontWeight: "500", fontSize: "13px", fontFamily: "Inter, sans-serif", boxShadow: "0 2px 8px rgba(37,99,235,0.22)" },
   successText: { color: "#16a34a", fontWeight: "500", fontSize: "13px" },
   errorText: { color: "#dc2626", fontWeight: "500", fontSize: "13px", marginTop: "6px" },
-  infoText: { color: "#94a3b8", fontSize: "13px" },
+  infoText: { color: "#64748b", fontSize: "13px" },
   aiCard: { background: "#ffffff", borderRadius: "18px", padding: "22px", boxShadow: "0 1px 10px rgba(15,23,42,0.05)", border: "1px solid #e8edf5" },
   aiCardHeader: { display: "flex", alignItems: "center", gap: "11px", marginBottom: "12px", justifyContent: "center" },
   aiIconWrapper: { width: "36px", height: "36px", borderRadius: "10px", background: "linear-gradient(135deg, #1d4ed8, #3b82f6)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
   aiTitle: { margin: 0, fontSize: "16px", fontWeight: "600", color: "#0f172a" },
-  aiSubtitle: { margin: "1px 0 0", fontSize: "11px", color: "#94a3b8", fontWeight: "400" },
+  aiSubtitle: { margin: "1px 0 0", fontSize: "11px", color: "#64748b", fontWeight: "400" },
   aiDescription: { color: "#64748b", fontSize: "13px", lineHeight: "1.55", marginBottom: "14px", textAlign: "center" },
   aiButton: { width: "100%", border: "none", background: "linear-gradient(135deg, #1d4ed8, #2563eb)", color: "#ffffff", padding: "11px", borderRadius: "10px", fontWeight: "500", fontSize: "13px", fontFamily: "Inter, sans-serif", letterSpacing: "0.1px", transition: "all 0.15s" },
   aiErrorBox: { marginTop: "10px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: "8px", padding: "10px 12px", color: "#dc2626", fontSize: "12px", fontWeight: "400" },
   aiEmptyState: { textAlign: "center", padding: "28px 16px" },
-  aiEmptyText: { color: "#94a3b8", fontSize: "12px", fontWeight: "400", lineHeight: "1.5", margin: 0 },
+  aiEmptyText: { color: "#64748b", fontSize: "12px", fontWeight: "400", lineHeight: "1.5", margin: 0 },
   jobsGrid: { marginTop: "18px", display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "12px" },
   jobCard: { border: "1px solid #e8edf5", background: "#ffffff", borderRadius: "14px", padding: "14px", cursor: "pointer", textAlign: "left", display: "flex", gap: "11px", alignItems: "center", transition: "all 0.15s" },
   companyLogo: { width: "44px", height: "44px", borderRadius: "11px", background: "#eff6ff", color: "#2563eb", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "600", fontSize: "18px", flexShrink: 0, overflow: "hidden" },
@@ -1122,7 +1184,7 @@ const styles = {
   companyNameButton: { display: "block", margin: 0, padding: 0, border: "none", background: "transparent", color: "#64748b", fontSize: "12px", fontWeight: "400", textDecoration: "underline", textUnderlineOffset: "2px", cursor: "pointer", fontFamily: "Inter, sans-serif", textAlign: "left" },
   companyNameLink: { border: "none", background: "transparent", padding: 0, margin: 0, color: "#2563eb", fontSize: "14px", fontWeight: "500", textDecoration: "underline", textUnderlineOffset: "2px", cursor: "pointer", fontFamily: "Inter, sans-serif" },
   companyWebsiteLink: { color: "#2563eb", fontWeight: "400", textDecoration: "underline", wordBreak: "break-word" },
-  emptyBox: { marginTop: "14px", border: "1.5px dashed #e2e8f0", borderRadius: "12px", padding: "24px", textAlign: "center", color: "#94a3b8", fontWeight: "400", fontSize: "13px" },
+  emptyBox: { marginTop: "14px", border: "1.5px dashed #e2e8f0", borderRadius: "12px", padding: "24px", textAlign: "center", color: "#64748b", fontWeight: "400", fontSize: "13px" },
   backButton: { border: "none", background: "#f1f5f9", color: "#475569", padding: "7px 13px", borderRadius: "8px", cursor: "pointer", fontWeight: "400", marginBottom: "18px", fontSize: "13px", fontFamily: "Inter, sans-serif" },
   jobDetailsHeader: { display: "flex", alignItems: "center", gap: "14px", marginBottom: "18px" },
   companyLogoLarge: { width: "68px", height: "68px", borderRadius: "14px", background: "#ffffff", border: "1px solid #e8edf5", color: "#2563eb", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "600", fontSize: "24px", flexShrink: 0, overflow: "hidden", padding: "4px", boxSizing: "border-box" },
@@ -1142,6 +1204,7 @@ const styles = {
   applicationBox: { marginTop: "20px", background: "#f8fafc", border: "1px solid #e8edf5", borderRadius: "14px", padding: "18px" },
   uploadLabel: { display: "flex", flexDirection: "column", gap: "7px", color: "#0f172a", fontWeight: "500", marginBottom: "12px", fontSize: "13px" },
   fileInput: { padding: "9px 11px", borderRadius: "8px", border: "1px solid #e2e8f0", background: "#ffffff", cursor: "pointer", fontSize: "13px" },
+  fileHelp: { margin: "-6px 0 12px", color: "#475569", fontSize: "12px", lineHeight: "1.4" },
   applyButton: { marginTop: "4px", border: "none", background: "#2563eb", color: "#ffffff", padding: "10px 16px", borderRadius: "9px", cursor: "pointer", fontWeight: "500", fontSize: "13px", fontFamily: "Inter, sans-serif" },
   applicationsShell: { background: "#ffffff", borderRadius: "18px", padding: "24px", boxShadow: "0 1px 10px rgba(15,23,42,0.05)", border: "1px solid #e8edf5" },
   applicationsHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" },
@@ -1156,7 +1219,7 @@ const styles = {
   applicationInfo: { flex: 1, textAlign: "left", minWidth: 0 },
   applicationJobTitle: { margin: "0 0 5px", fontSize: "15px", fontWeight: "600", color: "#0f172a" },
   applicationCompanyButton: { border: "none", background: "transparent", margin: "0 0 8px", padding: 0, color: "#64748b", fontSize: "12px", fontWeight: "400", display: "flex", alignItems: "center", gap: "5px", cursor: "pointer", textDecoration: "underline", textUnderlineOffset: "2px", fontFamily: "Inter, sans-serif" },
-  applicationMetaRow: { display: "flex", flexWrap: "wrap", alignItems: "center", gap: "14px", color: "#94a3b8", fontSize: "12px", fontWeight: "400" },
+  applicationMetaRow: { display: "flex", flexWrap: "wrap", alignItems: "center", gap: "14px", color: "#64748b", fontSize: "12px", fontWeight: "400" },
   metaItem: { display: "inline-flex", alignItems: "center", gap: "4px", whiteSpace: "nowrap" },
   applicationStatusBadge: { padding: "5px 11px", borderRadius: "999px", fontSize: "11px", fontWeight: "500", textTransform: "capitalize", whiteSpace: "nowrap" },
   companyOverlay: { position: "fixed", inset: 0, background: "rgba(15,23,42,0.4)", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px", zIndex: 999, backdropFilter: "blur(3px)" },

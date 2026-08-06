@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\ApplicationOutcomeEvent;
 use App\Entity\JobApplication;
 use App\Entity\JobPost;
 use App\Entity\User;
@@ -88,14 +89,6 @@ class CandidateApplicationController extends AbstractController
         $applicationDocument = $request->files->get('applicationDocument');
         $recommendationLetter = $request->files->get('recommendationLetter');
 
-        if ($job->isCvRequired() && !$applicationDocument) {
-            return $this->json(['message' => 'Application document is required.'], 400);
-        }
-
-        if ($job->isCoverLetterRequired() && !$recommendationLetter) {
-            return $this->json(['message' => 'Recommendation letter is required.'], 400);
-        }
-
         $application = new JobApplication();
         $application->setCandidate($candidate);
         $application->setJobPost($job);
@@ -117,6 +110,14 @@ class CandidateApplicationController extends AbstractController
                 $application->setRecommendationOriginalName($stored['originalName']);
             }
             $entityManager->persist($application);
+            $entityManager->persist(
+                (new ApplicationOutcomeEvent())
+                    ->setApplication($application)
+                    ->setActor($candidate)
+                    ->setPreviousStatus(null)
+                    ->setNewStatus('pending')
+                    ->setNotificationStatus('not_required')
+            );
             $entityManager->flush();
         } catch (\InvalidArgumentException $e) {
             foreach ($storedNames as $storedName) {
@@ -165,6 +166,7 @@ class CandidateApplicationController extends AbstractController
                     'jobType' => $job?->getJobType(),
                     'status' => $application->getStatus(),
                     'createdAt' => $application->getCreatedAt()?->format('Y-m-d H:i:s'),
+                    'statusUpdatedAt' => $application->getUpdatedAt()?->format('Y-m-d H:i:s'),
                 ];
             }, $applications),
         ]);

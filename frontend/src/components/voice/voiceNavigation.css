@@ -4,11 +4,9 @@
   top: auto;
   right: 18px;
   bottom: 18px;
-  width: min(290px, calc(100vw - 28px));
+  width: min(330px, calc(100vw - 28px));
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: 4px 10px;
+  gap: 8px;
   padding: 8px;
   border: 1px solid rgba(191, 219, 254, 0.9);
   border-radius: 14px;
@@ -17,6 +15,18 @@
   backdrop-filter: blur(12px);
   color: #0f172a;
   font-family: Inter, "DM Sans", system-ui, sans-serif;
+}
+
+.voice-navigation__bar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.voice-navigation__details {
+  display: grid;
+  gap: 6px;
 }
 
 .voice-navigation__toggle {
@@ -32,6 +42,17 @@
   font-size: 11px;
   font-weight: 700;
   white-space: nowrap;
+}
+
+.voice-navigation__panel-toggle {
+  min-height: 34px;
+  padding: 6px 9px;
+  border: 1px solid #bfdbfe;
+  border-radius: 9px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 10px;
+  font-weight: 700;
 }
 
 .voice-navigation__icon {
@@ -74,14 +95,12 @@
 }
 
 .voice-navigation__transcript {
-  grid-column: 1 / -1;
   padding: 3px 5px 0;
   color: #334155;
   font-size: 10px;
 }
 
 .voice-navigation__language {
-  grid-column: 1 / -1;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -103,7 +122,6 @@
 }
 
 .voice-navigation__actions {
-  grid-column: 1 / -1;
   display: flex;
   justify-content: flex-end;
   gap: 6px;
@@ -126,7 +144,6 @@
 }
 
 .voice-navigation__recording {
-  grid-column: 1 / -1;
   display: grid;
   gap: 5px;
   padding: 7px 5px 2px;
@@ -153,9 +170,8 @@
 }
 
 .voice-navigation__disclosure {
-  grid-column: 1 / -1;
   padding: 0 5px 2px;
-  color: #94a3b8;
+  color: #475569;
   font-size: 8px;
   letter-spacing: 0.2px;
 }
@@ -167,10 +183,28 @@
 
 @media (max-width: 640px) {
   .voice-navigation {
-    top: auto;
     right: 14px;
     bottom: 14px;
+    width: auto;
+    max-width: calc(100vw - 28px);
   }
+
+  .voice-navigation--expanded {
+    width: min(330px, calc(100vw - 28px));
+  }
+
+  .voice-navigation:not(.voice-navigation--expanded) .voice-navigation__status {
+    display: none;
+  }
+
+  .voice-navigation__details {
+    max-height: min(48vh, 340px);
+    overflow: auto;
+  }
+}
+
+@media (max-height: 520px) {
+  .voice-navigation__details { max-height: 42vh; }
 }
 
 @media (prefers-reduced-motion: reduce) {

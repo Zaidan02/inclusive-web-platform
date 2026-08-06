@@ -53,6 +53,7 @@ export default function VoiceNavigationControl() {
   const [transcript, setTranscript] = useState("");
   const [spokenLanguage, setSpokenLanguage] = useState("en");
   const [lastRecording, setLastRecording] = useState(null);
+  const [panelExpanded, setPanelExpanded] = useState(() => !window.matchMedia?.("(max-width: 640px)").matches);
   const enabledRef = useRef(false);
   const streamRef = useRef(null);
   const recorderRef = useRef(null);
@@ -73,6 +74,10 @@ export default function VoiceNavigationControl() {
   useEffect(() => {
     locationRef.current = location.pathname;
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (enabled) setPanelExpanded(true);
+  }, [enabled]);
 
   const stopOutput = useCallback(() => {
     if (outputAudioRef.current) {
@@ -226,7 +231,7 @@ export default function VoiceNavigationControl() {
       return result.feedback;
     }
     return result.feedback;
-  }, [deactivate, navigate, stopOutput]);
+  }, [navigate, stopOutput]);
 
   const processAudio = useCallback(async (blob) => {
     setPhase("processing");
@@ -434,7 +439,8 @@ export default function VoiceNavigationControl() {
   }, [releaseResources]);
 
   return (
-    <aside className={`voice-navigation voice-navigation--${phase}`} aria-label="Voice navigation">
+    <aside className={`voice-navigation voice-navigation--${phase}${panelExpanded ? " voice-navigation--expanded" : ""}`} aria-label="Voice navigation">
+      <div className="voice-navigation__bar">
       <button
         type="button"
         className="voice-navigation__toggle"
@@ -446,6 +452,18 @@ export default function VoiceNavigationControl() {
         <span>{enabled ? "Voice on" : "Voice navigation"}</span>
       </button>
       <span className="voice-navigation__status" role="status" aria-live="polite">{message}</span>
+      <button
+        type="button"
+        className="voice-navigation__panel-toggle"
+        onClick={() => setPanelExpanded((current) => !current)}
+        aria-expanded={panelExpanded}
+        aria-controls="voice-navigation-details"
+      >
+        {panelExpanded ? "Close" : "Options"}
+      </button>
+      </div>
+      {panelExpanded && (
+        <div className="voice-navigation__details" id="voice-navigation-details">
       <div className="voice-navigation__actions">
         {phase === "processing" && <button type="button" onClick={cancelProcessing}>Cancel</button>}
         {phase === "speaking" && <button type="button" onClick={stopSpeakingNow}>Stop talking</button>}
@@ -475,6 +493,8 @@ export default function VoiceNavigationControl() {
         </div>
       )}
       <span className="voice-navigation__disclosure">AI-generated voice</span>
+        </div>
+      )}
     </aside>
   );
 }

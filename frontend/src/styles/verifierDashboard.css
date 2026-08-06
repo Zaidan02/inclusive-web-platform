@@ -58,6 +58,7 @@
 .reject-button { color: #fff; background: #b23442; }
 .verifier-empty, .verifier-error, .verifier-success { padding: 16px; border-radius: 12px; }
 .verifier-empty { border: 1px dashed #a8b9d2; text-align: center; background: #fff; }
+.verifier-note-help { margin: 4px 0 0; color: #475569; font-size: .78rem; line-height: 1.4; }
 .verifier-error { color: #812731; background: #fde5e7; }
 .verifier-success { color: #145b39; background: #dff6e9; }
 .verifier-announcements:empty { display: none; }

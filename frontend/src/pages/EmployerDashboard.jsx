@@ -19,6 +19,7 @@ import {
 } from "../services/authService";
 import { API_BASE_URL, BACKEND_BASE_URL } from "../config";
 import useDialogFocus from "../hooks/useDialogFocus";
+import AccessibleNotice from "../components/accessibility/AccessibleNotice";
 
 const globalStyles = `
   * { box-sizing: border-box; }
@@ -33,7 +34,7 @@ const globalStyles = `
 const emptyForm = {
   jobDefinitionId: "", location: "", jobType: "Full-time",
   workMode: "On-site", description: "",
-  applicationDeadline: "", cvRequired: true, coverLetterRequired: false,
+  applicationDeadline: "",
   assistanceAvailable: false,
 };
 const emptyProfile = { companyName: "", industry: "", location: "", website: "", description: "", accessibilityStatement: "" };
@@ -114,6 +115,9 @@ function EmployerDashboard() {
   const [selectedProfile, setSelectedProfile] = useState(null);
   const logoInputRef = useRef(null);
   const logoButtonRef = useRef(null);
+  const messageRef = useRef(null);
+  const errorRef = useRef(null);
+  const voiceActionHandlerRef = useRef(null);
   const candidateDialogRef = useDialogFocus(Boolean(selectedProfile), () => setSelectedProfile(null));
 
   useEffect(() => {
@@ -186,7 +190,7 @@ function EmployerDashboard() {
 
   function handleEditJob(job) {
     setMessage(""); setError(""); setEditingJobId(job.id);
-    setFormData({ jobDefinitionId: String(job.jobDefinitionId || ""), location: job.location || "", jobType: job.jobType || "Full-time", workMode: job.workMode || "On-site", description: job.description || "", applicationDeadline: job.applicationDeadline || "", cvRequired: Boolean(job.cvRequired), coverLetterRequired: Boolean(job.coverLetterRequired), assistanceAvailable: Boolean(job.assistanceAvailable) });
+    setFormData({ jobDefinitionId: String(job.jobDefinitionId || ""), location: job.location || "", jobType: job.jobType || "Full-time", workMode: job.workMode || "On-site", description: job.description || "", applicationDeadline: job.applicationDeadline || "", assistanceAvailable: Boolean(job.assistanceAvailable) });
     setHighlightedTaskIds((job.highlightedTasks || []).map((task) => task.id));
     if (job.jobDefinitionId) getEmployerJobDefinition(job.jobDefinitionId).then((data) => setCatalogueTasks(data.job?.tasks || [])).catch((err) => setError(err.message));
     setActiveTab("POST_JOB");
@@ -212,7 +216,19 @@ function EmployerDashboard() {
   }
 
   async function handleStatusChange(appId, newStatus) {
-    try { setError(""); setMessage(""); await updateApplicationStatus(appId, newStatus); setApplications((prev) => prev.map((a) => a.id === appId ? { ...a, status: newStatus } : a)); }
+    try {
+      setError(""); setMessage("");
+      const data = await updateApplicationStatus(appId, newStatus);
+      setApplications((prev) => prev.map((a) => a.id === appId ? { ...a, status: newStatus } : a));
+      if (data.statusChanged === false) {
+        setMessage(`Application is already ${newStatus.replaceAll("_", " ")}. No notification was sent.`);
+        return;
+      }
+      const delivery = data.notificationSent
+        ? " The candidate was notified by email."
+        : " The outcome was saved, but email delivery was unavailable.";
+      setMessage(`Application status updated to ${newStatus.replaceAll("_", " ")}.${delivery}`);
+    }
     catch (err) { setError(err.message); }
   }
 
@@ -267,8 +283,7 @@ function EmployerDashboard() {
     window.location.href = "/signin";
   }
 
-  useEffect(() => {
-    function handleVoiceAction(event) {
+  voiceActionHandlerRef.current = (event) => {
       const action = event.detail.action;
       if (!action) return;
       const respond = (feedback) => {
@@ -308,8 +323,8 @@ function EmployerDashboard() {
           const key = action.target === "job_type" ? "jobType" : "workMode";
           switchTab("POST_JOB");
           setFormData((current) => ({ ...current, [key]: action.value }));
-        } else if (["cv_required", "cover_letter_required", "assistance_available"].includes(action.target)) {
-          const key = { cv_required: "cvRequired", cover_letter_required: "coverLetterRequired", assistance_available: "assistanceAvailable" }[action.target];
+        } else if (action.target === "assistance_available") {
+          const key = "assistanceAvailable";
           switchTab("POST_JOB");
           setFormData((current) => ({ ...current, [key]: action.value === "yes" }));
         } else return;
@@ -363,10 +378,15 @@ function EmployerDashboard() {
         else return;
         respond(`Activated ${action.label}.`);
       }
+  };
+
+  useEffect(() => {
+    function handleVoiceAction(event) {
+      voiceActionHandlerRef.current?.(event);
     }
     window.addEventListener("join:voice-action", handleVoiceAction);
     return () => window.removeEventListener("join:voice-action", handleVoiceAction);
-  }, [applications, catalogueTasks, employerProfile, formData, jobDefinitions, myJobs, selectedProfile]);
+  }, []);
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -385,7 +405,7 @@ function EmployerDashboard() {
       <style>{globalStyles}</style>
 
       {/* SIDEBAR */}
-      <aside style={{ width: "220px", minWidth: "220px", background: "linear-gradient(180deg, #0f172a 0%, #0a1628 100%)", padding: "28px 16px", display: "flex", flexDirection: "column", boxSizing: "border-box", boxShadow: "4px 0 20px rgba(0,0,0,0.15)" }}>
+      <aside className="dashboard-sidebar" style={{ width: "220px", minWidth: "220px", background: "linear-gradient(180deg, #0f172a 0%, #0a1628 100%)", padding: "28px 16px", display: "flex", flexDirection: "column", boxSizing: "border-box", boxShadow: "4px 0 20px rgba(0,0,0,0.15)" }}>
         <div style={{ marginBottom: "36px", paddingLeft: "8px" }}>
           <p style={{ margin: 0, fontSize: "10px", fontWeight: "500", color: "#475569", textTransform: "uppercase", letterSpacing: "1px" }}>Platform</p>
           <h2 style={{ margin: "4px 0 0", fontSize: "18px", fontWeight: "600", color: "#ffffff", letterSpacing: "-0.3px" }}>Employer Console</h2>
@@ -396,7 +416,7 @@ function EmployerDashboard() {
             return (
               <button type="button" key={tab} className="nav-btn" aria-current={isActive ? "page" : undefined}
                 onClick={() => { if (tab === "POST_JOB") resetForm(); switchTab(tab); }}
-                style={{ display: "flex", alignItems: "center", gap: "10px", background: isActive ? "rgba(59,130,246,0.15)" : "transparent", color: isActive ? "#60a5fa" : "#94a3b8", border: "none", textAlign: "left", padding: "10px 12px", borderRadius: "10px", cursor: "pointer", fontSize: "13px", fontWeight: isActive ? "600" : "400", transition: "all 0.15s", fontFamily: "Inter, sans-serif", borderLeft: isActive ? "2px solid #3b82f6" : "2px solid transparent" }}>
+                style={{ display: "flex", alignItems: "center", gap: "10px", background: isActive ? "rgba(59,130,246,0.15)" : "transparent", color: isActive ? "#60a5fa" : "#64748b", border: "none", textAlign: "left", padding: "10px 12px", borderRadius: "10px", cursor: "pointer", fontSize: "13px", fontWeight: isActive ? "600" : "400", transition: "all 0.15s", fontFamily: "Inter, sans-serif", borderLeft: isActive ? "2px solid #3b82f6" : "2px solid transparent" }}>
                 {icon}{label}
               </button>
             );
@@ -411,35 +431,35 @@ function EmployerDashboard() {
       </aside>
 
       {/* MAIN */}
-      <main style={{ flex: 1, padding: "32px 36px", boxSizing: "border-box", overflowX: "hidden" }}>
+      <main className="dashboard-main" style={{ flex: 1, padding: "32px 36px", boxSizing: "border-box", overflowX: "hidden" }} aria-busy={loading || loadingJobs || loadingApplications || loadingProfile}>
 
         {/* HEADER */}
-        <div style={{ marginBottom: "24px" }}>
-          <p style={{ margin: "0 0 4px", fontSize: "12px", fontWeight: "400", color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.8px" }}>Employer</p>
+        <div className="dashboard-page-header" style={{ marginBottom: "24px" }}>
+          <p style={{ margin: "0 0 4px", fontSize: "12px", fontWeight: "400", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.8px" }}>Employer</p>
           <h1 style={{ margin: 0, fontSize: "26px", fontWeight: "600", color: "#0f172a", letterSpacing: "-0.4px" }}>
             {activeTab === "POST_JOB" ? (editingJobId ? "Edit Job" : "Post a Job") : activeTab === "MY_JOBS" ? "My Jobs" : activeTab === "APPLICATIONS" ? "Applications" : "Company Profile"}
           </h1>
         </div>
 
         {message && (
-          <div style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: "10px", padding: "10px 14px", marginBottom: "18px", fontSize: "13px", color: "#16a34a", fontWeight: "500" }}>
+          <AccessibleNotice noticeRef={messageRef} tone="success">
             ✓ {message}
-          </div>
+          </AccessibleNotice>
         )}
         {error && (
-          <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: "10px", padding: "10px 14px", marginBottom: "18px", fontSize: "13px", color: "#dc2626", fontWeight: "500" }}>
+          <AccessibleNotice noticeRef={errorRef} tone="error">
             ⚠ {error}
-          </div>
+          </AccessibleNotice>
         )}
 
         {/* POST JOB */}
         {activeTab === "POST_JOB" && (
           <form onSubmit={handleSubmit}>
-            <div style={{ background: "#ffffff", borderRadius: "20px", padding: "28px", border: "1px solid #e8edf5", boxShadow: "0 1px 8px rgba(15,23,42,0.05)", marginBottom: "16px" }}>
+            <div className="dashboard-content-card" style={{ background: "#ffffff", borderRadius: "20px", padding: "28px", border: "1px solid #e8edf5", boxShadow: "0 1px 8px rgba(15,23,42,0.05)", marginBottom: "16px" }}>
               <h2 style={{ margin: "0 0 4px", fontSize: "16px", fontWeight: "600", color: "#0f172a" }}>Job Details</h2>
-              <p style={{ margin: "0 0 20px", fontSize: "12px", color: "#94a3b8" }}>Fields marked with * are required.</p>
+              <p style={{ margin: "0 0 20px", fontSize: "12px", color: "#64748b" }}>Fields marked with * are required.</p>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", padding: "12px 14px", marginBottom: "18px", borderRadius: "12px", background: employerProfile.companyName ? "#f0fdf4" : "#fff7ed", border: `1px solid ${employerProfile.companyName ? "#bbf7d0" : "#fed7aa"}` }}><div><span style={{ display: "block", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.6px", color: "#64748b" }}>Posting as</span><strong style={{ color: "#0f172a" }}>{employerProfile.companyName || "Company profile required"}</strong></div>{!employerProfile.companyName && <button type="button" onClick={() => switchTab("PROFILE")} style={{ border: "none", borderRadius: "8px", padding: "8px 11px", background: "#ea580c", color: "#fff", cursor: "pointer" }}>Complete profile</button>}</div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0 20px" }}>
+              <div className="dashboard-form-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0 20px" }}>
                 <Field label="Job Position *" hint="Positions are controlled by the platform administrator.">
                   <select className="input-field" style={inputStyle} name="jobDefinitionId" value={formData.jobDefinitionId} onChange={handleJobDefinitionChange} required><option value="">Select a position</option>{jobDefinitions.map((job) => <option key={job.id} value={job.id}>{job.name}</option>)}</select>
                 </Field>
@@ -477,11 +497,11 @@ function EmployerDashboard() {
                 <input className="input-field" style={inputStyle} value={taskSearch} onChange={(e) => setTaskSearch(e.target.value)} placeholder={formData.jobDefinitionId ? "Search tasks…" : "Select a job position first"} disabled={!formData.jobDefinitionId} />
                 {formData.jobDefinitionId && catalogueTasks.length > 0 && <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}><button type="button" onClick={() => setHighlightedTaskIds(catalogueTasks.map((task) => task.id))} style={{ border: "1px solid #bfdbfe", borderRadius: "8px", padding: "6px 10px", background: "#eff6ff", color: "#1d4ed8", cursor: "pointer", fontSize: "11px", fontWeight: "600" }}>Select all tasks</button><button type="button" onClick={() => setHighlightedTaskIds([])} style={{ border: "1px solid #e2e8f0", borderRadius: "8px", padding: "6px 10px", background: "#fff", color: "#64748b", cursor: "pointer", fontSize: "11px", fontWeight: "600" }}>Clear selection</button></div>}
                 {highlightedTaskIds.length > 0 && <div style={{ display: "flex", flexWrap: "wrap", gap: "7px", marginTop: "9px" }}>{highlightedTaskIds.map((id) => { const task = catalogueTasks.find((item) => item.id === id); return task ? <button type="button" key={id} onClick={() => toggleHighlightedTask(id)} style={{ border: "none", borderRadius: "999px", padding: "6px 10px", color: "#1d4ed8", background: "#eff6ff", cursor: "pointer" }}>{task.taskName} ×</button> : null; })}</div>}
-                {formData.jobDefinitionId && <div aria-label="Available job tasks" style={{ marginTop: "8px", maxHeight: "210px", overflowY: "auto", border: "1px solid #e2e8f0", borderRadius: "12px", padding: "6px", background: "#fff" }}>{catalogueTasks.filter((task) => task.taskName.toLowerCase().includes(taskSearch.toLowerCase())).map((task) => { const selected = highlightedTaskIds.includes(task.id); return <button type="button" aria-pressed={selected} key={task.id} onClick={() => toggleHighlightedTask(task.id)} style={{ width: "100%", display: "flex", alignItems: "center", gap: "9px", textAlign: "left", border: "none", borderRadius: "8px", padding: "9px 10px", marginBottom: "2px", background: selected ? "#eff6ff" : "transparent", color: selected ? "#1d4ed8" : "#334155", cursor: "pointer" }}><span aria-hidden="true">{selected ? "✓" : "○"}</span>{task.taskName}</button>; })}</div>}
-                <span style={{ fontSize: "11px", color: "#64748b", marginTop: "6px" }}>{highlightedTaskIds.length}/{catalogueTasks.length} catalogue tasks marked important</span>
+                {formData.jobDefinitionId && <div aria-label="Available job tasks" role="group" style={{ marginTop: "8px", maxHeight: "210px", overflowY: "auto", border: "1px solid #e2e8f0", borderRadius: "12px", padding: "6px", background: "#fff" }}>{catalogueTasks.filter((task) => task.taskName.toLowerCase().includes(taskSearch.toLowerCase())).map((task) => { const selected = highlightedTaskIds.includes(task.id); return <button type="button" aria-pressed={selected} key={task.id} onClick={() => toggleHighlightedTask(task.id)} style={{ width: "100%", display: "flex", alignItems: "center", gap: "9px", textAlign: "left", border: "none", borderRadius: "8px", padding: "9px 10px", marginBottom: "2px", background: selected ? "#eff6ff" : "transparent", color: selected ? "#1d4ed8" : "#334155", cursor: "pointer" }}><span aria-hidden="true">{selected ? "✓" : "○"}</span>{task.taskName}</button>; })}</div>}
+                <span role="status" style={{ fontSize: "11px", color: "#64748b", marginTop: "6px" }}>{highlightedTaskIds.length}/{catalogueTasks.length} catalogue tasks marked important</span>
               </Field>
-              <div style={{ display: "flex", gap: "20px", marginTop: "4px" }}>
-                {[{ name: "cvRequired", label: "Application document required" }, { name: "coverLetterRequired", label: "Recommendation letter required" }, { name: "assistanceAvailable", label: "Task assistance is available" }].map(({ name, label }) => (
+              <div className="dashboard-inline-actions" style={{ display: "flex", gap: "20px", marginTop: "4px" }}>
+                {[{ name: "assistanceAvailable", label: "Task assistance is available" }].map(({ name, label }) => (
                   <label key={name} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#475569", cursor: "pointer" }}>
                     <input type="checkbox" name={name} checked={formData[name]} onChange={handleChange} style={{ accentColor: "#2563eb" }} />
                     {label}
@@ -490,7 +510,7 @@ function EmployerDashboard() {
               </div>
             </div>
 
-            <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
+            <div className="dashboard-inline-actions" style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
               {editingJobId && (
                 <button type="button" onClick={resetForm} style={{ border: "1px solid #e2e8f0", background: "#fff", color: "#475569", padding: "10px 18px", borderRadius: "9px", cursor: "pointer", fontSize: "13px", fontFamily: "Inter, sans-serif" }}>
                   Cancel Edit
@@ -505,20 +525,20 @@ function EmployerDashboard() {
 
         {/* MY JOBS */}
         {activeTab === "MY_JOBS" && (
-          <div style={{ background: "#ffffff", borderRadius: "20px", padding: "24px", border: "1px solid #e8edf5", boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
+          <div className="dashboard-content-card" style={{ background: "#ffffff", borderRadius: "20px", padding: "24px", border: "1px solid #e8edf5", boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}>
+            <div className="dashboard-section-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
               <h2 style={{ margin: 0, fontSize: "16px", fontWeight: "600", color: "#0f172a" }}>Posted Jobs</h2>
-              <span style={{ fontSize: "12px", color: "#94a3b8" }}>{myJobs.length} job{myJobs.length !== 1 ? "s" : ""}</span>
+              <span style={{ fontSize: "12px", color: "#64748b" }}>{myJobs.length} job{myJobs.length !== 1 ? "s" : ""}</span>
             </div>
-            {loadingJobs && <p style={{ color: "#94a3b8", textAlign: "center", fontSize: "13px" }}>Loading...</p>}
+            {loadingJobs && <p style={{ color: "#64748b", textAlign: "center", fontSize: "13px" }}>Loading...</p>}
             {!loadingJobs && myJobs.length === 0 && (
               <div style={{ textAlign: "center", padding: "48px 20px", border: "1.5px dashed #e2e8f0", borderRadius: "14px" }}>
-                <p style={{ color: "#94a3b8", fontSize: "13px", margin: 0 }}>No jobs posted yet. Click "Post a Job" to get started.</p>
+                <p style={{ color: "#64748b", fontSize: "13px", margin: 0 }}>No jobs posted yet. Click "Post a Job" to get started.</p>
               </div>
             )}
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               {myJobs.map((job) => (
-                <div key={job.id} style={{ border: "1px solid #e8edf5", borderRadius: "14px", padding: "16px 20px", background: "#f8fafc", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "16px" }}>
+                <div key={job.id} className="dashboard-item-row" style={{ border: "1px solid #e8edf5", borderRadius: "14px", padding: "16px 20px", background: "#f8fafc", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "16px" }}>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <h3 style={{ margin: "0 0 4px", fontSize: "15px", fontWeight: "600", color: "#0f172a" }}>{job.title}</h3>
                     <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
@@ -534,8 +554,8 @@ function EmployerDashboard() {
                     </div>
                   </div>
                   <div style={{ display: "flex", gap: "8px", flexShrink: 0 }}>
-                    <button onClick={() => handleEditJob(job)} style={{ border: "none", background: "#eff6ff", color: "#2563eb", padding: "7px 14px", borderRadius: "8px", cursor: "pointer", fontSize: "12px", fontWeight: "500", fontFamily: "Inter, sans-serif" }}>Edit</button>
-                    <button onClick={() => handleDeleteJob(job.id)} style={{ border: "none", background: "#fef2f2", color: "#dc2626", padding: "7px 14px", borderRadius: "8px", cursor: "pointer", fontSize: "12px", fontWeight: "500", fontFamily: "Inter, sans-serif" }}>Delete</button>
+                    <button type="button" aria-label={`Edit ${job.title}`} onClick={() => handleEditJob(job)} style={{ border: "none", background: "#eff6ff", color: "#2563eb", padding: "7px 14px", borderRadius: "8px", cursor: "pointer", fontSize: "12px", fontWeight: "500", fontFamily: "Inter, sans-serif" }}>Edit</button>
+                    <button type="button" aria-label={`Delete ${job.title}`} onClick={() => handleDeleteJob(job.id)} style={{ border: "none", background: "#fef2f2", color: "#dc2626", padding: "7px 14px", borderRadius: "8px", cursor: "pointer", fontSize: "12px", fontWeight: "500", fontFamily: "Inter, sans-serif" }}>Delete</button>
                   </div>
                 </div>
               ))}
@@ -545,20 +565,20 @@ function EmployerDashboard() {
 
         {/* APPLICATIONS */}
         {activeTab === "APPLICATIONS" && (
-          <div style={{ background: "#ffffff", borderRadius: "20px", padding: "24px", border: "1px solid #e8edf5", boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
+          <div className="dashboard-content-card" style={{ background: "#ffffff", borderRadius: "20px", padding: "24px", border: "1px solid #e8edf5", boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}>
+            <div className="dashboard-section-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
               <h2 style={{ margin: 0, fontSize: "16px", fontWeight: "600", color: "#0f172a" }}>Applications</h2>
-              <span style={{ fontSize: "12px", color: "#94a3b8" }}>{applications.length} application{applications.length !== 1 ? "s" : ""}</span>
+              <span style={{ fontSize: "12px", color: "#64748b" }}>{applications.length} application{applications.length !== 1 ? "s" : ""}</span>
             </div>
-            {loadingApplications && <p style={{ color: "#94a3b8", textAlign: "center", fontSize: "13px" }}>Loading...</p>}
+            {loadingApplications && <p style={{ color: "#64748b", textAlign: "center", fontSize: "13px" }}>Loading...</p>}
             {!loadingApplications && applications.length === 0 && (
               <div style={{ textAlign: "center", padding: "48px 20px", border: "1.5px dashed #e2e8f0", borderRadius: "14px" }}>
-                <p style={{ color: "#94a3b8", fontSize: "13px", margin: 0 }}>No applications yet.</p>
+                <p style={{ color: "#64748b", fontSize: "13px", margin: 0 }}>No applications yet.</p>
               </div>
             )}
             {applications.length > 0 && (
-              <div style={{ overflowX: "auto" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <div className="dashboard-table-scroll" tabIndex={0} role="region" aria-label="Candidate applications table">
+                <table className="dashboard-table dashboard-table--employer-applications" style={{ width: "100%", borderCollapse: "collapse" }}>
                   <thead>
                     <tr style={{ background: "#f8fafc" }}>
                       {["Candidate", "Job", "Profile", "Status", "Application", "Recommendation", "Action"].map((h) => (
@@ -572,7 +592,7 @@ function EmployerDashboard() {
                         <td style={{ padding: "13px 12px", borderBottom: "1px solid #f1f5f9", fontSize: "13px", textAlign: "center", fontWeight: "500", color: "#0f172a" }}>{app.candidateName}</td>
                         <td style={{ padding: "13px 12px", borderBottom: "1px solid #f1f5f9", fontSize: "13px", textAlign: "center", color: "#64748b" }}>{app.jobTitle}</td>
                         <td style={{ padding: "13px 12px", borderBottom: "1px solid #f1f5f9", fontSize: "13px", textAlign: "center" }}>
-                          <button onClick={() => handleViewProfile(app)} style={{ border: "none", background: "#f1f5f9", color: "#475569", padding: "5px 10px", borderRadius: "7px", cursor: "pointer", fontSize: "11px", fontWeight: "500", fontFamily: "Inter, sans-serif" }}>View</button>
+                          <button type="button" aria-label={`View profile for ${app.candidateName || "candidate"}`} onClick={() => handleViewProfile(app)} style={{ border: "none", background: "#f1f5f9", color: "#475569", padding: "5px 10px", borderRadius: "7px", cursor: "pointer", fontSize: "11px", fontWeight: "500", fontFamily: "Inter, sans-serif" }}>View</button>
                         </td>
                         <td style={{ padding: "13px 12px", borderBottom: "1px solid #f1f5f9", textAlign: "center" }}>
                           <select aria-label={`Application status for ${app.candidateName || app.jobTitle}`} value={app.status} onChange={(e) => handleStatusChange(app.id, e.target.value)}
@@ -586,21 +606,21 @@ function EmployerDashboard() {
                         <td style={{ padding: "13px 12px", borderBottom: "1px solid #f1f5f9", textAlign: "center" }}>
                           {app.hasApplicationDocument ? (
                             <div style={{ display: "flex", gap: "4px", justifyContent: "center" }}>
-                              <button onClick={() => handleView(app.id, "application")} style={{ border: "none", background: "#eff6ff", color: "#2563eb", padding: "4px 8px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", fontFamily: "Inter, sans-serif" }}>View</button>
-                              <button onClick={() => handleDownload(app.id, "application", app.applicationOriginalName)} style={{ border: "none", background: "#f0fdf4", color: "#16a34a", padding: "4px 8px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", fontFamily: "Inter, sans-serif" }}>Download</button>
+                              <button type="button" aria-label={`View application document for ${app.candidateName || "candidate"}`} onClick={() => handleView(app.id, "application")} style={{ border: "none", background: "#eff6ff", color: "#2563eb", padding: "4px 8px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", fontFamily: "Inter, sans-serif" }}>View</button>
+                              <button type="button" aria-label={`Download application document for ${app.candidateName || "candidate"}`} onClick={() => handleDownload(app.id, "application", app.applicationOriginalName)} style={{ border: "none", background: "#f0fdf4", color: "#16a34a", padding: "4px 8px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", fontFamily: "Inter, sans-serif" }}>Download</button>
                             </div>
                           ) : <span style={{ color: "#cbd5e1", fontSize: "12px" }}>—</span>}
                         </td>
                         <td style={{ padding: "13px 12px", borderBottom: "1px solid #f1f5f9", textAlign: "center" }}>
                           {app.hasRecommendationLetter ? (
                             <div style={{ display: "flex", gap: "4px", justifyContent: "center" }}>
-                              <button onClick={() => handleView(app.id, "recommendation")} style={{ border: "none", background: "#eff6ff", color: "#2563eb", padding: "4px 8px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", fontFamily: "Inter, sans-serif" }}>View</button>
-                              <button onClick={() => handleDownload(app.id, "recommendation", app.recommendationOriginalName)} style={{ border: "none", background: "#f0fdf4", color: "#16a34a", padding: "4px 8px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", fontFamily: "Inter, sans-serif" }}>Download</button>
+                              <button type="button" aria-label={`View recommendation letter for ${app.candidateName || "candidate"}`} onClick={() => handleView(app.id, "recommendation")} style={{ border: "none", background: "#eff6ff", color: "#2563eb", padding: "4px 8px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", fontFamily: "Inter, sans-serif" }}>View</button>
+                              <button type="button" aria-label={`Download recommendation letter for ${app.candidateName || "candidate"}`} onClick={() => handleDownload(app.id, "recommendation", app.recommendationOriginalName)} style={{ border: "none", background: "#f0fdf4", color: "#16a34a", padding: "4px 8px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", fontFamily: "Inter, sans-serif" }}>Download</button>
                             </div>
                           ) : <span style={{ color: "#cbd5e1", fontSize: "12px" }}>—</span>}
                         </td>
                         <td style={{ padding: "13px 12px", borderBottom: "1px solid #f1f5f9", textAlign: "center" }}>
-                          <button onClick={() => handleDeleteApplication(app.id)} style={{ border: "none", background: "#fef2f2", color: "#dc2626", padding: "5px 10px", borderRadius: "7px", cursor: "pointer", fontSize: "11px", fontFamily: "Inter, sans-serif" }}>Delete</button>
+                          <button type="button" aria-label={`Delete application from ${app.candidateName || "candidate"}`} onClick={() => handleDeleteApplication(app.id)} style={{ border: "none", background: "#fef2f2", color: "#dc2626", padding: "5px 10px", borderRadius: "7px", cursor: "pointer", fontSize: "11px", fontFamily: "Inter, sans-serif" }}>Delete</button>
                         </td>
                       </tr>
                     ))}
@@ -613,14 +633,14 @@ function EmployerDashboard() {
 
         {/* PROFILE */}
         {activeTab === "PROFILE" && (
-          <div style={{ display: "grid", gridTemplateColumns: "240px 1fr", gap: "20px", alignItems: "start" }}>
+          <div className="dashboard-profile-layout" style={{ display: "grid", gridTemplateColumns: "240px 1fr", gap: "20px", alignItems: "start" }}>
             <div style={{ background: "#ffffff", borderRadius: "20px", padding: "24px", border: "1px solid #e8edf5", boxShadow: "0 1px 8px rgba(15,23,42,0.05)", display: "flex", flexDirection: "column", alignItems: "center", gap: "14px" }}>
               <p style={{ margin: 0, fontSize: "12px", fontWeight: "500", color: "#475569", textTransform: "uppercase", letterSpacing: "0.4px", alignSelf: "flex-start" }}>Company Logo</p>
               <div style={{ width: "160px", height: "160px", borderRadius: "16px", background: "#f8fafc", border: "1.5px dashed #cbd5e1", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
                 {getLogoSrc() ? (
-                  <img src={getLogoSrc()} alt="Logo" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+                  <img src={getLogoSrc()} alt={`${employerProfile.companyName || "Company"} logo`} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
                 ) : (
-                  <p style={{ color: "#94a3b8", fontSize: "12px", textAlign: "center", margin: 0 }}>No logo uploaded</p>
+                  <p style={{ color: "#64748b", fontSize: "12px", textAlign: "center", margin: 0 }}>No logo uploaded</p>
                 )}
               </div>
               <button
@@ -628,17 +648,19 @@ function EmployerDashboard() {
                 data-voice-control="company_logo"
                 type="button"
                 onClick={() => logoInputRef.current?.click()}
+                aria-describedby="company-logo-help"
                 style={{ border: "none", background: "#2563eb", color: "#fff", padding: "9px 16px", borderRadius: "9px", cursor: "pointer", fontSize: "12px", fontWeight: "500", fontFamily: "Inter, sans-serif" }}
               >
                 Upload Logo
               </button>
               <input ref={logoInputRef} type="file" accept="image/png,image/jpeg,image/webp,image/gif" style={{ display: "none" }} onChange={handleLogoChange} tabIndex={-1} aria-hidden="true" />
-              <p style={{ margin: 0, fontSize: "11px", color: "#94a3b8", textAlign: "center" }}>PNG, JPG, WebP or GIF. Max 3MB.</p>
+              <p id="company-logo-help" style={{ margin: 0, fontSize: "11px", color: "#64748b", textAlign: "center" }}>PNG, JPG, WebP or GIF. Max 3MB.</p>
+              {logoFile && <p role="status" style={{ margin: 0, fontSize: "11px", color: "#166534", textAlign: "center", overflowWrap: "anywhere" }}>Selected: {logoFile.name}</p>}
             </div>
 
             <div style={{ background: "#ffffff", borderRadius: "20px", padding: "24px", border: "1px solid #e8edf5", boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}>
-              {loadingProfile && <p style={{ color: "#94a3b8", fontSize: "13px" }}>Loading...</p>}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0 20px" }}>
+              {loadingProfile && <p style={{ color: "#64748b", fontSize: "13px" }}>Loading...</p>}
+              <div className="dashboard-form-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0 20px" }}>
                 {[{ name: "companyName", label: "Company Name" }, { name: "industry", label: "Industry" }, { name: "location", label: "Location" }, { name: "website", label: "Website" }].map(({ name, label }) => (
                   <Field key={name} label={label}>
                     <input className="input-field" style={inputStyle} name={name} value={employerProfile[name]} onChange={handleProfileChange} />
@@ -667,7 +689,7 @@ function EmployerDashboard() {
           <div ref={candidateDialogRef} role="dialog" aria-modal="true" aria-labelledby="candidate-profile-dialog-title" tabIndex={-1} style={{ width: "100%", maxWidth: "500px", background: "#fff", borderRadius: "18px", padding: "28px", boxShadow: "0 20px 60px rgba(15,23,42,0.2)", position: "relative" }}>
             <button type="button" aria-label="Close candidate profile" onClick={() => setSelectedProfile(null)} style={{ position: "absolute", top: "14px", right: "16px", width: "30px", height: "30px", borderRadius: "999px", border: "none", background: "#f1f5f9", color: "#64748b", fontSize: "18px", cursor: "pointer" }}>×</button>
             <h2 id="candidate-profile-dialog-title" style={{ margin: "0 0 4px", fontSize: "18px", fontWeight: "600", color: "#0f172a" }}>Candidate Profile</h2>
-            <p style={{ margin: "0 0 18px", fontSize: "13px", color: "#94a3b8" }}>Detailed candidate information</p>
+            <p style={{ margin: "0 0 18px", fontSize: "13px", color: "#64748b" }}>Detailed candidate information</p>
             <div style={{ background: "#f8fafc", border: "1px solid #e8edf5", borderRadius: "12px", padding: "14px", marginBottom: "16px" }}>
               <p style={{ margin: "0 0 4px", fontSize: "14px", fontWeight: "600", color: "#0f172a" }}>{selectedProfile.name || "Not specified"}</p>
               <p style={{ margin: 0, fontSize: "13px", color: "#64748b" }}>{selectedProfile.email || "Not specified"}</p>
@@ -681,7 +703,7 @@ function EmployerDashboard() {
                   <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
                     {items.map((item) => <span key={item} style={{ ...chipStyle, padding: "4px 10px", borderRadius: "999px", fontSize: "12px", fontWeight: "400" }}>{item}</span>)}
                   </div>
-                ) : <p style={{ margin: 0, fontSize: "13px", color: "#94a3b8" }}>{empty}</p>}
+                ) : <p style={{ margin: 0, fontSize: "13px", color: "#64748b" }}>{empty}</p>}
               </div>
             ))}
           </div>

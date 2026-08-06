@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\ApplicationOutcomeEvent;
 use App\Entity\JobApplication;
 use App\Entity\User;
 use App\Service\ApplicationDocumentStorage;
@@ -12,6 +13,8 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
 
 class EmployerApplicationController extends AbstractController
@@ -137,7 +140,8 @@ class EmployerApplicationController extends AbstractController
         int $id,
         Request $request,
         EntityManagerInterface $entityManager,
-        JWTEncoderInterface $jwtEncoder
+        JWTEncoderInterface $jwtEncoder,
+        MailerInterface $mailer
     ): JsonResponse {
         $employerCheck = $this->verifyEmployer($request, $jwtEncoder);
 
@@ -170,12 +174,53 @@ class EmployerApplicationController extends AbstractController
             return $this->json(['message' => 'Invalid status.'], 400);
         }
 
+        $previousStatus = $application->getStatus();
+        if ($previousStatus === $status) {
+            return $this->json([
+                'message' => 'Application already has this status.',
+                'status' => $status,
+                'notificationSent' => false,
+                'statusChanged' => false,
+            ]);
+        }
+
         $application->setStatus($status);
+        $outcome = (new ApplicationOutcomeEvent())
+            ->setApplication($application)
+            ->setActor($employer)
+            ->setPreviousStatus($previousStatus)
+            ->setNewStatus($status)
+            ->setNotificationStatus('pending');
+        $entityManager->persist($outcome);
+        $entityManager->flush();
+
+        $notificationSent = false;
+        $candidate = $application->getCandidate();
+        if ($candidate instanceof User && $candidate->getEmail()) {
+            try {
+                $jobTitle = $application->getJobPost()?->getJobDefinition()?->getName() ?? 'your job application';
+                $readableStatus = str_replace('_', ' ', $status);
+                $mailer->send(
+                    (new Email())
+                        ->from($_ENV['MAILER_FROM'] ?? 'inclusive.web.platform@outlook.com')
+                        ->to((string) $candidate->getEmail())
+                        ->subject('Your application status was updated')
+                        ->text("Hello {$candidate->getUsername()},\n\nYour application for {$jobTitle} is now {$readableStatus}.\n\nSign in to review your applications.")
+                );
+                $notificationSent = true;
+            } catch (\Throwable) {
+                // The outcome remains saved when the external mail service is unavailable.
+            }
+        }
+
+        $outcome->setNotificationStatus($notificationSent ? 'sent' : 'failed');
         $entityManager->flush();
 
         return $this->json([
             'message' => 'Application status updated successfully.',
             'status' => $application->getStatus(),
+            'notificationSent' => $notificationSent,
+            'statusChanged' => true,
         ]);
     }
 

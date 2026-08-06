@@ -137,11 +137,18 @@ docker compose -f backend\compose.yaml run --rm scoring-engine python -m unittes
 - [Candidate verification workflow](docs/CANDIDATE_VERIFICATION.md)
 - [Authentication and route authorization](docs/AUTHORIZATION_SECURITY.md)
 - [Consent, private storage, and privacy controls](docs/PRIVACY_CONTROLS.md)
+- [Outcome logging and accessible notifications](docs/OUTCOME_LOGGING_AND_ACCESSIBLE_NOTIFICATIONS.md)
 - [Scoring engine specification](docs/scoring-engine-technical-specification.md)
 - [Voice navigation specification](docs/voice-navigation-technical-specification.md)
 - [Keyboard navigation test plan](docs/keyboard-navigation-test-plan.md)
 - [Responsive and WCAG 2.1 AA baseline audit](docs/wcag-audit/BASELINE_AUDIT.md)
 - [WCAG baseline issue matrix](docs/wcag-audit/ISSUE_MATRIX.md)
+- [Responsive foundation implementation](docs/wcag-audit/RESPONSIVE_FOUNDATION.md)
+- [Public and authentication accessibility review](docs/wcag-audit/PUBLIC_AUTHENTICATION_ACCESSIBILITY.md)
+- [Candidate experience accessibility review](docs/wcag-audit/CANDIDATE_EXPERIENCE_ACCESSIBILITY.md)
+- [Management dashboards accessibility review](docs/wcag-audit/MANAGEMENT_DASHBOARDS_ACCESSIBILITY.md)
+- [Shared WCAG 2.1 AA corrections](docs/wcag-audit/SHARED_WCAG_CORRECTIONS.md)
+- [WCAG 2.1 AA final audit report and retest requirements](docs/wcag-audit/WCAG_2_1_AA_FINAL_AUDIT_REPORT.md)
 - [Frontend accessibility revamp](docs/frontend-revamp.md)
 
 ## Important operational notes

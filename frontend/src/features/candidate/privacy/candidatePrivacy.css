@@ -8,5 +8,13 @@
 .candidate-privacy__success { padding: 12px; border-radius: 8px; color: #166534; background: #dcfce7; }
 .candidate-privacy__delete { margin-top: 24px; padding: 20px; border: 2px solid #fecaca; border-radius: 12px; background: #fff7f7; }
 .candidate-privacy__delete label { display: grid; gap: 6px; max-width: 430px; margin: 12px 0; font-weight: 600; }
-.candidate-privacy__delete input { min-height: 44px; padding: 8px 10px; border: 1px solid #94a3b8; border-radius: 8px; }
+.candidate-privacy__delete input { min-height: 44px; padding: 8px 10px; border: 1px solid #64748b; border-radius: 8px; }
 .candidate-privacy__delete button { background: #b91c1c; }
+.candidate-privacy :is(p, li, span, a) { overflow-wrap: anywhere; }
+.candidate-privacy__delete input[aria-invalid="true"] { border-color: #b91c1c; box-shadow: 0 0 0 1px #b91c1c; }
+@media (max-width: 620px) {
+  .candidate-privacy { padding: 18px; border-radius: 14px; }
+  .candidate-privacy__grid { grid-template-columns: minmax(0, 1fr); }
+  .candidate-privacy button { width: 100%; }
+  .candidate-privacy__delete { padding: 16px; }
+}

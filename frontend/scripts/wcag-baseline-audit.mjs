@@ -158,17 +158,21 @@ async function inspectKeyboard(page) {
 }
 
 async function main() {
-  const tokens = {};
-  for (const [role, email] of Object.entries(roleEmails)) tokens[role] = await login(email);
-  if (process.env.WCAG_CANDIDATE_TOKEN) tokens.candidate = process.env.WCAG_CANDIDATE_TOKEN;
-
-  const browser = await chromium.launch({ executablePath: EDGE_PATH, headless: true });
-  const results = [];
   const routePool = INCLUDE_DASHBOARD_STATES ? dashboardStateRoutes : routes;
   const selectedRoutes = ROUTE_FILTER.length ? routePool.filter((route) => ROUTE_FILTER.includes(route.path)) : routePool;
   const selectedScenarios = SCENARIO_FILTER.length
     ? scenarios.filter((scenario) => SCENARIO_FILTER.includes(scenario.name))
     : scenarios;
+  const tokens = {};
+  const requiredRoles = [...new Set(selectedRoutes.map((route) => route.role).filter(Boolean))];
+  for (const role of requiredRoles) {
+    tokens[role] = role === "candidate" && process.env.WCAG_CANDIDATE_TOKEN
+      ? process.env.WCAG_CANDIDATE_TOKEN
+      : await login(roleEmails[role]);
+  }
+
+  const browser = await chromium.launch({ executablePath: EDGE_PATH, headless: true });
+  const results = [];
   try {
     for (const route of selectedRoutes) {
       for (const scenario of selectedScenarios) {

@@ -219,6 +219,12 @@ final class VerifierController extends AbstractController
             ->setDocumentRetentionUntil(
                 $reviewedAt->add(new \DateInterval('P' . PrivacyPolicy::CARD_RETENTION_DAYS_AFTER_REVIEW . 'D'))
             );
+        $entityManager->persist(
+            (new CandidateVerificationAccessEvent())
+                ->setVerificationRequest($verification)
+                ->setActor($actor)
+                ->setAction('decision_' . $status)
+        );
         $entityManager->flush();
 
         $candidate = $verification->getCandidate();

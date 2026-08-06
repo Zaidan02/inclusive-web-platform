@@ -743,6 +743,7 @@
   font-size: 24px;
 }
 
+.reset-success-card h2,
 .reset-success-card h3 {
   margin: 0 0 12px;
   color: #1d2b4c;
@@ -1573,4 +1574,60 @@
 .privacy-consent-option a {
   color: #075bc7;
   font-weight: 600;
+}
+
+/* Accessible authentication form foundation */
+.account-type-fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.account-type-fieldset legend {
+  margin-bottom: 8px;
+  color: #314364;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.account-type-fieldset .account-type-options { margin-bottom: 16px; }
+
+.auth-input::placeholder { color: #64748b; }
+
+.password-toggle {
+  width: 40px;
+  height: 40px;
+  right: 7px;
+}
+
+.strength-label {
+  min-width: 88px;
+  color: #334155 !important;
+}
+
+.hint-pill {
+  color: #475569;
+  border-color: #cbd5e1;
+  background: #f1f5f9;
+}
+
+.hint-pill--valid {
+  color: #047857;
+  border-color: #86efac;
+  background: #ecfdf5;
+}
+
+.auth-error:focus,
+.auth-success:focus,
+.reset-success-card:focus {
+  scroll-margin-block: 24px;
+}
+
+@media (max-width: 520px) {
+  .signin-password-label-row {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+  }
 }

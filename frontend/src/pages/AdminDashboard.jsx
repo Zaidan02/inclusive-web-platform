@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   getAdminApplications,
@@ -7,6 +7,7 @@ import {
 import { getToken, logout } from "../services/authService";
 import { API_BASE_URL } from "../config";
 import useDialogFocus from "../hooks/useDialogFocus";
+import AccessibleNotice from "../components/accessibility/AccessibleNotice";
 
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -87,6 +88,7 @@ function AdminDashboard() {
   const [showProfileApplications, setShowProfileApplications] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
   const [verificationFilter, setVerificationFilter] = useState("");
@@ -103,6 +105,9 @@ function AdminDashboard() {
   const [catalogueImporting, setCatalogueImporting] = useState(false);
   const [catalogueImportResult, setCatalogueImportResult] = useState(null);
   const catalogueInputRef = useRef(null);
+  const messageRef = useRef(null);
+  const errorRef = useRef(null);
+  const voiceActionHandlerRef = useRef(null);
   const anyDialogOpen = Boolean(selectedProfile || userToEdit || userToArchive || userToDelete);
   const closeActiveDialog = () => {
     setSelectedProfile(null);
@@ -118,7 +123,7 @@ function AdminDashboard() {
   const isUserProfilesView = activeTab === "USER_PROFILES";
   const isApplicationsView = activeTab === "APPLICATIONS";
 
-  async function fetchUsers(tab = activeTab) {
+  const fetchUsers = useCallback(async (tab) => {
     try {
       setLoading(true); setError("");
       const token = getToken();
@@ -131,9 +136,9 @@ function AdminDashboard() {
       if (!res.ok) throw new Error(data.message || "Failed to load users.");
       setUsers(data.users || []);
     } catch (err) { setError(err.message); } finally { setLoading(false); }
-  }
+  }, [navigate]);
 
-  async function fetchCandidateProfiles() {
+  const fetchCandidateProfiles = useCallback(async () => {
     try {
       setLoading(true); setError("");
       const token = getToken();
@@ -143,15 +148,15 @@ function AdminDashboard() {
       if (!res.ok) throw new Error(data.message || "Failed to load profiles.");
       setCandidateProfiles(data.profiles || []);
     } catch (err) { setError(err.message); } finally { setLoading(false); }
-  }
+  }, [navigate]);
 
-  async function fetchAdminApplications() {
+  const fetchAdminApplications = useCallback(async () => {
     try {
       setLoading(true); setError("");
       const data = await getAdminApplications();
       setAdminApplications(data.applications || []);
     } catch (err) { setError(err.message); } finally { setLoading(false); }
-  }
+  }, []);
 
   useEffect(() => {
     const requestedTab = location.state?.voiceTab;
@@ -163,10 +168,10 @@ function AdminDashboard() {
     if (activeTab === "USER_PROFILES") { fetchCandidateProfiles(); return; }
     if (activeTab === "APPLICATIONS") { fetchAdminApplications(); return; }
     fetchUsers(activeTab);
-  }, [activeTab]);
+  }, [activeTab, fetchAdminApplications, fetchCandidateProfiles, fetchUsers]);
 
   function handleLogout() { logout(); navigate("/signin"); }
-  function handleTabChange(tab) { setActiveTab(tab); setSearchTerm(""); setRoleFilter(""); setVerificationFilter(""); setError(""); setSelectedProfile(null); setShowProfileApplications(false); }
+  function handleTabChange(tab) { setActiveTab(tab); setSearchTerm(""); setRoleFilter(""); setVerificationFilter(""); setError(""); setMessage(""); setSelectedProfile(null); setShowProfileApplications(false); }
 
   function openEditModal(user) {
     setUserToEdit(user);
@@ -194,8 +199,8 @@ function AdminDashboard() {
       setUserToEdit(null);
       setEditFormData({ username: "", email: "", password: "" });
       setShowPasswordField(false);
-      if (data.emailVerificationRequired) alert("User updated. New verification email sent.");
-    } catch (err) { alert(err.message); } finally { setEditingUser(false); setActionLoadingId(null); }
+      setMessage(data.emailVerificationRequired ? "User updated. A new verification email was sent." : "User updated.");
+    } catch (err) { setError(err.message); } finally { setEditingUser(false); setActionLoadingId(null); }
   }
 
   async function handleArchiveUser(userOverride = null) {
@@ -210,7 +215,8 @@ function AdminDashboard() {
       if (!res.ok) throw new Error(data.message || "Failed to archive user.");
       setUsers((prev) => prev.filter((u) => u.id !== targetUser.id));
       setUserToArchive(null);
-    } catch (err) { alert(err.message); } finally { setArchivingUser(false); setActionLoadingId(null); }
+      setMessage(`${targetUser.username} was archived.`);
+    } catch (err) { setError(err.message); } finally { setArchivingUser(false); setActionLoadingId(null); }
   }
 
   async function handleRestoreUser(user) {
@@ -222,7 +228,8 @@ function AdminDashboard() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to restore user.");
       setUsers((prev) => prev.filter((u) => u.id !== user.id));
-    } catch (err) { alert(err.message); } finally { setActionLoadingId(null); }
+      setMessage(`${user.username} was restored.`);
+    } catch (err) { setError(err.message); } finally { setActionLoadingId(null); }
   }
 
   async function handleDeleteUser(userOverride = null) {
@@ -237,7 +244,8 @@ function AdminDashboard() {
       if (!res.ok) throw new Error(data.message || "Failed to delete user.");
       setUsers((prev) => prev.filter((u) => u.id !== targetUser.id));
       setUserToDelete(null);
-    } catch (err) { alert(err.message); } finally { setDeletingUser(false); }
+      setMessage(`${targetUser.username} was deleted.`);
+    } catch (err) { setError(err.message); } finally { setDeletingUser(false); }
   }
 
   function getMainRole(user) {
@@ -292,8 +300,7 @@ function AdminDashboard() {
     }
   }
 
-  useEffect(() => {
-    function handleVoiceAction(event) {
+  voiceActionHandlerRef.current = (event) => {
       const action = event.detail.action;
       if (!action) return;
       const respond = (feedback) => {
@@ -364,21 +371,26 @@ function AdminDashboard() {
         else return;
         respond(`Activated ${action.label}.`);
       }
+  };
+
+  useEffect(() => {
+    function handleVoiceAction(event) {
+      voiceActionHandlerRef.current?.(event);
     }
     window.addEventListener("join:voice-action", handleVoiceAction);
     return () => window.removeEventListener("join:voice-action", handleVoiceAction);
-  }, [adminApplications, candidateProfiles, editFormData, selectedProfile, showProfileApplications, userToEdit, users]);
+  }, []);
 
   function renderApplicationFileButtons(application, type) {
     const hasFile = type === "application" ? application.hasApplicationDocument : application.hasRecommendationLetter;
     const label = type === "application" ? application.applicationOriginalName || "Application" : application.recommendationOriginalName || "Recommendation";
-    if (!hasFile) return <span style={{ color: "#cbd5e1", fontSize: "12px" }}>—</span>;
+    if (!hasFile) return <span aria-label={`No ${type} document`} style={{ color: "#cbd5e1", fontSize: "12px" }}>—</span>;
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "4px", alignItems: "center" }}>
         <span style={{ fontSize: "11px", color: "#64748b", maxWidth: "100px", wordBreak: "break-word", textAlign: "center", lineHeight: "1.3" }}>{label}</span>
         <div style={{ display: "flex", gap: "4px" }}>
-          <button type="button" onClick={() => openAdminApplicationFile(application.id, type, false).catch((fileError) => setError(fileError.message))} style={{ border: 0, background: "#eff6ff", color: "#1d4ed8", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", fontWeight: "500", cursor: "pointer" }}>View</button>
-          <button type="button" onClick={() => openAdminApplicationFile(application.id, type, true).catch((fileError) => setError(fileError.message))} style={{ border: 0, background: "#f0fdf4", color: "#16a34a", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", fontWeight: "500", cursor: "pointer" }}>Download</button>
+          <button type="button" aria-label={`View ${type} document for ${application.candidateName || "candidate"}`} onClick={() => openAdminApplicationFile(application.id, type, false).catch((fileError) => setError(fileError.message))} style={{ border: 0, background: "#eff6ff", color: "#1d4ed8", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", fontWeight: "500", cursor: "pointer" }}>View</button>
+          <button type="button" aria-label={`Download ${type} document for ${application.candidateName || "candidate"}`} onClick={() => openAdminApplicationFile(application.id, type, true).catch((fileError) => setError(fileError.message))} style={{ border: 0, background: "#f0fdf4", color: "#16a34a", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", fontWeight: "500", cursor: "pointer" }}>Download</button>
         </div>
       </div>
     );
@@ -399,7 +411,7 @@ function AdminDashboard() {
       <div>
         <div style={{ display: "flex", gap: "10px", marginBottom: "16px", alignItems: "center", flexWrap: "wrap" }}>
           <div style={{ position: "relative", flex: 1, minWidth: "200px" }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)" }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)" }}>
               <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
             </svg>
             <input aria-label="Search applications" type="search" placeholder="Search by candidate, job or status..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
@@ -413,10 +425,10 @@ function AdminDashboard() {
             <option value="accepted">Accepted</option>
             <option value="rejected">Rejected</option>
           </select>
-          <span style={{ fontSize: "12px", color: "#94a3b8", whiteSpace: "nowrap" }}>{filtered.length} application{filtered.length !== 1 ? "s" : ""}</span>
+          <span style={{ fontSize: "12px", color: "#64748b", whiteSpace: "nowrap" }}>{filtered.length} application{filtered.length !== 1 ? "s" : ""}</span>
         </div>
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <div className="dashboard-table-scroll" tabIndex={0} role="region" aria-label="Applications table">
+          <table className="dashboard-table dashboard-table--applications" style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ background: "#f8fafc" }}>
                 {["#", "Candidate", "Job", "Status", "Application", "Recommendation", "Applied"].map((h) => (
@@ -427,7 +439,7 @@ function AdminDashboard() {
             <tbody>
               {filtered.map((app, i) => (
                 <tr key={app.id || i} className="row-hover" style={{ transition: "background 0.15s" }}>
-                  <td style={{ ...S.td, color: "#94a3b8", width: "36px" }}>{i + 1}</td>
+                  <td style={{ ...S.td, color: "#64748b", width: "36px" }}>{i + 1}</td>
                   <td style={{ ...S.td, fontWeight: "500", color: "#0f172a" }}>{app.candidateName || "—"}</td>
                   <td style={{ ...S.td, color: "#475569" }}>{app.jobTitle || "—"}</td>
                   <td style={S.td}>
@@ -448,7 +460,7 @@ function AdminDashboard() {
                 <line x1="16" y1="13" x2="8" y2="13"/>
                 <line x1="16" y1="17" x2="8" y2="17"/>
               </svg>
-              <p style={{ color: "#94a3b8", fontSize: "13px", margin: 0, fontWeight: "400" }}>No applications found</p>
+              <p style={{ color: "#64748b", fontSize: "13px", margin: 0, fontWeight: "400" }}>No applications found</p>
             </div>
           )}
         </div>
@@ -506,7 +518,7 @@ function AdminDashboard() {
       <style>{globalStyles}</style>
 
       {/* SIDEBAR */}
-      <aside style={{ width: "220px", minWidth: "220px", background: "linear-gradient(180deg, #0f172a 0%, #0a1628 100%)", padding: "28px 16px", display: "flex", flexDirection: "column", boxSizing: "border-box", boxShadow: "4px 0 20px rgba(0,0,0,0.15)" }}>
+      <aside className="dashboard-sidebar" style={{ width: "220px", minWidth: "220px", background: "linear-gradient(180deg, #0f172a 0%, #0a1628 100%)", padding: "28px 16px", display: "flex", flexDirection: "column", boxSizing: "border-box", boxShadow: "4px 0 20px rgba(0,0,0,0.15)" }}>
         <div style={{ marginBottom: "36px", paddingLeft: "8px" }}>
           <p style={{ margin: 0, fontSize: "10px", fontWeight: "500", color: "#475569", textTransform: "uppercase", letterSpacing: "1px" }}>Platform</p>
           <h2 style={{ margin: "4px 0 0", fontSize: "18px", fontWeight: "600", color: "#ffffff", letterSpacing: "-0.3px" }}>Admin Console</h2>
@@ -527,7 +539,7 @@ function AdminDashboard() {
                 style={{
                   display: "flex", alignItems: "center", gap: "10px",
                   background: isActive ? "rgba(59,130,246,0.15)" : "transparent",
-                  color: isActive ? "#60a5fa" : "#94a3b8",
+                  color: isActive ? "#60a5fa" : "#64748b",
                   border: "none", textAlign: "left", padding: "10px 12px",
                   borderRadius: "10px", cursor: "pointer", fontSize: "13px",
                   fontWeight: isActive ? "600" : "400",
@@ -555,12 +567,12 @@ function AdminDashboard() {
       </aside>
 
       {/* MAIN */}
-      <main style={{ flex: 1, padding: "32px 36px", boxSizing: "border-box", overflowX: "hidden" }}>
+      <main className="dashboard-main" style={{ flex: 1, padding: "32px 36px", boxSizing: "border-box", overflowX: "hidden" }} aria-busy={loading || catalogueImporting}>
 
         {/* HEADER */}
-        <div style={{ marginBottom: "28px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div className="dashboard-page-header" style={{ marginBottom: "28px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
-          <p style={{ margin: "0 0 4px", fontSize: "12px", fontWeight: "400", color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.8px" }}>
+          <p style={{ margin: "0 0 4px", fontSize: "12px", fontWeight: "400", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.8px" }}>
             {navItems.find((n) => n.tab === activeTab)?.label}
           </p>
           <h1 style={{ margin: 0, fontSize: "26px", fontWeight: "600", color: "#0f172a", letterSpacing: "-0.4px" }}>
@@ -580,12 +592,15 @@ function AdminDashboard() {
               type="button"
               onClick={() => catalogueInputRef.current?.click()}
               disabled={catalogueImporting}
-              style={{ border: "none", borderRadius: "10px", background: catalogueImporting ? "#94a3b8" : "#2563eb", color: "white", padding: "10px 16px", fontSize: "13px", fontWeight: 600, cursor: catalogueImporting ? "wait" : "pointer" }}
+              style={{ border: "none", borderRadius: "10px", background: catalogueImporting ? "#64748b" : "#2563eb", color: "white", padding: "10px 16px", fontSize: "13px", fontWeight: 600, cursor: catalogueImporting ? "wait" : "pointer" }}
             >
               {catalogueImporting ? "Importing data sheets..." : "Add data sheets"}
             </button>
           </div>
         </div>
+
+        <AccessibleNotice noticeRef={messageRef} tone="success" message={message} />
+        <AccessibleNotice noticeRef={errorRef} tone="error" message={error} />
 
         {catalogueImportResult && (
           <div
@@ -613,13 +628,13 @@ function AdminDashboard() {
 
         {/* STATS */}
         {!isApplicationsView && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px", marginBottom: "24px" }}>
+          <div className="dashboard-stat-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px", marginBottom: "24px" }}>
             {statsCards.map((card) => (
               <div key={card.label} className="card-stat" style={{ background: "#ffffff", borderRadius: "16px", padding: "20px", border: "1px solid #e8edf5", boxShadow: "0 1px 8px rgba(15,23,42,0.05)", transition: "all 0.2s ease", cursor: "default", display: "flex", flexDirection: "column", alignItems: "center" }}>
                 <div style={{ width: "38px", height: "38px", borderRadius: "10px", background: card.bg, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "14px" }}>
                   {card.icon}
                 </div>
-                <p style={{ margin: "0 0 4px", fontSize: "12px", fontWeight: "400", color: "#94a3b8" }}>{card.label}</p>
+                <p style={{ margin: "0 0 4px", fontSize: "12px", fontWeight: "400", color: "#64748b" }}>{card.label}</p>
                 <p style={{ margin: 0, fontSize: "28px", fontWeight: "600", color: "#0f172a", letterSpacing: "-0.5px" }}>{card.value}</p>
               </div>
             ))}
@@ -627,13 +642,13 @@ function AdminDashboard() {
         )}
 
         {/* CONTENT */}
-        <div style={{ background: "#ffffff", borderRadius: "20px", padding: "24px", border: "1px solid #e8edf5", boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}>
+        <div className="dashboard-content-card" style={{ background: "#ffffff", borderRadius: "20px", padding: "24px", border: "1px solid #e8edf5", boxShadow: "0 1px 8px rgba(15,23,42,0.05)" }}>
 
           {/* SEARCH + FILTERS */}
           {!isApplicationsView && (
             <div style={{ display: "flex", gap: "10px", marginBottom: "20px", flexWrap: "wrap" }}>
               <div style={{ position: "relative", flex: 1, minWidth: "200px" }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)" }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)" }}>
                   <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
                 </svg>
                 <input aria-label={isUserProfilesView ? "Search user profiles" : "Search users"} type="search" placeholder={isUserProfilesView ? "Search profiles..." : "Search users..."} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
@@ -659,7 +674,7 @@ function AdminDashboard() {
                 </>
               )}
               {!isUserProfilesView && (
-                <span style={{ display: "flex", alignItems: "center", fontSize: "12px", color: "#94a3b8", fontWeight: "400", whiteSpace: "nowrap" }}>
+                <span style={{ display: "flex", alignItems: "center", fontSize: "12px", color: "#64748b", fontWeight: "400", whiteSpace: "nowrap" }}>
                   {isUserProfilesView ? filteredProfiles.length : filteredUsers.length} result{(isUserProfilesView ? filteredProfiles.length : filteredUsers.length) !== 1 ? "s" : ""}
                 </span>
               )}
@@ -674,8 +689,8 @@ function AdminDashboard() {
             </div>
           )}
           {!loading && !error && !isUserProfilesView && !isApplicationsView && (
-            <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <div className="dashboard-table-scroll" tabIndex={0} role="region" aria-label={isArchivedView ? "Archived users table" : "Users table"}>
+              <table className="dashboard-table dashboard-table--users" style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>
                   <tr style={{ background: "#f8fafc" }}>
                     {["#", "Username", "Email", "Role", "Verified", "Actions"].map((h) => (
@@ -686,7 +701,7 @@ function AdminDashboard() {
                 <tbody>
                   {filteredUsers.map((user, index) => (
                     <tr key={user.id} className="row-hover" style={{ transition: "background 0.15s" }}>
-                      <td style={{ ...S.td, textAlign: "left", width: "40px", color: "#94a3b8" }}>{index + 1}</td>
+                      <td style={{ ...S.td, textAlign: "left", width: "40px", color: "#64748b" }}>{index + 1}</td>
                       <td style={{ ...S.td, textAlign: "left", fontWeight: "500" }}>{user.username}</td>
                       <td style={{ ...S.td, textAlign: "left", color: "#64748b" }}>{user.email}</td>
                       <td style={{ ...S.td, textAlign: "left" }}>
@@ -701,14 +716,14 @@ function AdminDashboard() {
                         <div style={{ display: "flex", gap: "6px", justifyContent: "center" }}>
                           {!isArchivedView ? (
                             <>
-                              <button className="action-btn" onClick={() => openEditModal(user)} disabled={actionLoadingId === user.id} style={S.btnBlue}>Edit</button>
-                              <button className="action-btn" onClick={() => setUserToArchive(user)} disabled={actionLoadingId === user.id} style={S.btnGray}>Archive</button>
-                              <button className="action-btn" onClick={() => setUserToDelete(user)} style={S.btnRed}>Delete</button>
+                              <button type="button" className="action-btn" aria-label={`Edit ${user.username}`} onClick={() => openEditModal(user)} disabled={actionLoadingId === user.id} style={S.btnBlue}>Edit</button>
+                              <button type="button" className="action-btn" aria-label={`Archive ${user.username}`} onClick={() => setUserToArchive(user)} disabled={actionLoadingId === user.id} style={S.btnGray}>Archive</button>
+                              <button type="button" className="action-btn" aria-label={`Delete ${user.username}`} onClick={() => setUserToDelete(user)} style={S.btnRed}>Delete</button>
                             </>
                           ) : (
                             <>
-                              <button className="action-btn" onClick={() => handleRestoreUser(user)} disabled={actionLoadingId === user.id} style={S.btnGreen}>{actionLoadingId === user.id ? "..." : "Restore"}</button>
-                              <button className="action-btn" onClick={() => setUserToDelete(user)} style={S.btnRed}>Delete</button>
+                              <button type="button" className="action-btn" aria-label={`Restore ${user.username}`} onClick={() => handleRestoreUser(user)} disabled={actionLoadingId === user.id} style={S.btnGreen}>{actionLoadingId === user.id ? "..." : "Restore"}</button>
+                              <button type="button" className="action-btn" aria-label={`Delete ${user.username}`} onClick={() => setUserToDelete(user)} style={S.btnRed}>Delete</button>
                             </>
                           )}
                         </div>
@@ -730,7 +745,7 @@ function AdminDashboard() {
                     {profile.username.charAt(0).toUpperCase()}
                   </div>
                   <p style={{ margin: "0 0 3px", fontSize: "14px", fontWeight: "600", color: "#0f172a" }}>{profile.username}</p>
-                  <p style={{ margin: "0 0 12px", fontSize: "12px", color: "#94a3b8", wordBreak: "break-word" }}>{profile.email}</p>
+                  <p style={{ margin: "0 0 12px", fontSize: "12px", color: "#64748b", wordBreak: "break-word" }}>{profile.email}</p>
                   <div style={{ display: "flex", flexDirection: "column", gap: "5px", marginBottom: "14px" }}>
                     {[
                       `${profile.selectedDisabilities.length} disabilities`,
@@ -758,7 +773,7 @@ function AdminDashboard() {
           <div ref={adminDialogRef} role="dialog" aria-modal="true" aria-labelledby="admin-profile-dialog-title" tabIndex={-1} style={{ width: "100%", maxWidth: "860px", maxHeight: "88vh", background: "#ffffff", borderRadius: "20px", boxShadow: "0 20px 60px rgba(15,23,42,0.2)", overflow: "hidden", display: "flex", flexDirection: "column" }}>
             <div style={{ flex: 1, overflowY: "auto", padding: "28px" }}>
               <h2 id="admin-profile-dialog-title" style={{ margin: "0 0 4px", fontSize: "20px", fontWeight: "600", color: "#0f172a" }}>Candidate Profile</h2>
-              <p style={{ margin: "0 0 20px", fontSize: "13px", color: "#94a3b8" }}>Detailed candidate information</p>
+              <p style={{ margin: "0 0 20px", fontSize: "13px", color: "#64748b" }}>Detailed candidate information</p>
               <div style={{ display: "flex", alignItems: "center", gap: "14px", background: "#f8fafc", border: "1px solid #e8edf5", borderRadius: "14px", padding: "16px", marginBottom: "18px" }}>
                 <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "linear-gradient(135deg, #1d4ed8, #3b82f6)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "19px", fontWeight: "600", flexShrink: 0 }}>
                   {selectedProfile.username.charAt(0).toUpperCase()}
@@ -779,7 +794,7 @@ function AdminDashboard() {
                       <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
                         {chips.map((c) => <span key={c} style={{ ...chipStyle, padding: "4px 10px", borderRadius: "999px", fontSize: "12px", fontWeight: "400" }}>{c}</span>)}
                       </div>
-                    ) : <p style={{ margin: 0, fontSize: "13px", color: "#94a3b8" }}>{empty}</p>}
+                    ) : <p style={{ margin: 0, fontSize: "13px", color: "#64748b" }}>{empty}</p>}
                   </div>
                 ))}
                 <div style={{ background: "#f8fafc", border: "1px solid #e8edf5", borderRadius: "14px", padding: "16px" }}>
@@ -904,7 +919,7 @@ function AdminDashboard() {
 const S = {
   td: { padding: "14px 14px", borderBottom: "1px solid #f1f5f9", fontSize: "13px", verticalAlign: "middle", textAlign: "center", color: "#374151" },
   badge: { padding: "4px 10px", borderRadius: "999px", fontSize: "11px", fontWeight: "500", whiteSpace: "nowrap", display: "inline-block" },
-  empty: { color: "#94a3b8", textAlign: "center", padding: "32px", fontSize: "13px", fontWeight: "400" },
+  empty: { color: "#64748b", textAlign: "center", padding: "32px", fontSize: "13px", fontWeight: "400" },
   overlay: { position: "fixed", inset: 0, background: "rgba(15,23,42,0.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "20px", backdropFilter: "blur(3px)" },
   btnBlue: { border: "none", background: "#eff6ff", color: "#2563eb", padding: "6px 12px", borderRadius: "7px", cursor: "pointer", fontSize: "12px", fontWeight: "500", fontFamily: "Inter, sans-serif", transition: "filter 0.15s" },
   btnGray: { border: "none", background: "#f1f5f9", color: "#475569", padding: "6px 12px", borderRadius: "7px", cursor: "pointer", fontSize: "12px", fontWeight: "500", fontFamily: "Inter, sans-serif", transition: "filter 0.15s" },

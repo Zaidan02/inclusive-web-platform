@@ -38,4 +38,5 @@
 .ai-profile-builder__confirmed ul{display:grid;gap:6px;padding-left:20px}
 .ai-profile-builder__confirmed li span{margin-left:8px;color:#64748b;font-size:12px}
 .ai-profile-builder__confirmed>p{font-size:12px}
+.ai-profile-builder__sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(max-width:680px){.ai-profile-builder{padding:18px}.ai-profile-builder__heading{display:block}.ai-profile-builder__badge{display:inline-block;margin-top:10px}.ai-profile-builder__controls{grid-template-columns:1fr}.ai-profile-builder__recording{align-items:flex-start;flex-direction:column}}
