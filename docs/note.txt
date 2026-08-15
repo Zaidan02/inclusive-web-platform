@@ -1,0 +1,134 @@
+Current recommended order:
+
+/////////////////
+
+1.Complete the AI-assisted profile-building workflow. DONE
+
+/////////////////
+
+2.Add editable transcripts and French support. DONE
+
+/////////////////
+
+3.Resolve catalogue gaps and the missing-assessment scoring policy. DONE
+
+/////////////////
+
+4.Implement consent, secure storage and privacy controls. DONE
+
+/////////////////
+
+5.finish responsive design and the complete WCAG audit.
+This requirement means making the entire platform usable across different screen sizes and formally checking it against WCAG 2.1 Level AA.
+
+Responsive design includes:
+
+- Mobile, tablet, laptop, and large-screen layouts.
+- No hidden controls, overlapping panels, or cut-off text.
+- Reflow at 320 CSS pixels without unnecessary horizontal scrolling.
+- Support for 200% browser zoom and increased text spacing.
+- Responsive dashboards, tables, forms, dialogs, voice controls, and navigation.
+- Readable touch controls while preserving keyboard interaction.
+
+The complete WCAG audit covers all roles and pages:
+
+- Candidate, employer, verifier, and administrator dashboards.
+- Registration, login, profile building, applications, verification, privacy controls, and error states.
+- Keyboard navigation, visible focus, correct focus order, and no keyboard traps.
+- Screen-reader semantics, landmarks, headings, labels, instructions, and status announcements.
+- Alternative text for meaningful images.
+- Colour contrast: normally 4.5:1 for text and 3:1 for large text.
+- Forms with understandable validation and accessible error messages.
+- Accessible dialogs, file uploads, tables, tabs, and dynamic AI results.
+- Page language, consistent navigation, skip links, and semantic HTML.
+- Reduced-motion and orientation compatibility where applicable.
+
+“Complete audit” should combine automated and manual testing. Automated tools alone cannot prove WCAG compliance. We should use browser accessibility tools alongside keyboard-only testing, screen-reader testing such as NVDA, zoom/reflow testing, contrast checks, and manual testing of every important workflow.
+
+Definition of done:
+
+- Every primary workflow works with mouse, keyboard, and screen reader.
+- Mobile and 200% zoom layouts remain usable.
+- No unresolved WCAG 2.1 Level A or AA violations.
+- Automated scans have no serious accessibility errors.
+- Issues and corrections are recorded in an audit report.
+- Every corrected issue is manually retested.
+
+The keyboard work already completed is one part of this requirement, but responsive layouts, screen-reader behavior, contrast, form validation, dialogs, and formal evidence still need a full review.
+
+We’ll handle it in controlled phases so responsive fixes do not break the existing keyboard, voice, scoring, or account workflows.
+
+## Plan
+
+1. Baseline audit (DONE)
+
+- Inventory every route and important component.
+- Test widths: 320, 375, 768, 1024, and 1440 pixels.
+- Test 200% zoom, text spacing, landscape orientation, and keyboard navigation.
+- Run automated accessibility scans.
+- Create an issue matrix with WCAG criterion, severity, page, and required correction.
+
+2. Responsive foundation (DONE)
+
+- Standardize breakpoints, spacing, typography, containers, and buttons.
+- Fix overflowing navigation, tables, cards, dialogs, and forms.
+- Replace problematic fixed widths and inline layouts where necessary.
+- Ensure content reflows without unnecessary horizontal scrolling.
+
+3. Public and authentication pages (DONE)
+
+- Welcome, employers, privacy, voice help, signup, signin, and password reset.
+- Fix labels, headings, validation, contrast, focus order, and mobile layouts.
+
+4. Candidate experience (DONE)
+
+- Profile and AI transcript workflow.
+- Jobs, applications, dialogs, file uploads, and privacy controls.
+- Verify screen-reader announcements and responsive cards.
+
+5. Employer, verifier, and administrator dashboards (DONE)
+
+- Responsive navigation and complex forms.
+- Accessible tables, filters, tabs, dialogs, document controls, and status updates.
+- Ensure all management operations remain keyboard-accessible.
+
+6. Shared WCAG corrections
+
+- Colour contrast.
+- Alternative text.
+- Semantic headings and landmarks.
+- Accessible names and descriptions.
+- Focus management and visible focus.
+- Error identification and status announcements.
+- Reduced-motion support.
+- Valid ARIA and semantic HTML.
+
+7. Manual verification(DONE)
+
+- Keyboard-only testing of every primary workflow.
+- NVDA screen-reader testing.
+- Zoom, reflow, text-spacing, and orientation tests.
+- Chrome, Firefox, and Edge regression checks.
+- Mouse and voice-navigation regression testing.
+
+8. Final evidence
+
+- Produce a WCAG 2.1 AA audit report.
+- Record every issue, correction, and retest result.
+- Update the keyboard test plan and project documentation.
+- Keep any unresolved limitation clearly documented rather than making an unsupported compliance claim.
+
+We should start with the baseline audit and responsive foundation. After that, we’ll fix pages in this order: public/authentication → candidate → employer → verifier → administrator.
+
+
+/////////////////
+
+6.Add outcome logging and accessible notifications.
+
+/////////////////
+
+7.Add integration/E2E tests and performance measurements.
+
+/////////////////
+
+8.Produce the final standards compliance and requirements traceability tables.

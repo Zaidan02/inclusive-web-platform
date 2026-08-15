@@ -10,7 +10,6 @@ import useDialogFocus from "../hooks/useDialogFocus";
 import AccessibleNotice from "../components/accessibility/AccessibleNotice";
 
 const globalStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
   * { box-sizing: border-box; }
   body { margin: 0; }
   ::-webkit-scrollbar { width: 5px; height: 5px; }

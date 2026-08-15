@@ -1,0 +1,153 @@
+{
+  "generatedAt": "2026-08-10T10:46:30.916Z",
+  "apiBase": "http://127.0.0.1:8081/api",
+  "summary": {
+    "passed": 17,
+    "failed": 0,
+    "total": 17
+  },
+  "results": [
+    {
+      "name": "anonymous session is rejected",
+      "status": "passed",
+      "durationMs": 115.3,
+      "detail": {
+        "httpStatus": 401
+      }
+    },
+    {
+      "name": "public jobs catalogue is available",
+      "status": "passed",
+      "durationMs": 719.2,
+      "detail": {
+        "httpStatus": 200,
+        "recordCount": 24
+      }
+    },
+    {
+      "name": "public job-definitions catalogue is available",
+      "status": "passed",
+      "durationMs": 187.2,
+      "detail": {
+        "httpStatus": 200,
+        "recordCount": 3
+      }
+    },
+    {
+      "name": "candidate fixture authenticates and opens its session",
+      "status": "passed",
+      "durationMs": 841.8,
+      "detail": {
+        "httpStatus": 200,
+        "role": "ROLE_CANDIDATE"
+      }
+    },
+    {
+      "name": "employer fixture authenticates and opens its session",
+      "status": "passed",
+      "durationMs": 679.8,
+      "detail": {
+        "httpStatus": 200,
+        "role": "ROLE_EMPLOYER"
+      }
+    },
+    {
+      "name": "admin fixture authenticates and opens its session",
+      "status": "passed",
+      "durationMs": 537.3,
+      "detail": {
+        "httpStatus": 200,
+        "role": "ROLE_ADMIN"
+      }
+    },
+    {
+      "name": "verifier fixture authenticates and opens its session",
+      "status": "passed",
+      "durationMs": 519.5,
+      "detail": {
+        "httpStatus": 200,
+        "role": "ROLE_VERIFIER"
+      }
+    },
+    {
+      "name": "candidate can read /candidate/profile",
+      "status": "passed",
+      "durationMs": 125.6,
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "candidate can read /candidate/applications",
+      "status": "passed",
+      "durationMs": 140.5,
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "employer can read /employer/jobs",
+      "status": "passed",
+      "durationMs": 232.1,
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "employer can read /employer/applications",
+      "status": "passed",
+      "durationMs": 177,
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "admin can read /admin/users",
+      "status": "passed",
+      "durationMs": 164.2,
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "verifier can read /verifier/requests?status=all",
+      "status": "passed",
+      "durationMs": 297.9,
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "candidate is blocked from /admin/users",
+      "status": "passed",
+      "durationMs": 227.8,
+      "detail": {
+        "httpStatus": 403
+      }
+    },
+    {
+      "name": "candidate is blocked from /verifier/requests",
+      "status": "passed",
+      "durationMs": 215.6,
+      "detail": {
+        "httpStatus": 403
+      }
+    },
+    {
+      "name": "employer is blocked from /candidate/applications",
+      "status": "passed",
+      "durationMs": 80.9,
+      "detail": {
+        "httpStatus": 403
+      }
+    },
+    {
+      "name": "verifier is blocked from /employer/applications",
+      "status": "passed",
+      "durationMs": 50,
+      "detail": {
+        "httpStatus": 403
+      }
+    }
+  ]
+}

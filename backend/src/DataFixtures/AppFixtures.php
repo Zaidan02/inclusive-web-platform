@@ -158,7 +158,7 @@ final class AppFixtures extends Fixture
                         ->setWorkMode('On-site')
                         ->setDescription('A practical ' . $jobRecord['name'] . ' opportunity at ' . $companyProfile?->getCompanyName() . '. This seeded offer marks ' . $actualImportantTaskCount . ' catalogue tasks as important and demonstrates scoring with assistance ' . ($assistanceAvailable ? 'available.' : 'not available.'))
                         ->setApplicationDeadline(new \DateTimeImmutable('+6 months'))
-                        ->setCvRequired(true)
+                        ->setCvRequired(false)
                         ->setCoverLetterRequired(false)
                         ->setAssistanceAvailable($assistanceAvailable)
                         ->setStatus('published');

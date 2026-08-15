@@ -1,0 +1,174 @@
+{
+  "generatedAt": "2026-08-10T10:46:48.638Z",
+  "webBase": "http://127.0.0.1:5173",
+  "summary": {
+    "passed": 19,
+    "failed": 0,
+    "total": 19
+  },
+  "results": [
+    {
+      "name": "public route / renders semantic page structure",
+      "status": "passed",
+      "durationMs": 525.3,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/",
+        "title": "JoIn Hospitality"
+      }
+    },
+    {
+      "name": "public route /signin renders semantic page structure",
+      "status": "passed",
+      "durationMs": 314.3,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/signin",
+        "title": "Sign in | JoIn Hospitality"
+      }
+    },
+    {
+      "name": "public route /signup renders semantic page structure",
+      "status": "passed",
+      "durationMs": 319.4,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/signup",
+        "title": "Create account | JoIn Hospitality"
+      }
+    },
+    {
+      "name": "public route /forgot-password renders semantic page structure",
+      "status": "passed",
+      "durationMs": 277.4,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/forgot-password",
+        "title": "Forgot password | JoIn Hospitality"
+      }
+    },
+    {
+      "name": "public route /employers renders semantic page structure",
+      "status": "passed",
+      "durationMs": 302.8,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/employers",
+        "title": "For employers | JoIn Hospitality"
+      }
+    },
+    {
+      "name": "public route /voice-help renders semantic page structure",
+      "status": "passed",
+      "durationMs": 292.2,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/voice-help",
+        "title": "Voice navigation help | JoIn Hospitality"
+      }
+    },
+    {
+      "name": "public route /privacy renders semantic page structure",
+      "status": "passed",
+      "durationMs": 259.4,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/privacy",
+        "title": "Privacy notice | JoIn Hospitality"
+      }
+    },
+    {
+      "name": "anonymous visitor is redirected from /candidate",
+      "status": "passed",
+      "durationMs": 449.8,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/signin"
+      }
+    },
+    {
+      "name": "anonymous visitor is redirected from /employer",
+      "status": "passed",
+      "durationMs": 487.1,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/signin"
+      }
+    },
+    {
+      "name": "anonymous visitor is redirected from /admin",
+      "status": "passed",
+      "durationMs": 481.1,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/signin"
+      }
+    },
+    {
+      "name": "anonymous visitor is redirected from /verifier",
+      "status": "passed",
+      "durationMs": 456.3,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/signin"
+      }
+    },
+    {
+      "name": "sign-in validation identifies and focuses the first invalid field",
+      "status": "passed",
+      "durationMs": 594.6,
+      "detail": {
+        "focusedField": "email"
+      }
+    },
+    {
+      "name": "invalid credentials produce an accessible alert",
+      "status": "passed",
+      "durationMs": 929.4,
+      "detail": {
+        "alertText": "Invalid credentials."
+      }
+    },
+    {
+      "name": "candidate opens the authorized dashboard",
+      "status": "passed",
+      "durationMs": 2045.2,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/candidate",
+        "heading": "Find your best job match ✦"
+      }
+    },
+    {
+      "name": "employer opens the authorized dashboard",
+      "status": "passed",
+      "durationMs": 1737.4,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/employer",
+        "heading": "Post a Job"
+      }
+    },
+    {
+      "name": "admin opens the authorized dashboard",
+      "status": "passed",
+      "durationMs": 1515.6,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/admin",
+        "heading": "Users"
+      }
+    },
+    {
+      "name": "verifier opens the authorized dashboard",
+      "status": "passed",
+      "durationMs": 1608.5,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/verifier",
+        "heading": "Candidate verification"
+      }
+    },
+    {
+      "name": "wrong-role dashboard access redirects to the user's own dashboard",
+      "status": "passed",
+      "durationMs": 680.7,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/candidate"
+      }
+    },
+    {
+      "name": "keyboard entry exposes the skip link",
+      "status": "passed",
+      "durationMs": 531,
+      "detail": {
+        "firstTabStop": "Skip to main content"
+      }
+    }
+  ]
+}

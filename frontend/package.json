@@ -8,7 +8,12 @@
     "start": "vite --open",
     "build": "vite build",
     "preview": "vite preview",
-    "audit:wcag": "node scripts/wcag-baseline-audit.mjs"
+    "audit:wcag": "node scripts/wcag-baseline-audit.mjs",
+    "test:integration": "node scripts/integration-api.mjs",
+    "test:e2e": "node scripts/e2e.mjs",
+    "test:integration-e2e": "npm run test:integration && npm run test:e2e",
+    "test:performance": "npm run build && node scripts/performance-measurements.mjs",
+    "test:all": "npm run test:integration-e2e && npm run test:performance"
   },
   "dependencies": {
     "react": "^19.2.4",

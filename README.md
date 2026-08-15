@@ -117,6 +117,9 @@ The fixture verifier is `verifier@join.local` and uses the shared development pa
 cd frontend
 npm.cmd run build
 .\node_modules\.bin\eslint.cmd src
+npm.cmd run test:integration
+npm.cmd run test:e2e
+npm.cmd run test:performance
 
 # Backend and Python services, from backend
 cd ..\backend
@@ -138,6 +141,7 @@ docker compose -f backend\compose.yaml run --rm scoring-engine python -m unittes
 - [Authentication and route authorization](docs/AUTHORIZATION_SECURITY.md)
 - [Consent, private storage, and privacy controls](docs/PRIVACY_CONTROLS.md)
 - [Outcome logging and accessible notifications](docs/OUTCOME_LOGGING_AND_ACCESSIBLE_NOTIFICATIONS.md)
+- [Integration, E2E, and performance verification](docs/testing/INTEGRATION_E2E_PERFORMANCE.md)
 - [Scoring engine specification](docs/scoring-engine-technical-specification.md)
 - [Voice navigation specification](docs/voice-navigation-technical-specification.md)
 - [Keyboard navigation test plan](docs/keyboard-navigation-test-plan.md)
