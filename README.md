@@ -144,6 +144,7 @@ docker compose -f backend\compose.yaml run --rm scoring-engine python -m unittes
 - [Integration, E2E, and performance verification](docs/testing/INTEGRATION_E2E_PERFORMANCE.md)
 - [Scoring engine specification](docs/scoring-engine-technical-specification.md)
 - [Voice navigation specification](docs/voice-navigation-technical-specification.md)
+- [English, French, and Arabic frontend localization strategy](docs/MULTILINGUAL_FRONTEND_STRATEGY.md)
 - [Keyboard navigation test plan](docs/keyboard-navigation-test-plan.md)
 - [Responsive and WCAG 2.1 AA baseline audit](docs/wcag-audit/BASELINE_AUDIT.md)
 - [WCAG baseline issue matrix](docs/wcag-audit/ISSUE_MATRIX.md)
