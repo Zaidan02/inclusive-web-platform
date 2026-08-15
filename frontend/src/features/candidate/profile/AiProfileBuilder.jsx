@@ -1,28 +1,17 @@
 import { useEffect, useRef, useState } from "react";
+import { Trans, useTranslation } from "react-i18next";
 import {
   confirmAiProfileSuggestions,
   requestAiProfileSuggestions,
   transcribeProfileAudio,
 } from "../../../services/candidateProfileApi";
 import { PRIVACY_VERSION } from "../../../privacy";
+import { normalizeLocale, SUPPORTED_LOCALES } from "../../../i18n/locales";
 import "./aiProfileBuilder.css";
 
-const FIELD_LABELS = {
-  firstName: "First name",
-  lastName: "Last name",
-  phone: "Phone",
-  location: "Location",
-  about: "About you",
-};
-
-function confidenceLabel(value) {
-  if (value >= 0.8) return "High confidence";
-  if (value >= 0.55) return "Medium confidence";
-  return "Low confidence";
-}
-
 export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirmed }) {
-  const [language, setLanguage] = useState("en");
+  const { t, i18n } = useTranslation("profile");
+  const language = normalizeLocale(i18n.resolvedLanguage) || "en";
   const [narrative, setNarrative] = useState("");
   const [consent, setConsent] = useState(false);
   const [suggestions, setSuggestions] = useState(null);
@@ -38,6 +27,12 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
   const consentRef = useRef(null);
   const errorRef = useRef(null);
   const resultsHeadingRef = useRef(null);
+
+  function confidenceLabel(value) {
+    if (value >= 0.8) return t("confidence.high");
+    if (value >= 0.55) return t("confidence.medium");
+    return t("confidence.low");
+  }
 
   function showError(message, controlRef) {
     setError(message);
@@ -59,7 +54,7 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
     setError("");
     setStatus("");
     if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
-      showError("Audio recording is not supported by this browser. You can type your description instead.");
+      showError(t("errors.unsupported"));
       return;
     }
     try {
@@ -76,7 +71,7 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
         stopStream();
         if (!blob.size) {
           setBusy("");
-          setError("No audio was captured. Please try again or type your description.");
+          setError(t("errors.emptyAudio"));
           return;
         }
         try {
@@ -85,21 +80,21 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
           setNarrative((current) => current.trim()
             ? `${current.trim()}\n${data.transcript}`
             : data.transcript);
-          setStatus("Transcript added. Review and edit it before asking for suggestions.");
-        } catch (err) {
-          setError(err.message);
+          setStatus(t("status.transcriptAdded"));
+        } catch {
+          setError(t("errors.transcription"));
         } finally {
           setBusy("");
         }
       };
       recorder.start();
       setBusy("recording");
-      setStatus("Recording started. Press Stop recording when you finish.");
+      setStatus(t("status.recordingStarted"));
     } catch (err) {
       stopStream();
       setError(err.name === "NotAllowedError"
-        ? "Microphone permission was denied. Allow access or type your description."
-        : "The microphone could not be started. You can type your description instead.");
+        ? t("errors.permission")
+        : t("errors.microphone"));
     }
   }
 
@@ -107,23 +102,23 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
     if (recorderRef.current?.state === "recording") {
       recorderRef.current.stop();
       setBusy("transcribing");
-      setStatus("Recording stopped. Creating an editable transcript.");
+      setStatus(t("status.recordingStopped"));
     }
   }
 
   async function analyseNarrative() {
     if (!consent) {
-      showError("Confirm consent before sending your description to the AI profile assistant.", consentRef);
+      showError(t("errors.consent"), consentRef);
       return;
     }
     if (narrative.trim().length < 10) {
-      showError("Enter at least 10 characters about yourself.", narrativeRef);
+      showError(t("errors.narrative"), narrativeRef);
       return;
     }
     try {
       setBusy("analysing");
       setError("");
-      setStatus("Analysing your description. Nothing is saved at this stage.");
+      setStatus(t("status.analysing"));
       const data = await requestAiProfileSuggestions({
         narrative: narrative.trim(),
         language,
@@ -136,10 +131,10 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
       setFieldValues(Object.fromEntries(
         (next.profileFields || []).map((item, index) => [`field-${index}`, item.value]),
       ));
-      setStatus(data.message || "Suggestions are ready for review.");
+      setStatus(t("status.suggestionsReady"));
       requestAnimationFrame(() => resultsHeadingRef.current?.focus());
-    } catch (err) {
-      setError(err.message);
+    } catch {
+      setError(t("errors.analysis"));
       setStatus("");
     } finally {
       setBusy("");
@@ -166,7 +161,7 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
         note: item.note || item.evidence || "",
       }));
     if (!Object.keys(profileFields).length && !educationLevel && !disabilities.length && !taskSkills.length) {
-      showError("Select at least one suggestion to add to your profile.", resultsHeadingRef);
+      showError(t("errors.selection"), resultsHeadingRef);
       return;
     }
 
@@ -180,12 +175,12 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
         taskSkills,
         language,
       });
-      setStatus(data.message || "Confirmed suggestions were saved.");
+      setStatus(t("status.saved"));
       setSuggestions(null);
       setAccepted({});
       onProfileConfirmed?.(data.profile);
-    } catch (err) {
-      setError(err.message);
+    } catch {
+      setError(t("errors.save"));
     } finally {
       setBusy("");
     }
@@ -200,38 +195,33 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
     <section className="ai-profile-builder" aria-labelledby="ai-profile-title">
       <div className="ai-profile-builder__heading">
         <div>
-          <span className="ai-profile-builder__eyebrow">Optional AI assistance</span>
-          <h2 id="ai-profile-title">Describe yourself in your own words</h2>
-          <p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p>
+          <span className="ai-profile-builder__eyebrow">{t("eyebrow")}</span>
+          <h2 id="ai-profile-title">{t("title")}</h2>
+          <p>{t("intro")}</p>
         </div>
-        <span className="ai-profile-builder__badge">Human reviewed</span>
+        <span className="ai-profile-builder__badge">{t("humanReviewed")}</span>
       </div>
 
       <div className="ai-profile-builder__controls">
-        <label>
-          <span>Spoken and written language</span>
-          <select value={language} onChange={(event) => setLanguage(event.target.value)} disabled={Boolean(busy)}>
-            <option value="en">English</option>
-            <option value="fr">Français</option>
-            <option value="ar">العربية</option>
-          </select>
-        </label>
-        <div className="ai-profile-builder__recording" aria-label="Audio recording controls">
+        <div className="ai-profile-builder__language" aria-live="polite">
+          <span>{t("activeLanguage", { language: SUPPORTED_LOCALES[language].nativeName })}</span>
+        </div>
+        <div className="ai-profile-builder__recording" aria-label={t("recordingControls")}>
           {busy === "recording" ? (
             <button type="button" className="ai-profile-builder__stop" onClick={stopRecording}>
-              Stop recording
+              {t("stopRecording")}
             </button>
           ) : (
             <button type="button" onClick={startRecording} disabled={Boolean(busy)}>
-              Use microphone
+              {t("useMicrophone")}
             </button>
           )}
-          <span>Audio is transcribed, then discarded by this application.</span>
+          <span>{t("audioDisclosure")}</span>
         </div>
       </div>
 
       <label className="ai-profile-builder__narrative">
-        <span>Your editable description or transcript</span>
+        <span>{t("narrativeLabel")}</span>
         <textarea
           ref={narrativeRef}
           rows="7"
@@ -241,11 +231,11 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
           dir={language === "ar" ? "rtl" : "ltr"}
           value={narrative}
           onChange={(event) => setNarrative(event.target.value)}
-          placeholder="For example: where you live, your education, the tasks you can do, your experience, and your work goals."
+          placeholder={t("narrativePlaceholder")}
         />
-        <small id="ai-profile-narrative-count">{narrative.length} / 4000 characters</small>
+        <small id="ai-profile-narrative-count">{t("characterCount", { count: narrative.length })}</small>
       </label>
-      <p id="ai-profile-narrative-help" className="ai-profile-builder__sr-only">You can edit the transcript before requesting suggestions.</p>
+      <p id="ai-profile-narrative-help" className="ai-profile-builder__sr-only">{t("narrativeHelp")}</p>
 
       <label className="ai-profile-builder__consent">
         <input
@@ -256,7 +246,11 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
           aria-describedby="ai-profile-consent-help"
           onChange={(event) => setConsent(event.target.checked)}
         />
-        <span id="ai-profile-consent-help">I agree to send this text to the AI assistant to create reviewable profile suggestions. It will not change my profile automatically. See the <a href="/privacy" target="_blank" rel="noreferrer">privacy notice</a>.</span>
+        <span id="ai-profile-consent-help"><Trans
+          t={t}
+          i18nKey="consent"
+          components={{ privacyLink: <a href="/privacy" target="_blank" rel="noreferrer" /> }}
+        /></span>
       </label>
 
       <button
@@ -265,7 +259,7 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
         onClick={analyseNarrative}
         disabled={Boolean(busy)}
       >
-        {busy === "analysing" ? "Creating suggestions…" : "Create profile suggestions"}
+        {busy === "analysing" ? t("creating") : t("create")}
       </button>
 
       <div className="ai-profile-builder__messages" aria-live="polite" aria-atomic="true">
@@ -275,8 +269,8 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
 
       {suggestions && (
         <div className="ai-profile-builder__review">
-          <h3 ref={resultsHeadingRef} tabIndex="-1">Review {suggestionCount} suggestion{suggestionCount === 1 ? "" : "s"}</h3>
-          <p>Nothing below is selected. Check only information that is accurate and that you want to add.</p>
+          <h3 ref={resultsHeadingRef} tabIndex="-1">{t("review", { count: suggestionCount })}</h3>
+          <p>{t("reviewHelp")}</p>
 
           {(suggestions.profileFields || []).map((item, index) => {
             const key = `field-${index}`;
@@ -284,17 +278,17 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
               <div className="ai-profile-builder__suggestion" key={key}>
                 <label className="ai-profile-builder__choice">
                   <input type="checkbox" checked={Boolean(accepted[key])} onChange={() => toggleAccepted(key)} />
-                  <strong>Add {FIELD_LABELS[item.field] || item.field}</strong>
+                  <strong>{t("addField", { field: t(`fields.${item.field}`, { defaultValue: item.field }) })}</strong>
                 </label>
                 <label className="ai-profile-builder__edit">
-                  <span>Edit suggested value</span>
+                  <span>{t("editValue")}</span>
                   {item.field === "about" ? (
-                    <textarea rows="3" value={fieldValues[key] || ""} onChange={(event) => setFieldValues((current) => ({ ...current, [key]: event.target.value }))} />
+                    <textarea rows="3" dir="auto" value={fieldValues[key] || ""} onChange={(event) => setFieldValues((current) => ({ ...current, [key]: event.target.value }))} />
                   ) : (
-                    <input value={fieldValues[key] || ""} onChange={(event) => setFieldValues((current) => ({ ...current, [key]: event.target.value }))} />
+                    <input dir="auto" value={fieldValues[key] || ""} onChange={(event) => setFieldValues((current) => ({ ...current, [key]: event.target.value }))} />
                   )}
                 </label>
-                <small>{confidenceLabel(item.confidence)} · Evidence: {item.evidence}</small>
+                <small dir="auto">{t("confidenceEvidence", { confidence: confidenceLabel(item.confidence), evidence: item.evidence })}</small>
               </div>
             );
           })}
@@ -303,9 +297,9 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
             <div className="ai-profile-builder__suggestion">
               <label className="ai-profile-builder__choice">
                 <input type="checkbox" checked={Boolean(accepted.education)} onChange={() => toggleAccepted("education")} />
-                <strong>Add education: {suggestions.educationLevel.value.replaceAll("_", " ")}</strong>
+                <strong>{t("addEducation", { education: t(`education.${suggestions.educationLevel.value}`) })}</strong>
               </label>
-              <small>{confidenceLabel(suggestions.educationLevel.confidence)} · Evidence: {suggestions.educationLevel.evidence}</small>
+              <small dir="auto">{t("confidenceEvidence", { confidence: confidenceLabel(suggestions.educationLevel.confidence), evidence: suggestions.educationLevel.evidence })}</small>
             </div>
           )}
 
@@ -315,9 +309,9 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
               <div className="ai-profile-builder__suggestion" key={key}>
                 <label className="ai-profile-builder__choice">
                   <input type="checkbox" checked={Boolean(accepted[key])} onChange={() => toggleAccepted(key)} />
-                  <strong>Add disability selection: {item.name}</strong>
+                  <strong dir="auto">{t("addDisability", { name: item.name })}</strong>
                 </label>
-                <small>{confidenceLabel(item.confidence)} · Explicit statement: {item.evidence}</small>
+                <small dir="auto">{t("explicitEvidence", { confidence: confidenceLabel(item.confidence), evidence: item.evidence })}</small>
               </div>
             );
           })}
@@ -328,26 +322,26 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
               <div className="ai-profile-builder__suggestion" key={key}>
                 <label className="ai-profile-builder__choice">
                   <input type="checkbox" checked={Boolean(accepted[key])} onChange={() => toggleAccepted(key)} />
-                  <strong>Add task skill: {item.task_name || item.taskName}</strong>
+                  <strong dir="auto">{t("addTaskSkill", { name: item.task_name || item.taskName })}</strong>
                 </label>
-                <span className="ai-profile-builder__job">{item.job_name || item.jobName}</span>
-                <small>{confidenceLabel(item.confidence)} · Evidence: {item.evidence}</small>
+                <span className="ai-profile-builder__job" dir="auto">{item.job_name || item.jobName}</span>
+                <small dir="auto">{t("confidenceEvidence", { confidence: confidenceLabel(item.confidence), evidence: item.evidence })}</small>
               </div>
             );
           })}
 
           {(suggestions.unmappedStatements || []).length > 0 && (
             <div className="ai-profile-builder__unmapped">
-              <h4>Useful details that were not mapped automatically</h4>
-              <ul>{suggestions.unmappedStatements.map((item) => <li key={item}>{item}</li>)}</ul>
-              <p>You can add these details manually to “About you.”</p>
+              <h4>{t("unmappedTitle")}</h4>
+              <ul>{suggestions.unmappedStatements.map((item) => <li key={item} dir="auto">{item}</li>)}</ul>
+              <p>{t("unmappedHelp")}</p>
             </div>
           )}
 
-          {suggestionCount === 0 && <p>No safe catalogue-backed suggestions were found. Your text was not saved.</p>}
+          {suggestionCount === 0 && <p>{t("noSuggestions")}</p>}
           {suggestionCount > 0 && (
             <button type="button" className="ai-profile-builder__confirm" onClick={confirmSelected} disabled={Boolean(busy)}>
-              {busy === "saving" ? "Saving confirmed items…" : "Add selected suggestions to my profile"}
+              {busy === "saving" ? t("saving") : t("confirm")}
             </button>
           )}
         </div>
@@ -355,16 +349,16 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
 
       {(currentProfile.confirmedTaskSkills || []).length > 0 && (
         <div className="ai-profile-builder__confirmed">
-          <h3>Your confirmed task skills</h3>
+          <h3>{t("confirmedSkills")}</h3>
           <ul>
             {currentProfile.confirmedTaskSkills.map((skill) => (
               <li key={skill.taskId}>
-                <strong>{skill.taskName}</strong>
-                <span>{skill.jobName}</span>
+                <strong dir="auto">{skill.taskName}</strong>
+                <span dir="auto">{skill.jobName}</span>
               </li>
             ))}
           </ul>
-          <p>These details enrich your profile but do not change the current compatibility formula.</p>
+          <p>{t("scoringBoundary")}</p>
         </div>
       )}
     </section>

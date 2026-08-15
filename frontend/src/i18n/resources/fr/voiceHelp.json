@@ -1,0 +1,87 @@
+{
+  "back": "← Retour à JoIn",
+  "eyebrow": "Mini-guide de navigation vocale",
+  "title": "Parlez naturellement avec des phrases courtes et claires.",
+  "intro": "Vous n’avez pas besoin de mémoriser un dictionnaire. Commencez par les phrases ci-dessous ; des formulations proches sont également comprises. Si plusieurs destinations sûres correspondent, JoIn vous posera une courte question de clarification.",
+  "stepsLabel": "Fonctionnement de la navigation vocale",
+  "steps": [
+    { "title": "Choisissez votre langue", "text": "Choisissez l’anglais, le français ou l’arabe dans le sélecteur de langue de l’interface." },
+    { "title": "Formulez une demande", "text": "Utilisez une phrase courte et marquez une pause lorsque vous avez terminé." },
+    { "title": "Écoutez ou interrompez", "text": "Utilisez les contrôles visibles pendant la lecture ou le traitement." }
+  ],
+  "commandsLabel": "Commandes vocales disponibles",
+  "groups": [
+    { "title": "Questions sur la page actuelle", "commands": [
+      ["De quoi parle cette page ?", "Résumer le contenu lisible de la page actuelle"],
+      ["Que signifie ce score ?", "Expliquer le score à partir de l’explication visible"],
+      ["Quelle entreprise a publié cette offre ?", "Répondre à partir des détails affichés"],
+      ["Quelles informations dois-je saisir ?", "Décrire le formulaire et les instructions visibles"]
+    ]},
+    { "title": "Remplir les formulaires d’authentification", "commands": [
+      ["Définis mon e-mail sur name@example.com", "Remplir et mettre en évidence le champ e-mail"],
+      ["Définis mon nom d’utilisateur sur Fouad", "Remplir le nom d’utilisateur d’inscription"],
+      ["Choisis employeur", "Sélectionner le type de compte employeur"],
+      ["Connecte-moi", "Demander confirmation avant l’envoi du formulaire"],
+      ["Oui", "Confirmer l’envoi immédiatement en attente"]
+    ]},
+    { "title": "Actions du candidat", "commands": [
+      ["Calcule ma compatibilité avec les emplois", "Lancer la compatibilité depuis la vue Emplois"],
+      ["Ouvre le deuxième emploi correspondant", "Ouvrir un résultat chargé selon son rang"],
+      ["Affiche l’explication du deuxième résultat", "Développer les détails du score chargé"],
+      ["Ouvre l’emploi de glacier", "Ouvrir un emploi chargé par son titre"],
+      ["Définis mon niveau d’études sur lycée", "Modifier une sélection du profil"],
+      ["Sélectionne fauteuil roulant comme handicap", "Basculer une option de handicap enregistrée"],
+      ["Enregistre mon profil", "Enregistrer le brouillon actuel du profil"],
+      ["Filtre mes candidatures acceptées", "Modifier le filtre d’état des candidatures"],
+      ["Importe mon CV", "Sélectionner le contrôle de fichier local"],
+      ["Envoie ma candidature", "Demander confirmation avant l’envoi"]
+    ]},
+    { "title": "Actions de l’employeur", "commands": [
+      ["Sélectionne le poste de pâtissier", "Résoudre une définition d’emploi chargée"],
+      ["Sélectionne la tâche nettoyer les surfaces", "Basculer une tâche chargée"],
+      ["Définis l’aménagement sur oui", "Modifier une option d’offre enregistrée"],
+      ["Publie cet emploi", "Demander confirmation avant publication ou mise à jour"],
+      ["Modifie l’emploi de glacier", "Ouvrir un emploi employeur chargé pour modification"],
+      ["Supprime l’emploi de glacier", "Demander confirmation avant suppression"],
+      ["Accepte la candidature de Fouad", "Demander confirmation avant modification"],
+      ["Ouvre le profil candidat de Fouad", "Examiner un candidat chargé"]
+    ]},
+    { "title": "Actions de l’administrateur", "commands": [
+      ["Recherche les utilisateurs Fouad", "Filtrer la vue d’administration chargée"],
+      ["Modifie l’utilisateur candidate@join.local", "Ouvrir l’utilisateur dans la boîte de modification"],
+      ["Archive l’utilisateur candidate@join.local", "Demander confirmation avant archivage"],
+      ["Restaure l’utilisateur candidate@join.local", "Demander confirmation avant restauration"],
+      ["Supprime l’utilisateur candidate@join.local", "Demander confirmation avant suppression définitive"],
+      ["Ouvre le profil de candidate@join.local", "Ouvrir un profil candidat chargé"],
+      ["Définis le filtre de rôle sur employeur", "Filtrer les utilisateurs actifs chargés"]
+    ]},
+    { "title": "Se déplacer", "commands": [
+      ["Va à la page de connexion", "Ouvrir une page disponible"],
+      ["Reviens en arrière", "Revenir à la page précédente"],
+      ["Lis cette section", "Lire le contenu disponible"]
+    ]},
+    { "title": "Contrôler la conversation", "commands": [
+      ["Arrête de parler", "Interrompre le retour vocal"],
+      ["Descends un peu", "Descendre d’une partie limitée de l’écran"],
+      ["Remonte d’une page", "Remonter d’environ un écran"],
+      ["Va en haut", "Aller au début de la page"],
+      ["Mets l’écoute en pause", "Arrêter temporairement le microphone"],
+      ["Annule", "Abandonner la demande actuelle"],
+      ["Répète", "Réécouter la dernière réponse"]
+    ]},
+    { "title": "Contrôler le mode vocal", "commands": [
+      ["Aide", "Ouvrir ce guide de commandes"],
+      ["Désactive la navigation vocale", "Arrêter complètement le mode vocal"],
+      ["Bouton Reprendre", "Redémarrer après une pause"]
+    ]}
+  ],
+  "groundingTitle": "Les réponses reposent sur la page actuelle",
+  "groundingText": "JoIn peut résumer et expliquer le contenu lisible actuellement affiché. Il ne répond pas aux questions de culture générale et n’invente pas d’informations absentes de la page.",
+  "versionTitle": "Important pour cette version",
+  "versionText": "Lorsque l’écoute est en pause, le microphone est réellement arrêté et ne peut pas entendre « reprendre ». Utilisez le bouton Reprendre. Pendant la lecture ou le traitement, utilisez Arrêter la lecture ou Annuler.",
+  "followupTitle": "Réponses conversationnelles courtes",
+  "followupText": "Si JoIn vous propose un choix, vous pouvez répondre avec l’option, « la première », « oui », « non » ou « annuler » dans la langue sélectionnée. Seuls les six derniers échanges sont conservés temporairement dans cette session, puis effacés à l’arrêt du mode vocal.",
+  "formsTitle": "Les actions de formulaire restent des brouillons jusqu’à leur envoi",
+  "formsText": "JoIn relit les valeurs ordinaires et met en évidence le contrôle modifié pour vérification. Les mots de passe ne sont jamais lus à voix haute ni affichés dans les diagnostics. La connexion et la création de compte demandent toujours une confirmation séparée."
+}
+

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { clearToken } from "../services/tokenService";
 import AccessibleNotice from "../components/accessibility/AccessibleNotice";
@@ -11,20 +12,22 @@ import "../styles/verifierDashboard.css";
 
 const FILTERS = ["pending", "approved", "rejected", "all"];
 
-function formatBytes(bytes) {
-  if (!Number.isFinite(bytes)) return "Unknown size";
-  return bytes < 1024 * 1024
-    ? `${Math.max(1, Math.round(bytes / 1024))} KB`
-    : `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+function formatBytes(bytes, locale, t) {
+  if (!Number.isFinite(bytes)) return t("verifier.unknownSize");
+  const megabytes = bytes >= 1024 * 1024;
+  const value = megabytes ? bytes / (1024 * 1024) : Math.max(1, Math.round(bytes / 1024));
+  return `${new Intl.NumberFormat(locale, { maximumFractionDigits: megabytes ? 1 : 0 }).format(value)} ${megabytes ? "MB" : "KB"}`;
 }
 
-function formatDate(value) {
-  if (!value) return "Not reviewed";
-  return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
+function formatDate(value, locale, t) {
+  if (!value) return t("verifier.notReviewed");
+  return new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
 }
 
 export default function VerifierDashboard() {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation("dashboards");
+  const locale = i18n.resolvedLanguage || "en";
   const [filter, setFilter] = useState("pending");
   const [requests, setRequests] = useState([]);
   const [counts, setCounts] = useState({ pending: 0, approved: 0, rejected: 0 });
@@ -47,37 +50,36 @@ export default function VerifierDashboard() {
       const data = await getVerificationRequests(filter);
       setRequests(data.requests || []);
       setCounts(data.counts || {});
-    } catch (err) {
-      setError(err.message);
+    } catch {
+      setError(t("verifier.errors.load"));
       focusNotice("error");
     } finally {
       setLoading(false);
     }
-  }, [filter]);
+  }, [filter, t]);
 
   useEffect(() => { loadRequests(); }, [loadRequests]);
 
   async function review(item, status) {
     const note = (notes[item.id] || "").trim();
     if (status === "rejected" && !note) {
-      setError("Enter a clear reason before rejecting this request.");
+      setError(t("verifier.errors.rejectionReason"));
       document.getElementById(`note-${item.id}`)?.focus();
       return;
     }
-    const action = status === "approved" ? "approve" : "reject";
-    if (!window.confirm(`Are you sure you want to ${action} ${item.candidate.username}'s verification?`)) return;
+    if (!window.confirm(t(`verifier.confirm.${status}`, { name: item.candidate.username }))) return;
 
     setWorkingId(item.id);
     setError("");
     setMessage("");
     try {
       const data = await updateVerificationRequest(item.id, status, note);
-      setMessage(`${data.message}${data.notificationSent ? " The candidate was notified by email." : " The decision was saved; email delivery was unavailable."}`);
+      setMessage(t(`verifier.saved.${data.notificationSent ? "emailSent" : "emailUnavailable"}`, { status: t(`verifier.filters.${status}`) }));
       setNotes((current) => ({ ...current, [item.id]: "" }));
       await loadRequests();
       focusNotice("message");
-    } catch (err) {
-      setError(err.message);
+    } catch {
+      setError(t("verifier.errors.update"));
       focusNotice("error");
     } finally {
       setWorkingId(null);
@@ -88,8 +90,8 @@ export default function VerifierDashboard() {
     setError("");
     try {
       await openVerificationDocument(item.id, item.document.originalName, download);
-    } catch (err) {
-      setError(err.message);
+    } catch {
+      setError(t("verifier.errors.document"));
       focusNotice("error");
     }
   }
@@ -103,22 +105,22 @@ export default function VerifierDashboard() {
     <main className="verifier-page dashboard-screen">
       <header className="verifier-header">
         <div>
-          <p className="verifier-eyebrow">Authorized access</p>
-          <h1>Candidate verification</h1>
-          <p>Review disability cards before candidate accounts are allowed to sign in.</p>
+          <p className="verifier-eyebrow">{t("verifier.eyebrow")}</p>
+          <h1>{t("verifier.title")}</h1>
+          <p>{t("verifier.intro")}</p>
         </div>
-        <button type="button" className="verifier-signout" onClick={signOut}>Sign out</button>
+        <button type="button" className="verifier-signout" onClick={signOut}>{t("common.signOut")}</button>
       </header>
 
       <section className="verifier-content" aria-labelledby="request-heading" aria-busy={loading}>
         <div className="verifier-toolbar">
-          <h2 id="request-heading">Signup requests</h2>
+          <h2 id="request-heading">{t("verifier.requests")}</h2>
           <button type="button" className="verifier-refresh" onClick={loadRequests} disabled={loading}>
-            {loading ? "Refreshing…" : "Refresh"}
+            {loading ? t("common.refreshing") : t("common.refresh")}
           </button>
         </div>
 
-        <div className="verifier-filters" aria-label="Filter verification requests" role="group">
+        <div className="verifier-filters" aria-label={t("verifier.filterLabel")} role="group">
           {FILTERS.map((status) => (
             <button
               key={status}
@@ -127,8 +129,8 @@ export default function VerifierDashboard() {
               className={filter === status ? "active" : ""}
               onClick={() => setFilter(status)}
             >
-              {status[0].toUpperCase() + status.slice(1)}
-              {status !== "all" && <span>{counts[status] ?? 0}</span>}
+              {t(`verifier.filters.${status}`)}
+              {status !== "all" && <span>{new Intl.NumberFormat(locale).format(counts[status] ?? 0)}</span>}
             </button>
           ))}
         </div>
@@ -139,51 +141,52 @@ export default function VerifierDashboard() {
         </div>
 
         {loading ? (
-          <p className="verifier-empty" role="status">Loading verification requests…</p>
+          <p className="verifier-empty" role="status">{t("verifier.loading")}</p>
         ) : requests.length === 0 ? (
-          <p className="verifier-empty" role="status">No {filter === "all" ? "" : `${filter} `}requests found.</p>
+          <p className="verifier-empty" role="status">{t("verifier.empty", { filter: filter === "all" ? "" : t(`verifier.filters.${filter}`).toLocaleLowerCase(locale) })}</p>
         ) : (
           <div className="verification-list">
             {requests.map((item) => (
               <article className="verification-card" key={item.id}>
                 <div className="verification-card-heading">
                   <div>
-                    <h3>{item.candidate.username}</h3>
-                    <a href={`mailto:${item.candidate.email}`}>{item.candidate.email}</a>
+                    <h3 dir="auto">{item.candidate.username}</h3>
+                    <a dir="ltr" href={`mailto:${item.candidate.email}`}>{item.candidate.email}</a>
                   </div>
-                  <span className={`verification-status status-${item.status}`} aria-label={`Verification status: ${item.status}`}>{item.status}</span>
+                  <span className={`verification-status status-${item.status}`} aria-label={t("verifier.statusLabel", { status: t(`verifier.filters.${item.status}`) })}>{t(`verifier.filters.${item.status}`)}</span>
                 </div>
 
                 <dl className="verification-meta">
-                  <div><dt>Email</dt><dd>{item.candidate.emailVerified ? "Verified" : "Not verified yet"}</dd></div>
-                  <div><dt>Submitted</dt><dd>{formatDate(item.submittedAt)}</dd></div>
-                  <div><dt>Document</dt><dd>{item.document.originalName} · {formatBytes(item.document.size)} · {item.document.available ? "available" : "deleted after retention"}</dd></div>
-                  {item.reviewedAt && <div><dt>Last review</dt><dd>{formatDate(item.reviewedAt)} by {item.reviewer}</dd></div>}
-                  {item.document.retentionUntil && item.document.available && <div><dt>Scheduled deletion</dt><dd>{formatDate(item.document.retentionUntil)}</dd></div>}
-                  {item.document.deletedAt && <div><dt>Document deleted</dt><dd>{formatDate(item.document.deletedAt)}</dd></div>}
+                  <div><dt>{t("verifier.email")}</dt><dd>{item.candidate.emailVerified ? t("verifier.emailVerified") : t("verifier.emailNotVerified")}</dd></div>
+                  <div><dt>{t("verifier.submitted")}</dt><dd>{formatDate(item.submittedAt, locale, t)}</dd></div>
+                  <div><dt>{t("verifier.document")}</dt><dd><bdi>{item.document.originalName}</bdi> · {formatBytes(item.document.size, locale, t)} · {item.document.available ? t("verifier.available") : t("verifier.deletedAfterRetention")}</dd></div>
+                  {item.reviewedAt && <div><dt>{t("verifier.lastReview")}</dt><dd>{t("verifier.reviewedBy", { date: formatDate(item.reviewedAt, locale, t), reviewer: item.reviewer })}</dd></div>}
+                  {item.document.retentionUntil && item.document.available && <div><dt>{t("verifier.scheduledDeletion")}</dt><dd>{formatDate(item.document.retentionUntil, locale, t)}</dd></div>}
+                  {item.document.deletedAt && <div><dt>{t("verifier.documentDeleted")}</dt><dd>{formatDate(item.document.deletedAt, locale, t)}</dd></div>}
                 </dl>
 
                 <div className="document-actions">
-                  <button type="button" aria-label={`Open disability card for ${item.candidate.username}`} onClick={() => openDocument(item)} disabled={!item.document.available}>Open document</button>
-                  <button type="button" aria-label={`Download disability card for ${item.candidate.username}`} onClick={() => openDocument(item, true)} disabled={!item.document.available}>Download</button>
+                  <button type="button" aria-label={t("verifier.openFor", { name: item.candidate.username })} onClick={() => openDocument(item)} disabled={!item.document.available}>{t("verifier.open")}</button>
+                  <button type="button" aria-label={t("verifier.downloadFor", { name: item.candidate.username })} onClick={() => openDocument(item, true)} disabled={!item.document.available}>{t("verifier.download")}</button>
                 </div>
 
-                <label htmlFor={`note-${item.id}`}>Reviewer note {item.status !== "approved" && "(required to reject)"}</label>
+                <label htmlFor={`note-${item.id}`}>{t("verifier.noteLabel")} {item.status !== "approved" && t("verifier.noteRequired")}</label>
                 <textarea
                   id={`note-${item.id}`}
+                  dir="auto"
                   rows="3"
                   maxLength="2000"
                   value={notes[item.id] ?? item.reviewerNote ?? ""}
                   aria-describedby={`note-help-${item.id}`}
                   aria-invalid={Boolean(error && item.status !== "approved" && !(notes[item.id] || "").trim())}
                   onChange={(event) => setNotes((current) => ({ ...current, [item.id]: event.target.value }))}
-                  placeholder="Give a concise reason or internal review note."
+                  placeholder={t("verifier.notePlaceholder")}
                 />
-                <p id={`note-help-${item.id}`} className="verifier-note-help">Maximum 2,000 characters. A reason is required before rejection.</p>
+                <p id={`note-help-${item.id}`} className="verifier-note-help">{t("verifier.noteHelp")}</p>
 
                 <div className="review-actions" aria-busy={workingId === item.id}>
-                  <button type="button" className="approve-button" disabled={workingId === item.id} onClick={() => review(item, "approved")}>Approve</button>
-                  <button type="button" className="reject-button" disabled={workingId === item.id} onClick={() => review(item, "rejected")}>Reject</button>
+                  <button type="button" className="approve-button" disabled={workingId === item.id} onClick={() => review(item, "approved")}>{t("verifier.approve")}</button>
+                  <button type="button" className="reject-button" disabled={workingId === item.id} onClick={() => review(item, "rejected")}>{t("verifier.reject")}</button>
                 </div>
               </article>
             ))}

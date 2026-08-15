@@ -1,0 +1,35 @@
+{
+  "loadingPage": "Loading page…",
+  "brand": {
+    "home": "JoIn Hospitality home",
+    "logoAlt": "JoIn Hospitality logo"
+  },
+  "language": {
+    "region": "Interface language",
+    "label": "Language",
+    "changed": "Interface language changed to {{language}}."
+  },
+  "languages": {
+    "en": "English",
+    "fr": "French",
+    "ar": "Arabic"
+  },
+  "accessibility": {
+    "skipToMain": "Skip to main content"
+  },
+  "routes": {
+    "home": "JoIn Hospitality",
+    "signin": "Sign in | JoIn Hospitality",
+    "signup": "Create account | JoIn Hospitality",
+    "forgotPassword": "Forgot password | JoIn Hospitality",
+    "resetPassword": "Reset password | JoIn Hospitality",
+    "employers": "For employers | JoIn Hospitality",
+    "voiceHelp": "Voice navigation help | JoIn Hospitality",
+    "privacy": "Privacy notice | JoIn Hospitality",
+    "candidate": "Candidate dashboard | JoIn Hospitality",
+    "candidateSetup": "Candidate profile setup | JoIn Hospitality",
+    "employer": "Employer dashboard | JoIn Hospitality",
+    "admin": "Admin dashboard | JoIn Hospitality",
+    "verifier": "Verifier dashboard | JoIn Hospitality"
+  }
+}

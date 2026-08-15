@@ -81,11 +81,11 @@ def create_app(settings: Settings | None = None) -> Flask:
         if not audio:
             return jsonify({"error": "empty_audio", "message": "The uploaded audio is empty."}), 400
         spoken_language = request.form.get("spokenLanguage", "en").lower()
-        if spoken_language not in {"en", "ar"}:
+        if spoken_language not in {"en", "fr", "ar"}:
             return jsonify(
                 {
                     "error": "unsupported_language",
-                    "message": "Spoken language must be 'en' or 'ar'.",
+                    "message": "Spoken language must be 'en', 'fr', or 'ar'.",
                 }
             ), 400
         try:

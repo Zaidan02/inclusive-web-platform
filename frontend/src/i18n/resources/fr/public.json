@@ -1,0 +1,106 @@
+{
+  "header": {
+    "menu": "Menu",
+    "closeMenu": "Fermer le menu",
+    "navigation": "Navigation principale",
+    "purpose": "Notre mission",
+    "how": "Fonctionnement",
+    "forYou": "Pour vous",
+    "employers": "Pour les employeurs",
+    "signIn": "Se connecter",
+    "signUp": "S’inscrire"
+  },
+  "footer": {
+    "intro": "Ouvrir l’hôtellerie aux capacités, au potentiel et à un travail porteur de sens.",
+    "platformNav": "Plateforme",
+    "platform": "Plateforme",
+    "purpose": "Notre mission",
+    "how": "Fonctionnement",
+    "started": "Commencer",
+    "accountNav": "Compte",
+    "account": "Compte",
+    "signIn": "Se connecter",
+    "candidate": "Compte candidat",
+    "employer": "Compte employeur",
+    "inclusion": "Inclusion",
+    "ability": "Mise en relation axée sur les capacités",
+    "accessible": "Opportunités accessibles",
+    "hospitality": "Hôtellerie inclusive",
+    "copyright": "© {{year}} JoIn Hospitality",
+    "closing": "Conçu pour un monde du travail plus inclusif."
+  },
+  "welcome": {
+    "heroEyebrow": "L’hôtellerie inclusive commence ici",
+    "heroStart": "Les opportunités doivent être façonnées par les",
+    "heroEmphasis": "capacités.",
+    "heroText": "JoIn relie les candidats et les employeurs de l’hôtellerie grâce à une approche plus claire et plus humaine, centrée sur les emplois dans lesquels chacun peut s’épanouir.",
+    "findOpportunity": "Trouver une opportunité",
+    "explorePurpose": "Découvrir notre mission",
+    "trust": ["Profils axés sur les capacités", "Mise en relation par tâches", "Inclusion dès la conception"],
+    "heroAlt": "Personnes réunies par l’emploi inclusif",
+    "strengths": "Forces reconnues",
+    "potential": "Potentiel mis en valeur",
+    "greatMatch": "Excellente compatibilité",
+    "realTasks": "Fondée sur des tâches réelles",
+    "why": "Pourquoi JoIn existe",
+    "purposeTitle": "Le travail devient plus inclusif lorsque nous posons une meilleure question.",
+    "purposeOne": "Au lieu de demander ce qu’une personne ne peut pas faire, nous aidons les employeurs à comprendre ce qu’elle peut apporter. Ce changement transforme l’incertitude en opportunité concrète.",
+    "purposeTwo": "JoIn facilite la compréhension des métiers de l’hôtellerie en reliant leurs tâches à des capacités réelles, donnant confiance aux candidats et clarté aux employeurs.",
+    "principles": [
+      { "title": "Les capacités d’abord", "text": "Nous partons des forces et des aptitudes pratiques, et non des étiquettes ou des suppositions." },
+      { "title": "Clair par conception", "text": "Les emplois, les tâches et les attentes sont présentés de manière compréhensible." },
+      { "title": "L’humain au centre", "text": "La technologie aide à prendre de meilleures décisions tout en gardant l’humain au cœur du processus." }
+    ],
+    "howKicker": "Fonctionnement",
+    "howTitle": "Un parcours réfléchi, du potentiel à l’opportunité.",
+    "howText": "Des étapes simples, des informations claires et une mise en relation construite autour du travail réel.",
+    "steps": [
+      { "number": "01", "title": "Présentez ce que vous savez faire", "text": "Les candidats créent un profil axé sur leurs forces, leurs préférences et leur potentiel concret." },
+      { "number": "02", "title": "Décrivez le travail réel", "text": "Les employeurs décomposent les opportunités en tâches claires et précisent les capacités réellement nécessaires." },
+      { "number": "03", "title": "Découvrez de meilleures compatibilités", "text": "La plateforme réunit les deux parties grâce à des résultats transparents fondés sur les tâches." }
+    ],
+    "chooseKicker": "Choisissez votre parcours",
+    "chooseTitle": "Une mission. Deux façons de participer.",
+    "candidateLabel": "Pour les candidats",
+    "candidateTitle": "Laissez vos capacités vous guider.",
+    "candidateText": "Créez votre profil, comprenez vos forces, explorez des postes adaptés et postulez en toute confiance.",
+    "candidateBenefits": ["Créer un profil axé sur les capacités", "Recevoir des indications de compatibilité", "Découvrir des employeurs accessibles"],
+    "candidateAction": "Devenir candidat",
+    "employerLabel": "Pour les employeurs",
+    "employerTitle": "Recrutez avec plus de clarté et de confiance.",
+    "employerText": "Décrivez le travail important, accédez à un vivier plus large et fondez vos décisions sur les capacités.",
+    "employerBenefits": ["Publier des opportunités fondées sur les tâches", "Créer un profil d’entreprise inclusif", "Examiner les candidatures au même endroit"],
+    "employerAction": "Pour les employeurs",
+    "closingKicker": "Un avenir du travail plus inclusif",
+    "closingTitle": "Prêt à transformer le potentiel en possibilités ?",
+    "closingText": "Rejoignez une communauté qui voit d’abord les capacités.",
+    "createAccount": "Créer votre compte",
+    "signIn": "Se connecter"
+  },
+  "employers": {
+    "back": "Retour à l’accueil",
+    "eyebrow": "Pour les employeurs",
+    "title": "Cette page est en construction.",
+    "text": "Nous préparons un espace consacré au recrutement inclusif, à la création d’offres fondées sur les tâches et à la manière dont JoIn aide les employeurs à découvrir des talents par leurs capacités.",
+    "create": "Créer un compte employeur",
+    "signIn": "Connexion employeur",
+    "note": "Le tableau de bord reste accessible aux comptes employeurs inscrits après leur connexion."
+  },
+  "privacy": {
+    "navigation": "Navigation de la page de confidentialité",
+    "back": "Retour à l’accueil",
+    "title": "Avis de confidentialité",
+    "subtitle": "Comment nous utilisons, protégeons et conservons vos informations, et comment vous pouvez les contrôler.",
+    "version": "Version {{version}}",
+    "sections": [
+      { "id": "privacy-processing", "title": "Données traitées", "text": "Nous traitons les informations de compte et de contact, le profil candidat, les capacités sélectionnées, les candidatures et les documents que vous choisissez d’importer. Les cartes de handicap servent uniquement à vérifier l’admissibilité et ne sont accessibles qu’aux vérificateurs et administrateurs habilités." },
+      { "id": "privacy-retention", "title": "Conservation de la carte de handicap", "text": "Les cartes sont conservées hors du répertoire web public avec des noms de fichiers aléatoires. Après la décision d’un vérificateur habilité, leur suppression est programmée après 30 jours. Le résultat de la vérification et un journal d’audit limité sont conservés afin que le compte puisse continuer à fonctionner." },
+      { "id": "privacy-ai", "title": "Profils assistés par l’IA", "text": "Le texte modifiable que vous approuvez n’est envoyé à l’assistant de profil qu’avec votre consentement explicite. Les suggestions sont vérifiables et ne mettent jamais le profil à jour automatiquement. La plateforme enregistre le consentement et les métadonnées opérationnelles, mais pas le contenu de la transcription." },
+      { "id": "privacy-controls", "title": "Vos contrôles", "text": "Les candidats peuvent télécharger une copie lisible par machine de leurs données, retirer un consentement IA actif, consulter l’état de conservation de leur carte et supprimer définitivement leur compte et leurs documents privés depuis le tableau de bord Confidentialité et données." },
+      { "id": "privacy-security", "title": "Sécurité et accès", "text": "Les documents privés sont transmis uniquement par des points d’accès authentifiés et autorisés selon le rôle. Les réponses de documents désactivent le cache du navigateur et l’accès aux cartes de handicap est audité." }
+    ],
+    "registration": "Retour à l’inscription",
+    "signIn": "Se connecter"
+  }
+}
+

@@ -210,3 +210,15 @@
 @media (prefers-reduced-motion: reduce) {
   .voice-navigation__icon { animation: none !important; }
 }
+
+[dir="rtl"] .voice-navigation {
+  right: auto;
+  left: 18px;
+}
+
+@media (max-width: 640px) {
+  [dir="rtl"] .voice-navigation {
+    right: auto;
+    left: 14px;
+  }
+}

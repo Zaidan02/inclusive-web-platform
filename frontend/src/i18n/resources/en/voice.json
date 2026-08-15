@@ -1,0 +1,43 @@
+{
+  "label": "Voice navigation",
+  "activate": "Activate voice navigation",
+  "deactivate": "Deactivate voice navigation",
+  "voiceOn": "Voice on",
+  "close": "Close",
+  "options": "Options",
+  "cancel": "Cancel",
+  "stopTalking": "Stop talking",
+  "resume": "Resume",
+  "commands": "Commands",
+  "commandLanguage": "Command language: {{language}}",
+  "lastCaptured": "Last captured input · {{kilobytes}} KB · {{seconds}}s",
+  "audioUnsupported": "Your browser does not support audio playback.",
+  "download": "Download recording",
+  "disclosure": "AI-generated voice",
+  "status": {
+    "off": "Voice navigation is off",
+    "speaking": "Speaking",
+    "processing": "Understanding your request",
+    "listening": "Listening — speak now",
+    "listeningRequest": "Listening to your request",
+    "paused": "Listening paused",
+    "requestCancelled": "Request cancelled",
+    "speechStopped": "Speech stopped — listening",
+    "unsupported": "This browser does not support microphone recording",
+    "permission": "Waiting for microphone permission",
+    "permissionDenied": "Microphone permission was denied",
+    "failed": "Voice navigation failed"
+  },
+  "feedback": {
+    "noPending": "There is no pending action to confirm.",
+    "pendingCancelled": "The pending action was cancelled.",
+    "actionUnavailable": "That action is registered, but its control is not available right now.",
+    "sectionUnavailable": "That section is not available on this page.",
+    "openingHelp": "Opening the voice navigation tutorial.",
+    "noPrevious": "There is no previous message to repeat.",
+    "outputStopped": "Voice output stopped.",
+    "cancelledNext": "Cancelled. What would you like to do next?",
+    "processingFailed": "Voice processing failed."
+  }
+}
+

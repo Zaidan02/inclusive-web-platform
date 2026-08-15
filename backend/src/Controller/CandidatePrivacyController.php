@@ -73,11 +73,11 @@ final class CandidatePrivacyController extends AbstractController
                 'cardRetentionDaysAfterReview' => PrivacyPolicy::CARD_RETENTION_DAYS_AFTER_REVIEW,
             ],
             'dataCategories' => [
-                'account and contact details',
-                'candidate profile and selected abilities',
-                'job applications and uploaded documents',
-                'disability verification status and temporarily retained card',
-                'AI-assistant consent and operational audit events (not transcript content)',
+                'account_contact',
+                'candidate_profile',
+                'applications_documents',
+                'verification_temporary_card',
+                'ai_consent_operational_events',
             ],
             'consents' => array_map(fn (ConsentRecord $consent) => $this->consentData($consent), $consents),
             'verificationDocument' => $verification === null ? null : [

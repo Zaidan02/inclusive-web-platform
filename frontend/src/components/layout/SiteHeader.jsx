@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import Brand from "../common/Brand";
 
 export default function SiteHeader() {
+  const { t } = useTranslation("public");
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef(null);
 
@@ -34,17 +36,17 @@ export default function SiteHeader() {
           onClick={() => setMenuOpen((current) => !current)}
         >
           <span aria-hidden="true">{menuOpen ? "×" : "☰"}</span>
-          <span>{menuOpen ? "Close menu" : "Menu"}</span>
+          <span>{menuOpen ? t("header.closeMenu") : t("header.menu")}</span>
         </button>
-        <nav id="site-navigation" className={`site-nav ${menuOpen ? "site-nav--open" : ""}`} aria-label="Main navigation">
-          <a href="#purpose" onClick={closeMenu}>Our purpose</a>
-          <a href="#how-it-works" onClick={closeMenu}>How it works</a>
-          <a href="#paths" onClick={closeMenu}>For you</a>
-          <Link to="/employers" onClick={closeMenu}>For employers</Link>
+        <nav id="site-navigation" className={`site-nav ${menuOpen ? "site-nav--open" : ""}`} aria-label={t("header.navigation")}>
+          <a href="#purpose" onClick={closeMenu}>{t("header.purpose")}</a>
+          <a href="#how-it-works" onClick={closeMenu}>{t("header.how")}</a>
+          <a href="#paths" onClick={closeMenu}>{t("header.forYou")}</a>
+          <Link to="/employers" onClick={closeMenu}>{t("header.employers")}</Link>
         </nav>
         <div className="site-header__actions">
-          <Link className="text-link" to="/signin">Sign in</Link>
-          <Link className="button button--small button--primary" to="/signup">Sign up</Link>
+          <Link className="text-link" to="/signin">{t("header.signIn")}</Link>
+          <Link className="button button--small button--primary" to="/signup">{t("header.signUp")}</Link>
         </div>
       </div>
     </header>

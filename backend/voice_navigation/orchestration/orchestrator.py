@@ -50,7 +50,7 @@ class VoiceOrchestrator:
         history = self._sanitize_history(recent_history or [])
         if self._is_pending_action_reply(normalized, history):
             classification = RequestClassification(
-                category="ACTION", confidence=1, language="ar" if self._contains_arabic(normalized) else "en"
+                category="ACTION", confidence=1, language=self._reply_language(normalized)
             )
         else:
             classification = self._classifier.classify(
@@ -99,7 +99,7 @@ class VoiceOrchestrator:
             action_context["currentView"] = current_view
             proposal = self._action_interpreter.interpret(normalized, action_context, history)
             route = self._action_registry.route(proposal, current_context)
-            feedback = self._action_feedback(route)
+            feedback = self._action_feedback(route, proposal.language)
             return VoiceTurnResult(
                 request_id=str(uuid4()),
                 transcript=normalized,
@@ -125,29 +125,80 @@ class VoiceOrchestrator:
         )
 
     @staticmethod
-    def _action_feedback(route) -> str:
+    def _action_feedback(route, language: str = "en") -> str:
+        locale = language.split("-")[0].lower()
+        messages = {
+            "en": {
+                "confirmation": "Please confirm the requested action.",
+                "rejected": "I could not safely perform that action.",
+                "confirmed": "Confirmed.",
+                "cancelled": "The pending action was cancelled.",
+                "executing": "Executing the requested action.",
+                "file": "The file control is focused. Use the file picker to choose a local file.",
+                "changed": "I changed the requested selection. Is that correct?",
+                "cleared": "I cleared the requested field. Is that correct?",
+                "sensitive": "I updated the sensitive field without reading it aloud. Is that correct?",
+                "updated": "I updated the requested field. Is that correct?",
+            },
+            "fr": {
+                "confirmation": "Veuillez confirmer l’action demandée.",
+                "rejected": "Je n’ai pas pu exécuter cette action en toute sécurité.",
+                "confirmed": "Confirmé.",
+                "cancelled": "L’action en attente a été annulée.",
+                "executing": "Exécution de l’action demandée.",
+                "file": "Le contrôle de fichier est sélectionné. Utilisez le sélecteur pour choisir un fichier local.",
+                "changed": "J’ai modifié la sélection demandée. Est-ce correct ?",
+                "cleared": "J’ai effacé le champ demandé. Est-ce correct ?",
+                "sensitive": "J’ai mis à jour le champ sensible sans le lire à voix haute. Est-ce correct ?",
+                "updated": "J’ai mis à jour le champ demandé. Est-ce correct ?",
+            },
+            "ar": {
+                "confirmation": "يرجى تأكيد العملية المطلوبة.",
+                "rejected": "لم أتمكن من تنفيذ هذه العملية بأمان.",
+                "confirmed": "تم التأكيد.",
+                "cancelled": "تم إلغاء العملية المعلقة.",
+                "executing": "جارٍ تنفيذ العملية المطلوبة.",
+                "file": "تم تحديد عنصر الملف. استخدم منتقي الملفات لاختيار ملف من جهازك.",
+                "changed": "غيّرت الخيار المطلوب. هل هذا صحيح؟",
+                "cleared": "مسحت الحقل المطلوب. هل هذا صحيح؟",
+                "sensitive": "حدّثت الحقل الحساس من دون قراءته بصوت عالٍ. هل هذا صحيح؟",
+                "updated": "حدّثت الحقل المطلوب. هل هذا صحيح؟",
+            },
+        }.get(locale)
+        messages = messages or {
+            "confirmation": "Please confirm the requested action.",
+            "rejected": "I could not safely perform that action.",
+            "confirmed": "Confirmed.",
+            "cancelled": "The pending action was cancelled.",
+            "executing": "Executing the requested action.",
+            "file": "The file control is focused. Use the file picker to choose a local file.",
+            "changed": "I changed the requested selection. Is that correct?",
+            "cleared": "I cleared the requested field. Is that correct?",
+            "sensitive": "I updated the sensitive field without reading it aloud. Is that correct?",
+            "updated": "I updated the requested field. Is that correct?",
+        }
         if route.status == "needs_confirmation":
-            return route.reason
+            return messages["confirmation"]
         if route.status != "authorized":
-            return route.reason
+            return messages["rejected"]
         if route.command == "CONFIRM":
-            return "Confirmed."
+            return messages["confirmed"]
         if route.command == "CANCEL_ACTION":
-            return "The pending action was cancelled."
+            return messages["cancelled"]
         action = route.action
         if route.command == "PRESS":
-            return f"Activating {action['label']}."
+            return messages["executing"]
         if route.command == "OPEN_ITEM":
-            return f"Opening {action['value']}."
+            return messages["executing"]
         if route.command == "FOCUS_FIELD":
-            return f"I focused the {action['label']} control. Use the file picker to choose a local file."
+            return messages["file"]
         if route.command == "TOGGLE_OPTION":
-            return f"I changed the {action['value']} selection. Is that correct?"
+            return messages["changed"]
         if route.command == "CLEAR_FIELD":
-            return f"I cleared the {action['label']} field. Is that correct?"
+            return messages["cleared"]
         if route.sensitive:
-            return f"I updated the {action['label']} field without reading it aloud. Is that correct?"
-        return f"I set {action['label']} to {action['value']}. Is that correct?"
+            return messages["sensitive"]
+        return messages["updated"]
 
     def process_audio(
         self,
@@ -210,6 +261,11 @@ class VoiceOrchestrator:
             "اكد",
             "أكد",
             "تابع",
+            "oui",
+            "confirmer",
+            "confirme",
+            "continuer",
+            "continue",
             "no",
             "cancel",
             "never mind",
@@ -218,8 +274,31 @@ class VoiceOrchestrator:
             "لا",
             "الغاء",
             "إلغاء",
+            "non",
+            "annuler",
+            "annule",
+            "laisse tomber",
         }
 
     @staticmethod
     def _contains_arabic(text: str) -> bool:
         return any("\u0600" <= character <= "\u06ff" for character in text)
+
+    @classmethod
+    def _reply_language(cls, text: str) -> str:
+        if cls._contains_arabic(text):
+            return "ar"
+        normalized = text.strip().casefold().rstrip(".!?")
+        if normalized in {
+            "oui",
+            "confirmer",
+            "confirme",
+            "continuer",
+            "continue",
+            "non",
+            "annuler",
+            "annule",
+            "laisse tomber",
+        }:
+            return "fr"
+        return "en"

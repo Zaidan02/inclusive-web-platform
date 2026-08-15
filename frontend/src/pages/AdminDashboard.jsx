@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   getAdminApplications,
   openAdminApplicationFile,
@@ -8,6 +9,7 @@ import { getToken, logout } from "../services/authService";
 import { API_BASE_URL } from "../config";
 import useDialogFocus from "../hooks/useDialogFocus";
 import AccessibleNotice from "../components/accessibility/AccessibleNotice";
+import { disabilityOptions } from "../features/candidate/profile/profileOptions";
 
 const globalStyles = `
   * { box-sizing: border-box; }
@@ -77,6 +79,7 @@ function ProfilesIcon() {
 function AdminDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t, i18n } = useTranslation("dashboards");
 
   const [activeTab, setActiveTab] = useState("USERS");
   const [_hoveredTab, setHoveredTab] = useState(null);
@@ -132,10 +135,10 @@ function AdminDashboard() {
         : `${API_BASE_URL}/admin/users`;
       const res = await fetch(endpoint, { method: "GET", headers: { "X-Auth-Token": token } });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Failed to load users.");
+      if (!res.ok) throw new Error("load");
       setUsers(data.users || []);
-    } catch (err) { setError(err.message); } finally { setLoading(false); }
-  }, [navigate]);
+    } catch { setError(t("admin.errors.users")); } finally { setLoading(false); }
+  }, [navigate, t]);
 
   const fetchCandidateProfiles = useCallback(async () => {
     try {
@@ -144,18 +147,18 @@ function AdminDashboard() {
       if (!token) { navigate("/signin"); return; }
       const res = await fetch(`${API_BASE_URL}/admin/candidate-profiles`, { method: "GET", headers: { "X-Auth-Token": token } });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Failed to load profiles.");
+      if (!res.ok) throw new Error("load");
       setCandidateProfiles(data.profiles || []);
-    } catch (err) { setError(err.message); } finally { setLoading(false); }
-  }, [navigate]);
+    } catch { setError(t("admin.errors.profiles")); } finally { setLoading(false); }
+  }, [navigate, t]);
 
   const fetchAdminApplications = useCallback(async () => {
     try {
       setLoading(true); setError("");
       const data = await getAdminApplications();
       setAdminApplications(data.applications || []);
-    } catch (err) { setError(err.message); } finally { setLoading(false); }
-  }, []);
+    } catch { setError(t("admin.errors.applications")); } finally { setLoading(false); }
+  }, [t]);
 
   useEffect(() => {
     const requestedTab = location.state?.voiceTab;
@@ -193,13 +196,13 @@ function AdminDashboard() {
         body: JSON.stringify({ username: editFormData.username, email: editFormData.email, password: showPasswordField ? editFormData.password : "" }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Failed to update user.");
+      if (!res.ok) throw new Error("update");
       setUsers((prev) => prev.map((u) => u.id === userToEdit.id ? data.user : u));
       setUserToEdit(null);
       setEditFormData({ username: "", email: "", password: "" });
       setShowPasswordField(false);
-      setMessage(data.emailVerificationRequired ? "User updated. A new verification email was sent." : "User updated.");
-    } catch (err) { setError(err.message); } finally { setEditingUser(false); setActionLoadingId(null); }
+      setMessage(data.emailVerificationRequired ? t("admin.messages.updatedVerification") : t("admin.messages.updated"));
+    } catch { setError(t("admin.errors.update")); } finally { setEditingUser(false); setActionLoadingId(null); }
   }
 
   async function handleArchiveUser(userOverride = null) {
@@ -210,12 +213,11 @@ function AdminDashboard() {
       const token = getToken();
       if (!token) { navigate("/signin"); return; }
       const res = await fetch(`${API_BASE_URL}/admin/users/${targetUser.id}/archive`, { method: "PATCH", headers: { "X-Auth-Token": token } });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Failed to archive user.");
+      if (!res.ok) throw new Error("archive");
       setUsers((prev) => prev.filter((u) => u.id !== targetUser.id));
       setUserToArchive(null);
-      setMessage(`${targetUser.username} was archived.`);
-    } catch (err) { setError(err.message); } finally { setArchivingUser(false); setActionLoadingId(null); }
+      setMessage(t("admin.messages.archived", { name: targetUser.username }));
+    } catch { setError(t("admin.errors.archive")); } finally { setArchivingUser(false); setActionLoadingId(null); }
   }
 
   async function handleRestoreUser(user) {
@@ -224,11 +226,10 @@ function AdminDashboard() {
       const token = getToken();
       if (!token) { navigate("/signin"); return; }
       const res = await fetch(`${API_BASE_URL}/admin/users/${user.id}/restore`, { method: "PATCH", headers: { "X-Auth-Token": token } });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Failed to restore user.");
+      if (!res.ok) throw new Error("restore");
       setUsers((prev) => prev.filter((u) => u.id !== user.id));
-      setMessage(`${user.username} was restored.`);
-    } catch (err) { setError(err.message); } finally { setActionLoadingId(null); }
+      setMessage(t("admin.messages.restored", { name: user.username }));
+    } catch { setError(t("admin.errors.restore")); } finally { setActionLoadingId(null); }
   }
 
   async function handleDeleteUser(userOverride = null) {
@@ -239,12 +240,11 @@ function AdminDashboard() {
       const token = getToken();
       if (!token) { navigate("/signin"); return; }
       const res = await fetch(`${API_BASE_URL}/admin/users/${targetUser.id}`, { method: "DELETE", headers: { "X-Auth-Token": token } });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Failed to delete user.");
+      if (!res.ok) throw new Error("delete");
       setUsers((prev) => prev.filter((u) => u.id !== targetUser.id));
       setUserToDelete(null);
-      setMessage(`${targetUser.username} was deleted.`);
-    } catch (err) { setError(err.message); } finally { setDeletingUser(false); }
+      setMessage(t("admin.messages.deleted", { name: targetUser.username }));
+    } catch { setError(t("admin.errors.delete")); } finally { setDeletingUser(false); }
   }
 
   function getMainRole(user) {
@@ -255,21 +255,27 @@ function AdminDashboard() {
 
   function formatRole(user) {
     const r = getMainRole(user);
-    if (r === "ADMIN") return "Admin";
-    if (r === "EMPLOYER") return "Employer";
-    return "User";
+    return t(`admin.roles.${r.toLowerCase()}`);
   }
 
   function formatStatus(s) {
-    if (!s) return "Pending";
-    return s.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase());
+    return t(`admin.statuses.${String(s || "pending").toLowerCase().replace(" ", "_")}`, { defaultValue: s || t("admin.statuses.pending") });
   }
 
   function formatDate(d) {
     if (!d) return "—";
     const date = new Date(d);
     if (isNaN(date.getTime())) return d;
-    return date.toLocaleDateString("en-GB");
+    return new Intl.DateTimeFormat(i18n.resolvedLanguage).format(date);
+  }
+
+  function formatDisability(value) {
+    const option = disabilityOptions.find((item) => item.name === value);
+    return option ? t(`profile:disabilities.${option.key}`) : value;
+  }
+
+  function formatEducation(value) {
+    return value ? t(`profile:education.${value}`, { defaultValue: value.replaceAll("_", " ") }) : "";
   }
 
   async function handleCatalogueImport(event) {
@@ -290,10 +296,10 @@ function AdminDashboard() {
         body,
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.details ? `${data.message} ${data.details}` : data.message || "Catalogue import failed.");
-      setCatalogueImportResult({ type: "success", message: data.message, summary: data.summary });
-    } catch (err) {
-      setCatalogueImportResult({ type: "error", message: err.message });
+      if (!response.ok) throw new Error("import");
+      setCatalogueImportResult({ type: "success", message: t("admin.catalogue.complete"), summary: data.summary });
+    } catch {
+      setCatalogueImportResult({ type: "error", message: t("admin.catalogue.failed") });
     } finally {
       setCatalogueImporting(false);
     }
@@ -322,40 +328,40 @@ function AdminDashboard() {
           setShowPasswordField(true);
           setEditFormData((current) => ({ ...current, password: value }));
         } else return;
-        respond(action.sensitive ? `I updated ${action.label} without reading it aloud. Please check it.` : `I set ${action.label} to ${value}. Please check it.`);
+        respond(action.sensitive ? t("admin.voice.sensitive", { label: action.label }) : t("admin.voice.fieldSet", { label: action.label, value }));
       } else if (action.type === "select_option") {
         const value = action.value === "all" ? "" : action.value;
         if (action.target === "role_filter") setRoleFilter(value);
         else if (action.target === "verification_filter") setVerificationFilter(value);
         else if (action.target === "admin_application_status") setAppStatusFilter(value);
         else return;
-        respond(`I selected ${action.value.replaceAll("_", " ")} for ${action.label}.`);
+        respond(t("admin.voice.selected", { label: action.label, value: action.value.replaceAll("_", " ") }));
       } else if (action.type === "open_item") {
         if (["edit_user", "archive_user", "restore_user", "delete_user"].includes(action.target)) {
           const user = findUser();
-          if (!user) { respond(`I could not find a loaded user matching ${action.value}.`); return; }
+          if (!user) { respond(t("admin.voice.userNotFound", { value: action.value })); return; }
           if (action.target === "edit_user") openEditModal(user);
           if (action.target === "archive_user") handleArchiveUser(user);
           if (action.target === "restore_user") handleRestoreUser(user);
           if (action.target === "delete_user") handleDeleteUser(user);
-          respond(`Activated ${action.label} for ${user.username}.`);
+          respond(t("admin.voice.activatedFor", { label: action.label, name: user.username }));
         } else if (action.target === "candidate_profile") {
           const profile = findProfile();
-          if (!profile) { respond(`I could not find a loaded candidate profile matching ${action.value}.`); return; }
+          if (!profile) { respond(t("admin.voice.profileNotFound", { value: action.value })); return; }
           setSelectedProfile(profile); setShowProfileApplications(false);
-          respond(`Opening the candidate profile for ${profile.username}.`);
+          respond(t("admin.voice.openingProfile", { name: profile.username }));
         } else if (["view_admin_application_document", "download_admin_application_document", "view_admin_recommendation", "download_admin_recommendation"].includes(action.target)) {
           const app = findApplication();
-          if (!app) { respond(`I could not find a loaded application matching ${action.value}.`); return; }
+          if (!app) { respond(t("admin.voice.applicationNotFound", { value: action.value })); return; }
           const recommendation = action.target.includes("recommendation");
           const download = action.target.includes("download");
           openAdminApplicationFile(app.id, recommendation ? "recommendation" : "application", download)
-            .then(() => respond(`Opening ${action.label} for ${app.candidateName || app.jobTitle}.`))
-            .catch((fileError) => setError(fileError.message));
+            .then(() => respond(t("admin.voice.openingFor", { label: action.label, name: app.candidateName || app.jobTitle })))
+            .catch(() => setError(t("admin.errors.document")));
         } else return;
       } else if (action.type === "focus_field" && action.target === "catalogue_workbooks") {
         catalogueInputRef.current?.click();
-        respond("Opening the workbook picker. Select one or more XLSX data sheets.");
+        respond(t("admin.voice.workbookPicker"));
       } else if (action.type === "press") {
         if (action.target === "toggle_password" && userToEdit) {
           setShowPasswordField((current) => !current);
@@ -368,7 +374,7 @@ function AdminDashboard() {
           setShowProfileApplications((current) => !current);
         } else if (action.target === "logout") handleLogout();
         else return;
-        respond(`Activated ${action.label}.`);
+        respond(t("admin.voice.activated", { label: action.label }));
       }
   };
 
@@ -382,14 +388,15 @@ function AdminDashboard() {
 
   function renderApplicationFileButtons(application, type) {
     const hasFile = type === "application" ? application.hasApplicationDocument : application.hasRecommendationLetter;
-    const label = type === "application" ? application.applicationOriginalName || "Application" : application.recommendationOriginalName || "Recommendation";
-    if (!hasFile) return <span aria-label={`No ${type} document`} style={{ color: "#cbd5e1", fontSize: "12px" }}>—</span>;
+    const typeLabel = t(`admin.applications.fileTypes.${type}`);
+    const label = type === "application" ? application.applicationOriginalName || typeLabel : application.recommendationOriginalName || typeLabel;
+    if (!hasFile) return <span aria-label={t("admin.applications.noDocument", { type: typeLabel })} style={{ color: "#64748b", fontSize: "12px" }}>—</span>;
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "4px", alignItems: "center" }}>
         <span style={{ fontSize: "11px", color: "#64748b", maxWidth: "100px", wordBreak: "break-word", textAlign: "center", lineHeight: "1.3" }}>{label}</span>
         <div style={{ display: "flex", gap: "4px" }}>
-          <button type="button" aria-label={`View ${type} document for ${application.candidateName || "candidate"}`} onClick={() => openAdminApplicationFile(application.id, type, false).catch((fileError) => setError(fileError.message))} style={{ border: 0, background: "#eff6ff", color: "#1d4ed8", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", fontWeight: "500", cursor: "pointer" }}>View</button>
-          <button type="button" aria-label={`Download ${type} document for ${application.candidateName || "candidate"}`} onClick={() => openAdminApplicationFile(application.id, type, true).catch((fileError) => setError(fileError.message))} style={{ border: 0, background: "#f0fdf4", color: "#16a34a", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", fontWeight: "500", cursor: "pointer" }}>Download</button>
+          <button type="button" aria-label={t("admin.applications.viewFor", { type: typeLabel, name: application.candidateName || t("admin.applications.candidate") })} onClick={() => openAdminApplicationFile(application.id, type, false).catch(() => setError(t("admin.errors.document")))} style={{ border: 0, background: "#eff6ff", color: "#1d4ed8", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", fontWeight: "500", cursor: "pointer" }}>{t("admin.actions.view")}</button>
+          <button type="button" aria-label={t("admin.applications.downloadFor", { type: typeLabel, name: application.candidateName || t("admin.applications.candidate") })} onClick={() => openAdminApplicationFile(application.id, type, true).catch(() => setError(t("admin.errors.document")))} style={{ border: 0, background: "#f0fdf4", color: "#166534", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", fontWeight: "500", cursor: "pointer" }}>{t("admin.actions.download")}</button>
         </div>
       </div>
     );
@@ -410,27 +417,27 @@ function AdminDashboard() {
       <div>
         <div style={{ display: "flex", gap: "10px", marginBottom: "16px", alignItems: "center", flexWrap: "wrap" }}>
           <div style={{ position: "relative", flex: 1, minWidth: "200px" }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)" }}>
+            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" style={{ position: "absolute", insetInlineStart: "12px", top: "50%", transform: "translateY(-50%)" }}>
               <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
             </svg>
-            <input aria-label="Search applications" type="search" placeholder="Search by candidate, job or status..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-              style={{ width: "100%", padding: "9px 12px 9px 34px", borderRadius: "10px", border: "1px solid #e2e8f0", fontSize: "13px", outline: "none", background: "#f8fafc", fontFamily: "Inter, sans-serif", color: "#0f172a", boxSizing: "border-box" }} />
+            <input aria-label={t("admin.applications.searchLabel")} type="search" placeholder={t("admin.applications.searchPlaceholder")} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} dir="auto"
+              style={{ width: "100%", paddingBlock: "9px", paddingInline: "34px 12px", borderRadius: "10px", border: "1px solid #e2e8f0", fontSize: "13px", outline: "none", background: "#f8fafc", fontFamily: "Inter, sans-serif", color: "#0f172a", boxSizing: "border-box" }} />
           </div>
-          <select aria-label="Filter applications by status" value={appStatusFilter} onChange={(e) => setAppStatusFilter(e.target.value)}
+          <select aria-label={t("admin.applications.filterLabel")} value={appStatusFilter} onChange={(e) => setAppStatusFilter(e.target.value)}
             style={{ padding: "9px 12px", borderRadius: "10px", border: "1px solid #e2e8f0", fontSize: "13px", background: "#f8fafc", color: "#475569", cursor: "pointer", outline: "none", fontFamily: "Inter, sans-serif" }}>
-            <option value="">All statuses</option>
-            <option value="pending">Pending</option>
-            <option value="in_review">In Review</option>
-            <option value="accepted">Accepted</option>
-            <option value="rejected">Rejected</option>
+            <option value="">{t("admin.filters.allStatuses")}</option>
+            <option value="pending">{t("admin.statuses.pending")}</option>
+            <option value="in_review">{t("admin.statuses.in_review")}</option>
+            <option value="accepted">{t("admin.statuses.accepted")}</option>
+            <option value="rejected">{t("admin.statuses.rejected")}</option>
           </select>
-          <span style={{ fontSize: "12px", color: "#64748b", whiteSpace: "nowrap" }}>{filtered.length} application{filtered.length !== 1 ? "s" : ""}</span>
+          <span style={{ fontSize: "12px", color: "#64748b", whiteSpace: "nowrap" }}>{t("admin.applications.count", { count: filtered.length })}</span>
         </div>
-        <div className="dashboard-table-scroll" tabIndex={0} role="region" aria-label="Applications table">
+        <div className="dashboard-table-scroll" tabIndex={0} role="region" aria-label={t("admin.applications.tableLabel")}>
           <table className="dashboard-table dashboard-table--applications" style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ background: "#f8fafc" }}>
-                {["#", "Candidate", "Job", "Status", "Application", "Recommendation", "Applied"].map((h) => (
+                {["#", t("admin.applications.candidate"), t("admin.applications.job"), t("admin.applications.status"), t("admin.applications.application"), t("admin.applications.recommendation"), t("admin.applications.applied")].map((h) => (
                   <th key={h} style={{ padding: "11px 12px", fontSize: "11px", fontWeight: "600", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: "1px solid #e8edf5", textAlign: "center" }}>{h}</th>
                 ))}
               </tr>
@@ -459,7 +466,7 @@ function AdminDashboard() {
                 <line x1="16" y1="13" x2="8" y2="13"/>
                 <line x1="16" y1="17" x2="8" y2="17"/>
               </svg>
-              <p style={{ color: "#64748b", fontSize: "13px", margin: 0, fontWeight: "400" }}>No applications found</p>
+              <p style={{ color: "#64748b", fontSize: "13px", margin: 0, fontWeight: "400" }}>{t("admin.applications.empty")}</p>
             </div>
           )}
         </div>
@@ -494,10 +501,10 @@ function AdminDashboard() {
   });
 
   const navItems = [
-    { tab: "USERS", label: "Users", icon: <UsersIcon /> },
-    { tab: "ARCHIVED_USERS", label: "Archived Users", icon: <ArchiveIcon /> },
-    { tab: "APPLICATIONS", label: "Applications", icon: <ApplicationsIcon /> },
-    { tab: "USER_PROFILES", label: "User Profiles", icon: <ProfilesIcon /> },
+    { tab: "USERS", label: t("admin.tabs.users"), icon: <UsersIcon /> },
+    { tab: "ARCHIVED_USERS", label: t("admin.tabs.archived"), icon: <ArchiveIcon /> },
+    { tab: "APPLICATIONS", label: t("admin.tabs.applications"), icon: <ApplicationsIcon /> },
+    { tab: "USER_PROFILES", label: t("admin.tabs.profiles"), icon: <ProfilesIcon /> },
   ];
 
   const statsCards = isUserProfilesView ? [
@@ -512,18 +519,30 @@ function AdminDashboard() {
     { label: "Admins", value: adminUsers, color: "#7c3aed", bg: "#f5f3ff", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3L19 6V11C19 15.5 16.2 19.4 12 21C7.8 19.4 5 15.5 5 11V6L12 3Z"/><polyline points="9.5 12 11.3 13.8 15 10"/></svg> },
   ];
 
+  const statTranslationKeys = {
+    "Total Profiles": "admin.stats.totalProfiles",
+    "Completed Profiles": "admin.stats.completedProfiles",
+    "Pending Education": "admin.stats.pendingEducation",
+    "Total Applications": "admin.stats.totalApplications",
+    "Archived Users": "admin.stats.archivedUsers",
+    "Active Users": "admin.stats.activeUsers",
+    "Verified Emails": "admin.stats.verifiedEmails",
+    "Unverified Users": "admin.stats.unverifiedUsers",
+    Admins: "admin.stats.admins",
+  };
+
   return (
     <div className="dashboard-screen dashboard-screen--admin" style={{ minHeight: "100vh", display: "flex", fontFamily: '"Inter", -apple-system, sans-serif', background: "#f8fafc", color: "#0f172a" }} data-voice-section="admin-dashboard" data-voice-view={activeTab}>
       <style>{globalStyles}</style>
 
       {/* SIDEBAR */}
       <aside className="dashboard-sidebar" style={{ width: "220px", minWidth: "220px", background: "linear-gradient(180deg, #0f172a 0%, #0a1628 100%)", padding: "28px 16px", display: "flex", flexDirection: "column", boxSizing: "border-box", boxShadow: "4px 0 20px rgba(0,0,0,0.15)" }}>
-        <div style={{ marginBottom: "36px", paddingLeft: "8px" }}>
-          <p style={{ margin: 0, fontSize: "10px", fontWeight: "500", color: "#475569", textTransform: "uppercase", letterSpacing: "1px" }}>Platform</p>
-          <h2 style={{ margin: "4px 0 0", fontSize: "18px", fontWeight: "600", color: "#ffffff", letterSpacing: "-0.3px" }}>Admin Console</h2>
+        <div style={{ marginBottom: "36px", paddingInlineStart: "8px" }}>
+          <p style={{ margin: 0, fontSize: "10px", fontWeight: "500", color: "#94a3b8", textTransform: "uppercase", letterSpacing: "1px" }}>{t("admin.platform")}</p>
+          <h2 style={{ margin: "4px 0 0", fontSize: "18px", fontWeight: "600", color: "#ffffff", letterSpacing: "-0.3px" }}>{t("admin.console")}</h2>
         </div>
 
-        <nav aria-label="Admin dashboard sections" style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+        <nav aria-label={t("admin.tabsLabel")} style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
           {navItems.map(({ tab, label, icon }) => {
             const isActive = activeTab === tab;
             return (
@@ -538,12 +557,12 @@ function AdminDashboard() {
                 style={{
                   display: "flex", alignItems: "center", gap: "10px",
                   background: isActive ? "rgba(59,130,246,0.15)" : "transparent",
-                  color: isActive ? "#60a5fa" : "#64748b",
-                  border: "none", textAlign: "left", padding: "10px 12px",
+                  color: isActive ? "#60a5fa" : "#94a3b8",
+                  border: "none", textAlign: "start", padding: "10px 12px",
                   borderRadius: "10px", cursor: "pointer", fontSize: "13px",
                   fontWeight: isActive ? "600" : "400",
                   transition: "all 0.15s", fontFamily: "Inter, sans-serif",
-                  borderLeft: isActive ? "2px solid #3b82f6" : "2px solid transparent",
+                  borderInlineStart: isActive ? "2px solid #3b82f6" : "2px solid transparent",
                 }}
               >
                 {icon}
@@ -554,13 +573,13 @@ function AdminDashboard() {
         </nav>
 
         <div style={{ marginTop: "auto", paddingTop: "20px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-          <button type="button" onClick={handleLogout} style={{ display: "flex", alignItems: "center", gap: "8px", background: "transparent", border: "none", color: "#64748b", cursor: "pointer", fontSize: "13px", fontWeight: "400", padding: "8px 12px", borderRadius: "8px", fontFamily: "Inter, sans-serif", width: "100%" }}>
+          <button type="button" onClick={handleLogout} style={{ display: "flex", alignItems: "center", gap: "8px", background: "transparent", border: "none", color: "#94a3b8", cursor: "pointer", fontSize: "13px", fontWeight: "400", padding: "8px 12px", borderRadius: "8px", fontFamily: "Inter, sans-serif", width: "100%" }}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
               <polyline points="16 17 21 12 16 7" />
               <line x1="21" y1="12" x2="9" y2="12" />
             </svg>
-            Log out
+            {t("common.signOut")}
           </button>
         </div>
       </aside>
@@ -575,7 +594,7 @@ function AdminDashboard() {
             {navItems.find((n) => n.tab === activeTab)?.label}
           </p>
           <h1 style={{ margin: 0, fontSize: "26px", fontWeight: "600", color: "#0f172a", letterSpacing: "-0.4px" }}>
-            {isArchivedView ? "Archived Users" : isUserProfilesView ? "User Profiles" : isApplicationsView ? "Applications" : "Users"}
+            {navItems.find((item) => item.tab === activeTab)?.label}
           </h1>
           </div>
           <div>
@@ -593,7 +612,7 @@ function AdminDashboard() {
               disabled={catalogueImporting}
               style={{ border: "none", borderRadius: "10px", background: catalogueImporting ? "#64748b" : "#2563eb", color: "white", padding: "10px 16px", fontSize: "13px", fontWeight: 600, cursor: catalogueImporting ? "wait" : "pointer" }}
             >
-              {catalogueImporting ? "Importing data sheets..." : "Add data sheets"}
+              {catalogueImporting ? t("admin.catalogue.importing") : t("admin.catalogue.add")}
             </button>
           </div>
         </div>
@@ -614,11 +633,11 @@ function AdminDashboard() {
               fontSize: "13px",
             }}
           >
-            <strong>{catalogueImportResult.type === "error" ? "Import failed: " : "Import complete: "}</strong>
+            <strong>{catalogueImportResult.type === "error" ? t("admin.catalogue.failedPrefix") : t("admin.catalogue.completePrefix")}</strong>
             {catalogueImportResult.message}
             {catalogueImportResult.summary?.warnings?.length > 0 && (
               <details style={{ marginTop: "8px" }}>
-                <summary>{catalogueImportResult.summary.warnings.length} extractor warning(s)</summary>
+                <summary>{t("admin.catalogue.warningCount", { count: catalogueImportResult.summary.warnings.length })}</summary>
                 <ul>{catalogueImportResult.summary.warnings.map((warning) => <li key={warning}>{warning}</li>)}</ul>
               </details>
             )}
@@ -633,7 +652,7 @@ function AdminDashboard() {
                 <div style={{ width: "38px", height: "38px", borderRadius: "10px", background: card.bg, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "14px" }}>
                   {card.icon}
                 </div>
-                <p style={{ margin: "0 0 4px", fontSize: "12px", fontWeight: "400", color: "#64748b" }}>{card.label}</p>
+                <p style={{ margin: "0 0 4px", fontSize: "12px", fontWeight: "400", color: "#64748b" }}>{t(statTranslationKeys[card.label])}</p>
                 <p style={{ margin: 0, fontSize: "28px", fontWeight: "600", color: "#0f172a", letterSpacing: "-0.5px" }}>{card.value}</p>
               </div>
             ))}
@@ -647,34 +666,34 @@ function AdminDashboard() {
           {!isApplicationsView && (
             <div style={{ display: "flex", gap: "10px", marginBottom: "20px", flexWrap: "wrap" }}>
               <div style={{ position: "relative", flex: 1, minWidth: "200px" }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)" }}>
+                <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" style={{ position: "absolute", insetInlineStart: "12px", top: "50%", transform: "translateY(-50%)" }}>
                   <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
                 </svg>
-                <input aria-label={isUserProfilesView ? "Search user profiles" : "Search users"} type="search" placeholder={isUserProfilesView ? "Search profiles..." : "Search users..."} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-                  style={{ width: "100%", padding: "9px 12px 9px 34px", borderRadius: "10px", border: "1px solid #e2e8f0", fontSize: "13px", outline: "none", boxSizing: "border-box", background: "#f8fafc", fontFamily: "Inter, sans-serif", color: "#0f172a" }} />
+                <input aria-label={isUserProfilesView ? t("admin.search.profilesLabel") : t("admin.search.usersLabel")} type="search" placeholder={isUserProfilesView ? t("admin.search.profilesPlaceholder") : t("admin.search.usersPlaceholder")} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} dir="auto"
+                  style={{ width: "100%", paddingBlock: "9px", paddingInline: "34px 12px", borderRadius: "10px", border: "1px solid #e2e8f0", fontSize: "13px", outline: "none", boxSizing: "border-box", background: "#f8fafc", fontFamily: "Inter, sans-serif", color: "#0f172a" }} />
               </div>
               {!isUserProfilesView && !isArchivedView && (
                 <>
-                  <select aria-label="Filter users by role" value={roleFilter} onChange={(e) => e.target.value === "RESET" ? setRoleFilter("") : setRoleFilter(e.target.value)}
+                  <select aria-label={t("admin.filters.roleLabel")} value={roleFilter} onChange={(e) => e.target.value === "RESET" ? setRoleFilter("") : setRoleFilter(e.target.value)}
                     style={{ padding: "9px 12px", borderRadius: "10px", border: "1px solid #e2e8f0", fontSize: "13px", background: "#f8fafc", color: "#475569", cursor: "pointer", outline: "none", fontFamily: "Inter, sans-serif" }}>
-                    <option value="" disabled hidden>Role</option>
-                    <option value="RESET">All roles</option>
-                    <option value="ADMIN">Admin</option>
-                    <option value="USER">User</option>
-                    <option value="EMPLOYER">Employer</option>
+                    <option value="" disabled hidden>{t("admin.filters.role")}</option>
+                    <option value="RESET">{t("admin.filters.allRoles")}</option>
+                    <option value="ADMIN">{t("admin.roles.admin")}</option>
+                    <option value="USER">{t("admin.roles.user")}</option>
+                    <option value="EMPLOYER">{t("admin.roles.employer")}</option>
                   </select>
-                  <select aria-label="Filter users by verification status" value={verificationFilter} onChange={(e) => e.target.value === "RESET" ? setVerificationFilter("") : setVerificationFilter(e.target.value)}
+                  <select aria-label={t("admin.filters.verificationLabel")} value={verificationFilter} onChange={(e) => e.target.value === "RESET" ? setVerificationFilter("") : setVerificationFilter(e.target.value)}
                     style={{ padding: "9px 12px", borderRadius: "10px", border: "1px solid #e2e8f0", fontSize: "13px", background: "#f8fafc", color: "#475569", cursor: "pointer", outline: "none", fontFamily: "Inter, sans-serif" }}>
-                    <option value="" disabled hidden>Email status</option>
-                    <option value="RESET">All statuses</option>
-                    <option value="VERIFIED">Verified</option>
-                    <option value="UNVERIFIED">Unverified</option>
+                    <option value="" disabled hidden>{t("admin.filters.emailStatus")}</option>
+                    <option value="RESET">{t("admin.filters.allStatuses")}</option>
+                    <option value="VERIFIED">{t("admin.verification.verified")}</option>
+                    <option value="UNVERIFIED">{t("admin.verification.unverified")}</option>
                   </select>
                 </>
               )}
               {!isUserProfilesView && (
                 <span style={{ display: "flex", alignItems: "center", fontSize: "12px", color: "#64748b", fontWeight: "400", whiteSpace: "nowrap" }}>
-                  {isUserProfilesView ? filteredProfiles.length : filteredUsers.length} result{(isUserProfilesView ? filteredProfiles.length : filteredUsers.length) !== 1 ? "s" : ""}
+                  {t("admin.search.results", { count: isUserProfilesView ? filteredProfiles.length : filteredUsers.length })}
                 </span>
               )}
             </div>
@@ -682,18 +701,18 @@ function AdminDashboard() {
 
           {isApplicationsView && (
             <div>
-              {loading && <p style={S.empty}>Loading...</p>}
+              {loading && <p style={S.empty}>{t("admin.loading")}</p>}
               {error && <p style={{ color: "#dc2626", fontSize: "13px", textAlign: "center" }}>{error}</p>}
               {!loading && !error && renderApplicationsTable(filteredApplications)}
             </div>
           )}
           {!loading && !error && !isUserProfilesView && !isApplicationsView && (
-            <div className="dashboard-table-scroll" tabIndex={0} role="region" aria-label={isArchivedView ? "Archived users table" : "Users table"}>
+            <div className="dashboard-table-scroll" tabIndex={0} role="region" aria-label={isArchivedView ? t("admin.users.archivedTable") : t("admin.users.table")}>
               <table className="dashboard-table dashboard-table--users" style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>
                   <tr style={{ background: "#f8fafc" }}>
-                    {["#", "Username", "Email", "Role", "Verified", "Actions"].map((h) => (
-                      <th key={h} style={{ padding: "11px 14px", fontSize: "11px", fontWeight: "600", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: "1px solid #e8edf5", textAlign: h === "Actions" ? "center" : "left" }}>{h}</th>
+                    {["#", t("admin.users.username"), t("admin.users.email"), t("admin.users.role"), t("admin.users.verified"), t("admin.users.actions")].map((h) => (
+                      <th key={h} style={{ padding: "11px 14px", fontSize: "11px", fontWeight: "600", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: "1px solid #e8edf5", textAlign: h === t("admin.users.actions") ? "center" : "start" }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -708,21 +727,21 @@ function AdminDashboard() {
                       </td>
                       <td style={{ ...S.td, textAlign: "left" }}>
                         <span style={{ ...S.badge, ...(user.isVerified ? { background: "#f0fdf4", color: "#16a34a" } : { background: "#fffbeb", color: "#d97706" }) }}>
-                          {user.isVerified ? "Verified" : "Unverified"}
+                          {user.isVerified ? t("admin.verification.verified") : t("admin.verification.unverified")}
                         </span>
                       </td>
                       <td style={{ ...S.td, textAlign: "center" }}>
                         <div style={{ display: "flex", gap: "6px", justifyContent: "center" }}>
                           {!isArchivedView ? (
                             <>
-                              <button type="button" className="action-btn" aria-label={`Edit ${user.username}`} onClick={() => openEditModal(user)} disabled={actionLoadingId === user.id} style={S.btnBlue}>Edit</button>
-                              <button type="button" className="action-btn" aria-label={`Archive ${user.username}`} onClick={() => setUserToArchive(user)} disabled={actionLoadingId === user.id} style={S.btnGray}>Archive</button>
-                              <button type="button" className="action-btn" aria-label={`Delete ${user.username}`} onClick={() => setUserToDelete(user)} style={S.btnRed}>Delete</button>
+                              <button type="button" className="action-btn" aria-label={t("admin.actions.editFor", { name: user.username })} onClick={() => openEditModal(user)} disabled={actionLoadingId === user.id} style={S.btnBlue}>{t("admin.actions.edit")}</button>
+                              <button type="button" className="action-btn" aria-label={t("admin.actions.archiveFor", { name: user.username })} onClick={() => setUserToArchive(user)} disabled={actionLoadingId === user.id} style={S.btnGray}>{t("admin.actions.archive")}</button>
+                              <button type="button" className="action-btn" aria-label={t("admin.actions.deleteFor", { name: user.username })} onClick={() => setUserToDelete(user)} style={S.btnRed}>{t("admin.actions.delete")}</button>
                             </>
                           ) : (
                             <>
-                              <button type="button" className="action-btn" aria-label={`Restore ${user.username}`} onClick={() => handleRestoreUser(user)} disabled={actionLoadingId === user.id} style={S.btnGreen}>{actionLoadingId === user.id ? "..." : "Restore"}</button>
-                              <button type="button" className="action-btn" aria-label={`Delete ${user.username}`} onClick={() => setUserToDelete(user)} style={S.btnRed}>Delete</button>
+                              <button type="button" className="action-btn" aria-label={t("admin.actions.restoreFor", { name: user.username })} onClick={() => handleRestoreUser(user)} disabled={actionLoadingId === user.id} style={S.btnGreen}>{actionLoadingId === user.id ? "…" : t("admin.actions.restore")}</button>
+                              <button type="button" className="action-btn" aria-label={t("admin.actions.deleteFor", { name: user.username })} onClick={() => setUserToDelete(user)} style={S.btnRed}>{t("admin.actions.delete")}</button>
                             </>
                           )}
                         </div>
@@ -731,7 +750,7 @@ function AdminDashboard() {
                   ))}
                 </tbody>
               </table>
-              {filteredUsers.length === 0 && <p style={S.empty}>No users match your search.</p>}
+              {filteredUsers.length === 0 && <p style={S.empty}>{t("admin.users.empty")}</p>}
             </div>
           )}
 
@@ -747,20 +766,20 @@ function AdminDashboard() {
                   <p style={{ margin: "0 0 12px", fontSize: "12px", color: "#64748b", wordBreak: "break-word" }}>{profile.email}</p>
                   <div style={{ display: "flex", flexDirection: "column", gap: "5px", marginBottom: "14px" }}>
                     {[
-                      `${profile.selectedDisabilities.length} disabilities`,
-                      profile.educationLevel ? `Education: ${profile.educationLevel.replaceAll("_", " ")}` : "Education pending",
-                      `${profile.applications?.length || 0} applications`,
+                      t("admin.profiles.disabilityCount", { count: profile.selectedDisabilities.length }),
+                      profile.educationLevel ? t("admin.profiles.education", { value: formatEducation(profile.educationLevel) }) : t("admin.profiles.educationPending"),
+                      t("admin.profiles.applicationCount", { count: profile.applications?.length || 0 }),
                     ].map((s) => (
                       <span key={s} style={{ background: "#ffffff", border: "1px solid #e8edf5", borderRadius: "8px", padding: "6px 10px", fontSize: "12px", fontWeight: "400", color: "#475569" }}>{s}</span>
                     ))}
                   </div>
                   <button onClick={() => { setSelectedProfile(profile); setShowProfileApplications(false); }}
                     style={{ border: "none", background: "#2563eb", color: "#fff", padding: "8px 16px", borderRadius: "8px", cursor: "pointer", fontSize: "12px", fontWeight: "500", fontFamily: "Inter, sans-serif" }}>
-                    View Profile
+                    {t("admin.profiles.view")}
                   </button>
                 </div>
               ))}
-              {filteredProfiles.length === 0 && <p style={S.empty}>No profiles found.</p>}
+              {filteredProfiles.length === 0 && <p style={S.empty}>{t("admin.profiles.empty")}</p>}
             </div>
           )}
         </div>
@@ -771,8 +790,8 @@ function AdminDashboard() {
         <div style={S.overlay}>
           <div ref={adminDialogRef} role="dialog" aria-modal="true" aria-labelledby="admin-profile-dialog-title" tabIndex={-1} style={{ width: "100%", maxWidth: "860px", maxHeight: "88vh", background: "#ffffff", borderRadius: "20px", boxShadow: "0 20px 60px rgba(15,23,42,0.2)", overflow: "hidden", display: "flex", flexDirection: "column" }}>
             <div style={{ flex: 1, overflowY: "auto", padding: "28px" }}>
-              <h2 id="admin-profile-dialog-title" style={{ margin: "0 0 4px", fontSize: "20px", fontWeight: "600", color: "#0f172a" }}>Candidate Profile</h2>
-              <p style={{ margin: "0 0 20px", fontSize: "13px", color: "#64748b" }}>Detailed candidate information</p>
+              <h2 id="admin-profile-dialog-title" style={{ margin: "0 0 4px", fontSize: "20px", fontWeight: "600", color: "#0f172a" }}>{t("admin.profileDialog.title")}</h2>
+              <p style={{ margin: "0 0 20px", fontSize: "13px", color: "#64748b" }}>{t("admin.profileDialog.description")}</p>
               <div style={{ display: "flex", alignItems: "center", gap: "14px", background: "#f8fafc", border: "1px solid #e8edf5", borderRadius: "14px", padding: "16px", marginBottom: "18px" }}>
                 <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "linear-gradient(135deg, #1d4ed8, #3b82f6)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "19px", fontWeight: "600", flexShrink: 0 }}>
                   {selectedProfile.username.charAt(0).toUpperCase()}
@@ -784,8 +803,8 @@ function AdminDashboard() {
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
                 {[
-                  { title: "Selected Disabilities", chips: selectedProfile.selectedDisabilities, empty: "No disabilities selected.", chipStyle: { background: "#eef2ff", color: "#4338ca" } },
-                  { title: "Education", chips: selectedProfile.educationLevel ? [selectedProfile.educationLevel.replaceAll("_", " ")] : [], empty: "Education not provided.", chipStyle: { background: "#f0fdf4", color: "#16a34a" } },
+                  { title: t("admin.profileDialog.disabilities"), chips: selectedProfile.selectedDisabilities.map(formatDisability), empty: t("admin.profileDialog.noDisabilities"), chipStyle: { background: "#eef2ff", color: "#4338ca" } },
+                  { title: t("admin.profileDialog.education"), chips: selectedProfile.educationLevel ? [formatEducation(selectedProfile.educationLevel)] : [], empty: t("admin.profileDialog.noEducation"), chipStyle: { background: "#f0fdf4", color: "#166534" } },
                 ].map(({ title, chips, empty, chipStyle }) => (
                   <div key={title} style={{ background: "#f8fafc", border: "1px solid #e8edf5", borderRadius: "14px", padding: "16px" }}>
                     <p style={{ margin: "0 0 12px", fontSize: "13px", fontWeight: "600", color: "#0f172a" }}>{title}</p>
@@ -797,18 +816,18 @@ function AdminDashboard() {
                   </div>
                 ))}
                 <div style={{ background: "#f8fafc", border: "1px solid #e8edf5", borderRadius: "14px", padding: "16px" }}>
-                  <p style={{ margin: "0 0 8px", fontSize: "13px", fontWeight: "600", color: "#0f172a" }}>Applications</p>
-                  <p style={{ margin: "0 0 10px", fontSize: "13px", color: "#64748b" }}>{selectedProfile.applications?.length || 0} application(s)</p>
+                  <p style={{ margin: "0 0 8px", fontSize: "13px", fontWeight: "600", color: "#0f172a" }}>{t("admin.tabs.applications")}</p>
+                  <p style={{ margin: "0 0 10px", fontSize: "13px", color: "#64748b" }}>{t("admin.profiles.applicationCount", { count: selectedProfile.applications?.length || 0 })}</p>
                   {(selectedProfile.applications?.length || 0) > 0 && (
                     <button onClick={() => setShowProfileApplications((p) => !p)}
                       style={{ border: "none", background: "#2563eb", color: "#fff", padding: "7px 14px", borderRadius: "8px", cursor: "pointer", fontSize: "12px", fontWeight: "500", fontFamily: "Inter, sans-serif" }}>
-                      {showProfileApplications ? "Hide" : "View"} Applications
+                      {showProfileApplications ? t("admin.actions.hideApplications") : t("admin.actions.viewApplications")}
                     </button>
                   )}
                 </div>
                 <div style={{ background: "#f8fafc", border: "1px solid #e8edf5", borderRadius: "14px", padding: "16px" }}>
-                  <p style={{ margin: "0 0 8px", fontSize: "13px", fontWeight: "600", color: "#0f172a" }}>Last Updated</p>
-                  <p style={{ margin: 0, fontSize: "13px", color: "#64748b" }}>{selectedProfile.updatedAt || "Not updated yet."}</p>
+                  <p style={{ margin: "0 0 8px", fontSize: "13px", fontWeight: "600", color: "#0f172a" }}>{t("admin.profileDialog.lastUpdated")}</p>
+                  <p style={{ margin: 0, fontSize: "13px", color: "#64748b" }}>{selectedProfile.updatedAt ? formatDate(selectedProfile.updatedAt) : t("admin.profileDialog.notUpdated")}</p>
                 </div>
               </div>
               {showProfileApplications && (
@@ -820,7 +839,7 @@ function AdminDashboard() {
             <div style={{ borderTop: "1px solid #e8edf5", padding: "14px 28px", display: "flex", justifyContent: "flex-end" }}>
               <button onClick={() => { setSelectedProfile(null); setShowProfileApplications(false); }}
                 style={{ border: "none", background: "#2563eb", color: "#fff", padding: "9px 20px", borderRadius: "9px", cursor: "pointer", fontSize: "13px", fontWeight: "500", fontFamily: "Inter, sans-serif" }}>
-                Close
+                {t("admin.actions.close")}
               </button>
             </div>
           </div>
@@ -831,10 +850,10 @@ function AdminDashboard() {
       {userToEdit && (
         <div style={S.overlay}>
           <div ref={adminDialogRef} role="dialog" aria-modal="true" aria-labelledby="edit-user-dialog-title" tabIndex={-1} style={{ width: "100%", maxWidth: "460px", background: "#fff", borderRadius: "18px", padding: "28px", boxShadow: "0 20px 60px rgba(15,23,42,0.18)" }}>
-            <h2 id="edit-user-dialog-title" style={{ margin: "0 0 4px", fontSize: "18px", fontWeight: "600", color: "#0f172a" }}>Edit User</h2>
-            <p style={{ margin: "0 0 20px", fontSize: "13px", color: "#64748b" }}>Update {userToEdit.username}&apos;s account information.</p>
+            <h2 id="edit-user-dialog-title" style={{ margin: "0 0 4px", fontSize: "18px", fontWeight: "600", color: "#0f172a" }}>{t("admin.edit.title")}</h2>
+            <p style={{ margin: "0 0 20px", fontSize: "13px", color: "#64748b" }}>{t("admin.edit.description", { name: userToEdit.username })}</p>
             <form onSubmit={handleEditUser} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-              {[{ label: "Username", name: "username", type: "text" }, { label: "Email", name: "email", type: "email" }].map(({ label, name, type }) => (
+              {[{ label: t("admin.users.username"), name: "username", type: "text" }, { label: t("admin.users.email"), name: "email", type: "email" }].map(({ label, name, type }) => (
                 <div key={name}>
                   <label htmlFor={`edit-user-${name}`} style={{ display: "block", fontSize: "12px", fontWeight: "500", color: "#475569", marginBottom: "5px", textTransform: "uppercase", letterSpacing: "0.4px" }}>{label}</label>
                   <input id={`edit-user-${name}`} type={type} name={name} value={editFormData[name]} onChange={handleEditFormChange}
@@ -842,16 +861,16 @@ function AdminDashboard() {
                 </div>
               ))}
               <div style={{ background: "#eff6ff", borderRadius: "9px", padding: "10px 12px", fontSize: "12px", color: "#1d4ed8" }}>
-                If the email changes, a new verification email will be sent.
+                {t("admin.edit.emailHelp")}
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 <button type="button" onClick={() => { setShowPasswordField((p) => !p); setEditFormData((d) => ({ ...d, password: "" })); }}
                   style={{ border: "1px solid #e2e8f0", background: "#f8fafc", color: "#475569", padding: "9px 14px", borderRadius: "9px", cursor: "pointer", fontSize: "12px", fontFamily: "Inter, sans-serif", alignSelf: "flex-start" }}>
-                  {showPasswordField ? "Cancel password change" : "Change password"}
+                  {showPasswordField ? t("admin.edit.cancelPassword") : t("admin.edit.changePassword")}
                 </button>
                 {showPasswordField && (
                   <div>
-                    <label htmlFor="edit-user-password" style={{ display: "block", fontSize: "12px", fontWeight: "500", color: "#475569", marginBottom: "5px", textTransform: "uppercase", letterSpacing: "0.4px" }}>New Password</label>
+                    <label htmlFor="edit-user-password" style={{ display: "block", fontSize: "12px", fontWeight: "500", color: "#475569", marginBottom: "5px", textTransform: "uppercase", letterSpacing: "0.4px" }}>{t("admin.edit.newPassword")}</label>
                     <input id="edit-user-password" type="password" name="password" value={editFormData.password} onChange={handleEditFormChange}
                       style={{ width: "100%", padding: "10px 12px", borderRadius: "9px", border: "1px solid #e2e8f0", fontSize: "13px", outline: "none", boxSizing: "border-box", fontFamily: "Inter, sans-serif" }} />
                   </div>
@@ -859,10 +878,10 @@ function AdminDashboard() {
               </div>
               <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end", marginTop: "6px" }}>
                 <button type="button" onClick={() => { setUserToEdit(null); setShowPasswordField(false); }} disabled={editingUser}
-                  style={{ border: "1px solid #e2e8f0", background: "#fff", color: "#475569", padding: "9px 16px", borderRadius: "9px", cursor: "pointer", fontSize: "13px", fontFamily: "Inter, sans-serif" }}>Cancel</button>
+                  style={{ border: "1px solid #e2e8f0", background: "#fff", color: "#475569", padding: "9px 16px", borderRadius: "9px", cursor: "pointer", fontSize: "13px", fontFamily: "Inter, sans-serif" }}>{t("admin.actions.cancel")}</button>
                 <button type="submit" disabled={editingUser}
                   style={{ border: "none", background: "#2563eb", color: "#fff", padding: "9px 16px", borderRadius: "9px", cursor: "pointer", fontSize: "13px", fontWeight: "500", fontFamily: "Inter, sans-serif" }}>
-                  {editingUser ? "Saving..." : "Save Changes"}
+                  {editingUser ? t("admin.edit.saving") : t("admin.edit.save")}
                 </button>
               </div>
             </form>
@@ -877,15 +896,15 @@ function AdminDashboard() {
             <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "#fffbeb", color: "#d97706", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
               <ArchiveIcon />
             </div>
-            <h2 id="archive-user-dialog-title" style={{ margin: "0 0 8px", fontSize: "17px", fontWeight: "600", color: "#0f172a" }}>Archive user?</h2>
-            <p style={{ margin: "0 0 6px", fontSize: "13px", color: "#64748b" }}>You are about to archive <strong>{userToArchive.username}</strong>.</p>
-            <p style={{ margin: "0 0 22px", fontSize: "12px", color: "#d97706" }}>This user will be moved to Archived Users.</p>
+            <h2 id="archive-user-dialog-title" style={{ margin: "0 0 8px", fontSize: "17px", fontWeight: "600", color: "#0f172a" }}>{t("admin.archive.title")}</h2>
+            <p style={{ margin: "0 0 6px", fontSize: "13px", color: "#64748b" }}>{t("admin.archive.description", { name: userToArchive.username })}</p>
+            <p style={{ margin: "0 0 22px", fontSize: "12px", color: "#92400e" }}>{t("admin.archive.help")}</p>
             <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
               <button onClick={() => setUserToArchive(null)} disabled={archivingUser}
-                style={{ border: "1px solid #e2e8f0", background: "#fff", color: "#475569", padding: "9px 16px", borderRadius: "9px", cursor: "pointer", fontSize: "13px", fontFamily: "Inter, sans-serif" }}>Cancel</button>
+                style={{ border: "1px solid #e2e8f0", background: "#fff", color: "#475569", padding: "9px 16px", borderRadius: "9px", cursor: "pointer", fontSize: "13px", fontFamily: "Inter, sans-serif" }}>{t("admin.actions.cancel")}</button>
               <button onClick={handleArchiveUser} disabled={archivingUser}
                 style={{ border: "none", background: "#d97706", color: "#fff", padding: "9px 16px", borderRadius: "9px", cursor: "pointer", fontSize: "13px", fontWeight: "500", fontFamily: "Inter, sans-serif" }}>
-                {archivingUser ? "Archiving..." : "Archive"}
+                {archivingUser ? t("admin.archive.progress") : t("admin.actions.archive")}
               </button>
             </div>
           </div>
@@ -897,15 +916,15 @@ function AdminDashboard() {
         <div style={S.overlay}>
           <div ref={adminDialogRef} role="dialog" aria-modal="true" aria-labelledby="delete-user-dialog-title" tabIndex={-1} style={{ width: "100%", maxWidth: "400px", background: "#fff", borderRadius: "18px", padding: "28px", boxShadow: "0 20px 60px rgba(15,23,42,0.18)", textAlign: "center" }}>
             <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "#fef2f2", color: "#dc2626", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px", fontSize: "18px", fontWeight: "600" }}>!</div>
-            <h2 id="delete-user-dialog-title" style={{ margin: "0 0 8px", fontSize: "17px", fontWeight: "600", color: "#0f172a" }}>Delete user?</h2>
-            <p style={{ margin: "0 0 6px", fontSize: "13px", color: "#64748b" }}>You are about to permanently delete <strong>{userToDelete.username}</strong>.</p>
-            <p style={{ margin: "0 0 22px", fontSize: "12px", color: "#dc2626" }}>This action cannot be undone.</p>
+            <h2 id="delete-user-dialog-title" style={{ margin: "0 0 8px", fontSize: "17px", fontWeight: "600", color: "#0f172a" }}>{t("admin.delete.title")}</h2>
+            <p style={{ margin: "0 0 6px", fontSize: "13px", color: "#64748b" }}>{t("admin.delete.description", { name: userToDelete.username })}</p>
+            <p style={{ margin: "0 0 22px", fontSize: "12px", color: "#b91c1c" }}>{t("admin.delete.help")}</p>
             <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
               <button onClick={() => setUserToDelete(null)} disabled={deletingUser}
-                style={{ border: "1px solid #e2e8f0", background: "#fff", color: "#475569", padding: "9px 16px", borderRadius: "9px", cursor: "pointer", fontSize: "13px", fontFamily: "Inter, sans-serif" }}>Cancel</button>
+                style={{ border: "1px solid #e2e8f0", background: "#fff", color: "#475569", padding: "9px 16px", borderRadius: "9px", cursor: "pointer", fontSize: "13px", fontFamily: "Inter, sans-serif" }}>{t("admin.actions.cancel")}</button>
               <button onClick={handleDeleteUser} disabled={deletingUser}
                 style={{ border: "none", background: "#dc2626", color: "#fff", padding: "9px 16px", borderRadius: "9px", cursor: "pointer", fontSize: "13px", fontWeight: "500", fontFamily: "Inter, sans-serif" }}>
-                {deletingUser ? "Deleting..." : "Delete"}
+                {deletingUser ? t("admin.delete.progress") : t("admin.actions.delete")}
               </button>
             </div>
           </div>

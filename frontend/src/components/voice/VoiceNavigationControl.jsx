@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { VOICE_NAVIGATION_URL } from "../../config";
+import { normalizeLocale, SUPPORTED_LOCALES } from "../../i18n/locales";
 import "./voiceNavigation.css";
 
 const SILENCE_THRESHOLD = 0.025;
@@ -47,11 +49,13 @@ function currentPageContext(pathname) {
 export default function VoiceNavigationControl() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t, i18n } = useTranslation("voice");
+  const interfaceLanguage = normalizeLocale(i18n.resolvedLanguage) || "en";
   const [enabled, setEnabled] = useState(false);
   const [phase, setPhase] = useState("off");
-  const [message, setMessage] = useState("Voice navigation is off");
+  const [message, setMessage] = useState(() => t("status.off"));
   const [transcript, setTranscript] = useState("");
-  const [spokenLanguage, setSpokenLanguage] = useState("en");
+  const [spokenLanguage, setSpokenLanguage] = useState(interfaceLanguage);
   const [lastRecording, setLastRecording] = useState(null);
   const [panelExpanded, setPanelExpanded] = useState(() => !window.matchMedia?.("(max-width: 640px)").matches);
   const enabledRef = useRef(false);
@@ -70,6 +74,7 @@ export default function VoiceNavigationControl() {
   const lastRecordingUrlRef = useRef("");
   const locationRef = useRef(location.pathname);
   const pendingActionRef = useRef(null);
+  const interfaceLanguageRef = useRef(interfaceLanguage);
 
   useEffect(() => {
     locationRef.current = location.pathname;
@@ -106,7 +111,7 @@ export default function VoiceNavigationControl() {
     stopOutput();
   }, [stopOutput]);
 
-  const deactivate = useCallback((status = "Voice navigation is off") => {
+  const deactivate = useCallback((status) => {
     requestAbortRef.current?.abort();
     requestAbortRef.current = null;
     pendingModeRef.current = null;
@@ -114,9 +119,9 @@ export default function VoiceNavigationControl() {
     enabledRef.current = false;
     setEnabled(false);
     setPhase("off");
-    setMessage(status);
+    setMessage(status || t("status.off"));
     releaseResources();
-  }, [releaseResources]);
+  }, [releaseResources, t]);
 
   const fallbackSpeak = useCallback((text, language) => new Promise((resolve) => {
     if (!window.speechSynthesis) {
@@ -135,7 +140,7 @@ export default function VoiceNavigationControl() {
     if (!text || !enabledRef.current) return;
     lastFeedbackRef.current = text;
     setPhase("speaking");
-    setMessage("Speaking");
+    setMessage(t("status.speaking"));
     stopOutput();
     try {
       const response = await fetch(`${VOICE_NAVIGATION_URL}/api/voice/speech`, {
@@ -160,7 +165,7 @@ export default function VoiceNavigationControl() {
     } catch {
       await fallbackSpeak(text, language);
     }
-  }, [fallbackSpeak, stopOutput]);
+  }, [fallbackSpeak, stopOutput, t]);
 
   const executeCommand = useCallback((result) => {
     const route = result.route;
@@ -174,18 +179,18 @@ export default function VoiceNavigationControl() {
     if (result.classification?.category === "ACTION") {
       let trustedAction = action;
       if (action.type === "confirm") {
-        if (!pendingActionRef.current) return "There is no pending action to confirm.";
+        if (!pendingActionRef.current) return t("feedback.noPending");
         trustedAction = pendingActionRef.current;
         pendingActionRef.current = null;
       } else if (action.type === "cancel_action") {
         pendingActionRef.current = null;
-        return "The pending action was cancelled.";
+        return t("feedback.pendingCancelled");
       } else {
         pendingActionRef.current = null;
       }
       const detail = { action: trustedAction, handled: false, feedback: "" };
       window.dispatchEvent(new CustomEvent(VOICE_ACTION_EVENT, { detail }));
-      if (!detail.handled) return "That action is registered, but its control is not available right now.";
+      if (!detail.handled) return t("feedback.actionUnavailable");
       return detail.feedback || result.feedback;
     } else if (action.type === "route" && action.value) {
       navigate(action.value);
@@ -209,33 +214,33 @@ export default function VoiceNavigationControl() {
     } else if (action.type === "read_section" && action.value) {
       const escaped = window.CSS?.escape ? window.CSS.escape(action.value) : action.value;
       const section = document.querySelector(`[data-voice-section="${escaped}"]`) || document.getElementById(action.value);
-      if (!section) return "That section is not available on this page.";
+      if (!section) return t("feedback.sectionUnavailable");
       section.scrollIntoView({ behavior: "smooth", block: "start" });
       return section.innerText.replace(/\s+/g, " ").trim().slice(0, 1000);
     } else if (action.type === "help") {
       navigate("/voice-help");
-      return "Opening the voice navigation tutorial.";
+      return t("feedback.openingHelp");
     } else if (action.type === "repeat") {
-      return lastFeedbackRef.current || "There is no previous message to repeat.";
+      return lastFeedbackRef.current || t("feedback.noPrevious");
     } else if (action.type === "stop_speaking") {
       stopOutput();
-      return "Voice output stopped.";
+      return t("feedback.outputStopped");
     } else if (action.type === "pause_listening") {
       pendingModeRef.current = "pause";
       return result.feedback;
     } else if (action.type === "cancel") {
       pendingActionRef.current = null;
-      return "Cancelled. What would you like to do next?";
+      return t("feedback.cancelledNext");
     } else if (action.type === "disable_voice") {
       pendingModeRef.current = "disable";
       return result.feedback;
     }
     return result.feedback;
-  }, [navigate, stopOutput]);
+  }, [navigate, stopOutput, t]);
 
   const processAudio = useCallback(async (blob) => {
     setPhase("processing");
-    setMessage("Understanding your request");
+    setMessage(t("status.processing"));
     const body = new FormData();
     body.append("audio", blob, blob.type.includes("ogg") ? "utterance.ogg" : "utterance.webm");
     body.append("currentContext", contextForPath(locationRef.current));
@@ -258,7 +263,7 @@ export default function VoiceNavigationControl() {
         error: data.error,
         message: data.message,
       });
-      throw new Error(data.message || "Voice processing failed.");
+      throw new Error(t("feedback.processingFailed"));
     }
     const isSensitive = Boolean(data.route?.sensitive);
     const safeTranscript = isSensitive ? "[REDACTED SENSITIVE VALUE]" : data.transcript;
@@ -293,32 +298,32 @@ export default function VoiceNavigationControl() {
       pendingModeRef.current = null;
       enabledRef.current = false;
       setPhase("paused");
-      setMessage("Listening paused");
+      setMessage(t("status.paused"));
       releaseResources();
     } else if (pendingModeRef.current === "disable") {
       pendingModeRef.current = null;
-      deactivate("Voice navigation is off");
+      deactivate(t("status.off"));
     }
-  }, [deactivate, executeCommand, releaseResources, speak, spokenLanguage]);
+  }, [deactivate, executeCommand, releaseResources, speak, spokenLanguage, t]);
 
   const cancelProcessing = useCallback(() => {
     requestAbortRef.current?.abort();
     requestAbortRef.current = null;
     setPhase("listening");
-    setMessage("Request cancelled");
+    setMessage(t("status.requestCancelled"));
     window.setTimeout(() => {
       if (enabledRef.current) beginTurnRef.current?.();
     }, 250);
-  }, []);
+  }, [t]);
 
   const stopSpeakingNow = useCallback(() => {
     stopOutput();
     setPhase("listening");
-    setMessage("Speech stopped — listening");
+    setMessage(t("status.speechStopped"));
     window.setTimeout(() => {
       if (enabledRef.current) beginTurnRef.current?.();
     }, 100);
-  }, [stopOutput]);
+  }, [stopOutput, t]);
 
   const beginTurnRef = useRef(null);
   const beginTurn = useCallback(() => {
@@ -363,7 +368,8 @@ export default function VoiceNavigationControl() {
       } catch (error) {
         if (error.name === "AbortError") return;
         setPhase("error");
-        setMessage(error.message || "Voice navigation failed");
+        console.error("[VOICE] Turn failed", error);
+        setMessage(t("status.failed"));
         if (enabledRef.current) window.setTimeout(() => beginTurnRef.current?.(), 1500);
       }
     };
@@ -381,7 +387,7 @@ export default function VoiceNavigationControl() {
       if (volume >= SILENCE_THRESHOLD) {
         heardSpeech = true;
         lastSoundAt = now;
-        setMessage("Listening to your request");
+        setMessage(t("status.listeningRequest"));
       }
       if (heardSpeech && now - lastSoundAt >= SILENCE_AFTER_SPEECH_MS) {
         recorder.stop();
@@ -397,9 +403,9 @@ export default function VoiceNavigationControl() {
 
     recorder.start(250);
     setPhase("listening");
-    setMessage("Listening — speak now");
+    setMessage(t("status.listening"));
     animationFrameRef.current = requestAnimationFrame(monitor);
-  }, [processAudio]);
+  }, [processAudio, t]);
 
   useEffect(() => {
     beginTurnRef.current = beginTurn;
@@ -408,12 +414,12 @@ export default function VoiceNavigationControl() {
   const activate = useCallback(async () => {
     if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
       setPhase("error");
-      setMessage("This browser does not support microphone recording");
+      setMessage(t("status.unsupported"));
       return;
     }
     try {
       setPhase("requesting");
-      setMessage("Waiting for microphone permission");
+      setMessage(t("status.permission"));
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const AudioContextClass = window.AudioContext || window.webkitAudioContext;
       const audioContext = new AudioContextClass();
@@ -427,10 +433,22 @@ export default function VoiceNavigationControl() {
       setEnabled(true);
       beginTurnRef.current?.();
     } catch {
-      deactivate("Microphone permission was denied");
+      deactivate(t("status.permissionDenied"));
       setPhase("error");
     }
-  }, [deactivate]);
+  }, [deactivate, t]);
+
+  useEffect(() => {
+    if (interfaceLanguageRef.current === interfaceLanguage) {
+      if (!enabledRef.current && phase === "off") setMessage(t("status.off"));
+      return;
+    }
+    interfaceLanguageRef.current = interfaceLanguage;
+    setSpokenLanguage(interfaceLanguage);
+    setTranscript("");
+    if (enabledRef.current) deactivate(t("status.off"));
+    else setMessage(t("status.off"));
+  }, [deactivate, interfaceLanguage, phase, t]);
 
   useEffect(() => () => {
     enabledRef.current = false;
@@ -439,17 +457,17 @@ export default function VoiceNavigationControl() {
   }, [releaseResources]);
 
   return (
-    <aside className={`voice-navigation voice-navigation--${phase}${panelExpanded ? " voice-navigation--expanded" : ""}`} aria-label="Voice navigation">
+    <aside className={`voice-navigation voice-navigation--${phase}${panelExpanded ? " voice-navigation--expanded" : ""}`} aria-label={t("label")}>
       <div className="voice-navigation__bar">
       <button
         type="button"
         className="voice-navigation__toggle"
         onClick={enabled ? () => deactivate() : activate}
         aria-pressed={enabled}
-        aria-label={enabled ? "Deactivate voice navigation" : "Activate voice navigation"}
+        aria-label={enabled ? t("deactivate") : t("activate")}
       >
         <span className="voice-navigation__icon" aria-hidden="true">{enabled ? "■" : "●"}</span>
-        <span>{enabled ? "Voice on" : "Voice navigation"}</span>
+        <span>{enabled ? t("voiceOn") : t("label")}</span>
       </button>
       <span className="voice-navigation__status" role="status" aria-live="polite">{message}</span>
       <button
@@ -459,40 +477,34 @@ export default function VoiceNavigationControl() {
         aria-expanded={panelExpanded}
         aria-controls="voice-navigation-details"
       >
-        {panelExpanded ? "Close" : "Options"}
+        {panelExpanded ? t("close") : t("options")}
       </button>
       </div>
       {panelExpanded && (
         <div className="voice-navigation__details" id="voice-navigation-details">
       <div className="voice-navigation__actions">
-        {phase === "processing" && <button type="button" onClick={cancelProcessing}>Cancel</button>}
-        {phase === "speaking" && <button type="button" onClick={stopSpeakingNow}>Stop talking</button>}
-        {phase === "paused" && <button type="button" onClick={activate}>Resume</button>}
-        <button type="button" onClick={() => navigate("/voice-help")}>Commands</button>
+        {phase === "processing" && <button type="button" onClick={cancelProcessing}>{t("cancel")}</button>}
+        {phase === "speaking" && <button type="button" onClick={stopSpeakingNow}>{t("stopTalking")}</button>}
+        {phase === "paused" && <button type="button" onClick={activate}>{t("resume")}</button>}
+        <button type="button" onClick={() => navigate("/voice-help")}>{t("commands")}</button>
       </div>
-      <label className="voice-navigation__language">
-        <span>Speak</span>
-        <select
-          value={spokenLanguage}
-          onChange={(event) => setSpokenLanguage(event.target.value)}
-          disabled={phase === "processing" || phase === "speaking"}
-          aria-label="Spoken command language"
-        >
-          <option value="en">English</option>
-          <option value="ar">Arabic</option>
-        </select>
-      </label>
-      {transcript && enabled && <span className="voice-navigation__transcript" title={transcript}>“{transcript}”</span>}
+      <div className="voice-navigation__language">
+        <span>{t("commandLanguage", { language: SUPPORTED_LOCALES[spokenLanguage].nativeName })}</span>
+      </div>
+      {transcript && enabled && <span className="voice-navigation__transcript" title={transcript} dir="auto">“{transcript}”</span>}
       {lastRecording && (
         <div className="voice-navigation__recording">
-          <span>Last captured input · {(lastRecording.bytes / 1024).toFixed(1)} KB · {(lastRecording.durationMs / 1000).toFixed(1)}s</span>
+          <span>{t("lastCaptured", {
+            kilobytes: new Intl.NumberFormat(interfaceLanguage, { maximumFractionDigits: 1 }).format(lastRecording.bytes / 1024),
+            seconds: new Intl.NumberFormat(interfaceLanguage, { maximumFractionDigits: 1 }).format(lastRecording.durationMs / 1000),
+          })}</span>
           <audio controls preload="metadata" src={lastRecording.url}>
-            Your browser does not support audio playback.
+            {t("audioUnsupported")}
           </audio>
-          <a href={lastRecording.url} download={`voice-debug-${Date.now()}.webm`}>Download recording</a>
+          <a href={lastRecording.url} download={`voice-debug-${Date.now()}.webm`}>{t("download")}</a>
         </div>
       )}
-      <span className="voice-navigation__disclosure">AI-generated voice</span>
+      <span className="voice-navigation__disclosure">{t("disclosure")}</span>
         </div>
       )}
     </aside>

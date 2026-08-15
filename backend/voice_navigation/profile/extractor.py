@@ -42,7 +42,10 @@ class OpenAIProfileExtractor:
                 "facts unless the narrative explicitly provides a replacement. Put useful statements "
                 "that cannot safely map to a controlled field into unmapped_statements. Preserve the "
                 "meaning of Arabic, French, or English input. Evidence must be a short paraphrase, "
-                "not unsupported reasoning. Return no suggestion when evidence is ambiguous. These "
+                "not unsupported reasoning. Use canonical English schema keys, field names, and enum "
+                "values, but preserve candidate-provided profile values in their original script. "
+                "Write evidence and unmapped statements in the declared language and return that "
+                "language code in the language field. Return no suggestion when evidence is ambiguous. These "
                 "results will be shown to the candidate and remain unsaved until individually accepted."
             ),
             input=(

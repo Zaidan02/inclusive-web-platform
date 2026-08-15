@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useSearchParams } from "react-router-dom";
 import logoImage from "../assets/john-logo.png";
 import { resetPassword } from "../services/authApi";
@@ -7,6 +8,7 @@ import "../styles/authPages.css";
 
 function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
+  const { t } = useTranslation("auth");
 
   const token = searchParams.get("token");
 
@@ -38,20 +40,20 @@ function ResetPasswordPage() {
     setError("");
 
     if (!token) {
-      setError("Password reset token is missing.");
+      setError(t("reset.missingToken"));
       return;
     }
 
     const nextFieldErrors = {
       newPassword: !formData.newPassword
-        ? "Please enter a new password."
+        ? t("reset.validation.newRequired")
         : !isStrongPassword(formData.newPassword)
-        ? "Use at least 8 characters with uppercase, lowercase, and a symbol."
+        ? t("reset.validation.weak")
         : "",
       confirmPassword: !formData.confirmPassword
-        ? "Please confirm your new password."
+        ? t("reset.validation.confirmRequired")
         : formData.newPassword !== formData.confirmPassword
-        ? "Passwords do not match."
+        ? t("reset.validation.mismatch")
         : "",
     };
     setFieldErrors(nextFieldErrors);
@@ -64,11 +66,11 @@ function ResetPasswordPage() {
     try {
       setLoading(true);
 
-      const data = await resetPassword(token, formData.newPassword);
-      setMessage(data.message || "Password reset successfully.");
+      await resetPassword(token, formData.newPassword);
+      setMessage(t("reset.successFallback"));
       window.requestAnimationFrame(() => successRef.current?.focus());
-    } catch (err) {
-      setError(err.message || "Failed to reset password.");
+    } catch {
+      setError(t("reset.errorFallback"));
       window.requestAnimationFrame(() => errorRef.current?.focus());
     } finally {
       setLoading(false);
@@ -79,18 +81,17 @@ function ResetPasswordPage() {
     <main className="auth-page">
       <div className="auth-shell">
         <div className="auth-left">
-          <span className="auth-badge">Reset Password</span>
-          <h1 className="auth-title">Choose a New Password</h1>
+          <span className="auth-badge">{t("reset.badge")}</span>
+          <h1 className="auth-title">{t("reset.title")}</h1>
           <p className="auth-subtitle" id="reset-password-help">
-            Your new password must contain at least 8 characters, one uppercase
-            letter, one lowercase letter, and one symbol.
+            {t("reset.help")}
           </p>
 
-          {!token && <p className="auth-error" role="alert">This reset link is missing its security token. Request a new password-reset email.</p>}
+          {!token && <p className="auth-error" role="alert">{t("reset.missingToken")}</p>}
 
           <form onSubmit={handleSubmit} className="auth-form" noValidate aria-busy={loading}>
             <div className="auth-field">
-              <label htmlFor="newPassword">New Password</label>
+              <label htmlFor="newPassword">{t("reset.newPassword")}</label>
 
               <div className="password-input-wrapper">
                 <input
@@ -98,7 +99,7 @@ function ResetPasswordPage() {
                   type={showPassword ? "text" : "password"}
                   name="newPassword"
                   autoComplete="new-password"
-                  placeholder="Enter new password"
+                  placeholder={t("reset.newPasswordPlaceholder")}
                   value={formData.newPassword}
                   onChange={handleChange}
                   required
@@ -111,7 +112,7 @@ function ResetPasswordPage() {
                   type="button"
                   className="password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-label={showPassword ? t("shared.hidePassword") : t("shared.showPassword")}
                   aria-controls="newPassword confirmPassword"
                   aria-pressed={showPassword}
                 >
@@ -122,13 +123,13 @@ function ResetPasswordPage() {
             </div>
 
             <div className="auth-field">
-              <label htmlFor="confirmPassword">Confirm Password</label>
+              <label htmlFor="confirmPassword">{t("reset.confirmPassword")}</label>
               <input
                 id="confirmPassword"
                 type={showPassword ? "text" : "password"}
                 name="confirmPassword"
                 autoComplete="new-password"
-                placeholder="Confirm new password"
+                placeholder={t("reset.confirmPasswordPlaceholder")}
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
@@ -154,17 +155,17 @@ function ResetPasswordPage() {
                   fontWeight: "600",
                 }}
               >
-                {message} Use the Sign in link below when you are ready.
+                {message} {t("shared.signInReady")}
               </p>
             )}
 
             <button type="submit" className="primary-btn full-width" disabled={loading || !token || Boolean(message)}>
-              {loading ? "Resetting..." : "Reset Password"}
+              {loading ? t("reset.resetting") : t("reset.submit")}
             </button>
           </form>
 
           <p className="auth-footer">
-            Back to <Link to="/signin">Sign in</Link>
+            {t("reset.backTo")} <Link to="/signin">{t("shared.signIn")}</Link>
           </p>
         </div>
 
@@ -173,7 +174,7 @@ function ResetPasswordPage() {
             <div className="logo-glow"></div>
             <img
               src={logoImage}
-              alt="JoIn Hospitality logo"
+              alt={t("shared.logoAlt")}
               className="logo-image"
             />
           </div>

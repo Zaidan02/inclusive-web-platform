@@ -1,6 +1,6 @@
 # Multilingual experience architecture: English, French, and Arabic
 
-Status: **Architecture decision and implementation plan**  
+Status: **Selected architecture; first implementation completed and under release verification**
 Decision date: 15 August 2026  
 Target interfaces: public pages, authentication, candidate, employer, verifier, administrator, privacy, AI profile, and voice-navigation interfaces  
 Initial source language: English (`en`)  
@@ -25,22 +25,22 @@ The only specifically English/Latin-format input is the **email address**, which
 
 For existing functions that currently understand English, add a **multilingual AI adapter**. The adapter understands the user's selected language and returns strict JSON with English-named keys and canonical English enum codes. Existing functions consume this validated JSON; their route names, database identifiers, and scoring contracts do not need to be translated.
 
-No application code or stored data is changed by this document.
+The implementation that follows this decision is tracked in [Multilingual implementation and verification](MULTILINGUAL_IMPLEMENTATION.md). The document remains the architectural rationale; the implementation record distinguishes verified behavior from remaining release work.
 
-## 2. Current-state findings
+## 2. Baseline findings
 
-The frontend is a React 19 and Vite application. It currently has no localization dependency, and most visible strings are embedded directly in JSX. The application contains public and authentication routes plus candidate, employer, verifier, and administrator interfaces.
+At the decision baseline, the frontend was a React 19 and Vite application with no localization dependency and most visible strings embedded directly in JSX. The application contained public and authentication routes plus candidate, employer, verifier, and administrator interfaces.
 
-The review identified these constraints:
+The baseline review identified these constraints:
 
-- English is currently the effective interface language.
-- The AI profile workflow already has language-aware foundations for English, French, and Arabic input, but the behavior must be verified consistently across the full workflow.
-- The current voice-navigation interface does not yet provide a complete, consistently tested English/French/Arabic experience. French must be added and all three command paths must be validated.
+- English was the effective interface language.
+- The AI profile workflow had language-aware foundations for English, French, and Arabic input, but not a consistent full-workflow contract.
+- The voice-navigation interface did not provide a complete, consistently tested English/French/Arabic experience.
 - Backend responses often provide English prose in a `message` field. Displaying that field directly prevents reliable frontend translation.
 - Styles contain physical direction rules such as `left`, `right`, `margin-left`, `padding-right`, and `text-align: left`. These need an RTL review rather than a global visual flip.
 - Job, task, and disability catalogue records are domain content, not interface labels. Their translation requires a reviewed content/data policy.
 
-Therefore, replacing English words alone would not deliver a correct Arabic or French experience.
+The implementation addresses these findings through one persisted locale, stable-code controls, canonical multilingual AI/voice contracts, and direction-aware styling. Catalogue content translation and release-level human/device validation remain separate work; replacing labels alone is still not treated as complete language support.
 
 ## 3. Goals and non-goals
 
@@ -152,7 +152,7 @@ Decision: **selected**. It has the lowest migration risk and the best balance of
 
 ### 5.1 Dependencies
 
-Add these only when implementation begins:
+Implemented runtime dependencies:
 
 ```powershell
 cd frontend

@@ -1631,3 +1631,49 @@
     gap: 6px 12px;
   }
 }
+
+/* Arabic direction overrides for physical legacy authentication styles. */
+[dir="rtl"] .auth-left--welcome,
+[dir="rtl"] .auth-field label,
+[dir="rtl"] .password-hints-title,
+[dir="rtl"] .rule {
+  text-align: start;
+}
+
+[dir="rtl"] .input-icon {
+  right: 14px;
+  left: auto;
+}
+
+[dir="rtl"] .auth-input--icon {
+  padding-right: 42px;
+  padding-left: 16px;
+}
+
+[dir="rtl"] .password-input {
+  padding-right: 16px;
+  padding-left: 56px;
+}
+
+[dir="rtl"] .password-toggle {
+  right: auto;
+  left: 7px;
+}
+
+[dir="rtl"] .account-type-check {
+  right: auto;
+  left: 10px;
+}
+
+[dir="rtl"] .auth-file-input::file-selector-button {
+  margin-right: 0;
+  margin-left: 12px;
+}
+
+[dir="rtl"] .strength-label {
+  text-align: end;
+}
+
+[dir="rtl"] .btn-arrow {
+  transform: scaleX(-1);
+}

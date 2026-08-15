@@ -1,16 +1,18 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Brand from "../common/Brand";
 
 export default function SiteFooter() {
+  const { t } = useTranslation("public");
   return (
     <footer className="site-footer">
       <div className="landing-container site-footer__grid">
-        <div className="site-footer__intro"><Brand light /><p>Opening hospitality to ability, potential, and meaningful work.</p></div>
-        <nav aria-label="Platform"><h2>Platform</h2><a href="#purpose">Our purpose</a><a href="#how-it-works">How it works</a><a href="#paths">Get started</a></nav>
-        <nav aria-label="Account"><h2>Account</h2><Link to="/signin">Sign in</Link><Link to="/signup?role=candidate">Candidate account</Link><Link to="/signup?role=employer">Employer account</Link></nav>
-        <section aria-labelledby="footer-inclusion-heading"><h2 id="footer-inclusion-heading">Inclusion</h2><span>Ability-first matching</span><span>Accessible opportunities</span><span>Inclusive hospitality</span></section>
+        <div className="site-footer__intro"><Brand light /><p>{t("footer.intro")}</p></div>
+        <nav aria-label={t("footer.platformNav")}><h2>{t("footer.platform")}</h2><a href="#purpose">{t("footer.purpose")}</a><a href="#how-it-works">{t("footer.how")}</a><a href="#paths">{t("footer.started")}</a></nav>
+        <nav aria-label={t("footer.accountNav")}><h2>{t("footer.account")}</h2><Link to="/signin">{t("footer.signIn")}</Link><Link to="/signup?role=candidate">{t("footer.candidate")}</Link><Link to="/signup?role=employer">{t("footer.employer")}</Link></nav>
+        <section aria-labelledby="footer-inclusion-heading"><h2 id="footer-inclusion-heading">{t("footer.inclusion")}</h2><span>{t("footer.ability")}</span><span>{t("footer.accessible")}</span><span>{t("footer.hospitality")}</span></section>
       </div>
-      <div className="landing-container site-footer__bottom"><span>© {new Date().getFullYear()} JoIn Hospitality</span><span>Designed for a more inclusive world of work.</span></div>
+      <div className="landing-container site-footer__bottom"><span>{t("footer.copyright", { year: new Date().getFullYear() })}</span><span>{t("footer.closing")}</span></div>
     </footer>
   );
 }

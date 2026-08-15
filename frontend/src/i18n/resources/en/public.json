@@ -1,0 +1,106 @@
+{
+  "header": {
+    "menu": "Menu",
+    "closeMenu": "Close menu",
+    "navigation": "Main navigation",
+    "purpose": "Our purpose",
+    "how": "How it works",
+    "forYou": "For you",
+    "employers": "For employers",
+    "signIn": "Sign in",
+    "signUp": "Sign up"
+  },
+  "footer": {
+    "intro": "Opening hospitality to ability, potential, and meaningful work.",
+    "platformNav": "Platform",
+    "platform": "Platform",
+    "purpose": "Our purpose",
+    "how": "How it works",
+    "started": "Get started",
+    "accountNav": "Account",
+    "account": "Account",
+    "signIn": "Sign in",
+    "candidate": "Candidate account",
+    "employer": "Employer account",
+    "inclusion": "Inclusion",
+    "ability": "Ability-first matching",
+    "accessible": "Accessible opportunities",
+    "hospitality": "Inclusive hospitality",
+    "copyright": "© {{year}} JoIn Hospitality",
+    "closing": "Designed for a more inclusive world of work."
+  },
+  "welcome": {
+    "heroEyebrow": "Inclusive hospitality starts here",
+    "heroStart": "Opportunity should be shaped by",
+    "heroEmphasis": "ability.",
+    "heroText": "JoIn connects candidates and hospitality employers through a clearer, more human way of matching people to the work they can thrive in.",
+    "findOpportunity": "Find your opportunity",
+    "explorePurpose": "Explore our purpose",
+    "trust": ["Ability-led profiles", "Task-based matching", "Inclusive by design"],
+    "heroAlt": "People connecting through inclusive employment",
+    "strengths": "Strengths recognized",
+    "potential": "Potential made visible",
+    "greatMatch": "Great match",
+    "realTasks": "Based on real tasks",
+    "why": "Why JoIn exists",
+    "purposeTitle": "Work becomes more inclusive when we ask a better question.",
+    "purposeOne": "Instead of asking what someone cannot do, we help employers understand what a person can contribute. That shift turns uncertainty into practical opportunity.",
+    "purposeTwo": "JoIn makes hospitality roles easier to understand by connecting job tasks with real abilities—giving candidates confidence and employers clarity.",
+    "principles": [
+      { "title": "Ability first", "text": "We start with strengths and practical capabilities—not labels or assumptions." },
+      { "title": "Clear by design", "text": "Jobs, tasks, and expectations are presented in a way people can understand." },
+      { "title": "Human at heart", "text": "Technology supports better decisions while people remain at the center." }
+    ],
+    "howKicker": "How it works",
+    "howTitle": "A thoughtful path from potential to opportunity.",
+    "howText": "Simple steps, clearer information, and matching built around the work itself.",
+    "steps": [
+      { "number": "01", "title": "Share what you can do", "text": "Candidates build an ability-led profile focused on strengths, preferences, and practical potential." },
+      { "number": "02", "title": "Describe the real work", "text": "Employers break opportunities into clear tasks and the abilities each task actually requires." },
+      { "number": "03", "title": "Discover better matches", "text": "Our platform brings both sides together with transparent, task-based compatibility insights." }
+    ],
+    "chooseKicker": "Choose your path",
+    "chooseTitle": "One purpose. Two ways to take part.",
+    "candidateLabel": "For candidates",
+    "candidateTitle": "Let your abilities lead the way.",
+    "candidateText": "Create your profile, understand your strengths, explore suitable roles, and apply with confidence.",
+    "candidateBenefits": ["Build an ability-led profile", "Receive compatibility insights", "Explore accessible employers"],
+    "candidateAction": "Become a candidate",
+    "employerLabel": "For employers",
+    "employerTitle": "Hire with more clarity and confidence.",
+    "employerText": "Describe the work that matters, reach a wider talent pool, and focus hiring decisions on capability.",
+    "employerBenefits": ["Publish task-based opportunities", "Build an inclusive company profile", "Review applications in one place"],
+    "employerAction": "For employers",
+    "closingKicker": "A more inclusive future of work",
+    "closingTitle": "Ready to turn potential into possibility?",
+    "closingText": "Join a community that sees ability first.",
+    "createAccount": "Create your account",
+    "signIn": "Sign in"
+  },
+  "employers": {
+    "back": "Back to home",
+    "eyebrow": "For employers",
+    "title": "This page is under construction.",
+    "text": "We’re preparing a dedicated space explaining inclusive hiring, task-based job creation, and how JoIn helps employers discover ability-led talent.",
+    "create": "Create an employer account",
+    "signIn": "Employer sign in",
+    "note": "The employer dashboard remains available to registered employer accounts after sign in."
+  },
+  "privacy": {
+    "navigation": "Privacy page navigation",
+    "back": "Back to home",
+    "title": "Privacy notice",
+    "subtitle": "How we use, protect, retain, and let you control your information.",
+    "version": "Version {{version}}",
+    "sections": [
+      { "id": "privacy-processing", "title": "What we process", "text": "We process account and contact details, candidate profile information, selected abilities, job applications, and documents you choose to upload. Candidate disability cards are used only to verify eligibility and are available only to authorized verifiers and administrators." },
+      { "id": "privacy-retention", "title": "Disability-card retention", "text": "Cards are stored outside the public web directory with randomized filenames. After an authorized verifier records a decision, the card is scheduled for deletion after 30 days. The verification result and limited audit record remain so the account can continue to operate." },
+      { "id": "privacy-ai", "title": "AI-assisted profiles", "text": "The editable text you approve is sent to the profile assistant only when you give explicit consent. Suggestions are reviewable and never update the profile automatically. The platform records consent and operational event metadata, not the transcript content." },
+      { "id": "privacy-controls", "title": "Your controls", "text": "Candidates can download a machine-readable copy of their data, withdraw active AI consent, view card-retention status, and permanently delete their account and private documents from the Privacy & data dashboard." },
+      { "id": "privacy-security", "title": "Security and access", "text": "Private documents are served only through authenticated, role-authorized endpoints. Document responses disable browser caching, and access to disability cards is audited." }
+    ],
+    "registration": "Return to registration",
+    "signIn": "Sign in"
+  }
+}
+

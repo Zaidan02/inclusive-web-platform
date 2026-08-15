@@ -1,0 +1,43 @@
+{
+  "label": "Navigation vocale",
+  "activate": "Activer la navigation vocale",
+  "deactivate": "Désactiver la navigation vocale",
+  "voiceOn": "Navigation vocale active",
+  "close": "Fermer",
+  "options": "Options",
+  "cancel": "Annuler",
+  "stopTalking": "Arrêter la lecture",
+  "resume": "Reprendre",
+  "commands": "Commandes",
+  "commandLanguage": "Langue des commandes : {{language}}",
+  "lastCaptured": "Dernier enregistrement · {{kilobytes}} Ko · {{seconds}} s",
+  "audioUnsupported": "Votre navigateur ne prend pas en charge la lecture audio.",
+  "download": "Télécharger l’enregistrement",
+  "disclosure": "Voix générée par l’IA",
+  "status": {
+    "off": "La navigation vocale est désactivée",
+    "speaking": "Lecture en cours",
+    "processing": "Interprétation de votre demande",
+    "listening": "À l’écoute — parlez maintenant",
+    "listeningRequest": "Écoute de votre demande",
+    "paused": "Écoute en pause",
+    "requestCancelled": "Demande annulée",
+    "speechStopped": "Lecture arrêtée — écoute en cours",
+    "unsupported": "Ce navigateur ne permet pas l’enregistrement par microphone",
+    "permission": "En attente de l’autorisation du microphone",
+    "permissionDenied": "L’autorisation du microphone a été refusée",
+    "failed": "Échec de la navigation vocale"
+  },
+  "feedback": {
+    "noPending": "Aucune action n’est en attente de confirmation.",
+    "pendingCancelled": "L’action en attente a été annulée.",
+    "actionUnavailable": "Cette action est enregistrée, mais son contrôle n’est pas disponible actuellement.",
+    "sectionUnavailable": "Cette section n’est pas disponible sur cette page.",
+    "openingHelp": "Ouverture du guide de navigation vocale.",
+    "noPrevious": "Il n’y a aucun message précédent à répéter.",
+    "outputStopped": "La sortie vocale est arrêtée.",
+    "cancelledNext": "Annulé. Que souhaitez-vous faire ensuite ?",
+    "processingFailed": "Le traitement de la commande vocale a échoué."
+  }
+}
+

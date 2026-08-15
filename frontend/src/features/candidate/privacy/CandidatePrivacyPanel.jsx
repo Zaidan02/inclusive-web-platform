@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   deleteCandidateAccount,
   exportCandidateData,
@@ -6,11 +7,13 @@ import {
   withdrawAiConsent,
 } from "../../../services/candidatePrivacyApi";
 
-function dateText(value) {
-  return value ? new Date(value).toLocaleString() : "Not set";
+function dateText(value, locale, fallback) {
+  return value ? new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(value)) : fallback;
 }
 
 export default function CandidatePrivacyPanel({ onAccountDeleted }) {
+  const { t, i18n } = useTranslation("dashboards");
+  const locale = i18n.resolvedLanguage || "en";
   const [summary, setSummary] = useState(null);
   const [busy, setBusy] = useState("");
   const [message, setMessage] = useState("");
@@ -27,28 +30,28 @@ export default function CandidatePrivacyPanel({ onAccountDeleted }) {
     requestAnimationFrame(() => (type === "error" ? errorRef.current : messageRef.current)?.focus());
   }
 
-  async function load() {
+  const load = useCallback(async () => {
     try {
       setError("");
       setSummary(await getPrivacySummary());
-    } catch (err) {
-      setError(err.message);
+    } catch {
+      setError(t("candidatePrivacy.errors.load"));
     }
-  }
+  }, [t]);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [load]);
 
   async function run(name, action) {
     try {
-      setBusy(name); setError(""); setMessage("");
-      const result = await action();
-      if (result?.message) {
-        setMessage(result.message);
-        focusMessage("message");
-      }
+      setBusy(name);
+      setError("");
+      setMessage("");
+      await action();
+      setMessage(t(`candidatePrivacy.success.${name}`));
+      focusMessage("message");
       await load();
-    } catch (err) {
-      setError(err.message);
+    } catch {
+      setError(t(`candidatePrivacy.errors.${name}`));
       focusMessage("error");
     } finally {
       setBusy("");
@@ -59,21 +62,22 @@ export default function CandidatePrivacyPanel({ onAccountDeleted }) {
     event.preventDefault();
     setDeleteError("");
     if (!password) {
-      setDeleteError("Enter your password to confirm account deletion.");
+      setDeleteError(t("candidatePrivacy.errors.password"));
       requestAnimationFrame(() => passwordRef.current?.focus());
       return;
     }
     if (confirmation !== "DELETE") {
-      setDeleteError("Type DELETE exactly to confirm permanent account deletion.");
+      setDeleteError(t("candidatePrivacy.errors.confirmation"));
       requestAnimationFrame(() => confirmationRef.current?.focus());
       return;
     }
     try {
-      setBusy("delete"); setError("");
+      setBusy("delete");
+      setError("");
       await deleteCandidateAccount(password, confirmation);
       onAccountDeleted?.();
-    } catch (err) {
-      setError(err.message);
+    } catch {
+      setError(t("candidatePrivacy.errors.delete"));
       focusMessage("error");
       setBusy("");
     }
@@ -82,47 +86,47 @@ export default function CandidatePrivacyPanel({ onAccountDeleted }) {
   const verification = summary?.verificationDocument;
   return (
     <section className="candidate-privacy" aria-labelledby="candidate-privacy-title">
-      <h2 id="candidate-privacy-title">Privacy and your data</h2>
-      <p>Review what the platform processes, download a copy of your data, or delete your account. Privacy notice version: {summary?.policy?.version || "loading"}.</p>
+      <h2 id="candidate-privacy-title">{t("candidatePrivacy.title")}</h2>
+      <p>{t("candidatePrivacy.intro", { version: summary?.policy?.version || t("candidatePrivacy.loading") })}</p>
       {error && <p ref={errorRef} tabIndex="-1" className="candidate-privacy__error" role="alert">{error}</p>}
       {message && <p ref={messageRef} tabIndex="-1" className="candidate-privacy__success" role="status">{message}</p>}
 
       <div className="candidate-privacy__grid">
         <article>
-          <h3>Data we use</h3>
-          <ul>{(summary?.dataCategories || []).map((item) => <li key={item}>{item}</li>)}</ul>
+          <h3>{t("candidatePrivacy.dataTitle")}</h3>
+          <ul>{(summary?.dataCategories || []).map((item) => <li key={item}>{t(`candidatePrivacy.categories.${item}`, { defaultValue: item })}</li>)}</ul>
           <button type="button" onClick={() => run("export", exportCandidateData)} disabled={Boolean(busy)}>
-            {busy === "export" ? "Preparing export…" : "Download my data (JSON)"}
+            {busy === "export" ? t("candidatePrivacy.preparing") : t("candidatePrivacy.export")}
           </button>
         </article>
 
         <article>
-          <h3>Disability-card retention</h3>
-          {!verification && <p>No verification request is linked to this account.</p>}
+          <h3>{t("candidatePrivacy.retentionTitle")}</h3>
+          {!verification && <p>{t("candidatePrivacy.noVerification")}</p>}
           {verification && <>
-            <p>Status: <strong>{verification.status}</strong></p>
-            <p>Private document: {verification.available ? "retained temporarily" : "deleted"}</p>
-            {verification.retentionUntil && <p>Scheduled deletion: {dateText(verification.retentionUntil)}</p>}
-            {verification.deletedAt && <p>Deleted: {dateText(verification.deletedAt)}</p>}
+            <p>{t("candidatePrivacy.status")} <strong>{t(`candidatePrivacy.statuses.${verification.status}`, { defaultValue: verification.status })}</strong></p>
+            <p>{t("candidatePrivacy.privateDocument")} {verification.available ? t("candidatePrivacy.retained") : t("candidatePrivacy.deleted")}</p>
+            {verification.retentionUntil && <p>{t("candidatePrivacy.scheduledDeletion")} {dateText(verification.retentionUntil, locale, t("candidatePrivacy.notSet"))}</p>}
+            {verification.deletedAt && <p>{t("candidatePrivacy.deletedAt")} {dateText(verification.deletedAt, locale, t("candidatePrivacy.notSet"))}</p>}
           </>}
         </article>
 
         <article>
-          <h3>AI profile assistant</h3>
-          <p>The platform records consent and operational events, but not the transcript text. You approve suggestions before profile changes are saved.</p>
+          <h3>{t("candidatePrivacy.aiTitle")}</h3>
+          <p>{t("candidatePrivacy.aiText")}</p>
           <button type="button" onClick={() => run("withdraw", withdrawAiConsent)} disabled={Boolean(busy)}>
-            {busy === "withdraw" ? "Withdrawing…" : "Withdraw active AI consent"}
+            {busy === "withdraw" ? t("candidatePrivacy.withdrawing") : t("candidatePrivacy.withdraw")}
           </button>
         </article>
       </div>
 
       <form className="candidate-privacy__delete" onSubmit={handleDelete} aria-busy={busy === "delete"}>
-        <h3>Delete account</h3>
-        <p>This permanently deletes your account and privately stored application and verification documents. This cannot be undone.</p>
+        <h3>{t("candidatePrivacy.deleteTitle")}</h3>
+        <p>{t("candidatePrivacy.deleteText")}</p>
         {deleteError && <p id="candidate-delete-error" className="candidate-privacy__error" role="alert">{deleteError}</p>}
-        <label>Password<input ref={passwordRef} type="password" autoComplete="current-password" value={password} onChange={(event) => { setPassword(event.target.value); setDeleteError(""); }} required aria-invalid={Boolean(deleteError && !password)} aria-describedby={deleteError ? "candidate-delete-error" : undefined} /></label>
-        <label>Type DELETE<input ref={confirmationRef} value={confirmation} onChange={(event) => { setConfirmation(event.target.value); setDeleteError(""); }} required aria-invalid={Boolean(deleteError && confirmation !== "DELETE")} aria-describedby={deleteError ? "candidate-delete-error" : undefined} /></label>
-        <button type="submit" disabled={Boolean(busy)}>{busy === "delete" ? "Deleting…" : "Permanently delete my account"}</button>
+        <label>{t("candidatePrivacy.password")}<input ref={passwordRef} type="password" autoComplete="current-password" value={password} onChange={(event) => { setPassword(event.target.value); setDeleteError(""); }} required aria-invalid={Boolean(deleteError && !password)} aria-describedby={deleteError ? "candidate-delete-error" : undefined} /></label>
+        <label>{t("candidatePrivacy.typeDelete")}<input ref={confirmationRef} dir="ltr" value={confirmation} onChange={(event) => { setConfirmation(event.target.value); setDeleteError(""); }} required aria-invalid={Boolean(deleteError && confirmation !== "DELETE")} aria-describedby={deleteError ? "candidate-delete-error" : undefined} /></label>
+        <button type="submit" disabled={Boolean(busy)}>{busy === "delete" ? t("candidatePrivacy.deleting") : t("candidatePrivacy.deleteButton")}</button>
       </form>
     </section>
   );
