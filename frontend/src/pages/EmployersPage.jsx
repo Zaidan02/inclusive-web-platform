@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Brand from "../components/common/Brand";
 import ArrowIcon from "../components/common/ArrowIcon";
+import LanguageSwitcher from "../components/localization/LanguageSwitcher";
 import "../styles/employersPage.css";
 
 export default function EmployersPage() {
@@ -10,7 +11,10 @@ export default function EmployersPage() {
     <main className="employers-placeholder">
       <header className="employers-placeholder__header">
         <Brand />
-        <Link to="/" className="employers-placeholder__home">{t("employers.back")}</Link>
+        <div className="public-page-header__actions">
+          <Link to="/" className="employers-placeholder__home">{t("employers.back")}</Link>
+          <LanguageSwitcher compact />
+        </div>
       </header>
       <section className="employers-placeholder__content">
         <div className="employers-placeholder__visual" aria-hidden="true">

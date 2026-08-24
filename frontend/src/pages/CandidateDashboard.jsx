@@ -12,6 +12,7 @@ import "../features/candidate/privacy/candidatePrivacy.css";
 import { API_BASE_URL, BACKEND_BASE_URL } from "../config";
 import useDialogFocus from "../hooks/useDialogFocus";
 import AccessibleNotice from "../components/accessibility/AccessibleNotice";
+import LanguageSwitcher from "../components/localization/LanguageSwitcher";
 
 const globalStyles = `
   @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -710,6 +711,7 @@ function CandidateDashboard() {
           <h1 style={styles.headerTitle}>{t("candidate.header.title")}</h1>
         </div>
         <div style={styles.userBox} className="candidate-dashboard__user">
+          <LanguageSwitcher compact />
           <button
             type="button"
             style={styles.userAvatar}
@@ -727,17 +729,20 @@ function CandidateDashboard() {
         </div>
       </header>
 
-      {/* TABS */}
-      <nav style={styles.tabs} className="candidate-dashboard__tabs" aria-label={t("candidate.tabsLabel")}>
-        {["JOBS", "APPLICATIONS", "PROFILE", "PRIVACY"].map((tab) => (
-          <button type="button" key={tab} aria-current={activeTab === tab ? "page" : undefined} onClick={() => { setActiveTab(tab); if (tab === "JOBS") setSelectedJob(null); }}
-            style={{ ...styles.tabButton, ...(activeTab === tab ? styles.activeTab : {}) }}>
-            {t(`candidate.tabs.${tab}`)}
-          </button>
-        ))}
-      </nav>
+      <div className="candidate-dashboard__layout">
+        {/* WORKFLOW NAVIGATION */}
+        <aside className="candidate-dashboard__sidebar">
+          <nav style={styles.tabs} className="candidate-dashboard__tabs" aria-label={t("candidate.tabsLabel")}>
+            {["JOBS", "APPLICATIONS", "PROFILE", "PRIVACY"].map((tab) => (
+              <button type="button" key={tab} aria-current={activeTab === tab ? "page" : undefined} onClick={() => { setActiveTab(tab); if (tab === "JOBS") setSelectedJob(null); }}
+                style={{ ...styles.tabButton, ...(activeTab === tab ? styles.activeTab : {}) }}>
+                {t(`candidate.tabs.${tab}`)}
+              </button>
+            ))}
+          </nav>
+        </aside>
 
-      <main style={styles.main} className="candidate-dashboard__main" aria-busy={loadingProfile}>
+        <main style={styles.main} className="candidate-dashboard__main" aria-busy={loadingProfile}>
         <nav className="candidate-journey" aria-label={t("candidate.journey.label")}>
           <ol>
             {journeySteps.map((step, index) => {
@@ -1017,7 +1022,8 @@ function CandidateDashboard() {
         )}
 
         {activeTab === "PRIVACY" && <CandidatePrivacyPanel onAccountDeleted={handleLogout} />}
-      </main>
+        </main>
+      </div>
 
       {selectedCompany && (
         <div style={styles.companyOverlay} className="candidate-dashboard__dialog-overlay">

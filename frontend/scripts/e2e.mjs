@@ -99,6 +99,7 @@ await check("wrong-role dashboard access redirects to the user's own dashboard",
 
 await check("keyboard entry exposes the skip link", async (page) => {
   await page.goto(`${WEB_BASE}/`, { waitUntil: "domcontentloaded" });
+  await page.locator(".skip-link").waitFor({ state: "attached", timeout: 10_000 });
   await page.keyboard.press("Tab");
   const focusedText = await page.evaluate(() => document.activeElement?.textContent?.trim());
   assert.equal(focusedText, "Skip to main content");

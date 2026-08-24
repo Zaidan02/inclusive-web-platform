@@ -1,6 +1,6 @@
 # Frontend design refresh
 
-Status: **Public, opportunity, and guided candidate-flow slices implemented on `new-frontend-design`**
+Status: **System-wide interface shell implemented on `new-frontend-design`**
 Date: 24 August 2026
 
 ## Objective
@@ -45,6 +45,16 @@ The public overview API exposes only aggregate counts and fields already intende
 - Updated first-time setup to identify itself as step 1 of 3 and to explain what follows.
 - After application submission, the existing behavior still advances to application tracking, completing the guided path without changing application logic.
 
+### Authentication and role workspaces
+
+- Rebuilt sign-in, signup, password-recovery, and password-reset surfaces with a calm hospitality palette, restrained geometry, clear form hierarchy, and an integrated page utility header.
+- Removed the application-level language row. Every public, authentication, setup, candidate, employer, verifier, and administrator screen now owns one language control in its actual header or top action group.
+- Converted candidate section tabs into a persistent left workflow column on desktop. The navigation reflows into a compact two-row control at smaller widths without changing routes or candidate business behavior.
+- Recoloured the administrator workspace with a deep slate column and the employer workspace with a deep hospitality green column. Current destinations use a visible terracotta edge and text, not colour alone.
+- Converted the verifier into the same professional two-column workspace model, using a muted aubergine review column with request counts and filters.
+- Retained horizontal compact navigation below 760–900 px where a fixed sidebar would reduce usable content width.
+- Corrected small-text and status contrast discovered during the rendered audit, including account-type descriptions, dashboard eyebrow labels, verification states, destructive actions, and voice-language status text.
+
 ## Protected boundaries
 
 This visual change does not modify:
@@ -77,7 +87,5 @@ This visual change does not modify:
 - Public page automated scan: no overflow across the baseline scenarios; detected contrast issues were corrected and retested.
 - Guided-flow WCAG retest: zero detected violations and no overflow on the welcome page, candidate dashboard, and candidate setup at 320, 375, 768, 1024, and 1440 px, landscape, 200% zoom, and text spacing.
 - Guided-flow E2E: public disclosure navigation opens by keyboard, closes with `Escape`, restores trigger focus, and the profile-save action advances to the matching stage.
-
-## Later design slices
-
-Authentication and employer, verifier, and administrator pages remain functionally unchanged. Any broader visual migration should be reviewed as a separate slice so usability and accessibility can be evaluated before the new style is propagated.
+- System-wide shell retest: all public, authentication, candidate, setup, employer, administrator, and verifier routes report zero automated WCAG 2.1 A/AA findings and no horizontal page overflow at 320, 375, 768, 1024, and 1440 px, landscape, 200% zoom simulation, and text spacing.
+- Protected-route and role-routing E2E: all candidate, employer, administrator, and verifier access controls pass.

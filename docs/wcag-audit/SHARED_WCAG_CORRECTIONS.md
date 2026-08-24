@@ -30,10 +30,13 @@
   colour set (`#94a3b8`, `#91a2c7`, `#7183a8`, `#9ca3af`, or `#a0aec0`) in the
   frontend source.
 
-## Remaining browser verification
+## Rendered browser verification
 
-Run the live accessibility matrix with the frontend server running. It must
-cover all routes at 320 px, 375 px, 768 px, 1024 px, and 1440 px; 200% zoom;
-text spacing; keyboard-only navigation; reduced motion; and automated axe scans.
-Static validation cannot prove the actual rendered contrast, focus order, and
-screen-reader announcements for authenticated data states.
+- The live matrix covers every route at 320 px, 375 px, 768 px, 1024 px, and
+  1440 px, plus landscape, 200% zoom simulation, text spacing, keyboard tab
+  stops, and automated axe scans.
+- The 24 August 2026 post-redesign run reports zero automated WCAG 2.1 A/AA
+  findings and no horizontal page overflow for every tested route and scenario.
+- Browser automation remains supporting evidence rather than a standalone AA
+  conformance claim; the documented native-zoom and NVDA/browser manual checks
+  remain part of final human acceptance.

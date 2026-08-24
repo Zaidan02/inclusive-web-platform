@@ -4,6 +4,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import logoImage from "../assets/john-logo.png";
 import { resetPassword } from "../services/authApi";
 import { isStrongPassword } from "../utils/authValidation";
+import AuthUtilityBar from "../components/layout/AuthUtilityBar";
 import "../styles/authPages.css";
 
 function ResetPasswordPage() {
@@ -81,6 +82,7 @@ function ResetPasswordPage() {
     <main className="auth-page">
       <div className="auth-shell">
         <div className="auth-left">
+          <AuthUtilityBar />
           <span className="auth-badge">{t("reset.badge")}</span>
           <h1 className="auth-title">{t("reset.title")}</h1>
           <p className="auth-subtitle" id="reset-password-help">

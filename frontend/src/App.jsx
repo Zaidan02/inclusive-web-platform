@@ -1,12 +1,11 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import RoleRoute from "./components/auth/RoleRoute";
 import VoiceNavigationControl from "./components/voice/VoiceNavigationControl";
 import RouteAccessibility from "./components/accessibility/RouteAccessibility";
 import SkipLink from "./components/accessibility/SkipLink";
 import ArrowKeyFocusNavigation from "./components/accessibility/ArrowKeyFocusNavigation";
-import LanguageSwitcher from "./components/localization/LanguageSwitcher";
 import "./styles/dashboard.css";
 
 const WelcomePage = lazy(() => import("./pages/WelcomePage"));
@@ -25,15 +24,12 @@ const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 
 function AppContent() {
   const { t } = useTranslation("common");
-  const location = useLocation();
-  const hasInlineLanguageSwitcher = location.pathname === "/";
 
   return (
     <>
       <RouteAccessibility />
       <ArrowKeyFocusNavigation />
       <SkipLink />
-      {!hasInlineLanguageSwitcher && <LanguageSwitcher />}
       <VoiceNavigationControl />
       <div id="main-content" className="route-content" tabIndex="-1">
         <Suspense fallback={<p className="route-loading" role="status">{t("loadingPage")}</p>}>

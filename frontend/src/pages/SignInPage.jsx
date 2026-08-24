@@ -6,6 +6,7 @@ import { loginUser } from "../services/authApi";
 import { getRoleFromToken } from "../services/authService";
 import { saveToken } from "../services/tokenService";
 import { isValidEmail } from "../utils/authValidation";
+import AuthUtilityBar from "../components/layout/AuthUtilityBar";
 import "../styles/authPages.css";
 
 function EyeIcon({ hidden }) {
@@ -151,6 +152,7 @@ function SignInPage() {
 
         {/* LEFT */}
         <div className="auth-left">
+          <AuthUtilityBar />
 
           <div className="signin-header">
             <span className="auth-badge">{t("signIn.badge")}</span>

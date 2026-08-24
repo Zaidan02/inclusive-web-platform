@@ -12,6 +12,8 @@
 /* First stage of the candidate journey: warm, structured, and low-decoration. */
 .profile-setup { background: #f5f2ec; }
 .profile-setup__header { border-bottom-color: #d8d3ca; }
+.profile-setup__header-tools { display:flex;align-items:center;gap:1rem; }.profile-setup__header-tools>span { color:var(--ink-500);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px; }
+@media(max-width:620px){.profile-setup__header-tools>span{display:none}}
 .profile-setup__step,
 .profile-setup__eyebrow { color: #96502f; }
 .profile-setup__intro h1 {

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import logoImage from "../assets/john-logo.png";
 import { requestPasswordReset } from "../services/authApi";
 import { isValidEmail } from "../utils/authValidation";
+import AuthUtilityBar from "../components/layout/AuthUtilityBar";
 import "../styles/authPages.css";
 
 function EmailIcon() {
@@ -58,6 +59,7 @@ function ForgotPasswordPage() {
 
         {/* LEFT */}
         <div className="auth-left">
+          <AuthUtilityBar />
 
           <div className="signin-header">
             <span className="auth-badge">JoIn Hospitality</span>

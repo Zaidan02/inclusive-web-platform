@@ -22,6 +22,7 @@ import { API_BASE_URL, BACKEND_BASE_URL } from "../config";
 import useDialogFocus from "../hooks/useDialogFocus";
 import AccessibleNotice from "../components/accessibility/AccessibleNotice";
 import { disabilityOptions } from "../features/candidate/profile/profileOptions";
+import LanguageSwitcher from "../components/localization/LanguageSwitcher";
 
 const globalStyles = `
   * { box-sizing: border-box; }
@@ -445,10 +446,15 @@ function EmployerDashboard() {
 
         {/* HEADER */}
         <div className="dashboard-page-header" style={{ marginBottom: "24px" }}>
-          <p style={{ margin: "0 0 4px", fontSize: "12px", fontWeight: "400", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.8px" }}>{t("employer.role")}</p>
-          <h1 style={{ margin: 0, fontSize: "26px", fontWeight: "600", color: "#0f172a", letterSpacing: "-0.4px" }}>
-            {activeTab === "POST_JOB" ? (editingJobId ? t("employer.tabs.editJob") : t("employer.tabs.postJob")) : activeTab === "MY_JOBS" ? t("employer.tabs.myJobs") : activeTab === "APPLICATIONS" ? t("employer.tabs.applications") : t("employer.tabs.profile")}
-          </h1>
+          <div>
+            <p style={{ margin: "0 0 4px", fontSize: "12px", fontWeight: "400", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.8px" }}>{t("employer.role")}</p>
+            <h1 style={{ margin: 0, fontSize: "26px", fontWeight: "600", color: "#0f172a", letterSpacing: "-0.4px" }}>
+              {activeTab === "POST_JOB" ? (editingJobId ? t("employer.tabs.editJob") : t("employer.tabs.postJob")) : activeTab === "MY_JOBS" ? t("employer.tabs.myJobs") : activeTab === "APPLICATIONS" ? t("employer.tabs.applications") : t("employer.tabs.profile")}
+            </h1>
+          </div>
+          <div className="dashboard-header-tools">
+            <LanguageSwitcher compact />
+          </div>
         </div>
 
         {message && (

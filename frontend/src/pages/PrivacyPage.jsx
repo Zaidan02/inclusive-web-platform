@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PRIVACY_VERSION } from "../privacy";
+import LanguageSwitcher from "../components/localization/LanguageSwitcher";
 import "../styles/privacy.css";
 
 export default function PrivacyPage() {
@@ -10,6 +11,7 @@ export default function PrivacyPage() {
     <main className="privacy-page">
       <nav className="privacy-page__back" aria-label={t("privacy.navigation")}>
         <Link to="/">{t("privacy.back")}</Link>
+        <LanguageSwitcher compact />
       </nav>
       <header className="privacy-page__header">
         <span>JoIn Hospitality</span>

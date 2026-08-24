@@ -473,3 +473,139 @@
   .candidate-next-step { align-items: stretch; flex-direction: column; }
   .candidate-next-step button { width: 100%; justify-content: center; }
 }
+
+/* Unified product shell: role-aware columns and inline header utilities. */
+.dashboard-screen--admin,
+.dashboard-screen--employer { background: #eeeae2 !important; }
+
+.dashboard-screen--admin > .dashboard-sidebar {
+  background: #29384a !important;
+  border-inline-end-color: #3e4c5f;
+}
+
+.dashboard-screen--employer > .dashboard-sidebar {
+  background: #21433f !important;
+  border-inline-end-color: #365b56;
+}
+
+.dashboard-sidebar {
+  box-shadow: none !important;
+}
+
+.dashboard-sidebar .nav-btn {
+  border-radius: .2rem !important;
+  color: #dce3e9 !important;
+}
+
+.dashboard-screen--admin .dashboard-sidebar .nav-btn[aria-current="page"] {
+  border-inline-start-color: #d98961 !important;
+  background: #3b4a5e !important;
+  color: #fff !important;
+}
+
+.dashboard-screen--employer .dashboard-sidebar .nav-btn[aria-current="page"] {
+  border-inline-start-color: #e4a273 !important;
+  background: #315852 !important;
+  color: #fff !important;
+}
+
+.dashboard-sidebar > div:last-child button { color: #e5e9ec !important; }
+.dashboard-sidebar > div:first-child p { color: #dce3e9 !important; }
+.dashboard-main { background: #f4f1eb; }
+
+.dashboard-page-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+.dashboard-page-header > div:first-child > p { color: #4a586b !important; }
+
+.dashboard-header-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+
+.dashboard-content-card,
+.dashboard-stat-grid > div,
+.dashboard-main [role="dialog"] { border-radius: .3rem !important; }
+
+.candidate-dashboard__layout {
+  display: grid;
+  grid-template-columns: minmax(13.5rem, 15rem) minmax(0, 1fr);
+  min-height: calc(100vh - 6.2rem);
+}
+
+.candidate-dashboard__sidebar {
+  border-inline-end: 1px solid #cfc8bd;
+  background: #ece5db;
+}
+
+.candidate-dashboard__tabs {
+  position: sticky;
+  top: 0;
+  display: flex !important;
+  flex-direction: column;
+  gap: .35rem !important;
+  padding: 1.4rem 1rem !important;
+  border-bottom: 0 !important;
+  background: transparent !important;
+}
+
+.candidate-dashboard__tabs button {
+  width: 100%;
+  min-height: 2.9rem;
+  padding: .7rem .85rem !important;
+  border: 1px solid transparent !important;
+  border-inline-start: 3px solid transparent !important;
+  border-radius: .2rem !important;
+  color: #435069 !important;
+  text-align: start;
+}
+
+.candidate-dashboard__tabs button:hover { background: #f8f5ef !important; }
+.candidate-dashboard__tabs button[aria-current="page"] {
+  border-color: #d6c4b7 !important;
+  border-inline-start-color: #a9532d !important;
+  background: #fff !important;
+  color: #7d361c !important;
+}
+
+.candidate-dashboard__main {
+  width: 100% !important;
+  max-width: 1180px;
+  margin-inline: auto !important;
+}
+
+.candidate-dashboard__user .language-toolbar--compact { margin-inline-end: .35rem; }
+
+@media (max-width: 900px) {
+  .candidate-dashboard__layout { grid-template-columns: minmax(0, 1fr); }
+  .candidate-dashboard__sidebar { border-inline-end: 0; border-bottom: 1px solid #cfc8bd; }
+  .candidate-dashboard__tabs {
+    position: static;
+    flex-flow: row wrap !important;
+    padding: .65rem var(--page-gutter) !important;
+  }
+  .candidate-dashboard__tabs button {
+    flex: 1 1 max-content;
+    width: auto;
+    min-width: max-content;
+    border-inline-start-width: 1px !important;
+    border-bottom: 3px solid transparent !important;
+    text-align: center;
+  }
+  .candidate-dashboard__tabs button[aria-current="page"] { border-bottom-color: #a9532d !important; }
+}
+
+@media (max-width: 760px) {
+  .dashboard-header-tools { width: 100%; justify-content: space-between; }
+  .candidate-dashboard__user .language-toolbar--compact { order: -1; }
+}
+
+@media (max-width: 520px) {
+  .candidate-dashboard__tabs { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .candidate-dashboard__tabs button { width: 100%; min-width: 0; }
+}

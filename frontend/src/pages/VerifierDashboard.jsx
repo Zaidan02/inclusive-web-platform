@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { clearToken } from "../services/tokenService";
 import AccessibleNotice from "../components/accessibility/AccessibleNotice";
+import LanguageSwitcher from "../components/localization/LanguageSwitcher";
 import {
   getVerificationRequests,
   openVerificationDocument,
@@ -103,23 +104,11 @@ export default function VerifierDashboard() {
 
   return (
     <main className="verifier-page dashboard-screen">
-      <header className="verifier-header">
-        <div>
+      <aside className="verifier-sidebar">
+        <div className="verifier-sidebar__heading">
           <p className="verifier-eyebrow">{t("verifier.eyebrow")}</p>
-          <h1>{t("verifier.title")}</h1>
-          <p>{t("verifier.intro")}</p>
+          <h2>{t("verifier.requests")}</h2>
         </div>
-        <button type="button" className="verifier-signout" onClick={signOut}>{t("common.signOut")}</button>
-      </header>
-
-      <section className="verifier-content" aria-labelledby="request-heading" aria-busy={loading}>
-        <div className="verifier-toolbar">
-          <h2 id="request-heading">{t("verifier.requests")}</h2>
-          <button type="button" className="verifier-refresh" onClick={loadRequests} disabled={loading}>
-            {loading ? t("common.refreshing") : t("common.refresh")}
-          </button>
-        </div>
-
         <div className="verifier-filters" aria-label={t("verifier.filterLabel")} role="group">
           {FILTERS.map((status) => (
             <button
@@ -134,6 +123,28 @@ export default function VerifierDashboard() {
             </button>
           ))}
         </div>
+      </aside>
+
+      <div className="verifier-main">
+        <header className="verifier-header">
+          <div>
+            <p className="verifier-eyebrow">{t("verifier.eyebrow")}</p>
+            <h1>{t("verifier.title")}</h1>
+            <p>{t("verifier.intro")}</p>
+          </div>
+          <div className="verifier-header__actions">
+            <LanguageSwitcher compact />
+            <button type="button" className="verifier-signout" onClick={signOut}>{t("common.signOut")}</button>
+          </div>
+        </header>
+
+        <section className="verifier-content" aria-labelledby="request-heading" aria-busy={loading}>
+          <div className="verifier-toolbar">
+            <h2 id="request-heading">{t("verifier.requests")}</h2>
+            <button type="button" className="verifier-refresh" onClick={loadRequests} disabled={loading}>
+              {loading ? t("common.refreshing") : t("common.refresh")}
+            </button>
+          </div>
 
         <div className="verifier-announcements">
           <AccessibleNotice noticeRef={errorRef} tone="error" message={error} />
@@ -192,7 +203,8 @@ export default function VerifierDashboard() {
             ))}
           </div>
         )}
-      </section>
+        </section>
+      </div>
     </main>
   );
 }

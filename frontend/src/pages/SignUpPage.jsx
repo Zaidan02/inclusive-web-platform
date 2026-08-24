@@ -4,6 +4,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { registerUser } from "../services/authApi";
 import { PRIVACY_VERSION } from "../privacy";
 import { getPasswordChecks, isValidEmail } from "../utils/authValidation";
+import AuthUtilityBar from "../components/layout/AuthUtilityBar";
 import "../styles/authPages.css";
 
 function EyeIcon({ hidden }) {
@@ -248,6 +249,7 @@ function SignUpPage() {
 
         {/* Card header shimmer stripe */}
         <div className="signup-card-stripe"></div>
+        <AuthUtilityBar />
 
         <div className="signup-header">
           <span className="auth-badge signup-badge">{t("signup.badge")}</span>

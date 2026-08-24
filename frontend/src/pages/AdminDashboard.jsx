@@ -10,6 +10,7 @@ import { API_BASE_URL } from "../config";
 import useDialogFocus from "../hooks/useDialogFocus";
 import AccessibleNotice from "../components/accessibility/AccessibleNotice";
 import { disabilityOptions } from "../features/candidate/profile/profileOptions";
+import LanguageSwitcher from "../components/localization/LanguageSwitcher";
 
 const globalStyles = `
   * { box-sizing: border-box; }
@@ -597,7 +598,8 @@ function AdminDashboard() {
             {navItems.find((item) => item.tab === activeTab)?.label}
           </h1>
           </div>
-          <div>
+          <div className="dashboard-header-tools">
+            <LanguageSwitcher compact />
             <input
               ref={catalogueInputRef}
               type="file"
@@ -726,7 +728,7 @@ function AdminDashboard() {
                         <span style={{ ...S.badge, background: "#eef2ff", color: "#4338ca" }}>{formatRole(user)}</span>
                       </td>
                       <td style={{ ...S.td, textAlign: "left" }}>
-                        <span style={{ ...S.badge, ...(user.isVerified ? { background: "#f0fdf4", color: "#16a34a" } : { background: "#fffbeb", color: "#d97706" }) }}>
+                        <span style={{ ...S.badge, ...(user.isVerified ? { background: "#f0fdf4", color: "#12633b" } : { background: "#fffbeb", color: "#784b00" }) }}>
                           {user.isVerified ? t("admin.verification.verified") : t("admin.verification.unverified")}
                         </span>
                       </td>
@@ -941,7 +943,7 @@ const S = {
   overlay: { position: "fixed", inset: 0, background: "rgba(15,23,42,0.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "20px", backdropFilter: "blur(3px)" },
   btnBlue: { border: "none", background: "#eff6ff", color: "#2563eb", padding: "6px 12px", borderRadius: "7px", cursor: "pointer", fontSize: "12px", fontWeight: "500", fontFamily: "Inter, sans-serif", transition: "filter 0.15s" },
   btnGray: { border: "none", background: "#f1f5f9", color: "#475569", padding: "6px 12px", borderRadius: "7px", cursor: "pointer", fontSize: "12px", fontWeight: "500", fontFamily: "Inter, sans-serif", transition: "filter 0.15s" },
-  btnRed: { border: "none", background: "#fef2f2", color: "#dc2626", padding: "6px 12px", borderRadius: "7px", cursor: "pointer", fontSize: "12px", fontWeight: "500", fontFamily: "Inter, sans-serif", transition: "filter 0.15s" },
+  btnRed: { border: "none", background: "#fef2f2", color: "#a1131f", padding: "6px 12px", borderRadius: "7px", cursor: "pointer", fontSize: "12px", fontWeight: "500", fontFamily: "Inter, sans-serif", transition: "filter 0.15s" },
   btnGreen: { border: "none", background: "#f0fdf4", color: "#16a34a", padding: "6px 12px", borderRadius: "7px", cursor: "pointer", fontSize: "12px", fontWeight: "500", fontFamily: "Inter, sans-serif", transition: "filter 0.15s" },
 };
 

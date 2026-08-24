@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import Brand from "../../../components/common/Brand";
+import LanguageSwitcher from "../../../components/localization/LanguageSwitcher";
 import { getCandidateProfile, updateCandidateProfile } from "../../../services/candidateProfileApi";
 import AiProfileBuilder from "./AiProfileBuilder";
 import { isCandidateProfileComplete } from "./profileCompletion";
@@ -155,7 +156,13 @@ export default function CandidateProfileSetup() {
 
   return (
     <main className="profile-setup">
-      <header className="profile-setup__header"><Brand /><span>{t("setup.header")}</span></header>
+      <header className="profile-setup__header">
+        <Brand />
+        <div className="profile-setup__header-tools">
+          <span>{t("setup.header")}</span>
+          <LanguageSwitcher compact />
+        </div>
+      </header>
       <section className="profile-setup__shell" data-voice-section="candidate-setup">
         <div className="profile-setup__intro">
           <span className="profile-setup__step">{t("setup.step")}</span>

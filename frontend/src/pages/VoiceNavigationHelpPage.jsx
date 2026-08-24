@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import LanguageSwitcher from "../components/localization/LanguageSwitcher";
 import "../styles/voiceHelp.css";
 
 export default function VoiceNavigationHelpPage() {
@@ -10,7 +11,10 @@ export default function VoiceNavigationHelpPage() {
   return (
     <main className="voice-help" data-voice-section="voice-help">
       <div className="voice-help__shell">
-        <Link className="voice-help__back" to="/">{t("back")}</Link>
+        <div className="public-page-header__actions public-page-header__actions--spread">
+          <Link className="voice-help__back" to="/">{t("back")}</Link>
+          <LanguageSwitcher compact />
+        </div>
         <header className="voice-help__hero">
           <span>{t("eyebrow")}</span>
           <h1>{t("title")}</h1>
