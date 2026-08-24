@@ -60,6 +60,8 @@
       "empty": "Your compatibility scores will appear here after analysis.",
       "percentAria": "{{percent}}% compatibility",
       "shortLabel": "match",
+      "notScoredAria": "No compatibility percentage because this offer is not eligible",
+      "notScoredShort": "not scored",
       "highestRanked": "HIGHEST-RANKED OFFER",
       "hideExplanation": "▲ Hide explanation",
       "showExplanation": "▼ Show scoring explanation",

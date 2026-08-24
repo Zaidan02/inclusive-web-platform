@@ -60,6 +60,8 @@
       "empty": "ستظهر درجات توافقك هنا بعد التحليل.",
       "percentAria": "توافق بنسبة {{percent}}٪",
       "shortLabel": "توافق",
+      "notScoredAria": "لا توجد نسبة توافق لأن هذا العرض غير مؤهل",
+      "notScoredShort": "بلا درجة",
       "highestRanked": "العرض الأعلى ترتيبًا",
       "hideExplanation": "▲ إخفاء الشرح",
       "showExplanation": "▼ عرض شرح الدرجة",

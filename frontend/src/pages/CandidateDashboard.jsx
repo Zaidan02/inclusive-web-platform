@@ -173,17 +173,19 @@ function EmptyStateIllustration() {
 
 function CircleProgress({ percent, size = 80, color = "#2563eb" }) {
   const { t } = useTranslation("dashboards");
+  const hasScore = Number.isFinite(percent);
+  const displayedPercent = hasScore ? Math.max(0, Math.min(100, percent)) : 0;
   const r = 34;
   const circ = 2 * Math.PI * r;
-  const offset = circ - (percent / 100) * circ;
+  const offset = circ - (displayedPercent / 100) * circ;
   return (
-    <svg width={size} height={size} viewBox="0 0 80 80" role="img" aria-label={t("candidate.match.percentAria", { percent })}>
+    <svg width={size} height={size} viewBox="0 0 80 80" role="img" aria-label={hasScore ? t("candidate.match.percentAria", { percent: displayedPercent }) : t("candidate.match.notScoredAria")}>
       <circle cx="40" cy="40" r={r} fill="none" stroke="#e8edf5" strokeWidth="6" />
       <circle cx="40" cy="40" r={r} fill="none" stroke={color} strokeWidth="6"
         strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round"
         transform="rotate(-90 40 40)" style={{ transition: "stroke-dashoffset 1.2s ease" }} />
-      <text x="40" y="36" textAnchor="middle" fontSize="14" fontWeight="600" fill={color} fontFamily="Inter, sans-serif">{percent}%</text>
-      <text x="40" y="50" textAnchor="middle" fontSize="8" fill="#64748b" fontWeight="400" fontFamily="Inter, sans-serif">{t("candidate.match.shortLabel")}</text>
+      <text x="40" y="36" textAnchor="middle" fontSize="14" fontWeight="600" fill={color} fontFamily="Inter, sans-serif">{hasScore ? `${displayedPercent}%` : "—"}</text>
+      <text x="40" y="50" textAnchor="middle" fontSize="8" fill="#64748b" fontWeight="400" fontFamily="Inter, sans-serif">{hasScore ? t("candidate.match.shortLabel") : t("candidate.match.notScoredShort")}</text>
     </svg>
   );
 }
@@ -208,6 +210,8 @@ function JobResultCard({ result, index, onOpenJob }) {
   ];
   const p = palettes[index] || palettes[0];
   const compatibilityBand = getCompatibilityBand(result, t);
+  const hasScore = result.eligible && Number.isFinite(Number(result.score));
+  const score = hasScore ? Number(result.score) : null;
 
   useEffect(() => {
     function handleVoiceAction(event) {
@@ -228,7 +232,7 @@ function JobResultCard({ result, index, onOpenJob }) {
   return (
     <div className="result-card-in" style={{ border: `1px solid ${index === 0 ? p.border : "#e8edf5"}`, borderRadius: "16px", padding: "16px", marginBottom: "10px", background: index === 0 ? p.light : "#fafbfc", animationDelay: `${index * 0.1}s` }}>
       <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-        <CircleProgress percent={result.score ?? 0} size={76} color={result.eligible ? p.color : "#dc2626"} />
+        <CircleProgress percent={score} size={76} color={hasScore ? p.color : "#b91c1c"} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "3px" }}>
             <span style={{ fontSize: "10px", fontWeight: "500", color: "#64748b" }}>#{index + 1}</span>
@@ -238,7 +242,7 @@ function JobResultCard({ result, index, onOpenJob }) {
           <p style={{ margin: "0 0 2px", fontSize: "16px", fontWeight: "600", color: "#0f172a", letterSpacing: "-0.2px" }}>{result.job_title}</p>
           <p style={{ margin: "0 0 8px", fontSize: "11px", color: "#64748b" }}>{result.companyName}{result.assistanceAvailable ? ` · ${t("candidate.accommodation.offered")}` : ""}</p>
           <div style={{ height: "4px", background: "#e2e8f0", borderRadius: "999px", overflow: "hidden" }}>
-            <div style={{ width: `${result.score ?? 0}%`, height: "100%", background: result.eligible ? `linear-gradient(90deg, ${p.color}, ${p.color}aa)` : "#dc2626", borderRadius: "999px", transition: "width 1.2s ease" }} />
+            <div style={{ width: `${score ?? 0}%`, height: "100%", background: hasScore ? `linear-gradient(90deg, ${p.color}, ${p.color}aa)` : "transparent", borderRadius: "999px", transition: "width 1.2s ease" }} />
           </div>
         </div>
       </div>
