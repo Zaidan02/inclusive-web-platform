@@ -40,6 +40,28 @@ for (const endpoint of ["jobs", "job-definitions"]) {
   });
 }
 
+await check("public overview returns aggregates and safe published-job fields", async () => {
+  const { response, body } = await requestJson(`${API_BASE}/public-overview`);
+  assert.equal(response.status, 200);
+  for (const key of ["registeredCandidates", "publishedJobPosts", "activeJobDescriptions"]) {
+    assert.ok(Number.isInteger(body.stats?.[key]));
+    assert.ok(body.stats[key] >= 0);
+  }
+  assert.ok(Array.isArray(body.latestJobs));
+  assert.ok(body.latestJobs.length <= 6);
+
+  const allowedJobFields = new Set(["id", "title", "companyName", "location", "jobType", "workMode", "createdAt"]);
+  for (const job of body.latestJobs) {
+    assert.ok(Object.keys(job).every((key) => allowedJobFields.has(key)));
+  }
+
+  return {
+    httpStatus: response.status,
+    stats: body.stats,
+    latestJobCount: body.latestJobs.length,
+  };
+});
+
 const tokens = {};
 for (const [name, account] of Object.entries(fixtureAccounts)) {
   await check(`${name} fixture authenticates and opens its session`, async () => {

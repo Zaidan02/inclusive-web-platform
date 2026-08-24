@@ -63,6 +63,7 @@ security:
 
         - { path: ^/api/jobs$, roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: ^/api/job-definitions$, roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: ^/api/public-overview$, roles: PUBLIC_ACCESS, methods: [GET] }
 
         - { path: ^/api/admin, roles: ROLE_ADMIN }
         - { path: ^/api/verifier, roles: ROLE_VERIFIER }

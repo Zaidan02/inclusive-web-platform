@@ -1,18 +1,81 @@
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ArrowIcon from "../components/common/ArrowIcon";
 import SiteHeader from "../components/layout/SiteHeader";
 import SiteFooter from "../components/layout/SiteFooter";
+import { getPublicOverview } from "../services/publicOverviewApi";
 import "../styles/landing.css";
 
+const JOB_TYPE_KEYS = {
+  "full-time": "fullTime",
+  "part-time": "partTime",
+  internship: "internship",
+  seasonal: "seasonal",
+};
+
+const WORK_MODE_KEYS = {
+  "on-site": "onSite",
+  hybrid: "hybrid",
+  remote: "remote",
+};
+
 export default function WelcomePage() {
-  const { t } = useTranslation("public");
+  const { t, i18n } = useTranslation("public");
+  const [overview, setOverview] = useState({ status: "loading", data: null });
   const steps = t("welcome.steps", { returnObjects: true });
   const principles = t("welcome.principles", { returnObjects: true });
   const trust = t("welcome.trust", { returnObjects: true });
   const candidateBenefits = t("welcome.candidateBenefits", { returnObjects: true });
   const employerBenefits = t("welcome.employerBenefits", { returnObjects: true });
   const matchingSteps = t("welcome.matchingSteps", { returnObjects: true });
+  const numberFormatter = useMemo(
+    () => new Intl.NumberFormat(i18n.resolvedLanguage || "en"),
+    [i18n.resolvedLanguage],
+  );
+  const dateFormatter = useMemo(
+    () => new Intl.DateTimeFormat(i18n.resolvedLanguage || "en", { dateStyle: "medium" }),
+    [i18n.resolvedLanguage],
+  );
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    getPublicOverview(controller.signal)
+      .then((data) => setOverview({ status: "ready", data }))
+      .catch((error) => {
+        if (error.name !== "AbortError") setOverview({ status: "error", data: null });
+      });
+
+    return () => controller.abort();
+  }, []);
+
+  const localizeOption = (value, keys, translationGroup) => {
+    const key = keys[String(value || "").toLowerCase()];
+    return key ? t(`welcome.opportunities.${translationGroup}.${key}`) : value;
+  };
+
+  const statistics = overview.data ? [
+    {
+      key: "registeredCandidates",
+      value: overview.data.stats.registeredCandidates,
+      label: t("welcome.opportunities.stats.candidates.label"),
+      description: t("welcome.opportunities.stats.candidates.description"),
+    },
+    {
+      key: "publishedJobPosts",
+      value: overview.data.stats.publishedJobPosts,
+      label: t("welcome.opportunities.stats.posts.label"),
+      description: t("welcome.opportunities.stats.posts.description"),
+    },
+    {
+      key: "activeJobDescriptions",
+      value: overview.data.stats.activeJobDescriptions,
+      label: t("welcome.opportunities.stats.descriptions.label"),
+      description: t("welcome.opportunities.stats.descriptions.description"),
+    },
+  ] : [];
+
   return (
     <div className="landing-page">
       <SiteHeader />
@@ -61,6 +124,86 @@ export default function WelcomePage() {
                 <p>{t("welcome.missionText")}</p>
               </article>
             </div>
+          </div>
+        </section>
+
+        <section className="opportunity-section section" aria-labelledby="opportunity-title">
+          <div className="landing-container">
+            <div className="opportunity-heading">
+              <div>
+                <span className="section-kicker">{t("welcome.opportunities.kicker")}</span>
+                <h2 id="opportunity-title">{t("welcome.opportunities.title")}</h2>
+                <p>{t("welcome.opportunities.intro")}</p>
+              </div>
+              <Link
+                className="button button--secondary"
+                to="/signin"
+                aria-label={t("welcome.opportunities.viewAllAccessible")}
+              >
+                {t("welcome.opportunities.viewAll")} <ArrowIcon />
+              </Link>
+            </div>
+
+            {overview.status === "loading" && (
+              <p className="opportunity-status" role="status" aria-live="polite">
+                {t("welcome.opportunities.loading")}
+              </p>
+            )}
+
+            {overview.status === "error" && (
+              <p className="opportunity-status opportunity-status--error" role="status">
+                {t("welcome.opportunities.error")}
+              </p>
+            )}
+
+            {overview.status === "ready" && (
+              <>
+                <dl className="platform-statistics" aria-label={t("welcome.opportunities.statsLabel")}>
+                  {statistics.map((statistic) => (
+                    <div className="platform-statistic" key={statistic.key}>
+                      <dt>{statistic.label}</dt>
+                      <dd>
+                        <strong>{numberFormatter.format(statistic.value)}</strong>
+                        <span>{statistic.description}</span>
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+
+                <div className="latest-jobs-heading">
+                  <div>
+                    <span>{t("welcome.opportunities.latestKicker")}</span>
+                    <h3>{t("welcome.opportunities.latestTitle")}</h3>
+                  </div>
+                  <p>{t("welcome.opportunities.latestDescription")}</p>
+                </div>
+
+                {overview.data.latestJobs.length > 0 ? (
+                  <div className="latest-jobs-grid">
+                    {overview.data.latestJobs.map((job) => (
+                      <article className="latest-job-card" key={job.id}>
+                        <div className="latest-job-card__main">
+                          <h4>{job.title}</h4>
+                          <p>{job.companyName || t("welcome.opportunities.employerFallback")}</p>
+                        </div>
+                        <ul className="latest-job-card__meta" aria-label={t("welcome.opportunities.jobDetails", { title: job.title })}>
+                          {job.location && <li>{job.location}</li>}
+                          {job.jobType && <li>{localizeOption(job.jobType, JOB_TYPE_KEYS, "jobTypes")}</li>}
+                          {job.workMode && <li>{localizeOption(job.workMode, WORK_MODE_KEYS, "workModes")}</li>}
+                        </ul>
+                        {job.createdAt && (
+                          <p className="latest-job-card__date">
+                            {t("welcome.opportunities.posted", { date: dateFormatter.format(new Date(job.createdAt)) })}
+                          </p>
+                        )}
+                      </article>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="opportunity-status">{t("welcome.opportunities.empty")}</p>
+                )}
+              </>
+            )}
           </div>
         </section>
 

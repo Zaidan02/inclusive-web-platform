@@ -17,7 +17,13 @@ The referenced Zoho Recruit landing page informed the use of strong typography, 
 - Replaced the decorative visual with an explanatory three-step panel: remaining abilities, hospitality job tasks, and workplace support.
 - Changed the hero to a clean sans-serif typographic hierarchy with solid accessible actions.
 - Added the approved JoIn Hospitality mission and vision in English, French, and Arabic.
+- Added a live opportunity overview with exact counts for active candidate registrations, published job posts, and active job descriptions.
+- Added the six newest published job posts using real platform data, known-value localization, responsive cards, and explicit loading, empty, and unavailable states.
 - Retained the candidate and employer paths, purpose, process, and footer content.
+
+The overview deliberately distinguishes an employer's published **job post** from an active **job description** in the task-based matching catalogue. Counts are not hardcoded and do not use an inflated `+` suffix. Importing the 12 additional job descriptions will therefore change the catalogue total from 3 to 15 automatically when those definitions are active in the database.
+
+The public overview API exposes only aggregate counts and fields already intended for a published vacancy: title, company name, location, job type, work mode, and publication date. Candidate names, contact details, disability information, verification state, documents, profiles, and application data are never returned.
 
 ### Candidate experience
 
@@ -32,7 +38,7 @@ The referenced Zoho Recruit landing page informed the use of strong typography, 
 This visual change does not modify:
 
 - scoring mathematics, weights, gates, sorting, or catalogue data;
-- candidate, employer, verifier, or administrator API contracts;
+- existing candidate, employer, verifier, or administrator API contracts;
 - authentication, role authorization, verification, consent, privacy, or file security;
 - form fields, job publication, applications, or outcome management;
 - keyboard, voice, mouse, touch, or screen-reader operation;
@@ -51,6 +57,7 @@ This visual change does not modify:
 ## Verification
 
 - Translation contract: 3 locales and 7 namespaces pass.
+- API integration: the overview is publicly readable, contains non-negative integer aggregates, returns no more than six jobs, and exposes only the approved published-job fields.
 - ESLint: changed React pages pass.
 - Production build: passes.
 - Multilingual browser E2E: passes persistence, `lang`/`dir`, Arabic reflow, LTR email direction, and voice-language synchronization.
@@ -60,4 +67,3 @@ This visual change does not modify:
 ## Later design slices
 
 Authentication and employer, verifier, and administrator pages remain functionally unchanged. Any broader visual migration should be reviewed as a separate slice so usability and accessibility can be evaluated before the new style is propagated.
-
