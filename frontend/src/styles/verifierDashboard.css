@@ -80,7 +80,16 @@
 }
 
 .verifier-sidebar {
+  position: sticky;
+  inset-block-start: 0;
+  align-self: start;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
   padding: 2rem 1rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: #4a3541;
   color: #fff;
 }
@@ -113,6 +122,19 @@
   color: #fff;
 }
 
+.verifier-sidebar__footer {
+  margin-top: auto;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255,255,255,.16);
+}
+
+.verifier-sidebar__footer .verifier-signout {
+  width: 100%;
+  color: #fff;
+  border-color: #a88e9e;
+  background: transparent;
+}
+
 .verifier-main { min-width: 0; }
 .verifier-header {
   padding: 2rem clamp(1rem, 4vw, 3rem);
@@ -138,10 +160,12 @@
 
 @media (max-width: 760px) {
   .verifier-page { grid-template-columns: minmax(0, 1fr); }
-  .verifier-sidebar { padding: .9rem var(--page-gutter); }
+  .verifier-sidebar { position: static; height: auto; padding: .9rem var(--page-gutter); overflow: visible; }
   .verifier-sidebar__heading { margin-bottom: .7rem; padding-inline: 0; }
   .verifier-sidebar .verifier-filters { display: flex; flex-wrap: wrap; }
   .verifier-sidebar .verifier-filters button { flex: 1 1 max-content; width: auto; }
+  .verifier-sidebar__footer { margin-top: .75rem; padding-top: .75rem; }
+  .verifier-sidebar__footer .verifier-signout { width: auto; }
   .verifier-header { align-items: flex-start; flex-direction: column; }
   .verifier-header__actions { width: 100%; justify-content: space-between; }
 }

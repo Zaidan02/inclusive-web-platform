@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-08-24T11:49:11.790Z",
+  "generatedAt": "2026-08-24T12:16:11.044Z",
   "webBase": "http://127.0.0.1:5173",
   "summary": {
-    "passed": 21,
+    "passed": 24,
     "failed": 0,
-    "total": 21
+    "total": 24
   },
   "results": [
     {
       "name": "public route / renders semantic page structure",
       "status": "passed",
-      "durationMs": 691.2,
+      "durationMs": 713,
       "detail": {
         "finalUrl": "http://127.0.0.1:5173/",
         "title": "JoIn Hospitality"
@@ -19,7 +19,7 @@
     {
       "name": "public route /signin renders semantic page structure",
       "status": "passed",
-      "durationMs": 620.5,
+      "durationMs": 623.1,
       "detail": {
         "finalUrl": "http://127.0.0.1:5173/signin",
         "title": "Sign in | JoIn Hospitality"
@@ -28,7 +28,7 @@
     {
       "name": "public route /signup renders semantic page structure",
       "status": "passed",
-      "durationMs": 603.3,
+      "durationMs": 624.5,
       "detail": {
         "finalUrl": "http://127.0.0.1:5173/signup",
         "title": "Create account | JoIn Hospitality"
@@ -37,7 +37,7 @@
     {
       "name": "public route /forgot-password renders semantic page structure",
       "status": "passed",
-      "durationMs": 572.3,
+      "durationMs": 587.4,
       "detail": {
         "finalUrl": "http://127.0.0.1:5173/forgot-password",
         "title": "Forgot password | JoIn Hospitality"
@@ -46,7 +46,7 @@
     {
       "name": "public route /employers renders semantic page structure",
       "status": "passed",
-      "durationMs": 621,
+      "durationMs": 592.9,
       "detail": {
         "finalUrl": "http://127.0.0.1:5173/employers",
         "title": "For employers | JoIn Hospitality"
@@ -55,7 +55,7 @@
     {
       "name": "public route /voice-help renders semantic page structure",
       "status": "passed",
-      "durationMs": 596.8,
+      "durationMs": 632.2,
       "detail": {
         "finalUrl": "http://127.0.0.1:5173/voice-help",
         "title": "Voice navigation help | JoIn Hospitality"
@@ -64,7 +64,7 @@
     {
       "name": "public route /privacy renders semantic page structure",
       "status": "passed",
-      "durationMs": 594.4,
+      "durationMs": 597.4,
       "detail": {
         "finalUrl": "http://127.0.0.1:5173/privacy",
         "title": "Privacy notice | JoIn Hospitality"
@@ -73,7 +73,7 @@
     {
       "name": "anonymous visitor is redirected from /candidate",
       "status": "passed",
-      "durationMs": 272.8,
+      "durationMs": 312.8,
       "detail": {
         "finalUrl": "http://127.0.0.1:5173/signin"
       }
@@ -81,7 +81,7 @@
     {
       "name": "anonymous visitor is redirected from /employer",
       "status": "passed",
-      "durationMs": 250.1,
+      "durationMs": 296.3,
       "detail": {
         "finalUrl": "http://127.0.0.1:5173/signin"
       }
@@ -89,7 +89,7 @@
     {
       "name": "anonymous visitor is redirected from /admin",
       "status": "passed",
-      "durationMs": 235.3,
+      "durationMs": 282.4,
       "detail": {
         "finalUrl": "http://127.0.0.1:5173/signin"
       }
@@ -97,7 +97,7 @@
     {
       "name": "anonymous visitor is redirected from /verifier",
       "status": "passed",
-      "durationMs": 235.2,
+      "durationMs": 296.9,
       "detail": {
         "finalUrl": "http://127.0.0.1:5173/signin"
       }
@@ -105,7 +105,7 @@
     {
       "name": "sign-in validation identifies and focuses the first invalid field",
       "status": "passed",
-      "durationMs": 631.1,
+      "durationMs": 630.4,
       "detail": {
         "focusedField": "email"
       }
@@ -113,7 +113,7 @@
     {
       "name": "invalid credentials produce an accessible alert",
       "status": "passed",
-      "durationMs": 861.8,
+      "durationMs": 858.3,
       "detail": {
         "alertText": "The email or password is incorrect, or the account is not yet verified."
       }
@@ -121,7 +121,7 @@
     {
       "name": "candidate opens the authorized dashboard",
       "status": "passed",
-      "durationMs": 1456.7,
+      "durationMs": 1459.7,
       "detail": {
         "finalUrl": "http://127.0.0.1:5173/candidate",
         "heading": "Find hospitality work that fits your abilities"
@@ -130,7 +130,7 @@
     {
       "name": "employer opens the authorized dashboard",
       "status": "passed",
-      "durationMs": 1426.8,
+      "durationMs": 1449.3,
       "detail": {
         "finalUrl": "http://127.0.0.1:5173/employer",
         "heading": "Post a job"
@@ -139,7 +139,7 @@
     {
       "name": "admin opens the authorized dashboard",
       "status": "passed",
-      "durationMs": 1417.8,
+      "durationMs": 1447.3,
       "detail": {
         "finalUrl": "http://127.0.0.1:5173/admin",
         "heading": "Users"
@@ -148,7 +148,7 @@
     {
       "name": "verifier opens the authorized dashboard",
       "status": "passed",
-      "durationMs": 1322.6,
+      "durationMs": 1392.7,
       "detail": {
         "finalUrl": "http://127.0.0.1:5173/verifier",
         "heading": "Candidate verification"
@@ -157,15 +157,45 @@
     {
       "name": "wrong-role dashboard access redirects to the user's own dashboard",
       "status": "passed",
-      "durationMs": 366.3,
+      "durationMs": 374,
       "detail": {
         "finalUrl": "http://127.0.0.1:5173/candidate"
       }
     },
     {
+      "name": "employer workspace keeps its desktop rail and sign-out in view",
+      "status": "passed",
+      "durationMs": 1753.1,
+      "detail": {
+        "role": "employer",
+        "position": "sticky",
+        "signOutVisible": true
+      }
+    },
+    {
+      "name": "admin workspace keeps its desktop rail and sign-out in view",
+      "status": "passed",
+      "durationMs": 1824.2,
+      "detail": {
+        "role": "admin",
+        "position": "sticky",
+        "signOutVisible": true
+      }
+    },
+    {
+      "name": "verifier workspace keeps its desktop rail and sign-out in view",
+      "status": "passed",
+      "durationMs": 3570.8,
+      "detail": {
+        "role": "verifier",
+        "position": "sticky",
+        "signOutVisible": true
+      }
+    },
+    {
       "name": "keyboard entry exposes the skip link",
       "status": "passed",
-      "durationMs": 294.3,
+      "durationMs": 329.2,
       "detail": {
         "firstTabStop": "Skip to main content"
       }
@@ -173,7 +203,7 @@
     {
       "name": "public grouped navigation opens and closes from the keyboard",
       "status": "passed",
-      "durationMs": 1296.4,
+      "durationMs": 1286.5,
       "detail": {
         "trigger": "Job seekers",
         "escapeReturnedFocus": true
@@ -182,7 +212,7 @@
     {
       "name": "saved candidate profile offers and follows the next journey step",
       "status": "passed",
-      "durationMs": 1624.9,
+      "durationMs": 2186.1,
       "detail": {
         "destination": "Jobs",
         "currentJourneyStep": "Match and explore"

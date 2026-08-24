@@ -123,6 +123,9 @@ export default function VerifierDashboard() {
             </button>
           ))}
         </div>
+        <div className="verifier-sidebar__footer">
+          <button type="button" className="verifier-signout" onClick={signOut}>{t("common.signOut")}</button>
+        </div>
       </aside>
 
       <div className="verifier-main">
@@ -134,7 +137,6 @@ export default function VerifierDashboard() {
           </div>
           <div className="verifier-header__actions">
             <LanguageSwitcher compact />
-            <button type="button" className="verifier-signout" onClick={signOut}>{t("common.signOut")}</button>
           </div>
         </header>
 

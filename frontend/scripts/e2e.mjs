@@ -97,6 +97,26 @@ await check("wrong-role dashboard access redirects to the user's own dashboard",
   return { finalUrl: page.url() };
 });
 
+for (const role of ["employer", "admin", "verifier"]) {
+  await check(`${role} workspace keeps its desktop rail and sign-out in view`, async (page, context) => {
+    const account = fixtureAccounts[role];
+    const railSelector = role === "verifier" ? ".verifier-sidebar" : ".dashboard-sidebar";
+    await context.addInitScript((token) => sessionStorage.setItem("token", token), tokens[role]);
+    await page.setViewportSize({ width: 1280, height: 600 });
+    await page.goto(`${WEB_BASE}${account.home}`, { waitUntil: "networkidle" });
+    const rail = page.locator(railSelector);
+    await rail.waitFor({ state: "visible" });
+    assert.equal(await rail.evaluate((element) => getComputedStyle(element).position), "sticky");
+    const signOut = rail.getByRole("button", { name: "Sign out" });
+    assert.equal(await signOut.isVisible(), true);
+    const before = await rail.boundingBox();
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    const after = await rail.boundingBox();
+    assert.ok(before && after && Math.abs(before.y - after.y) <= 1);
+    return { role, position: "sticky", signOutVisible: true };
+  });
+}
+
 await check("keyboard entry exposes the skip link", async (page) => {
   await page.goto(`${WEB_BASE}/`, { waitUntil: "domcontentloaded" });
   await page.locator(".skip-link").waitFor({ state: "attached", timeout: 10_000 });

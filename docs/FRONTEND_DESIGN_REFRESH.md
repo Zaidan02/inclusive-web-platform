@@ -52,6 +52,7 @@ The public overview API exposes only aggregate counts and fields already intende
 - Converted candidate section tabs into a persistent left workflow column on desktop. The navigation reflows into a compact two-row control at smaller widths without changing routes or candidate business behavior.
 - Recoloured the administrator workspace with a deep slate column and the employer workspace with a deep hospitality green column. Current destinations use a visible terracotta edge and text, not colour alone.
 - Converted the verifier into the same professional two-column workspace model, using a muted aubergine review column with request counts and filters.
+- Kept the administrator, employer, and verifier workspace columns fixed in view while their main work areas scroll independently; sign-out remains anchored at the bottom of each desktop column.
 - Retained horizontal compact navigation below 760–900 px where a fixed sidebar would reduce usable content width.
 - Corrected small-text and status contrast discovered during the rendered audit, including account-type descriptions, dashboard eyebrow labels, verification states, destructive actions, and voice-language status text.
 

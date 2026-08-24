@@ -489,6 +489,13 @@
 }
 
 .dashboard-sidebar {
+  position: sticky;
+  inset-block-start: 0;
+  align-self: start;
+  height: 100vh;
+  height: 100svh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   box-shadow: none !important;
 }
 
@@ -601,6 +608,11 @@
 }
 
 @media (max-width: 760px) {
+  .dashboard-sidebar {
+    position: static;
+    height: auto;
+    overflow: visible;
+  }
   .dashboard-header-tools { width: 100%; justify-content: space-between; }
   .candidate-dashboard__user .language-toolbar--compact { order: -1; }
 }
