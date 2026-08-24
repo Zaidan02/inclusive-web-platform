@@ -36,7 +36,22 @@
     "heroText": "JoIn relie les candidats et les employeurs de l’hôtellerie grâce à une approche plus claire et plus humaine, centrée sur les emplois dans lesquels chacun peut s’épanouir.",
     "findOpportunity": "Trouver une opportunité",
     "explorePurpose": "Découvrir notre mission",
+    "forEmployersAction": "Pour les employeurs",
     "trust": ["Profils axés sur les capacités", "Mise en relation par tâches", "Inclusion dès la conception"],
+    "matchingLabel": "Fonctionnement de la compatibilité",
+    "matchingTitle": "Une vision claire de la compatibilité avec l’emploi",
+    "matchingText": "JoIn compare des informations structurées au lieu de faire des suppositions sur une personne.",
+    "matchingSteps": [
+      { "title": "Capacités restantes", "text": "Le candidat confirme ses capacités pratiques, sa formation et ses préférences." },
+      { "title": "Tâches du métier hôtelier", "text": "L’employeur identifie les responsabilités réelles et les tâches importantes du poste." },
+      { "title": "Soutien sur le lieu de travail", "text": "L’assistance disponible est prise en compte avant le calcul de la compatibilité." }
+    ],
+    "matchingNote": "Le résultat reste transparent, vérifiable et fondé sur des tâches réelles.",
+    "missionVisionTitle": "Mission et vision de JoIn Hospitality",
+    "visionTitle": "Notre vision",
+    "visionText": "Un monde où les capacités définissent les opportunités et où chaque personne bénéficie d’un accès égal à un emploi porteur de sens, à la dignité et à l’indépendance.",
+    "missionTitle": "Notre mission",
+    "missionText": "Donner aux personnes en situation de handicap les moyens d’agir grâce à une technologie accessible, un recrutement inclusif et une mise en relation fondée sur les capacités qui relie les talents aux opportunités.",
     "heroAlt": "Personnes réunies par l’emploi inclusif",
     "strengths": "Forces reconnues",
     "potential": "Potentiel mis en valeur",
@@ -103,4 +118,3 @@
     "signIn": "Se connecter"
   }
 }
-

@@ -9,8 +9,8 @@
     "tabsLabel": "Sections du tableau de bord candidat",
     "tabs": { "JOBS": "Emplois", "APPLICATIONS": "Mes candidatures", "PROFILE": "Mon profil", "PRIVACY": "Confidentialité et données" },
     "header": {
-      "greeting": "Bonjour, {{name}} 👋",
-      "title": "Trouvez l'emploi qui vous correspond le mieux ✦",
+      "greeting": "Bienvenue, {{name}}",
+      "title": "Trouvez un emploi dans l’hôtellerie adapté à vos capacités",
       "openProfile": "Ouvrir mon profil"
     },
     "steps": { "profile": "Compléter votre profil", "match": "Calculer les correspondances", "apply": "Postuler aux emplois" },
@@ -45,10 +45,10 @@
       "save": "Enregistrer le profil"
     },
     "match": {
-      "title": "Correspondance de compatibilité",
-      "subtitle": "Calculée par des règles mathématiques transparentes",
-      "description": "Utilisez votre profil enregistré pour obtenir des scores de compatibilité personnalisés avant d'explorer les possibilités.",
-      "run": "Obtenir mes correspondances",
+      "title": "Compatibilité fondée sur les tâches",
+      "subtitle": "Calculée à partir de règles transparentes liées aux tâches",
+      "description": "Comparez votre profil confirmé aux tâches réelles de l’hôtellerie et au soutien proposé pour chaque poste.",
+      "run": "Calculer la compatibilité",
       "analysing": "Analyse de votre profil…",
       "results": "Vos résultats",
       "conditionsAnalysed_zero": "{{count}} situation analysée",

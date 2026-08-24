@@ -36,7 +36,22 @@
     "heroText": "JoIn connects candidates and hospitality employers through a clearer, more human way of matching people to the work they can thrive in.",
     "findOpportunity": "Find your opportunity",
     "explorePurpose": "Explore our purpose",
+    "forEmployersAction": "For employers",
     "trust": ["Ability-led profiles", "Task-based matching", "Inclusive by design"],
+    "matchingLabel": "How matching works",
+    "matchingTitle": "A clear view of job compatibility",
+    "matchingText": "JoIn compares structured information rather than making assumptions about a person.",
+    "matchingSteps": [
+      { "title": "Remaining abilities", "text": "The candidate confirms practical abilities, education, and preferences." },
+      { "title": "Hospitality job tasks", "text": "The employer identifies the real duties and important tasks of the vacancy." },
+      { "title": "Workplace support", "text": "Available assistance is considered before compatibility is calculated." }
+    ],
+    "matchingNote": "The result remains transparent, reviewable, and based on real tasks.",
+    "missionVisionTitle": "JoIn Hospitality mission and vision",
+    "visionTitle": "Our vision",
+    "visionText": "A world where abilities define opportunities, and every person has equal access to meaningful employment, dignity, and independence.",
+    "missionTitle": "Our mission",
+    "missionText": "To empower persons with disabilities through accessible technology, inclusive recruitment, and ability-based job matching that connects talent with opportunity.",
     "heroAlt": "People connecting through inclusive employment",
     "strengths": "Strengths recognized",
     "potential": "Potential made visible",
@@ -103,4 +118,3 @@
     "signIn": "Sign in"
   }
 }
-

@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import heroImage from "../assets/hero.png";
 import ArrowIcon from "../components/common/ArrowIcon";
 import SiteHeader from "../components/layout/SiteHeader";
 import SiteFooter from "../components/layout/SiteFooter";
@@ -13,6 +12,7 @@ export default function WelcomePage() {
   const trust = t("welcome.trust", { returnObjects: true });
   const candidateBenefits = t("welcome.candidateBenefits", { returnObjects: true });
   const employerBenefits = t("welcome.employerBenefits", { returnObjects: true });
+  const matchingSteps = t("welcome.matchingSteps", { returnObjects: true });
   return (
     <div className="landing-page">
       <SiteHeader />
@@ -21,19 +21,45 @@ export default function WelcomePage() {
           <div className="landing-container hero-grid">
             <div className="hero-copy">
               <span className="eyebrow"><i /> {t("welcome.heroEyebrow")}</span>
-              <h1>{t("welcome.heroStart")} <em>{t("welcome.heroEmphasis")}</em></h1>
+              <h1>{t("welcome.heroStart")} <strong>{t("welcome.heroEmphasis")}</strong></h1>
               <p>{t("welcome.heroText")}</p>
               <div className="hero-actions">
                 <Link className="button button--primary" to="/signup?role=candidate">{t("welcome.findOpportunity")} <ArrowIcon /></Link>
-                <a className="button button--secondary" href="#purpose">{t("welcome.explorePurpose")}</a>
+                <Link className="button button--secondary" to="/employers">{t("welcome.forEmployersAction")}</Link>
               </div>
               <div className="hero-trust">{trust.map((item) => <span key={item}><b>✓</b> {item}</span>)}</div>
             </div>
-            <div className="hero-visual">
-              <div className="hero-visual__glow" />
-              <div className="hero-visual__frame"><img src={heroImage} alt={t("welcome.heroAlt")} /></div>
-              <div className="floating-card floating-card--top"><span className="floating-icon">✦</span><div><strong>{t("welcome.strengths")}</strong><small>{t("welcome.potential")}</small></div></div>
-              <div className="floating-card floating-card--bottom"><span className="match-ring">92<small>%</small></span><div><strong>{t("welcome.greatMatch")}</strong><small>{t("welcome.realTasks")}</small></div></div>
+            <aside className="matching-preview" aria-labelledby="matching-preview-title">
+              <div className="matching-preview__header">
+                <span className="matching-preview__label">{t("welcome.matchingLabel")}</span>
+                <h2 id="matching-preview-title">{t("welcome.matchingTitle")}</h2>
+                <p>{t("welcome.matchingText")}</p>
+              </div>
+              <ol className="matching-preview__steps">
+                {matchingSteps.map((step, index) => (
+                  <li key={step.title}>
+                    <span className="matching-preview__number" aria-hidden="true">{index + 1}</span>
+                    <div><h3>{step.title}</h3><p>{step.text}</p></div>
+                  </li>
+                ))}
+              </ol>
+              <p className="matching-preview__note">{t("welcome.matchingNote")}</p>
+            </aside>
+          </div>
+        </section>
+
+        <section className="mission-vision-section" aria-labelledby="mission-vision-title">
+          <div className="landing-container">
+            <h2 id="mission-vision-title" className="visually-hidden">{t("welcome.missionVisionTitle")}</h2>
+            <div className="mission-vision-grid">
+              <article className="mission-vision-card">
+                <span className="mission-vision-card__label">{t("welcome.visionTitle")}</span>
+                <p>{t("welcome.visionText")}</p>
+              </article>
+              <article className="mission-vision-card">
+                <span className="mission-vision-card__label">{t("welcome.missionTitle")}</span>
+                <p>{t("welcome.missionText")}</p>
+              </article>
             </div>
           </div>
         </section>

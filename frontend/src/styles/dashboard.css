@@ -47,6 +47,15 @@
   outline-offset: 3px;
 }
 
+.candidate-match-button:hover:not(:disabled) {
+  background: #124da9 !important;
+}
+
+.candidate-match-button:focus-visible {
+  outline: 3px solid #0f172a;
+  outline-offset: 3px;
+}
+
 @media (max-width: 760px) {
   .candidate-dashboard__header {
     align-items: flex-start !important;
@@ -74,6 +83,11 @@
 
   .candidate-dashboard__main {
     padding: var(--space-4) var(--page-gutter) !important;
+  }
+
+  .candidate-match-button {
+    width: 100% !important;
+    min-width: 0 !important;
   }
 
   .candidate-dashboard__card-header {

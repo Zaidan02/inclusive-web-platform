@@ -156,6 +156,7 @@ docker compose -f backend\compose.yaml run --rm scoring-engine python -m unittes
 - [Shared WCAG 2.1 AA corrections](docs/wcag-audit/SHARED_WCAG_CORRECTIONS.md)
 - [WCAG 2.1 AA final audit report and retest requirements](docs/wcag-audit/WCAG_2_1_AA_FINAL_AUDIT_REPORT.md)
 - [Frontend accessibility revamp](docs/frontend-revamp.md)
+- [Professional frontend design refresh](docs/FRONTEND_DESIGN_REFRESH.md)
 
 ## Important operational notes
 

@@ -15,14 +15,6 @@ import AccessibleNotice from "../components/accessibility/AccessibleNotice";
 
 const globalStyles = `
   @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-  @keyframes shimmer {
-    0% { background-position: -200% center; }
-    100% { background-position: 200% center; }
-  }
-  @keyframes pulse-ring {
-    0%, 100% { box-shadow: 0 4px 14px rgba(37,99,235,0.28); }
-    50% { box-shadow: 0 4px 22px rgba(37,99,235,0.5); }
-  }
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: translateY(0); }
@@ -33,24 +25,8 @@ const globalStyles = `
     transform: translateY(-2px) !important;
     box-shadow: 0 6px 18px rgba(37,99,235,0.1) !important;
   }
-  .ai-btn-idle {
-    animation: pulse-ring 2.5s ease-in-out infinite;
-  }
-  .ai-btn-idle:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(37,99,235,0.4) !important;
-  }
-  .shimmer-btn {
-    background: linear-gradient(90deg, #1d4ed8 0%, #3b82f6 40%, #60a5fa 50%, #3b82f6 60%, #1d4ed8 100%) !important;
-    background-size: 200% auto !important;
-    animation: shimmer 1.8s linear infinite !important;
-  }
   .result-card-in {
     animation: fadeIn 0.35s ease forwards;
-  }
-  .header-pattern {
-    background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
-    background-size: 22px 22px;
   }
 `;
 
@@ -158,19 +134,6 @@ function SpinnerIcon() {
   );
 }
 
-function EmptyStateIllustration() {
-  return (
-    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" style={{ marginBottom: "12px" }}>
-      <circle cx="32" cy="32" r="30" fill="#eff6ff" stroke="#bfdbfe" strokeWidth="1.5" />
-      <circle cx="32" cy="26" r="10" fill="none" stroke="#93c5fd" strokeWidth="2" />
-      <path d="M39 33L46 40" stroke="#93c5fd" strokeWidth="2" strokeLinecap="round" />
-      <path d="M22 44C22 44 24 38 32 38C40 38 42 44 42 44" stroke="#93c5fd" strokeWidth="2" strokeLinecap="round" />
-      <circle cx="44" cy="20" r="5" fill="#dbeafe" stroke="#93c5fd" strokeWidth="1.5" />
-      <path d="M44 17V23M41 20H47" stroke="#60a5fa" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 function CircleProgress({ percent, size = 80, color = "#2563eb" }) {
   const { t } = useTranslation("dashboards");
   const hasScore = Number.isFinite(percent);
@@ -230,7 +193,7 @@ function JobResultCard({ result, index, onOpenJob }) {
   }, [index, result.job_title, t]);
 
   return (
-    <div className="result-card-in" style={{ border: `1px solid ${index === 0 ? p.border : "#e8edf5"}`, borderRadius: "16px", padding: "16px", marginBottom: "10px", background: index === 0 ? p.light : "#fafbfc", animationDelay: `${index * 0.1}s` }}>
+    <article className="result-card-in" style={{ border: `1px solid ${index === 0 ? p.border : "#d9e1ec"}`, borderRadius: "12px", padding: "18px", marginBottom: "10px", background: "#ffffff" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
         <CircleProgress percent={score} size={76} color={hasScore ? p.color : "#b91c1c"} />
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -260,7 +223,7 @@ function JobResultCard({ result, index, onOpenJob }) {
           {result.eligible ? t("candidate.jobs.viewApply") : t("candidate.jobs.viewDetails")} <span className="directional-arrow" aria-hidden="true">→</span>
         </button>
       )}
-    </div>
+    </article>
   );
 }
 
@@ -354,25 +317,20 @@ function AccommodationBadge({ compact = false }) {
 function AiJobMatchCard({ aiLoading, aiError, aiResults, selectedDisabilities, onMatch, onOpenJob, resultsRef }) {
   const { t } = useTranslation("dashboards");
   return (
-    <div style={{ ...styles.aiCard, marginBottom: "18px" }}>
+    <section className="candidate-match-card" style={{ ...styles.aiCard, marginBottom: "18px" }} aria-labelledby="candidate-match-title">
       <div style={styles.aiCardHeader}>
-        <div style={styles.aiIconWrapper}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M12 2L14.4 9.6H22L15.8 14.4L18.2 22L12 17.2L5.8 22L8.2 14.4L2 9.6H9.6L12 2Z" fill="white" />
-          </svg>
-        </div>
         <div>
-          <h2 style={styles.aiTitle}>{t("candidate.match.title")}</h2>
+          <h2 id="candidate-match-title" style={styles.aiTitle}>{t("candidate.match.title")}</h2>
           <p style={styles.aiSubtitle}>{t("candidate.match.subtitle")}</p>
         </div>
       </div>
-      <p style={{ ...styles.aiDescription, textAlign: "center", width: "100%" }}>
+      <p style={{ ...styles.aiDescription, width: "100%" }}>
         {t("candidate.match.description")}
       </p>
-      <button data-voice-control="run_job_match" onClick={onMatch} disabled={aiLoading} className={aiLoading ? "shimmer-btn" : "ai-btn-idle"} style={{ ...styles.aiButton, opacity: aiLoading ? 0.9 : 1, cursor: aiLoading ? "not-allowed" : "pointer" }}>
+      <button data-voice-control="run_job_match" onClick={onMatch} disabled={aiLoading} className="candidate-match-button" style={{ ...styles.aiButton, opacity: aiLoading ? 0.82 : 1, cursor: aiLoading ? "not-allowed" : "pointer" }}>
         {aiLoading ? <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}><SpinnerIcon /> {t("candidate.match.analysing")}</span> : t("candidate.match.run")}
       </button>
-      {aiError && <div style={styles.aiErrorBox} role="alert">⚠️ {aiError}</div>}
+      {aiError && <div style={styles.aiErrorBox} role="alert">{aiError}</div>}
       {aiResults && (
         <div ref={resultsRef} tabIndex="-1" style={{ marginTop: "20px" }} role="status">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
@@ -382,8 +340,8 @@ function AiJobMatchCard({ aiLoading, aiError, aiResults, selectedDisabilities, o
           {aiResults.results.map((result, index) => <JobResultCard key={result.job_id} result={result} index={index} onOpenJob={onOpenJob} />)}
         </div>
       )}
-      {!aiResults && !aiLoading && <div style={styles.aiEmptyState}><EmptyStateIllustration /><p style={styles.aiEmptyText}>{t("candidate.match.empty")}</p></div>}
-    </div>
+      {!aiResults && !aiLoading && <div style={styles.aiEmptyState}><p style={styles.aiEmptyText}>{t("candidate.match.empty")}</p></div>}
+    </section>
   );
 }
 
@@ -718,7 +676,7 @@ function CandidateDashboard() {
       <style>{globalStyles}</style>
 
       {/* HEADER */}
-      <header style={styles.header} className="header-pattern candidate-dashboard__header">
+      <header style={styles.header} className="candidate-dashboard__header">
         <div>
           <p style={styles.headerGreeting}>{t("candidate.header.greeting", { name: candidateName })}</p>
           <h1 style={styles.headerTitle}>{t("candidate.header.title")}</h1>
@@ -842,62 +800,6 @@ function CandidateDashboard() {
                 </div>
               </div>
 
-              {/* RIGHT CARD — DETERMINISTIC MATCHING */}
-              <div style={{ ...styles.aiCard, display: "none" }} aria-hidden="true">
-                <div style={styles.aiCardHeader}>
-                  <div style={styles.aiIconWrapper}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                      <path d="M12 2L14.4 9.6H22L15.8 14.4L18.2 22L12 17.2L5.8 22L8.2 14.4L2 9.6H9.6L12 2Z" fill="white" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h2 style={styles.aiTitle}>Compatibility Match</h2>
-                    <p style={styles.aiSubtitle}>Powered by transparent mathematical rules</p>
-                  </div>
-                </div>
-
-                <p style={{ ...styles.aiDescription, textAlign: "center", width: "100%" }}>
-                  Select your disabilities on the left, then click below to get your personalized compatibility scores.
-                </p>
-
-                <button
-                  onClick={handleGetAiMatch}
-                  disabled={aiLoading}
-                  className={aiLoading ? "shimmer-btn" : "ai-btn-idle"}
-                  style={{ ...styles.aiButton, opacity: aiLoading ? 0.9 : 1, cursor: aiLoading ? "not-allowed" : "pointer" }}
-                >
-                  {aiLoading ? (
-                    <span style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <SpinnerIcon /> Analyzing your profile...
-                    </span>
-                  ) : (
-                    "Get My Job Match"
-                  )}
-                </button>
-
-                {aiError && <div style={styles.aiErrorBox}>⚠️ {aiError}</div>}
-
-                {aiResults && (
-                  <div style={{ marginTop: "20px" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-                      <span style={{ fontSize: "13px", fontWeight: "600", color: "#0f172a" }}>Your results</span>
-                      <span style={{ fontSize: "11px", color: "#64748b", fontWeight: "400" }}>
-                        {selectedDisabilities.length} condition{selectedDisabilities.length !== 1 ? "s" : ""} analyzed
-                      </span>
-                    </div>
-                    {aiResults.results.map((result, index) => (
-                      <JobResultCard key={result.job_id} result={result} index={index} onOpenJob={openMatchedJob} />
-                    ))}
-                  </div>
-                )}
-
-                {!aiResults && !aiLoading && (
-                  <div style={styles.aiEmptyState}>
-                    <EmptyStateIllustration />
-                    <p style={styles.aiEmptyText}>Your compatibility scores will appear here after analysis</p>
-                  </div>
-                )}
-              </div>
             </section>
           </div>
         )}
@@ -1137,28 +1039,28 @@ function CandidateDashboard() {
 }
 
 const styles = {
-  page: { minHeight: "100vh", background: "#f8fafc", color: "#0f172a", fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, sans-serif', WebkitFontSmoothing: "antialiased" },
-  header: { background: "linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 60%, #2563eb 100%)", padding: "22px 48px", display: "flex", justifyContent: "space-between", alignItems: "center", boxShadow: "0 2px 20px rgba(29,78,216,0.2)" },
-  headerGreeting: { margin: "0 0 4px", color: "#93c5fd", fontSize: "12px", fontWeight: "400" },
-  headerTitle: { margin: 0, fontSize: "20px", fontWeight: "500", color: "#ffffff", letterSpacing: "0.1px" },
+  page: { minHeight: "100vh", background: "#f4f7fb", color: "#0f172a", fontFamily: '"DM Sans", system-ui, sans-serif', WebkitFontSmoothing: "antialiased" },
+  header: { background: "#123d82", padding: "24px 48px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #0b2f6b" },
+  headerGreeting: { margin: "0 0 5px", color: "#c9daf7", fontSize: "12px", fontWeight: "500" },
+  headerTitle: { margin: 0, fontSize: "22px", fontWeight: "650", color: "#ffffff", letterSpacing: "-0.2px" },
   userBox: { display: "flex", alignItems: "center", gap: "10px" },
-  userAvatar: { width: "38px", height: "38px", borderRadius: "50%", background: "rgba(255,255,255,0.15)", border: "1.5px solid rgba(255,255,255,0.25)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "13px", fontWeight: "600" },
+  userAvatar: { width: "40px", height: "40px", borderRadius: "10px", background: "#ffffff", border: "1px solid #ffffff", color: "#123d82", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "13px", fontWeight: "750" },
   userName: { margin: 0, color: "#ffffff", fontSize: "13px", fontWeight: "500" },
-  userRole: { margin: "2px 0 0", color: "#93c5fd", fontSize: "11px" },
-  logoutBtn: { marginInlineStart: "6px", border: "1px solid rgba(255,255,255,0.2)", background: "transparent", color: "#e0effe", cursor: "pointer", fontSize: "12px", fontWeight: "400", padding: "6px 12px", borderRadius: "7px", fontFamily: "Inter, sans-serif" },
+  userRole: { margin: "2px 0 0", color: "#c9daf7", fontSize: "11px" },
+  logoutBtn: { marginInlineStart: "6px", border: "1px solid #8eadd9", background: "transparent", color: "#ffffff", cursor: "pointer", fontSize: "12px", fontWeight: "600", padding: "8px 13px", borderRadius: "8px", fontFamily: "inherit" },
   tabs: { background: "#ffffff", padding: "0 48px", display: "flex", gap: "4px", borderBottom: "1px solid #e8edf5" },
   tabButton: { background: "transparent", border: "none", padding: "15px 14px", cursor: "pointer", fontSize: "13px", fontWeight: "400", color: "#64748b", borderBottom: "2px solid transparent", transition: "all 0.15s", borderRadius: 0, fontFamily: "Inter, sans-serif" },
   activeTab: { color: "#2563eb", borderBottom: "2px solid #2563eb", fontWeight: "600" },
-  main: { padding: "22px 26px" },
+  main: { width: "min(100%, 1180px)", margin: "0 auto", padding: "28px 26px" },
   stepRow: { display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "18px" },
   stepDot: { width: "7px", height: "7px", borderRadius: "50%", flexShrink: 0 },
   stepLabel: { fontSize: "11px", fontWeight: "500", whiteSpace: "nowrap" },
   stepLine: { width: "44px", height: "1px", background: "#e2e8f0", margin: "0 8px" },
   profileGrid: { display: "grid", gridTemplateColumns: "1fr", gap: "18px" },
-  card: { background: "#ffffff", borderRadius: "18px", padding: "24px", boxShadow: "0 1px 10px rgba(15,23,42,0.05)", border: "1px solid #e8edf5" },
+  card: { background: "#ffffff", borderRadius: "14px", padding: "26px", boxShadow: "none", border: "1px solid #d6dfec" },
   cardHeader: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" },
-  sectionTitle: { margin: "0 0 4px", fontSize: "17px", fontWeight: "600", color: "#0f172a", letterSpacing: "-0.2px", textAlign: "center" },
-  text: { color: "#64748b", fontSize: "13px", lineHeight: "1.5", margin: 0, textAlign: "center" },
+  sectionTitle: { margin: "0 0 4px", fontSize: "18px", fontWeight: "700", color: "#0f172a", letterSpacing: "-0.2px", textAlign: "start" },
+  text: { color: "#52617d", fontSize: "13px", lineHeight: "1.55", margin: 0, textAlign: "start" },
   selectedPill: { background: "#eff6ff", color: "#2563eb", border: "1px solid #bfdbfe", borderRadius: "999px", padding: "4px 11px", fontSize: "12px", fontWeight: "500", whiteSpace: "nowrap" },
   profileFieldLabel: { display: "grid", gap: "5px", color: "#475569", fontSize: "12px", fontWeight: "500" },
   fieldError: { color: "#b91c1c", fontSize: "12px", fontWeight: "600", lineHeight: "1.35" },
@@ -1180,16 +1082,15 @@ const styles = {
   successText: { color: "#16a34a", fontWeight: "500", fontSize: "13px" },
   errorText: { color: "#dc2626", fontWeight: "500", fontSize: "13px", marginTop: "6px" },
   infoText: { color: "#64748b", fontSize: "13px" },
-  aiCard: { background: "#ffffff", borderRadius: "18px", padding: "22px", boxShadow: "0 1px 10px rgba(15,23,42,0.05)", border: "1px solid #e8edf5" },
-  aiCardHeader: { display: "flex", alignItems: "center", gap: "11px", marginBottom: "12px", justifyContent: "center" },
-  aiIconWrapper: { width: "36px", height: "36px", borderRadius: "10px", background: "linear-gradient(135deg, #1d4ed8, #3b82f6)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
-  aiTitle: { margin: 0, fontSize: "16px", fontWeight: "600", color: "#0f172a" },
-  aiSubtitle: { margin: "1px 0 0", fontSize: "11px", color: "#64748b", fontWeight: "400" },
-  aiDescription: { color: "#64748b", fontSize: "13px", lineHeight: "1.55", marginBottom: "14px", textAlign: "center" },
-  aiButton: { width: "100%", border: "none", background: "linear-gradient(135deg, #1d4ed8, #2563eb)", color: "#ffffff", padding: "11px", borderRadius: "10px", fontWeight: "500", fontSize: "13px", fontFamily: "Inter, sans-serif", letterSpacing: "0.1px", transition: "all 0.15s" },
+  aiCard: { background: "#ffffff", borderRadius: "16px", padding: "26px", boxShadow: "0 8px 26px rgba(15,23,42,0.055)", border: "1px solid #d6dfec" },
+  aiCardHeader: { display: "flex", alignItems: "center", gap: "11px", marginBottom: "9px", justifyContent: "flex-start" },
+  aiTitle: { margin: 0, fontSize: "19px", fontWeight: "700", color: "#0f172a" },
+  aiSubtitle: { margin: "3px 0 0", fontSize: "12px", color: "#52617d", fontWeight: "500" },
+  aiDescription: { maxWidth: "700px", color: "#52617d", fontSize: "14px", lineHeight: "1.6", margin: "0 0 18px", textAlign: "start" },
+  aiButton: { width: "auto", minWidth: "240px", border: "none", background: "#175dcc", color: "#ffffff", padding: "12px 20px", borderRadius: "9px", fontWeight: "700", fontSize: "13px", fontFamily: "inherit", letterSpacing: "0", transition: "background-color 0.15s" },
   aiErrorBox: { marginTop: "10px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: "8px", padding: "10px 12px", color: "#dc2626", fontSize: "12px", fontWeight: "400" },
-  aiEmptyState: { textAlign: "center", padding: "28px 16px" },
-  aiEmptyText: { color: "#64748b", fontSize: "12px", fontWeight: "400", lineHeight: "1.5", margin: 0 },
+  aiEmptyState: { textAlign: "start", marginTop: "18px", padding: "16px 18px", background: "#f5f7fb", borderInlineStart: "3px solid #7f99bd" },
+  aiEmptyText: { color: "#475569", fontSize: "13px", fontWeight: "500", lineHeight: "1.5", margin: 0 },
   jobsGrid: { marginTop: "18px", display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "12px" },
   jobCard: { border: "1px solid #e8edf5", background: "#ffffff", borderRadius: "14px", padding: "14px", cursor: "pointer", textAlign: "start", display: "flex", gap: "11px", alignItems: "center", transition: "all 0.15s" },
   companyLogo: { width: "44px", height: "44px", borderRadius: "11px", background: "#eff6ff", color: "#2563eb", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "600", fontSize: "18px", flexShrink: 0, overflow: "hidden" },

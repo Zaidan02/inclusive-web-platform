@@ -9,8 +9,8 @@
     "tabsLabel": "Candidate dashboard sections",
     "tabs": { "JOBS": "Jobs", "APPLICATIONS": "My applications", "PROFILE": "My profile", "PRIVACY": "Privacy and data" },
     "header": {
-      "greeting": "Hello, {{name}} 👋",
-      "title": "Find your best job match ✦",
+      "greeting": "Welcome, {{name}}",
+      "title": "Find hospitality work that fits your abilities",
       "openProfile": "Open my profile"
     },
     "steps": { "profile": "Complete your profile", "match": "Calculate matches", "apply": "Apply to jobs" },
@@ -45,10 +45,10 @@
       "save": "Save profile"
     },
     "match": {
-      "title": "Compatibility match",
-      "subtitle": "Powered by transparent mathematical rules",
-      "description": "Use your saved profile to get personalized compatibility scores before exploring opportunities.",
-      "run": "Get my job match",
+      "title": "Task-based compatibility",
+      "subtitle": "Calculated using transparent job-task rules",
+      "description": "Compare your confirmed profile with real hospitality duties and the workplace support offered for each vacancy.",
+      "run": "Calculate compatibility",
       "analysing": "Analysing your profile…",
       "results": "Your results",
       "conditionsAnalysed_zero": "{{count}} conditions analysed",
