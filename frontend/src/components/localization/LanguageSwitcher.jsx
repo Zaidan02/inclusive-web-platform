@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { normalizeLocale, SUPPORTED_LOCALES } from "../../i18n/locales";
 
-export default function LanguageSwitcher() {
+export default function LanguageSwitcher({ compact = false }) {
   const { t, i18n } = useTranslation("common");
   const [announcement, setAnnouncement] = useState("");
   const currentLocale = normalizeLocale(i18n.resolvedLanguage) || "en";
@@ -18,7 +18,7 @@ export default function LanguageSwitcher() {
   }
 
   return (
-    <div className="language-toolbar" role="region" aria-label={t("language.region")}>
+    <div className={`language-toolbar ${compact ? "language-toolbar--compact" : ""}`} role="region" aria-label={t("language.region")}>
       <div className="language-toolbar__inner">
         <label htmlFor="interface-language">{t("language.label")}</label>
         <select id="interface-language" value={currentLocale} onChange={changeLanguage}>
@@ -35,4 +35,3 @@ export default function LanguageSwitcher() {
     </div>
   );
 }
-

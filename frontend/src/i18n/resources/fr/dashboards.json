@@ -14,6 +14,17 @@
       "openProfile": "Ouvrir mon profil"
     },
     "steps": { "profile": "Compléter votre profil", "match": "Calculer les correspondances", "apply": "Postuler aux emplois" },
+    "journey": {
+      "label": "Parcours candidat",
+      "profile": { "title": "Créer votre profil", "text": "Confirmez vos capacités et vos préférences" },
+      "jobs": { "title": "Comparer et explorer", "text": "Comparez votre profil aux tâches réelles des métiers" },
+      "applications": { "title": "Postuler et suivre", "text": "Suivez l’avancement de vos candidatures" }
+    },
+    "nextStep": {
+      "title": "Votre profil est prêt.",
+      "text": "Continuez pour calculer la compatibilité et explorer les emplois adaptés dans l’hôtellerie.",
+      "action": "Continuer vers la mise en relation"
+    },
     "common": {
       "notSpecified": "Non précisé",
       "more": "+{{count}} de plus",

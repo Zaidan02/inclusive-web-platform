@@ -8,7 +8,17 @@
     "forYou": "ما يناسبك",
     "employers": "لأصحاب العمل",
     "signIn": "تسجيل الدخول",
-    "signUp": "إنشاء حساب"
+    "signUp": "إنشاء حساب",
+    "candidates": "الباحثون عن عمل",
+    "latestJobs": "أحدث الوظائف",
+    "candidateHow": "كيف تعمل المطابقة",
+    "candidateAccount": "إنشاء حساب مرشح",
+    "employerOverview": "التوظيف الشامل",
+    "employerHow": "كيفية مشاركة أصحاب العمل",
+    "employerAccount": "إنشاء حساب صاحب عمل",
+    "about": "عن JoIn",
+    "missionVision": "الرسالة والرؤية",
+    "privacy": "الخصوصية والبيانات"
   },
   "footer": {
     "intro": "فتح قطاع الضيافة أمام القدرات والإمكانات والعمل الهادف.",

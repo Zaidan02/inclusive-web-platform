@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getToken, logout } from "../services/authService";
@@ -376,6 +376,8 @@ function CandidateDashboard() {
   const [loadingApplications, setLoadingApplications] = useState(false);
   const [applicationsError, setApplicationsError] = useState("");
   const [applicationStatusFilter, setApplicationStatusFilter] = useState("all");
+  const [savedProfileSignature, setSavedProfileSignature] = useState("");
+  const [profileOutcome, setProfileOutcome] = useState("");
   const [profileErrors, setProfileErrors] = useState({});
   const [applicationErrors, setApplicationErrors] = useState({});
   const applicationDocumentRef = useRef(null);
@@ -400,6 +402,11 @@ function CandidateDashboard() {
   }, [location.state?.voiceNavigationTurn, location.state?.voiceTab]);
   const filteredDisabilities = disabilityOptions.filter(({ key }) => t(`profile:disabilities.${key}`).toLocaleLowerCase(i18n.resolvedLanguage).includes(searchTerm.toLocaleLowerCase(i18n.resolvedLanguage)));
   const filteredApplications = applicationStatusFilter === "all" ? candidateApplications : candidateApplications.filter((a) => a.status === applicationStatusFilter);
+  const profileSignature = useMemo(() => JSON.stringify({
+    selectedDisabilities: [...selectedDisabilities].sort(),
+    educationLevel,
+    ...basicInfo,
+  }), [basicInfo, educationLevel, selectedDisabilities]);
   function disabilityLabel(name) {
     const option = disabilityOptions.find((item) => item.name === name);
     return option ? t(`profile:disabilities.${option.key}`) : name;
@@ -490,6 +497,7 @@ function CandidateDashboard() {
     });
     setConfirmedTaskSkills(profile.confirmedTaskSkills || []);
     setSuccessMessage(t("candidate.success.aiSuggestions"));
+    setProfileOutcome("ai");
     setErrorMessage("");
   }
 
@@ -528,10 +536,13 @@ function CandidateDashboard() {
       return;
     }
     try {
-      setSavingProfile(true); setSuccessMessage(""); setErrorMessage("");
-      const data = await updateCandidateProfile({ selectedDisabilities, educationLevel, ...basicInfo });
+      setSavingProfile(true); setSuccessMessage(""); setProfileOutcome(""); setErrorMessage("");
+      const payload = { selectedDisabilities, educationLevel, ...basicInfo };
+      const data = await updateCandidateProfile(payload);
       setSelectedDisabilities(data.profile?.selectedDisabilities || []);
+      setSavedProfileSignature(JSON.stringify({ ...payload, selectedDisabilities: [...payload.selectedDisabilities].sort() }));
       setSuccessMessage(t("candidate.success.profileSaved"));
+      setProfileOutcome("saved");
     } catch {
       setErrorMessage(t("candidate.errors.profileSave"));
       requestAnimationFrame(() => profileErrorRef.current?.focus());
@@ -670,6 +681,23 @@ function CandidateDashboard() {
 
   const selectedCompanyProfile = selectedCompany?.employerProfile || {};
   const companyJobs = selectedCompany ? getCompanyJobs(selectedCompany) : [];
+  const journeySteps = [
+    { key: "PROFILE", title: t("candidate.journey.profile.title"), text: t("candidate.journey.profile.text") },
+    { key: "JOBS", title: t("candidate.journey.jobs.title"), text: t("candidate.journey.jobs.text") },
+    { key: "APPLICATIONS", title: t("candidate.journey.applications.title"), text: t("candidate.journey.applications.text") },
+  ];
+  const journeyCurrent = activeTab === "PROFILE" ? "PROFILE"
+    : activeTab === "APPLICATIONS" ? "APPLICATIONS"
+    : activeTab === "JOBS" ? "JOBS"
+    : null;
+
+  function openJourneyStep(step) {
+    setActiveTab(step);
+    if (step === "JOBS") setSelectedJob(null);
+    setSuccessMessage("");
+    setErrorMessage("");
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }
 
   return (
     <div className="dashboard-screen dashboard-screen--candidate" style={styles.page} data-voice-section="candidate-dashboard" data-voice-view={activeTab}>
@@ -710,19 +738,30 @@ function CandidateDashboard() {
       </nav>
 
       <main style={styles.main} className="candidate-dashboard__main" aria-busy={loadingProfile}>
+        <nav className="candidate-journey" aria-label={t("candidate.journey.label")}>
+          <ol>
+            {journeySteps.map((step, index) => {
+              const current = journeyCurrent === step.key;
+              const completed = step.key === "PROFILE"
+                || (step.key === "JOBS" && Boolean(aiResults))
+                || (step.key === "APPLICATIONS" && candidateApplications.length > 0);
+              return (
+                <li key={step.key} data-state={current ? "current" : completed ? "completed" : "upcoming"}>
+                  <button type="button" aria-current={current ? "step" : undefined} onClick={() => openJourneyStep(step.key)}>
+                    <span className="candidate-journey__number" aria-hidden="true">{index + 1}</span>
+                    <span className="candidate-journey__copy">
+                      <strong>{step.title}</strong>
+                      <span>{step.text}</span>
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        </nav>
+
         {activeTab === "PROFILE" && (
           <div>
-            {/* STEP INDICATOR */}
-            <div style={styles.stepRow} className="candidate-dashboard__steps">
-              {[t("candidate.steps.profile"), t("candidate.steps.match"), t("candidate.steps.apply")].map((step, i) => (
-                <div key={step} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                  <div style={{ ...styles.stepDot, background: i === 0 ? "#2563eb" : i === 1 && aiResults ? "#2563eb" : "#cbd5e1", transition: "background 0.4s" }} />
-                  <span style={{ ...styles.stepLabel, color: i === 0 ? "#2563eb" : i === 1 && aiResults ? "#2563eb" : "#64748b", transition: "color 0.4s" }}>{step}</span>
-                  {i < 2 && <div style={styles.stepLine} />}
-                </div>
-              ))}
-            </div>
-
             <AiProfileBuilder
               currentProfile={{ ...basicInfo, educationLevel, selectedDisabilities, confirmedTaskSkills }}
               onProfileConfirmed={applyConfirmedProfile}
@@ -782,7 +821,7 @@ function CandidateDashboard() {
                         <div style={styles.imageWrapper}>
                           <img src={disability.image} alt="" style={styles.disabilityImage} />
                         </div>
-                        <span style={{ ...styles.disabilityName, color: isSelected ? "#2563eb" : "#374151" }}>
+                        <span style={{ ...styles.disabilityName, color: isSelected ? "#126746" : "#374151" }}>
                           {t(`profile:disabilities.${disability.key}`)}
                         </span>
                       </button>
@@ -796,8 +835,21 @@ function CandidateDashboard() {
                   <button type="button" data-voice-control="save_profile" onClick={handleSaveProfile} style={styles.saveButton} disabled={savingProfile} aria-busy={savingProfile}>
                     {savingProfile ? t("candidate.profile.saving") : t("candidate.profile.save")}
                   </button>
-                  {successMessage && <span style={styles.successText} role="status">✓ {successMessage}</span>}
                 </div>
+                {successMessage && profileOutcome === "ai" && (
+                  <p className="candidate-profile-outcome" role="status">{successMessage}</p>
+                )}
+                {successMessage && profileOutcome === "saved" && savedProfileSignature === profileSignature && (
+                  <div className="candidate-next-step" role="status">
+                    <div>
+                      <strong>{t("candidate.nextStep.title")}</strong>
+                      <p>{t("candidate.nextStep.text")}</p>
+                    </div>
+                    <button type="button" onClick={() => openJourneyStep("JOBS")}>
+                      {t("candidate.nextStep.action")} <span className="directional-arrow" aria-hidden="true">→</span>
+                    </button>
+                  </div>
+                )}
               </div>
 
             </section>
@@ -1039,61 +1091,61 @@ function CandidateDashboard() {
 }
 
 const styles = {
-  page: { minHeight: "100vh", background: "#f4f7fb", color: "#0f172a", fontFamily: '"DM Sans", system-ui, sans-serif', WebkitFontSmoothing: "antialiased" },
-  header: { background: "#123d82", padding: "24px 48px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #0b2f6b" },
-  headerGreeting: { margin: "0 0 5px", color: "#c9daf7", fontSize: "12px", fontWeight: "500" },
-  headerTitle: { margin: 0, fontSize: "22px", fontWeight: "650", color: "#ffffff", letterSpacing: "-0.2px" },
+  page: { minHeight: "100vh", background: "#f5f2ec", color: "#0f172a", fontFamily: '"DM Sans", system-ui, sans-serif', WebkitFontSmoothing: "antialiased" },
+  header: { background: "#ffffff", padding: "24px 48px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #d8d3ca" },
+  headerGreeting: { margin: "0 0 5px", color: "#8b4527", fontSize: "12px", fontWeight: "650" },
+  headerTitle: { margin: 0, fontSize: "22px", fontWeight: "650", color: "#14213d", letterSpacing: "-0.2px" },
   userBox: { display: "flex", alignItems: "center", gap: "10px" },
-  userAvatar: { width: "40px", height: "40px", borderRadius: "10px", background: "#ffffff", border: "1px solid #ffffff", color: "#123d82", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "13px", fontWeight: "750" },
-  userName: { margin: 0, color: "#ffffff", fontSize: "13px", fontWeight: "500" },
-  userRole: { margin: "2px 0 0", color: "#c9daf7", fontSize: "11px" },
-  logoutBtn: { marginInlineStart: "6px", border: "1px solid #8eadd9", background: "transparent", color: "#ffffff", cursor: "pointer", fontSize: "12px", fontWeight: "600", padding: "8px 13px", borderRadius: "8px", fontFamily: "inherit" },
-  tabs: { background: "#ffffff", padding: "0 48px", display: "flex", gap: "4px", borderBottom: "1px solid #e8edf5" },
+  userAvatar: { width: "40px", height: "40px", borderRadius: "4px", background: "#f5eee7", border: "1px solid #c7bfb3", color: "#7d361c", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "13px", fontWeight: "750" },
+  userName: { margin: 0, color: "#14213d", fontSize: "13px", fontWeight: "600" },
+  userRole: { margin: "2px 0 0", color: "#5b687d", fontSize: "11px" },
+  logoutBtn: { marginInlineStart: "6px", border: "1px solid #8a96a8", background: "transparent", color: "#28364d", cursor: "pointer", fontSize: "12px", fontWeight: "600", padding: "8px 13px", borderRadius: "3px", fontFamily: "inherit" },
+  tabs: { background: "#fbfaf7", padding: "0 48px", display: "flex", gap: "4px", borderBottom: "1px solid #d8d3ca" },
   tabButton: { background: "transparent", border: "none", padding: "15px 14px", cursor: "pointer", fontSize: "13px", fontWeight: "400", color: "#64748b", borderBottom: "2px solid transparent", transition: "all 0.15s", borderRadius: 0, fontFamily: "Inter, sans-serif" },
-  activeTab: { color: "#2563eb", borderBottom: "2px solid #2563eb", fontWeight: "600" },
+  activeTab: { color: "#7d361c", borderBottom: "2px solid #a9532d", fontWeight: "650" },
   main: { width: "min(100%, 1180px)", margin: "0 auto", padding: "28px 26px" },
   stepRow: { display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "18px" },
   stepDot: { width: "7px", height: "7px", borderRadius: "50%", flexShrink: 0 },
   stepLabel: { fontSize: "11px", fontWeight: "500", whiteSpace: "nowrap" },
   stepLine: { width: "44px", height: "1px", background: "#e2e8f0", margin: "0 8px" },
   profileGrid: { display: "grid", gridTemplateColumns: "1fr", gap: "18px" },
-  card: { background: "#ffffff", borderRadius: "14px", padding: "26px", boxShadow: "none", border: "1px solid #d6dfec" },
+  card: { background: "#ffffff", borderRadius: "4px", padding: "26px", boxShadow: "none", border: "1px solid #d7d2c9" },
   cardHeader: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" },
   sectionTitle: { margin: "0 0 4px", fontSize: "18px", fontWeight: "700", color: "#0f172a", letterSpacing: "-0.2px", textAlign: "start" },
   text: { color: "#52617d", fontSize: "13px", lineHeight: "1.55", margin: 0, textAlign: "start" },
-  selectedPill: { background: "#eff6ff", color: "#2563eb", border: "1px solid #bfdbfe", borderRadius: "999px", padding: "4px 11px", fontSize: "12px", fontWeight: "500", whiteSpace: "nowrap" },
+  selectedPill: { background: "#eef6f0", color: "#126746", border: "1px solid #b8d5c3", borderRadius: "3px", padding: "4px 11px", fontSize: "12px", fontWeight: "650", whiteSpace: "nowrap" },
   profileFieldLabel: { display: "grid", gap: "5px", color: "#475569", fontSize: "12px", fontWeight: "500" },
   fieldError: { color: "#b91c1c", fontSize: "12px", fontWeight: "600", lineHeight: "1.35" },
   searchWrapper: { position: "relative", marginBottom: "12px" },
-  searchInput: { width: "100%", padding: "10px 12px", paddingInlineStart: "34px", borderRadius: "9px", border: "1px solid #e2e8f0", fontSize: "13px", outline: "none", boxSizing: "border-box", background: "#f8fafc", color: "#0f172a", fontFamily: "Inter, sans-serif" },
+  searchInput: { width: "100%", padding: "10px 12px", paddingInlineStart: "34px", borderRadius: "3px", border: "1px solid #d7d2c9", fontSize: "13px", outline: "none", boxSizing: "border-box", background: "#fff", color: "#0f172a", fontFamily: "Inter, sans-serif" },
   selectedChipsRow: { display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "12px", alignItems: "center" },
-  selectedChip: { display: "inline-flex", alignItems: "center", gap: "5px", background: "#eff6ff", color: "#2563eb", padding: "4px 9px", borderRadius: "999px", fontSize: "11px", fontWeight: "500", border: "1px solid #bfdbfe" },
+  selectedChip: { display: "inline-flex", alignItems: "center", gap: "5px", background: "#eef6f0", color: "#126746", padding: "4px 9px", borderRadius: "3px", fontSize: "11px", fontWeight: "600", border: "1px solid #b8d5c3" },
   chipRemove: { background: "none", border: "none", color: "#93c5fd", cursor: "pointer", fontSize: "13px", padding: "0", lineHeight: "1", fontFamily: "Inter, sans-serif" },
-  resetBtn: { background: "none", border: "1px solid #e2e8f0", color: "#64748b", cursor: "pointer", fontSize: "11px", fontWeight: "400", padding: "4px 9px", borderRadius: "999px", fontFamily: "Inter, sans-serif" },
+  resetBtn: { background: "none", border: "1px solid #c9c4bb", color: "#596579", cursor: "pointer", fontSize: "11px", fontWeight: "500", padding: "4px 9px", borderRadius: "3px", fontFamily: "Inter, sans-serif" },
   disabilityGrid: { display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px" },
-  disabilityCard: { position: "relative", border: "1px solid #e8edf5", background: "#fafbfc", borderRadius: "13px", padding: "10px", cursor: "pointer", minHeight: "175px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-between", transition: "all 0.15s ease", outline: "none" },
-  selectedDisabilityCard: { border: "1.5px solid #2563eb", background: "#eff6ff", boxShadow: "0 4px 14px rgba(37,99,235,0.1)", transform: "translateY(-1px)" },
-  selectedCheck: { position: "absolute", top: "8px", insetInlineEnd: "8px", width: "17px", height: "17px", borderRadius: "50%", background: "#2563eb", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "9px", fontWeight: "700" },
-  imageWrapper: { width: "100%", height: "125px", background: "#ffffff", borderRadius: "9px", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" },
+  disabilityCard: { position: "relative", border: "1px solid #dcd7ce", background: "#fbfaf7", borderRadius: "4px", padding: "10px", cursor: "pointer", minHeight: "175px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-between", transition: "all 0.15s ease", outline: "none" },
+  selectedDisabilityCard: { border: "1.5px solid #16835a", background: "#eef6f0", boxShadow: "none", transform: "none" },
+  selectedCheck: { position: "absolute", top: "8px", insetInlineEnd: "8px", width: "17px", height: "17px", borderRadius: "2px", background: "#16835a", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "9px", fontWeight: "700" },
+  imageWrapper: { width: "100%", height: "125px", background: "#ffffff", borderRadius: "2px", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" },
   disabilityImage: { width: "100%", height: "100%", objectFit: "contain" },
   disabilityName: { marginTop: "6px", fontSize: "11px", fontWeight: "500", textAlign: "center" },
   saveRow: { display: "flex", alignItems: "center", gap: "12px", marginTop: "18px", flexWrap: "wrap" },
-  saveButton: { border: "none", background: "#2563eb", color: "#ffffff", padding: "9px 18px", borderRadius: "9px", cursor: "pointer", fontWeight: "500", fontSize: "13px", fontFamily: "Inter, sans-serif", boxShadow: "0 2px 8px rgba(37,99,235,0.22)" },
+  saveButton: { border: "none", background: "#173e68", color: "#ffffff", padding: "9px 18px", borderRadius: "3px", cursor: "pointer", fontWeight: "650", fontSize: "13px", fontFamily: "Inter, sans-serif", boxShadow: "none" },
   successText: { color: "#16a34a", fontWeight: "500", fontSize: "13px" },
   errorText: { color: "#dc2626", fontWeight: "500", fontSize: "13px", marginTop: "6px" },
   infoText: { color: "#64748b", fontSize: "13px" },
-  aiCard: { background: "#ffffff", borderRadius: "16px", padding: "26px", boxShadow: "0 8px 26px rgba(15,23,42,0.055)", border: "1px solid #d6dfec" },
+  aiCard: { background: "#ffffff", borderRadius: "4px", padding: "26px", boxShadow: "none", border: "1px solid #d7d2c9" },
   aiCardHeader: { display: "flex", alignItems: "center", gap: "11px", marginBottom: "9px", justifyContent: "flex-start" },
   aiTitle: { margin: 0, fontSize: "19px", fontWeight: "700", color: "#0f172a" },
   aiSubtitle: { margin: "3px 0 0", fontSize: "12px", color: "#52617d", fontWeight: "500" },
   aiDescription: { maxWidth: "700px", color: "#52617d", fontSize: "14px", lineHeight: "1.6", margin: "0 0 18px", textAlign: "start" },
-  aiButton: { width: "auto", minWidth: "240px", border: "none", background: "#175dcc", color: "#ffffff", padding: "12px 20px", borderRadius: "9px", fontWeight: "700", fontSize: "13px", fontFamily: "inherit", letterSpacing: "0", transition: "background-color 0.15s" },
+  aiButton: { width: "auto", minWidth: "240px", border: "none", background: "#173e68", color: "#ffffff", padding: "12px 20px", borderRadius: "3px", fontWeight: "700", fontSize: "13px", fontFamily: "inherit", letterSpacing: "0", transition: "background-color 0.15s" },
   aiErrorBox: { marginTop: "10px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: "8px", padding: "10px 12px", color: "#dc2626", fontSize: "12px", fontWeight: "400" },
   aiEmptyState: { textAlign: "start", marginTop: "18px", padding: "16px 18px", background: "#f5f7fb", borderInlineStart: "3px solid #7f99bd" },
   aiEmptyText: { color: "#475569", fontSize: "13px", fontWeight: "500", lineHeight: "1.5", margin: 0 },
   jobsGrid: { marginTop: "18px", display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "12px" },
-  jobCard: { border: "1px solid #e8edf5", background: "#ffffff", borderRadius: "14px", padding: "14px", cursor: "pointer", textAlign: "start", display: "flex", gap: "11px", alignItems: "center", transition: "all 0.15s" },
-  companyLogo: { width: "44px", height: "44px", borderRadius: "11px", background: "#eff6ff", color: "#2563eb", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "600", fontSize: "18px", flexShrink: 0, overflow: "hidden" },
+  jobCard: { border: "1px solid #dcd7ce", background: "#ffffff", borderRadius: "3px", padding: "14px", cursor: "pointer", textAlign: "start", display: "flex", gap: "11px", alignItems: "center", transition: "all 0.15s" },
+  companyLogo: { width: "44px", height: "44px", borderRadius: "3px", background: "#f5eee7", color: "#8b4527", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "600", fontSize: "18px", flexShrink: 0, overflow: "hidden" },
   companyLogoImage: { width: "100%", height: "100%", objectFit: "cover" },
   jobCardContent: { minWidth: 0 },
   jobTitle: { margin: "0 0 3px", fontSize: "14px", color: "#0f172a", fontWeight: "600" },

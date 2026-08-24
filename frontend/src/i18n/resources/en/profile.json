@@ -73,7 +73,7 @@
   },
   "setup": {
     "header": "Candidate profile setup",
-    "step": "Step 1 of 1",
+    "step": "Step 1 of 3",
     "title": "Let's build your ability-led profile.",
     "intro": "Select the options that apply to you. This helps JoIn make opportunities and tasks easier to evaluate for your needs.",
     "privacyTitle": "Your profile, your choice",
@@ -100,9 +100,9 @@
     "searchPlaceholder": "Search options",
     "searchLabel": "Search disability options",
     "loading": "Loading your profile…",
-    "changeLater": "You can change this later.",
+    "changeLater": "You can update this later. Next, compare your profile with real job tasks.",
     "saving": "Saving profile…",
-    "complete": "Complete setup",
+    "complete": "Save profile and continue",
     "errors": {
       "load": "Your profile could not be loaded. Please try again.",
       "required": "Add your name, location, education level, and at least one disability.",

@@ -105,6 +105,33 @@ await check("keyboard entry exposes the skip link", async (page) => {
   return { firstTabStop: focusedText };
 });
 
+await check("public grouped navigation opens and closes from the keyboard", async (page) => {
+  await page.goto(`${WEB_BASE}/`, { waitUntil: "networkidle" });
+  const trigger = page.getByRole("button", { name: "Job seekers" });
+  await trigger.focus();
+  await page.keyboard.press("Enter");
+  assert.equal(await trigger.getAttribute("aria-expanded"), "true");
+  await page.getByRole("link", { name: "Latest jobs" }).waitFor({ state: "visible" });
+  await page.keyboard.press("Escape");
+  assert.equal(await trigger.getAttribute("aria-expanded"), "false");
+  assert.equal(await trigger.evaluate((element) => element === document.activeElement), true);
+  return { trigger: "Job seekers", escapeReturnedFocus: true };
+});
+
+await check("saved candidate profile offers and follows the next journey step", async (page, context) => {
+  await context.addInitScript((token) => sessionStorage.setItem("token", token), tokens.candidate);
+  await page.goto(`${WEB_BASE}/candidate`, { waitUntil: "networkidle" });
+  await page.getByRole("button", { name: "My profile", exact: true }).click();
+  await page.getByRole("button", { name: "Save profile", exact: true }).click();
+  const nextStep = page.locator(".candidate-next-step");
+  await nextStep.waitFor({ state: "visible" });
+  await nextStep.getByRole("button", { name: "Continue to job matching" }).click();
+  const jobsTab = page.getByRole("button", { name: "Jobs", exact: true });
+  assert.equal(await jobsTab.getAttribute("aria-current"), "page");
+  assert.equal(await page.locator('.candidate-journey li[data-state="current"] strong').textContent(), "Match and explore");
+  return { destination: "Jobs", currentJourneyStep: "Match and explore" };
+});
+
 await browser.close();
 const failed = results.filter((result) => result.status === "failed");
 const reportPath = await writeJsonReport(OUTPUT, {

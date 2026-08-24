@@ -41,3 +41,25 @@
 .ai-profile-builder__confirmed>p{font-size:12px}
 .ai-profile-builder__sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(max-width:680px){.ai-profile-builder{padding:18px}.ai-profile-builder__heading{display:block}.ai-profile-builder__badge{display:inline-block;margin-top:10px}.ai-profile-builder__controls{grid-template-columns:1fr}.ai-profile-builder__recording{align-items:flex-start;flex-direction:column}}
+
+/* Portal refresh: AI support remains optional and visually secondary. */
+.ai-profile-builder {
+  border-color: #d8cfc4;
+  border-radius: .3rem;
+  background: #faf7f2;
+}
+.ai-profile-builder__eyebrow { color: #96502f; }
+.ai-profile-builder__badge,
+.ai-profile-builder__language,
+.ai-profile-builder select,
+.ai-profile-builder input:not([type=checkbox]),
+.ai-profile-builder textarea,
+.ai-profile-builder button,
+.ai-profile-builder__status,
+.ai-profile-builder__error,
+.ai-profile-builder__suggestion,
+.ai-profile-builder__unmapped,
+.ai-profile-builder__confirmed { border-radius: .2rem; }
+.ai-profile-builder button { background: #173e68; }
+.ai-profile-builder__review { border-top-color: #d8cfc4; }
+.ai-profile-builder__suggestion { border-color: #d8d3ca; }

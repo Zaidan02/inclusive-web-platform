@@ -73,7 +73,7 @@
   },
   "setup": {
     "header": "Configuration du profil candidat",
-    "step": "Étape 1 sur 1",
+    "step": "Étape 1 sur 3",
     "title": "Construisons votre profil centré sur vos capacités.",
     "intro": "Sélectionnez les options qui vous concernent. Cela aide JoIn à évaluer plus facilement les possibilités et les tâches selon vos besoins.",
     "privacyTitle": "Votre profil, votre choix",
@@ -100,9 +100,9 @@
     "searchPlaceholder": "Rechercher des options",
     "searchLabel": "Rechercher des options de handicap",
     "loading": "Chargement de votre profil…",
-    "changeLater": "Vous pourrez modifier ces informations plus tard.",
+    "changeLater": "Vous pourrez modifier ces informations plus tard. Ensuite, comparez votre profil aux tâches réelles des métiers.",
     "saving": "Enregistrement du profil…",
-    "complete": "Terminer la configuration",
+    "complete": "Enregistrer le profil et continuer",
     "errors": {
       "load": "Votre profil n'a pas pu être chargé. Réessayez.",
       "required": "Ajoutez votre nom, votre localisation, votre niveau d'études et au moins un handicap.",

@@ -14,6 +14,17 @@
       "openProfile": "Open my profile"
     },
     "steps": { "profile": "Complete your profile", "match": "Calculate matches", "apply": "Apply to jobs" },
+    "journey": {
+      "label": "Candidate journey",
+      "profile": { "title": "Build your profile", "text": "Confirm your abilities and preferences" },
+      "jobs": { "title": "Match and explore", "text": "Compare your profile with real job tasks" },
+      "applications": { "title": "Apply and track", "text": "Follow the progress of your applications" }
+    },
+    "nextStep": {
+      "title": "Your profile is ready.",
+      "text": "Continue to calculate compatibility and explore suitable hospitality jobs.",
+      "action": "Continue to job matching"
+    },
     "common": {
       "notSpecified": "Not specified",
       "more": "+{{count}} more",

@@ -39,15 +39,17 @@ export default function WelcomePage() {
   );
 
   useEffect(() => {
-    const controller = new AbortController();
+    let active = true;
 
-    getPublicOverview(controller.signal)
-      .then((data) => setOverview({ status: "ready", data }))
-      .catch((error) => {
-        if (error.name !== "AbortError") setOverview({ status: "error", data: null });
+    getPublicOverview()
+      .then((data) => {
+        if (active) setOverview({ status: "ready", data });
+      })
+      .catch(() => {
+        if (active) setOverview({ status: "error", data: null });
       });
 
-    return () => controller.abort();
+    return () => { active = false; };
   }, []);
 
   const localizeOption = (value, keys, translationGroup) => {
@@ -111,7 +113,7 @@ export default function WelcomePage() {
           </div>
         </section>
 
-        <section className="mission-vision-section" aria-labelledby="mission-vision-title">
+        <section className="mission-vision-section" id="mission-vision" aria-labelledby="mission-vision-title">
           <div className="landing-container">
             <h2 id="mission-vision-title" className="visually-hidden">{t("welcome.missionVisionTitle")}</h2>
             <div className="mission-vision-grid">
@@ -127,7 +129,7 @@ export default function WelcomePage() {
           </div>
         </section>
 
-        <section className="opportunity-section section" aria-labelledby="opportunity-title">
+        <section className="opportunity-section section" id="opportunities" aria-labelledby="opportunity-title">
           <div className="landing-container">
             <div className="opportunity-heading">
               <div>

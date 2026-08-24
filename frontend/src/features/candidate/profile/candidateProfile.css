@@ -8,3 +8,37 @@
 .profile-setup__state { min-height:300px;display:grid;place-items:center;color:var(--ink-500); }.profile-setup__error { margin:16px 0 0;padding:11px 13px;border-radius:11px;background:#fff1f0;border:1px solid #ffd5d2;color:#b42318;font-size:12px;font-weight:600; }.profile-setup__footer { margin-top:24px;padding-top:20px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:20px; }.profile-setup__footer>span { color:var(--ink-500);font-size:12px; }.profile-setup__footer button { min-height:48px;padding:0 22px;border:0;border-radius:999px;background:linear-gradient(135deg,var(--brand-700),var(--brand-600));color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;gap:12px;box-shadow:0 12px 26px rgba(37,99,235,.22); }.profile-setup__footer button:disabled { opacity:.65;cursor:not-allowed; }
 @media(max-width:900px){.profile-setup__shell{grid-template-columns:1fr;gap:24px;padding-top:30px}.profile-setup__intro{position:static;text-align:center}.profile-setup__intro>p{margin:auto}.profile-setup__privacy{max-width:520px;margin:28px auto 0;text-align:start}}
 @media(max-width:620px){.profile-setup__header,.profile-setup__shell{width:calc(100% - (var(--page-gutter) * 2))}.profile-setup__header>span{display:none}.profile-setup__shell{padding-bottom:36px}.profile-setup__intro h1{font-size:clamp(2rem,10vw,2.7rem);letter-spacing:-1px}.profile-setup__card{padding:20px;border-radius:22px}.profile-setup__fields{grid-template-columns:1fr}.profile-options{grid-template-columns:repeat(2,minmax(0,1fr))}.profile-setup__card-header{flex-direction:column}.profile-setup__footer{align-items:stretch;flex-direction:column}.profile-setup__footer button{justify-content:center;width:100%}}
+
+/* First stage of the candidate journey: warm, structured, and low-decoration. */
+.profile-setup { background: #f5f2ec; }
+.profile-setup__header { border-bottom-color: #d8d3ca; }
+.profile-setup__step,
+.profile-setup__eyebrow { color: #96502f; }
+.profile-setup__intro h1 {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-weight: 750;
+  letter-spacing: -.045em;
+}
+.profile-setup__privacy { border-radius: .2rem; background: #f1f7f2; }
+.profile-setup__card {
+  border-color: #d7d2c9;
+  border-radius: .3rem;
+  box-shadow: 0 16px 36px rgba(48, 43, 34, .08);
+}
+.profile-setup__count,
+.profile-setup__search,
+.profile-setup__fields input,
+.profile-setup__education select,
+.profile-option,
+.profile-option img,
+.profile-setup__error,
+.profile-setup__footer button { border-radius: .2rem; }
+.profile-setup__count { background: #f7eee8; color: #7d361c; }
+.profile-option { border-color: #dcd7ce; background: #fbfaf7; }
+.profile-option--selected { border-color: #16835a; background: #eef6f0; color: #126746; }
+.profile-option__check { border-radius: .1rem; background: #16835a; }
+.profile-setup__footer button { background: #173e68; box-shadow: none; }
+
+@media(max-width:620px) {
+  .profile-setup__card { border-radius: .3rem; }
+}

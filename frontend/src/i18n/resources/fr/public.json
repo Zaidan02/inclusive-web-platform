@@ -8,7 +8,17 @@
     "forYou": "Pour vous",
     "employers": "Pour les employeurs",
     "signIn": "Se connecter",
-    "signUp": "S’inscrire"
+    "signUp": "S’inscrire",
+    "candidates": "Candidats",
+    "latestJobs": "Dernières offres",
+    "candidateHow": "Fonctionnement de la mise en relation",
+    "candidateAccount": "Créer un compte candidat",
+    "employerOverview": "Recrutement inclusif",
+    "employerHow": "Participation des employeurs",
+    "employerAccount": "Créer un compte employeur",
+    "about": "À propos de JoIn",
+    "missionVision": "Mission et vision",
+    "privacy": "Confidentialité et données"
   },
   "footer": {
     "intro": "Ouvrir l’hôtellerie aux capacités, au potentiel et à un travail porteur de sens.",

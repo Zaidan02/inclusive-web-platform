@@ -8,7 +8,17 @@
     "forYou": "For you",
     "employers": "For employers",
     "signIn": "Sign in",
-    "signUp": "Sign up"
+    "signUp": "Sign up",
+    "candidates": "Job seekers",
+    "latestJobs": "Latest jobs",
+    "candidateHow": "How matching works",
+    "candidateAccount": "Create a candidate account",
+    "employerOverview": "Inclusive recruitment",
+    "employerHow": "How employers participate",
+    "employerAccount": "Create an employer account",
+    "about": "About JoIn",
+    "missionVision": "Mission and vision",
+    "privacy": "Privacy and data"
   },
   "footer": {
     "intro": "Opening hospitality to ability, potential, and meaningful work.",

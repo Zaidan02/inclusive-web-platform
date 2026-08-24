@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import RoleRoute from "./components/auth/RoleRoute";
 import VoiceNavigationControl from "./components/voice/VoiceNavigationControl";
@@ -23,15 +23,17 @@ const CandidateProfileSetup = lazy(() => import("./features/candidate/profile/Ca
 const VoiceNavigationHelpPage = lazy(() => import("./pages/VoiceNavigationHelpPage"));
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 
-function App() {
+function AppContent() {
   const { t } = useTranslation("common");
+  const location = useLocation();
+  const hasInlineLanguageSwitcher = location.pathname === "/";
 
   return (
-    <BrowserRouter>
+    <>
       <RouteAccessibility />
       <ArrowKeyFocusNavigation />
       <SkipLink />
-      <LanguageSwitcher />
+      {!hasInlineLanguageSwitcher && <LanguageSwitcher />}
       <VoiceNavigationControl />
       <div id="main-content" className="route-content" tabIndex="-1">
         <Suspense fallback={<p className="route-loading" role="status">{t("loadingPage")}</p>}>
@@ -52,6 +54,14 @@ function App() {
         </Routes>
         </Suspense>
       </div>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
   );
 }
