@@ -35,6 +35,15 @@ class CandidateProfile
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $educationLevel = null;
 
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $readingAbility = null;
+
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $writingAbility = null;
+
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $numeracyAbility = null;
+
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $firstName = null;
 
@@ -139,6 +148,12 @@ class CandidateProfile
 
     public function getEducationLevel(): ?string { return $this->educationLevel; }
     public function setEducationLevel(?string $level): static { $this->educationLevel = $level; return $this; }
+    public function getReadingAbility(): ?string { return $this->readingAbility; }
+    public function setReadingAbility(?string $value): static { $this->readingAbility = $value; return $this; }
+    public function getWritingAbility(): ?string { return $this->writingAbility; }
+    public function setWritingAbility(?string $value): static { $this->writingAbility = $value; return $this; }
+    public function getNumeracyAbility(): ?string { return $this->numeracyAbility; }
+    public function setNumeracyAbility(?string $value): static { $this->numeracyAbility = $value; return $this; }
     public function getFirstName(): ?string { return $this->firstName; }
     public function setFirstName(?string $value): static { $this->firstName = $value; return $this; }
     public function getLastName(): ?string { return $this->lastName; }

@@ -4,17 +4,17 @@ namespace App\Controller;
 
 use App\Entity\JobPost;
 use App\Entity\User;
+use App\Service\CompatibilityScoringService;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class CandidateMatchController extends AbstractController
 {
-    public function __construct(private readonly HttpClientInterface $httpClient, private readonly string $scoringEngineUrl) {}
+    public function __construct(private readonly CompatibilityScoringService $scoringService) {}
 
     #[Route('/api/candidate/matches', name: 'api_candidate_matches', methods: ['GET'])]
     public function matches(Request $request, EntityManagerInterface $em, JWTEncoderInterface $jwt): JsonResponse
@@ -22,24 +22,16 @@ final class CandidateMatchController extends AbstractController
         $candidate = $this->candidate($request, $jwt, $em);
         if ($candidate instanceof JsonResponse) return $candidate;
         $profile = $candidate->getCandidateProfile();
-        if (!$profile || !$profile->getEducationLevel() || $profile->getDisabilities()->isEmpty()) {
+        if (!$profile || !$profile->getEducationLevel() || !$profile->getReadingAbility() || !$profile->getWritingAbility() || !$profile->getNumeracyAbility() || $profile->getDisabilities()->isEmpty()) {
             return $this->json(['message' => 'Complete the candidate profile before calculating matches.'], 400);
         }
 
         $jobs = $em->getRepository(JobPost::class)->findBy(['status' => 'published'], ['id' => 'DESC']);
-        $payload = [
-            'candidate' => ['id' => $candidate->getId(), 'educationLevel' => $profile->getEducationLevel(), 'disabilities' => array_map(static fn ($item) => $item->getSlug(), $profile->getDisabilities()->toArray())],
-            'jobs' => array_map(fn (JobPost $job) => $this->jobPayload($job), $jobs),
-        ];
-
         try {
-            $response = $this->httpClient->request('POST', rtrim($this->scoringEngineUrl, '/') . '/score', ['json' => $payload, 'timeout' => 15]);
-            $status = $response->getStatusCode();
-            $data = $response->toArray(false);
+            $data = ['results' => $this->scoringService->score($candidate, $jobs)];
         } catch (\Throwable) {
             return $this->json(['message' => 'The scoring service is currently unavailable.'], 503);
         }
-        if ($status >= 400) return $this->json(['message' => $data['message'] ?? 'The scoring service rejected the request.'], 502);
 
         $metadata = [];
         foreach ($jobs as $job) {
@@ -64,22 +56,4 @@ final class CandidateMatchController extends AbstractController
         return $user;
     }
 
-    private function jobPayload(JobPost $job): array
-    {
-        $highlightedIds = array_map(static fn ($item) => $item->getTask()?->getId(), $job->getHighlightedTasks()->toArray());
-        $definition = $job->getJobDefinition();
-        return [
-            'id' => $job->getId(), 'title' => $definition?->getName(),
-            'minimumEducationLevel' => $definition?->getMinimumEducationLevel() ?? 'none',
-            'assistanceAvailable' => $job->isAssistanceAvailable(),
-            'tasks' => array_map(static function ($task) use ($highlightedIds): array {
-                $assessments = [];
-                foreach ($task->getAssessments() as $assessment) {
-                    $slug = $assessment->getDisability()?->getSlug();
-                    if ($slug) $assessments[$slug] = $assessment->getFeasibility();
-                }
-                return ['id' => $task->getId(), 'name' => $task->getName(), 'weight' => $task->getWeight(), 'mandatory' => $task->isMandatory(), 'highlighted' => in_array($task->getId(), $highlightedIds, true), 'assessments' => $assessments];
-            }, $definition?->getTasks()->toArray() ?? []),
-        ];
-    }
 }

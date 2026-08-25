@@ -7,6 +7,7 @@ use App\Entity\JobApplication;
 use App\Entity\JobPost;
 use App\Entity\User;
 use App\Service\ApplicationDocumentStorage;
+use App\Service\CompatibilityScoringService;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,6 +18,8 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class CandidateApplicationController extends AbstractController
 {
+    private const POSITION_KNOWLEDGE_LEVELS = ['independent', 'with_support', 'not_yet'];
+
     private function getUserFromToken(Request $request, JWTEncoderInterface $jwtEncoder, EntityManagerInterface $entityManager): User|JsonResponse
     {
         $token = $request->headers->get('X-Auth-Token');
@@ -63,7 +66,8 @@ class CandidateApplicationController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         JWTEncoderInterface $jwtEncoder,
-        ApplicationDocumentStorage $documentStorage
+        ApplicationDocumentStorage $documentStorage,
+        CompatibilityScoringService $scoringService
     ): JsonResponse {
         $candidate = $this->getUserFromToken($request, $jwtEncoder, $entityManager);
 
@@ -88,11 +92,35 @@ class CandidateApplicationController extends AbstractController
 
         $applicationDocument = $request->files->get('applicationDocument');
         $recommendationLetter = $request->files->get('recommendationLetter');
+        $positionKnowledgeLevel = (string) $request->request->get('positionKnowledgeLevel', '');
+        if (!in_array($positionKnowledgeLevel, self::POSITION_KNOWLEDGE_LEVELS, true)) {
+            return $this->json(['message' => 'Select a valid basic position knowledge level.'], 400);
+        }
 
         $application = new JobApplication();
         $application->setCandidate($candidate);
         $application->setJobPost($job);
         $application->setStatus('pending');
+        $application->setPositionKnowledgeLevel($positionKnowledgeLevel);
+
+        try {
+            $match = $scoringService->score($candidate, [$job], [$job->getId() => $positionKnowledgeLevel])[0] ?? null;
+            if (is_array($match)) {
+                $application->setCompatibilityScore(is_numeric($match['score'] ?? null) ? (float) $match['score'] : null);
+                $application->setCompatibilityEligible(isset($match['eligible']) ? (bool) $match['eligible'] : null);
+                $application->setCompatibilitySnapshot([
+                    'taskScore' => $match['task_score'] ?? null,
+                    'personalEducationScore' => $match['practical_ability_score'] ?? null,
+                    'educationScore' => $match['education_score'] ?? null,
+                    'education' => $match['education'] ?? null,
+                    'abilityResults' => $match['ability_results'] ?? [],
+                    'exclusionReasons' => $match['exclusion_reasons'] ?? [],
+                    'summary' => $match['summary'] ?? null,
+                ]);
+            }
+        } catch (\Throwable) {
+            // Application submission remains available if the scoring service is temporarily unavailable.
+        }
 
         $storedNames = [];
         try {
@@ -165,6 +193,9 @@ class CandidateApplicationController extends AbstractController
                     'location' => $job?->getLocation(),
                     'jobType' => $job?->getJobType(),
                     'status' => $application->getStatus(),
+                    'positionKnowledgeLevel' => $application->getPositionKnowledgeLevel(),
+                    'compatibilityScore' => $application->getCompatibilityScore(),
+                    'compatibilityEligible' => $application->isCompatibilityEligible(),
                     'createdAt' => $application->getCreatedAt()?->format('Y-m-d H:i:s'),
                     'statusUpdatedAt' => $application->getUpdatedAt()?->format('Y-m-d H:i:s'),
                 ];

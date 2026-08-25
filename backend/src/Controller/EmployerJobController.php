@@ -16,6 +16,16 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class EmployerJobController extends AbstractController
 {
+    private const REQUIREMENT_LEVELS = ['not_required', 'preferred', 'required'];
+    private const EDUCATION_LEVELS = ['none', 'primary', 'middle_school', 'high_school', 'vocational', 'university'];
+
+    private function isEducationalSkillTask(JobDefinitionTask $task): bool
+    {
+        $name = mb_strtolower(trim((string) $task->getName()));
+        return in_array($name, ['write', 'read', 'count', 'personal education'], true)
+            || (str_starts_with($name, 'basic ') && str_ends_with($name, ' knowledge to position'));
+    }
+
     private function employer(Request $request, JWTEncoderInterface $jwt, EntityManagerInterface $em): User|JsonResponse
     {
         $token = $request->headers->get('X-Auth-Token');
@@ -34,7 +44,8 @@ final class EmployerJobController extends AbstractController
     {
         $data = ['id' => $definition->getId(), 'slug' => $definition->getSlug(), 'name' => $definition->getName(), 'description' => $definition->getDescription(), 'minimumEducationLevel' => $definition->getMinimumEducationLevel()];
         if ($includeTasks) {
-            $data['tasks'] = array_map(static fn ($task) => ['id' => $task->getId(), 'taskName' => $task->getName(), 'position' => $task->getPosition(), 'weight' => $task->getWeight(), 'mandatory' => $task->isMandatory()], $definition->getTasks()->toArray());
+            $operationalTasks = array_values(array_filter($definition->getTasks()->toArray(), fn ($task) => !$this->isEducationalSkillTask($task)));
+            $data['tasks'] = array_map(static fn ($task) => ['id' => $task->getId(), 'taskName' => $task->getName(), 'position' => $task->getPosition(), 'weight' => $task->getWeight(), 'mandatory' => $task->isMandatory()], $operationalTasks);
         }
         return $data;
     }
@@ -52,6 +63,12 @@ final class EmployerJobController extends AbstractController
             'description' => $job->getDescription(), 'applicationDeadline' => $job->getApplicationDeadline()?->format('Y-m-d'),
             'cvRequired' => $job->isCvRequired(), 'coverLetterRequired' => $job->isCoverLetterRequired(),
             'assistanceAvailable' => $job->isAssistanceAvailable(), 'status' => $job->getStatus(),
+            'educationRequirement' => $job->getEducationRequirement(),
+            'minimumEducationLevel' => $job->getMinimumEducationLevel(),
+            'readingRequirement' => $job->getReadingRequirement(),
+            'writingRequirement' => $job->getWritingRequirement(),
+            'numeracyRequirement' => $job->getNumeracyRequirement(),
+            'positionKnowledgeRequirement' => $job->getPositionKnowledgeRequirement(),
             'createdAt' => $job->getCreatedAt()?->format('Y-m-d H:i:s'), 'updatedAt' => $job->getUpdatedAt()?->format('Y-m-d H:i:s'),
             'highlightedTasks' => array_map(static fn (JobPostHighlightedTask $highlight) => ['id' => $highlight->getTask()?->getId(), 'name' => $highlight->getTask()?->getName(), 'displayPosition' => $highlight->getDisplayPosition()], $job->getHighlightedTasks()->toArray()),
         ];
@@ -84,15 +101,39 @@ final class EmployerJobController extends AbstractController
         if (!$companyProfile || trim((string) $companyProfile->getCompanyName()) === '') return $this->json(['message' => 'Complete your company profile before posting a job.'], 400);
         $taskIds = array_values(array_unique(array_map('intval', is_array($data['highlightedTaskIds'] ?? null) ? $data['highlightedTaskIds'] : [])));
         if (count($taskIds) < 1) return $this->json(['message' => 'Select at least one important task.'], 400);
-        $tasks = $em->getRepository(JobDefinitionTask::class)->findBy(['id' => $taskIds, 'jobDefinition' => $definition]);
+        $tasks = array_values(array_filter(
+            $em->getRepository(JobDefinitionTask::class)->findBy(['id' => $taskIds, 'jobDefinition' => $definition]),
+            fn (JobDefinitionTask $task) => !$this->isEducationalSkillTask($task)
+        ));
         $tasksById = []; foreach ($tasks as $task) $tasksById[$task->getId()] = $task;
         if (count($tasksById) !== count($taskIds)) return $this->json(['message' => 'Every highlighted task must belong to the selected job.'], 400);
         try { $deadline = new \DateTimeImmutable($data['applicationDeadline']); } catch (\Throwable) { return $this->json(['message' => 'Invalid application deadline.'], 400); }
+        $requirements = [];
+        foreach (['educationRequirement', 'readingRequirement', 'writingRequirement', 'numeracyRequirement', 'positionKnowledgeRequirement'] as $field) {
+            $value = (string) ($data[$field] ?? 'not_required');
+            if (!in_array($value, self::REQUIREMENT_LEVELS, true)) return $this->json(['message' => "$field must be not_required, preferred, or required."], 400);
+            $requirements[$field] = $value;
+        }
+        $minimumEducationLevel = $data['minimumEducationLevel'] ?? null;
+        if ($requirements['educationRequirement'] !== 'not_required') {
+            if (!is_string($minimumEducationLevel) || !in_array($minimumEducationLevel, self::EDUCATION_LEVELS, true)) {
+                return $this->json(['message' => 'Select a valid minimum education level.'], 400);
+            }
+        } else {
+            $minimumEducationLevel = null;
+        }
         $job->setJobDefinition($definition)->setLocation(trim($data['location']))
             ->setJobType(trim($data['jobType']))->setWorkMode(trim($data['workMode']))->setDescription(trim($data['description']))
             ->setApplicationDeadline($deadline)->setCvRequired(false)
             ->setCoverLetterRequired(false)
-            ->setAssistanceAvailable((bool) ($data['assistanceAvailable'] ?? false))->setUpdatedAt(new \DateTimeImmutable());
+            ->setAssistanceAvailable((bool) ($data['assistanceAvailable'] ?? false))
+            ->setEducationRequirement($requirements['educationRequirement'])
+            ->setMinimumEducationLevel($minimumEducationLevel)
+            ->setReadingRequirement($requirements['readingRequirement'])
+            ->setWritingRequirement($requirements['writingRequirement'])
+            ->setNumeracyRequirement($requirements['numeracyRequirement'])
+            ->setPositionKnowledgeRequirement($requirements['positionKnowledgeRequirement'])
+            ->setUpdatedAt(new \DateTimeImmutable());
         $job->clearHighlightedTasks();
         foreach ($taskIds as $position => $taskId) {
             $job->addHighlightedTask((new JobPostHighlightedTask())->setTask($tasksById[$taskId])->setDisplayPosition($position + 1));

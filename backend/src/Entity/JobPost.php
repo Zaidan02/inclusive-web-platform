@@ -47,6 +47,24 @@ class JobPost
     #[ORM\Column(options: ['default' => false])]
     private bool $assistanceAvailable = false;
 
+    #[ORM\Column(length: 20, options: ['default' => 'not_required'])]
+    private string $educationRequirement = 'not_required';
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $minimumEducationLevel = null;
+
+    #[ORM\Column(length: 20, options: ['default' => 'not_required'])]
+    private string $readingRequirement = 'not_required';
+
+    #[ORM\Column(length: 20, options: ['default' => 'not_required'])]
+    private string $writingRequirement = 'not_required';
+
+    #[ORM\Column(length: 20, options: ['default' => 'not_required'])]
+    private string $numeracyRequirement = 'not_required';
+
+    #[ORM\Column(length: 20, options: ['default' => 'not_required'])]
+    private string $positionKnowledgeRequirement = 'not_required';
+
     #[ORM\Column(length: 50)]
     private ?string $status = 'published';
 
@@ -180,6 +198,19 @@ class JobPost
         $this->assistanceAvailable = $assistanceAvailable;
         return $this;
     }
+
+    public function getEducationRequirement(): string { return $this->educationRequirement; }
+    public function setEducationRequirement(string $value): static { $this->educationRequirement = $value; return $this; }
+    public function getMinimumEducationLevel(): ?string { return $this->minimumEducationLevel; }
+    public function setMinimumEducationLevel(?string $value): static { $this->minimumEducationLevel = $value; return $this; }
+    public function getReadingRequirement(): string { return $this->readingRequirement; }
+    public function setReadingRequirement(string $value): static { $this->readingRequirement = $value; return $this; }
+    public function getWritingRequirement(): string { return $this->writingRequirement; }
+    public function setWritingRequirement(string $value): static { $this->writingRequirement = $value; return $this; }
+    public function getNumeracyRequirement(): string { return $this->numeracyRequirement; }
+    public function setNumeracyRequirement(string $value): static { $this->numeracyRequirement = $value; return $this; }
+    public function getPositionKnowledgeRequirement(): string { return $this->positionKnowledgeRequirement; }
+    public function setPositionKnowledgeRequirement(string $value): static { $this->positionKnowledgeRequirement = $value; return $this; }
 
     public function addHighlightedTask(JobPostHighlightedTask $highlight): static
     {

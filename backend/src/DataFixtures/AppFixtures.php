@@ -88,6 +88,9 @@ final class AppFixtures extends Fixture
             ->setUser($candidateUser)
             ->replaceDisabilities([$disabilities['ankle']])
             ->setEducationLevel('high_school')
+            ->setReadingAbility('independent')
+            ->setWritingAbility('independent')
+            ->setNumeracyAbility('with_support')
             ->setFirstName('Alex')
             ->setLastName('Candidate')
             ->setPhone('+961 70 123 456')
@@ -101,19 +104,19 @@ final class AppFixtures extends Fixture
             throw new \RuntimeException('The job fixtures require at least one employer account.');
         }
 
-        $educationByJob = [
-            'chocolate-confectionery-worker' => 'middle_school',
-            'ice-cream-maker' => 'high_school',
-            'bakery-pastry-worker' => 'vocational',
-        ];
         $jobIndex = 0;
+        $practicalRequirementsByJob = [
+            'chocolate-confectionery-worker' => ['required', 'preferred', 'required', 'required'],
+            'ice-cream-maker' => ['preferred', 'not_required', 'required', 'preferred'],
+            'bakery-pastry-worker' => ['preferred', 'not_required', 'preferred', 'required'],
+        ];
 
         foreach ($catalogue['jobs'] as $jobRecord) {
             $job = (new JobDefinition())
                 ->setSlug($jobRecord['slug'])
                 ->setName($jobRecord['name'])
-                ->setDescription("Catalogue definition for {$jobRecord['name']}.")
-                ->setMinimumEducationLevel($educationByJob[$jobRecord['slug']] ?? 'none')
+                ->setDescription(sprintf('Catalogue definition imported from %s.', $jobRecord['sourceWorkbook']))
+                ->setMinimumEducationLevel('none')
                 ->setActive(true);
             $manager->persist($job);
 
@@ -150,6 +153,8 @@ final class AppFixtures extends Fixture
                     $companyProfile = $employer->getEmployerProfile();
                     $selectedTasks = array_slice(array_values($tasks), 0, min($importantTaskCount, count($tasks)));
                     $actualImportantTaskCount = count($selectedTasks);
+                    [$readingRequirement, $writingRequirement, $numeracyRequirement, $positionKnowledgeRequirement]
+                        = $practicalRequirementsByJob[$jobRecord['slug']] ?? ['not_required', 'not_required', 'not_required', 'not_required'];
                     $post = (new JobPost())
                         ->setEmployer($employer)
                         ->setJobDefinition($job)
@@ -161,6 +166,12 @@ final class AppFixtures extends Fixture
                         ->setCvRequired(false)
                         ->setCoverLetterRequired(false)
                         ->setAssistanceAvailable($assistanceAvailable)
+                        ->setEducationRequirement('not_required')
+                        ->setMinimumEducationLevel(null)
+                        ->setReadingRequirement($readingRequirement)
+                        ->setWritingRequirement($writingRequirement)
+                        ->setNumeracyRequirement($numeracyRequirement)
+                        ->setPositionKnowledgeRequirement($positionKnowledgeRequirement)
                         ->setStatus('published');
                     foreach ($selectedTasks as $position => $task) {
                         $post->addHighlightedTask((new JobPostHighlightedTask())->setTask($task)->setDisplayPosition($position + 1));
