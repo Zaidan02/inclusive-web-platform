@@ -39,6 +39,12 @@ const emptyForm = {
   workMode: "On-site", description: "",
   applicationDeadline: "",
   assistanceAvailable: false,
+  educationRequirement: "not_required",
+  minimumEducationLevel: "",
+  readingRequirement: "not_required",
+  writingRequirement: "not_required",
+  numeracyRequirement: "not_required",
+  positionKnowledgeRequirement: "not_required",
 };
 const emptyProfile = { companyName: "", industry: "", location: "", website: "", description: "", accessibilityStatement: "" };
 
@@ -186,7 +192,14 @@ function EmployerDashboard() {
 
   function handleEditJob(job) {
     setMessage(""); setError(""); setEditingJobId(job.id);
-    setFormData({ jobDefinitionId: String(job.jobDefinitionId || ""), location: job.location || "", jobType: job.jobType || "Full-time", workMode: job.workMode || "On-site", description: job.description || "", applicationDeadline: job.applicationDeadline || "", assistanceAvailable: Boolean(job.assistanceAvailable) });
+    setFormData({
+      jobDefinitionId: String(job.jobDefinitionId || ""), location: job.location || "", jobType: job.jobType || "Full-time",
+      workMode: job.workMode || "On-site", description: job.description || "", applicationDeadline: job.applicationDeadline || "",
+      assistanceAvailable: Boolean(job.assistanceAvailable), educationRequirement: job.educationRequirement || "not_required",
+      minimumEducationLevel: job.minimumEducationLevel || "", readingRequirement: job.readingRequirement || "not_required",
+      writingRequirement: job.writingRequirement || "not_required", numeracyRequirement: job.numeracyRequirement || "not_required",
+      positionKnowledgeRequirement: job.positionKnowledgeRequirement || "not_required",
+    });
     setHighlightedTaskIds((job.highlightedTasks || []).map((task) => task.id));
     if (job.jobDefinitionId) getEmployerJobDefinition(job.jobDefinitionId).then((data) => setCatalogueTasks(data.job?.tasks || [])).catch(() => setError(t("employer.errors.tasksLoad")));
     setActiveTab("POST_JOB");
@@ -245,7 +258,18 @@ function EmployerDashboard() {
   }
 
   function handleViewProfile(app) {
-    setSelectedProfile({ name: app.candidateName, email: app.candidateEmail, selectedDisabilities: app.candidateSelectedDisabilities || [], educationLevel: app.candidateEducationLevel || t("employer.common.notProvided") });
+    setSelectedProfile({
+      name: app.candidateName,
+      email: app.candidateEmail,
+      selectedDisabilities: app.candidateSelectedDisabilities || [],
+      educationLevel: app.candidateEducationLevel,
+      readingAbility: app.candidateReadingAbility,
+      writingAbility: app.candidateWritingAbility,
+      numeracyAbility: app.candidateNumeracyAbility,
+      positionKnowledgeLevel: app.positionKnowledgeLevel,
+      compatibilityScore: app.compatibilityScore,
+      compatibilityEligible: app.compatibilityEligible,
+    });
   }
 
   async function fetchFileBlob(appId, type) {
@@ -509,6 +533,35 @@ function EmployerDashboard() {
               <Field label={t("employer.jobForm.description")}>
                 <textarea dir="auto" className="input-field" style={textareaStyle} name="description" value={formData.description} onChange={handleChange} required />
               </Field>
+              <fieldset style={{ margin: "4px 0 20px", padding: "18px", border: "1px solid #d7dee9", borderRadius: "4px", background: "#f8fafc" }}>
+                <legend style={{ paddingInline: "5px", color: "#0f172a", fontSize: "14px", fontWeight: "700" }}>{t("employer.jobForm.requirementsTitle")}</legend>
+                <p style={{ margin: "0 0 16px", color: "#52627a", fontSize: "12px", lineHeight: 1.5 }}>{t("employer.jobForm.requirementsHelp")}</p>
+                <div className="dashboard-form-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "0 20px" }}>
+                  <Field label={t("employer.jobForm.educationRequirement")}>
+                    <select className="input-field" style={inputStyle} name="educationRequirement" value={formData.educationRequirement} onChange={handleChange}>
+                      {["not_required", "preferred", "required"].map((level) => <option key={level} value={level}>{t(`employer.requirementLevels.${level}`)}</option>)}
+                    </select>
+                  </Field>
+                  {formData.educationRequirement !== "not_required" && (
+                    <Field label={t("employer.jobForm.minimumEducation")}>
+                      <select className="input-field" style={inputStyle} name="minimumEducationLevel" value={formData.minimumEducationLevel} onChange={handleChange} required>
+                        <option value="">{t("employer.jobForm.minimumEducationPlaceholder")}</option>
+                        {["none", "primary", "middle_school", "high_school", "vocational", "university"].map((level) => <option key={level} value={level}>{t(`profile:education.${level}`)}</option>)}
+                      </select>
+                    </Field>
+                  )}
+                  {[
+                    ["readingRequirement", "reading"], ["writingRequirement", "writing"],
+                    ["numeracyRequirement", "numeracy"], ["positionKnowledgeRequirement", "positionKnowledge"],
+                  ].map(([name, label]) => (
+                    <Field key={name} label={t(`employer.jobForm.${label}`)}>
+                      <select className="input-field" style={inputStyle} name={name} value={formData[name]} onChange={handleChange}>
+                        {["not_required", "preferred", "required"].map((level) => <option key={level} value={level}>{t(`employer.requirementLevels.${level}`)}</option>)}
+                      </select>
+                    </Field>
+                  ))}
+                </div>
+              </fieldset>
               <Field label={t("employer.jobForm.tasks")} hint={t("employer.jobForm.tasksHint")}>
                 <input dir="auto" className="input-field" style={inputStyle} value={taskSearch} onChange={(e) => setTaskSearch(e.target.value)} placeholder={formData.jobDefinitionId ? t("employer.jobForm.searchTasks") : t("employer.jobForm.selectPositionFirst")} disabled={!formData.jobDefinitionId} />
                 {formData.jobDefinitionId && catalogueTasks.length > 0 && <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}><button type="button" onClick={() => setHighlightedTaskIds(catalogueTasks.map((task) => task.id))} style={{ border: "1px solid #bfdbfe", borderRadius: "8px", padding: "6px 10px", background: "#eff6ff", color: "#1d4ed8", cursor: "pointer", fontSize: "11px", fontWeight: "600" }}>{t("employer.jobForm.selectAllTasks")}</button><button type="button" onClick={() => setHighlightedTaskIds([])} style={{ border: "1px solid #e2e8f0", borderRadius: "8px", padding: "6px 10px", background: "#fff", color: "#64748b", cursor: "pointer", fontSize: "11px", fontWeight: "600" }}>{t("employer.jobForm.clearTasks")}</button></div>}
@@ -710,6 +763,32 @@ function EmployerDashboard() {
               <p dir="auto" style={{ margin: "0 0 4px", fontSize: "14px", fontWeight: "600", color: "#0f172a" }}>{selectedProfile.name || t("employer.common.notSpecified")}</p>
               <p dir="ltr" style={{ margin: 0, fontSize: "13px", color: "#64748b" }}>{selectedProfile.email || t("employer.common.notSpecified")}</p>
             </div>
+            <dl style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "10px 16px", margin: "0 0 18px" }}>
+              {[
+                [t("employer.candidateProfile.education"), selectedProfile.educationLevel ? t(`profile:education.${selectedProfile.educationLevel}`) : t("employer.common.notProvided")],
+                [t("employer.candidateProfile.reading"), selectedProfile.readingAbility ? t(`candidate.profile.abilityLevels.${selectedProfile.readingAbility}`) : t("employer.common.notProvided")],
+                [t("employer.candidateProfile.writing"), selectedProfile.writingAbility ? t(`candidate.profile.abilityLevels.${selectedProfile.writingAbility}`) : t("employer.common.notProvided")],
+                [t("employer.candidateProfile.numeracy"), selectedProfile.numeracyAbility ? t(`candidate.profile.abilityLevels.${selectedProfile.numeracyAbility}`) : t("employer.common.notProvided")],
+                [t("employer.candidateProfile.positionKnowledge"), selectedProfile.positionKnowledgeLevel ? t(`candidate.profile.abilityLevels.${selectedProfile.positionKnowledgeLevel}`) : t("employer.common.notProvided")],
+              ].map(([label, value]) => (
+                <div key={label}>
+                  <dt style={{ color: "#64748b", fontSize: "12px" }}>{label}</dt>
+                  <dd style={{ margin: "3px 0 0", color: "#0f172a", fontSize: "13px", fontWeight: "600" }}>{value}</dd>
+                </div>
+              ))}
+            </dl>
+            {selectedProfile.compatibilityEligible !== null && selectedProfile.compatibilityEligible !== undefined && (
+              <div role="status" style={{ marginBottom: "16px", padding: "12px 14px", border: `1px solid ${selectedProfile.compatibilityEligible ? "#a7f3d0" : "#fed7aa"}`, borderRadius: "4px", background: selectedProfile.compatibilityEligible ? "#ecfdf5" : "#fff7ed", color: selectedProfile.compatibilityEligible ? "#065f46" : "#9a3412" }}>
+                <strong style={{ display: "block", fontSize: "13px" }}>
+                  {selectedProfile.compatibilityEligible ? t("employer.candidateProfile.requirementsMet") : t("employer.candidateProfile.humanReview")}
+                </strong>
+                <span style={{ fontSize: "12px" }}>
+                  {selectedProfile.compatibilityScore !== null && selectedProfile.compatibilityScore !== undefined
+                    ? t("employer.candidateProfile.applicationScore", { score: selectedProfile.compatibilityScore })
+                    : t("employer.candidateProfile.noApplicationScore")}
+                </span>
+              </div>
+            )}
             {[
               { title: t("employer.candidateProfile.disabilities"), items: selectedProfile.selectedDisabilities, chipStyle: { background: "#eef2ff", color: "#4338ca" }, empty: t("employer.candidateProfile.noDisabilities") },
             ].map(({ title, items, chipStyle, empty }) => (

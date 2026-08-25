@@ -48,6 +48,11 @@
       "optional": "(facultatif)",
       "education": "Niveau d'études le plus élevé",
       "educationPlaceholder": "Sélectionner le niveau d'études",
+      "practicalTitle": "Éducation personnelle",
+      "practicalHelp": "Ces réponses décrivent votre manière de travailler aujourd'hui. Le soutien ne vous exclut pas et ne modifie pas la formule de compatibilité actuelle.",
+      "abilities": { "readingAbility": "Lire", "writingAbility": "Écrire", "numeracyAbility": "Compter" },
+      "abilityPlaceholder": "Sélectionner une réponse",
+      "abilityLevels": { "independent": "Oui, de façon autonome", "with_support": "Oui, avec un soutien", "not_yet": "Pas encore" },
       "searchLabel": "Rechercher des handicaps",
       "searchPlaceholder": "Rechercher des handicaps",
       "removeDisability": "Retirer {{name}}",
@@ -78,12 +83,17 @@
       "showExplanation": "▼ Afficher l'explication du score",
       "selectDisabilities": "Sélectionnez des handicaps pour afficher le résultat",
       "bands": {
-        "notEligible": "Non admissible",
+        "notEligible": "Critères obligatoires non satisfaits",
         "strong": "Forte compatibilité",
         "moderate": "Compatibilité moyenne",
         "limited": "Compatibilité limitée",
         "low": "Faible compatibilité"
-      }
+      },
+      "summary": { "eligible": "Les exigences configurées sont satisfaites. La compatibilité globale est de {{score}} %.", "review": "Un ou plusieurs critères explicitement obligatoires ne sont pas satisfaits actuellement. L'emploi reste visible pour un examen humain transparent." },
+      "breakdown": { "tasks": "Tâches opérationnelles : {{score}} %", "personalEducation": "Éducation personnelle : {{score}} %", "formalEducation": "Études : {{score}} %" },
+      "educationRequirement": "Études : {{level}} ({{requirement}})",
+      "abilities": { "reading": "Lecture", "writing": "Écriture", "counting": "Calcul", "positionKnowledge": "Connaissances de base du poste" },
+      "feasibility": { "feasible": "réalisable", "feasible_with_assistance": "réalisable avec aide", "avoid": "adaptation nécessaire" }
     },
     "jobs": {
       "title": "Emplois disponibles",
@@ -104,7 +114,11 @@
       "text": "L'employeur a indiqué qu'une aide aux tâches ou un aménagement peut être fourni pour ce poste."
     },
     "applicationForm": {
-      "title": "Documents de candidature",
+      "title": "Détails de la candidature",
+      "knowledgeTitle": "Connaissance du poste",
+      "knowledgeLabel": "Connaissances de base liées au poste {{position}}",
+      "knowledgeHelp": "Indiquez vos connaissances actuelles. Si l'employeur a configuré cette compétence, elle entre dans le résultat de compatibilité propre à la candidature.",
+      "knowledgePlaceholder": "Sélectionner une réponse",
       "document": "Document de candidature (facultatif)",
       "recommendation": "Lettre de recommandation (facultative)",
       "selected": "Sélectionné : {{name}}",
@@ -156,7 +170,9 @@
       "lastName": "Saisissez votre nom.",
       "location": "Saisissez votre localisation.",
       "education": "Choisissez votre niveau d'études le plus élevé.",
-      "requiredProfile": "Ajoutez votre nom, votre localisation, votre niveau d'études et au moins un handicap.",
+      "practicalAbility": "Choisissez une réponse pour chaque capacité pratique.",
+      "positionKnowledge": "Indiquez votre niveau actuel de connaissances de base pour ce poste.",
+      "requiredProfile": "Ajoutez votre nom, votre localisation, votre niveau d'études, vos capacités pratiques et au moins un handicap.",
       "profileSave": "Votre profil n'a pas pu être enregistré. Réessayez.",
       "applicationSubmit": "Votre candidature n'a pas pu être envoyée. Réessayez."
     },
@@ -195,6 +211,15 @@
       "jobType": "Type d'emploi *",
       "workMode": "Mode de travail *",
       "description": "Description de l'emploi *",
+      "requirementsTitle": "Formation et compétences éducatives personnelles",
+      "requirementsHelp": "Seules les exigences configurées influencent la compatibilité. Une compétence non requise est exclue du score. Une compétence obligatoire peut modifier l'admissibilité selon l'aide disponible.",
+      "educationRequirement": "Exigence de formation",
+      "minimumEducation": "Niveau d'études minimum *",
+      "minimumEducationPlaceholder": "Sélectionner le niveau minimum",
+      "reading": "Lecture",
+      "writing": "Écriture",
+      "numeracy": "Calcul",
+      "positionKnowledge": "Connaissances de base du poste",
       "tasks": "Tâches importantes *",
       "tasksHint": "Sélectionnez chaque tâche du catalogue particulièrement importante pour ce poste. Ces tâches reçoivent un poids de score supérieur ; au moins une est obligatoire.",
       "searchTasks": "Rechercher des tâches…",
@@ -208,6 +233,7 @@
       "update": "Mettre à jour l'emploi",
       "publish": "Publier l'emploi"
     },
+    "requirementLevels": { "not_required": "Non requis", "preferred": "Souhaité", "required": "Obligatoire" },
     "jobTypes": { "fullTime": "Temps plein", "partTime": "Temps partiel", "internship": "Stage", "seasonal": "Saisonnier" },
     "workModes": { "onSite": "Sur site", "hybrid": "Hybride", "remote": "À distance" },
     "myJobs": {
@@ -263,6 +289,15 @@
       "close": "Fermer le profil du candidat",
       "title": "Profil du candidat",
       "intro": "Informations détaillées sur le candidat",
+      "education": "Études",
+      "reading": "Lire",
+      "writing": "Écrire",
+      "numeracy": "Compter",
+      "positionKnowledge": "Connaissance de ce poste",
+      "requirementsMet": "Exigences configurées satisfaites",
+      "humanReview": "Une compétence obligatoire nécessite un examen humain",
+      "applicationScore": "Compatibilité propre à la candidature : {{score}} %",
+      "noApplicationScore": "Le service de calcul était indisponible lors de l'envoi de cette candidature.",
       "disabilities": "Handicaps sélectionnés",
       "noDisabilities": "Aucun handicap sélectionné."
     },
@@ -401,8 +436,8 @@
   },
   "admin": {
     "platform": "Plateforme", "console": "Console d'administration", "tabsLabel": "Sections du tableau de bord administrateur", "loading": "Chargement…",
-    "tabs": { "users": "Utilisateurs", "archived": "Utilisateurs archivés", "applications": "Candidatures", "profiles": "Profils utilisateurs" },
-    "stats": { "totalProfiles": "Total des profils", "completedProfiles": "Profils complétés", "pendingEducation": "Formation en attente", "totalApplications": "Total des candidatures", "archivedUsers": "Utilisateurs archivés", "activeUsers": "Utilisateurs actifs", "verifiedEmails": "E-mails vérifiés", "unverifiedUsers": "Utilisateurs non vérifiés", "admins": "Administrateurs" },
+    "tabs": { "users": "Utilisateurs", "archived": "Utilisateurs archivés", "applications": "Candidatures", "profiles": "Profils utilisateurs", "catalogue": "Catalogue des données" },
+    "stats": { "totalProfiles": "Total des profils", "completedProfiles": "Profils complétés", "pendingEducation": "Formation en attente", "totalApplications": "Total des candidatures", "archivedUsers": "Utilisateurs archivés", "activeUsers": "Utilisateurs actifs", "verifiedEmails": "E-mails vérifiés", "unverifiedUsers": "Utilisateurs non vérifiés", "admins": "Administrateurs", "catalogueDatasets": "Descriptions de poste", "activeDatasets": "Jeux de données actifs", "catalogueTasks": "Tâches du catalogue", "catalogueAssessments": "Évaluations" },
     "roles": { "admin": "Administrateur", "employer": "Employeur", "user": "Utilisateur" },
     "statuses": { "pending": "En attente", "in_review": "En cours d'examen", "accepted": "Acceptée", "rejected": "Refusée" },
     "verification": { "verified": "Vérifié", "unverified": "Non vérifié" },
@@ -416,9 +451,9 @@
     "edit": { "title": "Modifier l'utilisateur", "description": "Mettre à jour les informations du compte de {{name}}.", "emailHelp": "Si l'e-mail change, un nouvel e-mail de vérification sera envoyé.", "changePassword": "Changer le mot de passe", "cancelPassword": "Annuler le changement de mot de passe", "newPassword": "Nouveau mot de passe", "saving": "Enregistrement…", "save": "Enregistrer" },
     "archive": { "title": "Archiver l'utilisateur ?", "description": "Vous êtes sur le point d'archiver {{name}}.", "help": "Cet utilisateur sera déplacé vers les utilisateurs archivés.", "progress": "Archivage…" },
     "delete": { "title": "Supprimer l'utilisateur ?", "description": "Vous êtes sur le point de supprimer définitivement {{name}}.", "help": "Cette action est irréversible.", "progress": "Suppression…" },
-    "catalogue": { "add": "Ajouter des feuilles de données", "importing": "Importation des feuilles de données…", "complete": "Les feuilles de données ont été importées.", "failed": "L'importation du catalogue a échoué. Vérifiez le format du classeur et réessayez.", "completePrefix": "Importation terminée : ", "failedPrefix": "Échec de l'importation : ", "warningCount": "{{count}} avertissements d'extraction" },
+    "catalogue": { "add": "Ajouter des feuilles de données", "importing": "Importation des feuilles de données…", "complete": "Les feuilles de données ont été importées.", "failed": "L'importation du catalogue a échoué. Vérifiez le format du classeur et réessayez.", "completePrefix": "Importation terminée : ", "failedPrefix": "Échec de l'importation : ", "warningCount": "{{count}} avertissements d'extraction", "sectionLabel": "Jeux de données de descriptions de poste importés", "loading": "Chargement des jeux de données…", "loadingTasks": "Chargement des tâches…", "empty": "Aucun jeu de données ne correspond à votre recherche.", "dataset": "Jeu de données de description de poste", "active": "Actif", "inactive": "Inactif", "source": "Classeur source", "builtInSource": "Données de démonstration ou catalogue existant", "tasks": "Tâches", "assessments": "Évaluations", "sheets": "Feuilles sources", "sourceSheets": "Feuilles de calcul", "viewTasks": "Voir {{count}} tâches", "hideTasks": "Masquer les tâches", "searchLabel": "Rechercher dans les jeux de données", "searchPlaceholder": "Rechercher par poste ou source…", "taskSearchLabel": "Rechercher des tâches dans ce jeu de données", "taskSearchPlaceholder": "Rechercher par tâche ou feuille source…", "taskResults": "{{count}} tâches affichées", "taskTableLabel": "Tâches de {{name}}", "position": "Position", "task": "Tâche", "category": "Catégorie", "taskStatus": "État de la tâche", "distribution": "Répartition des évaluations", "personalEducation": "Entrée d'éducation personnelle", "operational": "Tâche opérationnelle", "mandatory": "Obligatoire", "standard": "Standard", "feasibleShort": "Faisable {{count}}", "assistanceShort": "Assistance {{count}}", "avoidShort": "À éviter {{count}}", "noTasks": "Aucune tâche ne correspond à votre recherche." },
     "messages": { "updated": "Utilisateur mis à jour.", "updatedVerification": "Utilisateur mis à jour. Un nouvel e-mail de vérification a été envoyé.", "archived": "{{name}} a été archivé.", "restored": "{{name}} a été restauré.", "deleted": "{{name}} a été supprimé." },
-    "errors": { "users": "Impossible de charger les utilisateurs. Réessayez.", "profiles": "Impossible de charger les profils candidats. Réessayez.", "applications": "Impossible de charger les candidatures. Réessayez.", "update": "Impossible de mettre à jour l'utilisateur. Réessayez.", "archive": "Impossible d'archiver l'utilisateur. Réessayez.", "restore": "Impossible de restaurer l'utilisateur. Réessayez.", "delete": "Impossible de supprimer l'utilisateur. Réessayez.", "document": "Impossible d'ouvrir le document. Il n'est peut-être plus disponible." },
+    "errors": { "users": "Impossible de charger les utilisateurs. Réessayez.", "profiles": "Impossible de charger les profils candidats. Réessayez.", "applications": "Impossible de charger les candidatures. Réessayez.", "catalogue": "Impossible de charger les jeux de données du catalogue. Réessayez.", "catalogueDetail": "Impossible de charger les tâches du jeu de données. Réessayez.", "update": "Impossible de mettre à jour l'utilisateur. Réessayez.", "archive": "Impossible d'archiver l'utilisateur. Réessayez.", "restore": "Impossible de restaurer l'utilisateur. Réessayez.", "delete": "Impossible de supprimer l'utilisateur. Réessayez.", "document": "Impossible d'ouvrir le document. Il n'est peut-être plus disponible." },
     "voice": { "sensitive": "J'ai mis à jour {{label}} sans le lire à voix haute. Vérifiez-le.", "fieldSet": "J'ai défini {{label}} sur {{value}}. Vérifiez-le.", "selected": "J'ai sélectionné {{value}} pour {{label}}.", "userNotFound": "Je n'ai trouvé aucun utilisateur chargé correspondant à {{value}}.", "profileNotFound": "Je n'ai trouvé aucun profil candidat chargé correspondant à {{value}}.", "applicationNotFound": "Je n'ai trouvé aucune candidature chargée correspondant à {{value}}.", "activatedFor": "{{label}} activé pour {{name}}.", "openingProfile": "Ouverture du profil candidat de {{name}}.", "openingFor": "Ouverture de {{label}} pour {{name}}.", "workbookPicker": "Ouverture du sélecteur de classeurs. Sélectionnez une ou plusieurs feuilles XLSX.", "activated": "{{label}} activé." }
   }
 }

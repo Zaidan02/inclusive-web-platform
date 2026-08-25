@@ -10,12 +10,15 @@ import { disabilityOptions } from "./profileOptions";
 import "./candidateProfile.css";
 
 const EDUCATION_LEVELS = ["none", "primary", "middle_school", "high_school", "vocational", "university"];
+const PRACTICAL_ABILITY_KEYS = ["readingAbility", "writingAbility", "numeracyAbility"];
+const PRACTICAL_ABILITY_LEVELS = ["independent", "with_support", "not_yet"];
 
 export default function CandidateProfileSetup() {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation("profile");
   const [selected, setSelected] = useState([]);
   const [educationLevel, setEducationLevel] = useState("");
+  const [practicalAbilities, setPracticalAbilities] = useState({ readingAbility: "", writingAbility: "", numeracyAbility: "" });
   const [basicInfo, setBasicInfo] = useState({ firstName: "", lastName: "", phone: "", location: "", about: "" });
   const [confirmedTaskSkills, setConfirmedTaskSkills] = useState([]);
   const [search, setSearch] = useState("");
@@ -27,6 +30,7 @@ export default function CandidateProfileSetup() {
   const lastNameRef = useRef(null);
   const locationRef = useRef(null);
   const educationRef = useRef(null);
+  const practicalAbilityRefs = useRef({});
   const searchRef = useRef(null);
   const errorRef = useRef(null);
   const voiceActionHandlerRef = useRef(null);
@@ -43,6 +47,7 @@ export default function CandidateProfileSetup() {
         }
         setSelected(profile.selectedDisabilities || []);
         setEducationLevel(profile.educationLevel || "");
+        setPracticalAbilities({ readingAbility: profile.readingAbility || "", writingAbility: profile.writingAbility || "", numeracyAbility: profile.numeracyAbility || "" });
         setBasicInfo({
           firstName: profile.firstName || "",
           lastName: profile.lastName || "",
@@ -73,6 +78,11 @@ export default function CandidateProfileSetup() {
     if (!profile) return;
     setSelected(profile.selectedDisabilities || []);
     setEducationLevel(profile.educationLevel || "");
+    setPracticalAbilities((current) => ({
+      readingAbility: profile.readingAbility ?? current.readingAbility,
+      writingAbility: profile.writingAbility ?? current.writingAbility,
+      numeracyAbility: profile.numeracyAbility ?? current.numeracyAbility,
+    }));
     setBasicInfo({
       firstName: profile.firstName || "",
       lastName: profile.lastName || "",
@@ -85,13 +95,15 @@ export default function CandidateProfileSetup() {
   }
 
   async function completeSetup() {
-    if (!selected.length || !educationLevel || !basicInfo.firstName.trim() || !basicInfo.lastName.trim() || !basicInfo.location.trim()) {
+    const missingPracticalAbility = PRACTICAL_ABILITY_KEYS.find((key) => !practicalAbilities[key]);
+    if (!selected.length || !educationLevel || missingPracticalAbility || !basicInfo.firstName.trim() || !basicInfo.lastName.trim() || !basicInfo.location.trim()) {
       setAttemptedSave(true);
       setError(t("setup.errors.required"));
       const missingControl = !basicInfo.firstName.trim() ? firstNameRef
         : !basicInfo.lastName.trim() ? lastNameRef
         : !basicInfo.location.trim() ? locationRef
         : !educationLevel ? educationRef
+        : missingPracticalAbility ? { current: practicalAbilityRefs.current[missingPracticalAbility] }
         : searchRef;
       window.requestAnimationFrame(() => missingControl.current?.focus());
       return;
@@ -99,7 +111,7 @@ export default function CandidateProfileSetup() {
     try {
       setSaving(true);
       setError("");
-      await updateCandidateProfile({ selectedDisabilities: selected, educationLevel, ...basicInfo });
+      await updateCandidateProfile({ selectedDisabilities: selected, educationLevel, ...practicalAbilities, ...basicInfo });
       navigate("/candidate", { replace: true });
     } catch {
       setError(t("setup.errors.save"));
@@ -175,7 +187,7 @@ export default function CandidateProfileSetup() {
         </div>
         <div className="profile-setup__card">
           <AiProfileBuilder
-            currentProfile={{ ...basicInfo, educationLevel, selectedDisabilities: selected, confirmedTaskSkills }}
+            currentProfile={{ ...basicInfo, educationLevel, ...practicalAbilities, selectedDisabilities: selected, confirmedTaskSkills }}
             onProfileConfirmed={applyConfirmedProfile}
           />
           <div className="profile-setup__card-header">
@@ -203,6 +215,32 @@ export default function CandidateProfileSetup() {
               {EDUCATION_LEVELS.map((level) => <option key={level} value={level}>{t(`education.${level}`)}</option>)}
             </select>
           </label>
+          <fieldset className="profile-setup__practical">
+            <legend>{t("setup.practicalTitle")}</legend>
+            <p>{t("setup.practicalHelp")}</p>
+            <div className="profile-setup__practical-grid">
+              {PRACTICAL_ABILITY_KEYS.map((key) => (
+                <label key={key}>
+                  <strong>{t(`setup.abilities.${key}`)}</strong>
+                  <select
+                    ref={(element) => { practicalAbilityRefs.current[key] = element; }}
+                    aria-label={t(`setup.abilities.${key}`)}
+                    value={practicalAbilities[key]}
+                    required
+                    aria-invalid={attemptedSave && !practicalAbilities[key]}
+                    aria-describedby={attemptedSave && !practicalAbilities[key] ? "profile-setup-error" : undefined}
+                    onChange={(event) => {
+                      setPracticalAbilities((current) => ({ ...current, [key]: event.target.value }));
+                      setAttemptedSave(false);
+                    }}
+                  >
+                    <option value="">{t("setup.abilityPlaceholder")}</option>
+                    {PRACTICAL_ABILITY_LEVELS.map((level) => <option key={level} value={level}>{t(`setup.abilityLevels.${level}`)}</option>)}
+                  </select>
+                </label>
+              ))}
+            </div>
+          </fieldset>
           <label className="profile-setup__search">
             <span aria-hidden="true">⌕</span>
             <input ref={searchRef} data-voice-control="disability_search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t("setup.searchPlaceholder")} aria-label={t("setup.searchLabel")} aria-describedby={attemptedSave && !selected.length ? "profile-setup-error" : undefined} />

@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-08-10T10:46:30.916Z",
+  "generatedAt": "2026-08-25T09:54:54.434Z",
   "apiBase": "http://127.0.0.1:8081/api",
   "summary": {
-    "passed": 17,
+    "passed": 23,
     "failed": 0,
-    "total": 17
+    "total": 23
   },
   "results": [
     {
       "name": "anonymous session is rejected",
       "status": "passed",
-      "durationMs": 115.3,
+      "durationMs": 369.4,
       "detail": {
         "httpStatus": 401
       }
@@ -18,7 +18,7 @@
     {
       "name": "public jobs catalogue is available",
       "status": "passed",
-      "durationMs": 719.2,
+      "durationMs": 827.8,
       "detail": {
         "httpStatus": 200,
         "recordCount": 24
@@ -27,16 +27,30 @@
     {
       "name": "public job-definitions catalogue is available",
       "status": "passed",
-      "durationMs": 187.2,
+      "durationMs": 123.1,
       "detail": {
         "httpStatus": 200,
-        "recordCount": 3
+        "recordCount": 5
+      }
+    },
+    {
+      "name": "public overview returns aggregates and safe published-job fields",
+      "status": "passed",
+      "durationMs": 281.9,
+      "detail": {
+        "httpStatus": 200,
+        "stats": {
+          "registeredCandidates": 3,
+          "publishedJobPosts": 24,
+          "activeJobDescriptions": 5
+        },
+        "latestJobCount": 6
       }
     },
     {
       "name": "candidate fixture authenticates and opens its session",
       "status": "passed",
-      "durationMs": 841.8,
+      "durationMs": 759.1,
       "detail": {
         "httpStatus": 200,
         "role": "ROLE_CANDIDATE"
@@ -45,7 +59,7 @@
     {
       "name": "employer fixture authenticates and opens its session",
       "status": "passed",
-      "durationMs": 679.8,
+      "durationMs": 643.2,
       "detail": {
         "httpStatus": 200,
         "role": "ROLE_EMPLOYER"
@@ -54,7 +68,7 @@
     {
       "name": "admin fixture authenticates and opens its session",
       "status": "passed",
-      "durationMs": 537.3,
+      "durationMs": 529.6,
       "detail": {
         "httpStatus": 200,
         "role": "ROLE_ADMIN"
@@ -63,7 +77,7 @@
     {
       "name": "verifier fixture authenticates and opens its session",
       "status": "passed",
-      "durationMs": 519.5,
+      "durationMs": 449.8,
       "detail": {
         "httpStatus": 200,
         "role": "ROLE_VERIFIER"
@@ -72,7 +86,7 @@
     {
       "name": "candidate can read /candidate/profile",
       "status": "passed",
-      "durationMs": 125.6,
+      "durationMs": 157.8,
       "detail": {
         "httpStatus": 200
       }
@@ -80,7 +94,7 @@
     {
       "name": "candidate can read /candidate/applications",
       "status": "passed",
-      "durationMs": 140.5,
+      "durationMs": 155.2,
       "detail": {
         "httpStatus": 200
       }
@@ -88,7 +102,7 @@
     {
       "name": "employer can read /employer/jobs",
       "status": "passed",
-      "durationMs": 232.1,
+      "durationMs": 128.6,
       "detail": {
         "httpStatus": 200
       }
@@ -96,7 +110,7 @@
     {
       "name": "employer can read /employer/applications",
       "status": "passed",
-      "durationMs": 177,
+      "durationMs": 264.6,
       "detail": {
         "httpStatus": 200
       }
@@ -104,7 +118,7 @@
     {
       "name": "admin can read /admin/users",
       "status": "passed",
-      "durationMs": 164.2,
+      "durationMs": 184.1,
       "detail": {
         "httpStatus": 200
       }
@@ -112,15 +126,64 @@
     {
       "name": "verifier can read /verifier/requests?status=all",
       "status": "passed",
-      "durationMs": 297.9,
+      "durationMs": 174,
       "detail": {
         "httpStatus": 200
       }
     },
     {
+      "name": "candidate profile exposes hospitality foundation abilities",
+      "status": "passed",
+      "durationMs": 198.5,
+      "detail": {
+        "httpStatus": 200,
+        "abilities": {
+          "reading": "independent",
+          "writing": "independent",
+          "numeracy": "with_support"
+        }
+      }
+    },
+    {
+      "name": "employer vacancies expose controlled HR requirements",
+      "status": "passed",
+      "durationMs": 219.2,
+      "detail": {
+        "httpStatus": 200,
+        "vacancyCount": 3
+      }
+    },
+    {
+      "name": "admin can inspect catalogue datasets and task status",
+      "status": "passed",
+      "durationMs": 874.1,
+      "detail": {
+        "httpStatus": 200,
+        "datasetCount": 5,
+        "inspectedTaskCount": 189
+      }
+    },
+    {
+      "name": "candidate matching separates personal education from operational tasks",
+      "status": "passed",
+      "durationMs": 671.2,
+      "detail": {
+        "httpStatus": 200,
+        "resultCount": 24
+      }
+    },
+    {
       "name": "candidate is blocked from /admin/users",
       "status": "passed",
-      "durationMs": 227.8,
+      "durationMs": 293.2,
+      "detail": {
+        "httpStatus": 403
+      }
+    },
+    {
+      "name": "candidate is blocked from /admin/job-catalogue",
+      "status": "passed",
+      "durationMs": 187.8,
       "detail": {
         "httpStatus": 403
       }
@@ -128,7 +191,7 @@
     {
       "name": "candidate is blocked from /verifier/requests",
       "status": "passed",
-      "durationMs": 215.6,
+      "durationMs": 73.3,
       "detail": {
         "httpStatus": 403
       }
@@ -136,7 +199,7 @@
     {
       "name": "employer is blocked from /candidate/applications",
       "status": "passed",
-      "durationMs": 80.9,
+      "durationMs": 87,
       "detail": {
         "httpStatus": 403
       }
@@ -144,7 +207,7 @@
     {
       "name": "verifier is blocked from /employer/applications",
       "status": "passed",
-      "durationMs": 50,
+      "durationMs": 191.4,
       "detail": {
         "httpStatus": 403
       }

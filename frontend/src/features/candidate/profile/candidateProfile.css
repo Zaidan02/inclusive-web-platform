@@ -14,6 +14,14 @@
 .profile-setup__header { border-bottom-color: #d8d3ca; }
 .profile-setup__header-tools { display:flex;align-items:center;gap:1rem; }.profile-setup__header-tools>span { color:var(--ink-500);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px; }
 @media(max-width:620px){.profile-setup__header-tools>span{display:none}}
+
+.profile-setup__practical{margin:0 0 18px;padding:16px;border:1px solid #dbe3ef;border-radius:4px;background:#f8fafc}
+.profile-setup__practical legend{padding-inline:4px;color:#0f172a;font-weight:700}
+.profile-setup__practical>p{margin:0 0 12px;color:#52627a;font-size:.875rem}
+.profile-setup__practical-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.profile-setup__practical-grid label{display:grid;gap:6px}
+.profile-setup__practical-grid select{min-width:0;padding:11px 12px;border:1px solid #cbd5e1;border-radius:4px;background:#fff;color:#0f172a}
+@media(max-width:700px){.profile-setup__practical-grid{grid-template-columns:1fr}}
 .profile-setup__step,
 .profile-setup__eyebrow { color: #96502f; }
 .profile-setup__intro h1 {

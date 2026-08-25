@@ -11,7 +11,14 @@ It is a rules engine, not a machine-learning model.
 
 ## Current proof-of-concept policy
 
-- Education below the job minimum excludes the candidate.
+- Education is excluded by default. HR may mark a minimum level as `preferred` or `required`; only an unmet `required` level affects eligibility.
+- Personal education is a grouped HR concept with four child skills: reading, writing, counting, and basic position knowledge.
+- A child skill marked `not_required` is excluded from the calculation.
+- A preferred child skill influences ranking without excluding the candidate.
+- A required child skill affects eligibility when it is not currently feasible.
+- `with_support` receives factor `0.75` when the employer offers assistance. Without offered assistance it receives factor `0.25` and does not satisfy a required skill.
+- The operational-task component uses 75% of the score when personal-education requirements are active; the grouped personal-education component uses 25%.
+- An active education preference/requirement uses 10%, reducing the operational-task component accordingly. With no configured education or personal-education requirements, operational tasks remain 100% of the score.
 - A missing disability/task assessment is treated as feasible, but recorded as an assumption.
 - For multiple disabilities, the most restrictive assessment wins for each task.
 - `needs_assistance` becomes `feasible_with_assistance` when the employer offers assistance.
@@ -23,7 +30,7 @@ It is a rules engine, not a machine-learning model.
 - Work feasible with assistance has factor `0.75`.
 - Highlighted tasks multiply their configured weight by `1.5`.
 
-The percentage for an eligible candidate is:
+The operational-task component for an eligible candidate is:
 
 ```text
 sum(adjusted task weight × feasibility factor)
@@ -32,6 +39,8 @@ sum(adjusted task weight)
 ```
 
 Task weight describes how important a task is to the job. The feasibility factor describes this candidate's relationship with that task. They are deliberately separate values.
+
+The final result combines only active components. “Personal education” source headings and their Write/Read/Count/Basic knowledge child rows are removed from ordinary task scoring; otherwise those concepts would be counted twice through both disability assessments and HR requirements.
 
 ## Package layout
 
@@ -65,7 +74,7 @@ The package uses only the Python standard library.
 
 ## Current integration boundary
 
-The Symfony `GET /api/candidate/matches` endpoint loads the candidate, published jobs, tasks, assessments, highlighted task identifiers, and `assistanceAvailable` value from PostgreSQL. It sends plain JSON to the containerized `POST /score` endpoint and returns the ranked, explainable results to React.
+The Symfony `GET /api/candidate/matches` endpoint loads the candidate, employer-configured requirements, published jobs, operational tasks, assessments, highlighted task identifiers, and `assistanceAvailable` value from PostgreSQL. It sends plain JSON to the containerized `POST /score` endpoint and returns the ranked, explainable results to React. Application submission adds the position-specific knowledge answer and stores a compact compatibility snapshot for authorized HR review.
 
 Database access and HTTP concerns should not be added to this package.
 

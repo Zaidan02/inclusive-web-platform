@@ -48,6 +48,11 @@
       "optional": "(اختياري)",
       "education": "أعلى مستوى تعليمي",
       "educationPlaceholder": "اختر المستوى التعليمي",
+      "practicalTitle": "التعليم الشخصي",
+      "practicalHelp": "تصف هذه الإجابات طريقة عملك حاليًا. اختيار الدعم لا يستبعدك ولا يغيّر معادلة التوافق الحالية.",
+      "abilities": { "readingAbility": "القراءة", "writingAbility": "الكتابة", "numeracyAbility": "العدّ" },
+      "abilityPlaceholder": "اختر إجابة",
+      "abilityLevels": { "independent": "نعم، باستقلالية", "with_support": "نعم، مع الدعم", "not_yet": "ليس بعد" },
       "searchLabel": "البحث في حالات الإعاقة",
       "searchPlaceholder": "ابحث في حالات الإعاقة",
       "removeDisability": "إزالة {{name}}",
@@ -78,12 +83,17 @@
       "showExplanation": "▼ عرض شرح الدرجة",
       "selectDisabilities": "حدّد حالات الإعاقة لعرض النتيجة",
       "bands": {
-        "notEligible": "غير مؤهل",
+        "notEligible": "لم تُستوفَ المعايير المطلوبة",
         "strong": "توافق قوي",
         "moderate": "توافق متوسط",
         "limited": "توافق محدود",
         "low": "توافق منخفض"
-      }
+      },
+      "summary": { "eligible": "تم استيفاء المتطلبات المحددة. التوافق الإجمالي هو {{score}}٪.", "review": "يوجد معيار مطلوب صراحةً أو أكثر غير مستوفى حاليًا. تبقى الوظيفة ظاهرة لإجراء مراجعة بشرية شفافة." },
+      "breakdown": { "tasks": "المهام التشغيلية: {{score}}٪", "personalEducation": "التعليم الشخصي: {{score}}٪", "formalEducation": "التعليم الرسمي: {{score}}٪" },
+      "educationRequirement": "التعليم: {{level}} ({{requirement}})",
+      "abilities": { "reading": "القراءة", "writing": "الكتابة", "counting": "العدّ", "positionKnowledge": "المعرفة الأساسية بالوظيفة" },
+      "feasibility": { "feasible": "قابل للتنفيذ", "feasible_with_assistance": "قابل للتنفيذ مع المساعدة", "avoid": "بحاجة إلى تكييف" }
     },
     "jobs": {
       "title": "الوظائف المتاحة",
@@ -104,7 +114,11 @@
       "text": "أشار صاحب العمل إلى إمكانية توفير مساعدة في المهام أو تكييف لهذا المنصب."
     },
     "applicationForm": {
-      "title": "مستندات الطلب",
+      "title": "تفاصيل الطلب",
+      "knowledgeTitle": "المعرفة بالوظيفة",
+      "knowledgeLabel": "المعرفة الأساسية المتعلقة بوظيفة {{position}}",
+      "knowledgeHelp": "صِف معرفتك الحالية. إذا حدّد صاحب العمل هذه المهارة، فستدخل في نتيجة التوافق الخاصة بالطلب.",
+      "knowledgePlaceholder": "اختر إجابة",
       "document": "مستند الطلب (اختياري)",
       "recommendation": "رسالة توصية (اختيارية)",
       "selected": "المحدد: {{name}}",
@@ -156,7 +170,9 @@
       "lastName": "أدخل اسم العائلة.",
       "location": "أدخل موقعك.",
       "education": "اختر أعلى مستوى تعليمي.",
-      "requiredProfile": "أضف اسمك وموقعك ومستواك التعليمي وحالة إعاقة واحدة على الأقل.",
+      "practicalAbility": "اختر إجابة لكل قدرة عملية.",
+      "positionKnowledge": "اختر مستواك الحالي في المعرفة الأساسية لهذه الوظيفة.",
+      "requiredProfile": "أضف اسمك وموقعك ومستواك التعليمي وقدراتك العملية وحالة إعاقة واحدة على الأقل.",
       "profileSave": "تعذر حفظ ملفك. حاول مرة أخرى.",
       "applicationSubmit": "تعذر إرسال طلبك. حاول مرة أخرى."
     },
@@ -195,6 +211,15 @@
       "jobType": "نوع الوظيفة *",
       "workMode": "نمط العمل *",
       "description": "وصف الوظيفة *",
+      "requirementsTitle": "التعليم ومهارات التعليم الشخصي",
+      "requirementsHelp": "تؤثر المتطلبات المحددة فقط في التوافق. تُستبعد المهارة غير المطلوبة من الدرجة، وقد تؤثر المهارة الإلزامية في الأهلية بحسب توفر المساعدة.",
+      "educationRequirement": "متطلب التعليم",
+      "minimumEducation": "الحد الأدنى للتعليم *",
+      "minimumEducationPlaceholder": "اختر الحد الأدنى",
+      "reading": "القراءة",
+      "writing": "الكتابة",
+      "numeracy": "العدّ",
+      "positionKnowledge": "المعرفة الأساسية بالوظيفة",
       "tasks": "المهام المهمة *",
       "tasksHint": "حدّد كل مهمة من الكتالوج مهمة بشكل خاص لهذه الوظيفة. تحصل المهام المهمة على وزن أكبر في حساب الدرجة؛ ويجب اختيار مهمة واحدة على الأقل.",
       "searchTasks": "البحث في المهام…",
@@ -208,6 +233,7 @@
       "update": "تحديث الوظيفة",
       "publish": "نشر الوظيفة"
     },
+    "requirementLevels": { "not_required": "غير مطلوب", "preferred": "مفضّل", "required": "مطلوب" },
     "jobTypes": { "fullTime": "دوام كامل", "partTime": "دوام جزئي", "internship": "تدريب", "seasonal": "موسمي" },
     "workModes": { "onSite": "في موقع العمل", "hybrid": "هجين", "remote": "عن بُعد" },
     "myJobs": {
@@ -263,6 +289,15 @@
       "close": "إغلاق ملف المرشح",
       "title": "ملف المرشح",
       "intro": "معلومات تفصيلية عن المرشح",
+      "education": "التعليم",
+      "reading": "القراءة",
+      "writing": "الكتابة",
+      "numeracy": "العدّ",
+      "positionKnowledge": "المعرفة بهذه الوظيفة",
+      "requirementsMet": "تم استيفاء المتطلبات المحددة",
+      "humanReview": "تحتاج مهارة مطلوبة إلى مراجعة بشرية",
+      "applicationScore": "توافق خاص بالطلب: {{score}}٪",
+      "noApplicationScore": "كانت خدمة حساب التوافق غير متاحة عند إرسال هذا الطلب.",
       "disabilities": "حالات الإعاقة المحددة",
       "noDisabilities": "لم يتم تحديد حالات إعاقة."
     },
@@ -401,8 +436,8 @@
   },
   "admin": {
     "platform": "المنصة", "console": "لوحة الإدارة", "tabsLabel": "أقسام لوحة تحكم المسؤول", "loading": "جارٍ التحميل…",
-    "tabs": { "users": "المستخدمون", "archived": "المستخدمون المؤرشفون", "applications": "طلبات التوظيف", "profiles": "ملفات المستخدمين" },
-    "stats": { "totalProfiles": "إجمالي الملفات", "completedProfiles": "الملفات المكتملة", "pendingEducation": "التعليم المعلّق", "totalApplications": "إجمالي الطلبات", "archivedUsers": "المستخدمون المؤرشفون", "activeUsers": "المستخدمون النشطون", "verifiedEmails": "رسائل البريد المتحقق منها", "unverifiedUsers": "المستخدمون غير المتحقق منهم", "admins": "المسؤولون" },
+    "tabs": { "users": "المستخدمون", "archived": "المستخدمون المؤرشفون", "applications": "طلبات التوظيف", "profiles": "ملفات المستخدمين", "catalogue": "كتالوج البيانات" },
+    "stats": { "totalProfiles": "إجمالي الملفات", "completedProfiles": "الملفات المكتملة", "pendingEducation": "التعليم المعلّق", "totalApplications": "إجمالي الطلبات", "archivedUsers": "المستخدمون المؤرشفون", "activeUsers": "المستخدمون النشطون", "verifiedEmails": "رسائل البريد المتحقق منها", "unverifiedUsers": "المستخدمون غير المتحقق منهم", "admins": "المسؤولون", "catalogueDatasets": "أوصاف الوظائف", "activeDatasets": "مجموعات البيانات النشطة", "catalogueTasks": "مهام الكتالوج", "catalogueAssessments": "التقييمات" },
     "roles": { "admin": "مسؤول", "employer": "صاحب عمل", "user": "مستخدم" },
     "statuses": { "pending": "قيد الانتظار", "in_review": "قيد المراجعة", "accepted": "مقبول", "rejected": "مرفوض" },
     "verification": { "verified": "تم التحقق", "unverified": "لم يتم التحقق" },
@@ -416,9 +451,9 @@
     "edit": { "title": "تعديل المستخدم", "description": "تحديث معلومات حساب {{name}}.", "emailHelp": "إذا تغيّر البريد الإلكتروني فسيتم إرسال رسالة تحقق جديدة.", "changePassword": "تغيير كلمة المرور", "cancelPassword": "إلغاء تغيير كلمة المرور", "newPassword": "كلمة المرور الجديدة", "saving": "جارٍ الحفظ…", "save": "حفظ التغييرات" },
     "archive": { "title": "أرشفة المستخدم؟", "description": "أنت على وشك أرشفة {{name}}.", "help": "سيُنقل هذا المستخدم إلى المستخدمين المؤرشفين.", "progress": "جارٍ الأرشفة…" },
     "delete": { "title": "حذف المستخدم؟", "description": "أنت على وشك حذف {{name}} نهائيًا.", "help": "لا يمكن التراجع عن هذا الإجراء.", "progress": "جارٍ الحذف…" },
-    "catalogue": { "add": "إضافة أوراق بيانات", "importing": "جارٍ استيراد أوراق البيانات…", "complete": "تم استيراد أوراق البيانات.", "failed": "فشل استيراد الكتالوج. تحقق من تنسيق المصنف وحاول مرة أخرى.", "completePrefix": "اكتمل الاستيراد: ", "failedPrefix": "فشل الاستيراد: ", "warningCount": "{{count}} تحذيرات من أداة الاستخراج" },
+    "catalogue": { "add": "إضافة أوراق بيانات", "importing": "جارٍ استيراد أوراق البيانات…", "complete": "تم استيراد أوراق البيانات.", "failed": "فشل استيراد الكتالوج. تحقق من تنسيق المصنف وحاول مرة أخرى.", "completePrefix": "اكتمل الاستيراد: ", "failedPrefix": "فشل الاستيراد: ", "warningCount": "{{count}} تحذيرات من أداة الاستخراج", "sectionLabel": "مجموعات بيانات أوصاف الوظائف المستوردة", "loading": "جارٍ تحميل مجموعات بيانات الكتالوج…", "loadingTasks": "جارٍ تحميل مهام مجموعة البيانات…", "empty": "لا توجد مجموعات بيانات تطابق بحثك.", "dataset": "مجموعة بيانات وصف وظيفة", "active": "نشطة", "inactive": "غير نشطة", "source": "المصنف المصدر", "builtInSource": "بيانات تجريبية أو بيانات كتالوج موجودة", "tasks": "المهام", "assessments": "التقييمات", "sheets": "الأوراق المصدر", "sourceSheets": "أوراق العمل", "viewTasks": "عرض {{count}} مهمة", "hideTasks": "إخفاء المهام", "searchLabel": "البحث في مجموعات بيانات الكتالوج", "searchPlaceholder": "ابحث حسب وصف الوظيفة أو المصدر…", "taskSearchLabel": "البحث في مهام مجموعة البيانات", "taskSearchPlaceholder": "ابحث حسب المهمة أو الورقة المصدر…", "taskResults": "يتم عرض {{count}} مهمة", "taskTableLabel": "مهام {{name}}", "position": "الترتيب", "task": "المهمة", "category": "الفئة", "taskStatus": "حالة المهمة", "distribution": "توزيع التقييمات", "personalEducation": "مدخل التعليم الشخصي", "operational": "مهمة تشغيلية", "mandatory": "إلزامية", "standard": "قياسية", "feasibleShort": "ممكن {{count}}", "assistanceShort": "مساعدة {{count}}", "avoidShort": "تجنب {{count}}", "noTasks": "لا توجد مهام تطابق بحثك." },
     "messages": { "updated": "تم تحديث المستخدم.", "updatedVerification": "تم تحديث المستخدم وإرسال رسالة تحقق جديدة.", "archived": "تمت أرشفة {{name}}.", "restored": "تمت استعادة {{name}}.", "deleted": "تم حذف {{name}}." },
-    "errors": { "users": "تعذر تحميل المستخدمين. حاول مرة أخرى.", "profiles": "تعذر تحميل ملفات المرشحين. حاول مرة أخرى.", "applications": "تعذر تحميل الطلبات. حاول مرة أخرى.", "update": "تعذر تحديث المستخدم. حاول مرة أخرى.", "archive": "تعذر أرشفة المستخدم. حاول مرة أخرى.", "restore": "تعذر استعادة المستخدم. حاول مرة أخرى.", "delete": "تعذر حذف المستخدم. حاول مرة أخرى.", "document": "تعذر فتح المستند. ربما لم يعد متاحًا." },
+    "errors": { "users": "تعذر تحميل المستخدمين. حاول مرة أخرى.", "profiles": "تعذر تحميل ملفات المرشحين. حاول مرة أخرى.", "applications": "تعذر تحميل الطلبات. حاول مرة أخرى.", "catalogue": "تعذر تحميل مجموعات بيانات الكتالوج. حاول مرة أخرى.", "catalogueDetail": "تعذر تحميل مهام مجموعة البيانات المحددة. حاول مرة أخرى.", "update": "تعذر تحديث المستخدم. حاول مرة أخرى.", "archive": "تعذر أرشفة المستخدم. حاول مرة أخرى.", "restore": "تعذر استعادة المستخدم. حاول مرة أخرى.", "delete": "تعذر حذف المستخدم. حاول مرة أخرى.", "document": "تعذر فتح المستند. ربما لم يعد متاحًا." },
     "voice": { "sensitive": "حدّثت {{label}} من دون قراءته بصوت عالٍ. يرجى مراجعته.", "fieldSet": "ضبطت {{label}} على {{value}}. يرجى مراجعته.", "selected": "اخترت {{value}} للحقل {{label}}.", "userNotFound": "لم أجد مستخدمًا محمّلًا يطابق {{value}}.", "profileNotFound": "لم أجد ملف مرشح محمّلًا يطابق {{value}}.", "applicationNotFound": "لم أجد طلبًا محمّلًا يطابق {{value}}.", "activatedFor": "تم تفعيل {{label}} لـ {{name}}.", "openingProfile": "جارٍ فتح ملف المرشح {{name}}.", "openingFor": "جارٍ فتح {{label}} لـ {{name}}.", "workbookPicker": "جارٍ فتح منتقي المصنفات. اختر ورقة XLSX واحدة أو أكثر.", "activated": "تم تفعيل {{label}}." }
   }
 }

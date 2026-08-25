@@ -77,6 +77,16 @@ function ProfilesIcon() {
   );
 }
 
+function CatalogueIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <ellipse cx="12" cy="5" rx="9" ry="3" />
+      <path d="M3 5v6c0 1.7 4 3 9 3s9-1.3 9-3V5" />
+      <path d="M3 11v6c0 1.7 4 3 9 3s9-1.3 9-3v-6" />
+    </svg>
+  );
+}
+
 function AdminDashboard() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -107,6 +117,10 @@ function AdminDashboard() {
   const [actionLoadingId, setActionLoadingId] = useState(null);
   const [catalogueImporting, setCatalogueImporting] = useState(false);
   const [catalogueImportResult, setCatalogueImportResult] = useState(null);
+  const [catalogueDatasets, setCatalogueDatasets] = useState([]);
+  const [selectedCatalogueDataset, setSelectedCatalogueDataset] = useState(null);
+  const [catalogueDetailLoading, setCatalogueDetailLoading] = useState(false);
+  const [taskSearchTerm, setTaskSearchTerm] = useState("");
   const catalogueInputRef = useRef(null);
   const messageRef = useRef(null);
   const errorRef = useRef(null);
@@ -125,6 +139,7 @@ function AdminDashboard() {
   const isArchivedView = activeTab === "ARCHIVED_USERS";
   const isUserProfilesView = activeTab === "USER_PROFILES";
   const isApplicationsView = activeTab === "APPLICATIONS";
+  const isCatalogueView = activeTab === "CATALOGUE";
 
   const fetchUsers = useCallback(async (tab) => {
     try {
@@ -161,20 +176,56 @@ function AdminDashboard() {
     } catch { setError(t("admin.errors.applications")); } finally { setLoading(false); }
   }, [t]);
 
+  const fetchCatalogueDatasets = useCallback(async () => {
+    try {
+      setLoading(true); setError("");
+      const token = getToken();
+      if (!token) { navigate("/signin"); return; }
+      const response = await fetch(`${API_BASE_URL}/admin/job-catalogue`, {
+        headers: { "X-Auth-Token": token },
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error("load");
+      setCatalogueDatasets(data.datasets || []);
+    } catch { setError(t("admin.errors.catalogue")); } finally { setLoading(false); }
+  }, [navigate, t]);
+
+  const toggleCatalogueDataset = useCallback(async (dataset) => {
+    if (selectedCatalogueDataset?.id === dataset.id) {
+      setSelectedCatalogueDataset(null);
+      setTaskSearchTerm("");
+      return;
+    }
+
+    try {
+      setCatalogueDetailLoading(true); setError(""); setTaskSearchTerm("");
+      setSelectedCatalogueDataset(null);
+      const token = getToken();
+      if (!token) { navigate("/signin"); return; }
+      const response = await fetch(`${API_BASE_URL}/admin/job-catalogue/${dataset.id}`, {
+        headers: { "X-Auth-Token": token },
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error("load");
+      setSelectedCatalogueDataset(data.dataset);
+    } catch { setError(t("admin.errors.catalogueDetail")); } finally { setCatalogueDetailLoading(false); }
+  }, [navigate, selectedCatalogueDataset?.id, t]);
+
   useEffect(() => {
     const requestedTab = location.state?.voiceTab;
-    if (!["USERS", "ARCHIVED_USERS", "APPLICATIONS", "USER_PROFILES"].includes(requestedTab)) return;
+    if (!["USERS", "ARCHIVED_USERS", "APPLICATIONS", "USER_PROFILES", "CATALOGUE"].includes(requestedTab)) return;
     handleTabChange(requestedTab);
   }, [location.state?.voiceNavigationTurn, location.state?.voiceTab]);
 
   useEffect(() => {
     if (activeTab === "USER_PROFILES") { fetchCandidateProfiles(); return; }
     if (activeTab === "APPLICATIONS") { fetchAdminApplications(); return; }
+    if (activeTab === "CATALOGUE") { fetchCatalogueDatasets(); return; }
     fetchUsers(activeTab);
-  }, [activeTab, fetchAdminApplications, fetchCandidateProfiles, fetchUsers]);
+  }, [activeTab, fetchAdminApplications, fetchCandidateProfiles, fetchCatalogueDatasets, fetchUsers]);
 
   function handleLogout() { logout(); navigate("/signin"); }
-  function handleTabChange(tab) { setActiveTab(tab); setSearchTerm(""); setRoleFilter(""); setVerificationFilter(""); setError(""); setMessage(""); setSelectedProfile(null); setShowProfileApplications(false); }
+  function handleTabChange(tab) { setActiveTab(tab); setSearchTerm(""); setTaskSearchTerm(""); setRoleFilter(""); setVerificationFilter(""); setError(""); setMessage(""); setSelectedProfile(null); setSelectedCatalogueDataset(null); setShowProfileApplications(false); }
 
   function openEditModal(user) {
     setUserToEdit(user);
@@ -299,6 +350,8 @@ function AdminDashboard() {
       const data = await response.json();
       if (!response.ok) throw new Error("import");
       setCatalogueImportResult({ type: "success", message: t("admin.catalogue.complete"), summary: data.summary });
+      setSelectedCatalogueDataset(null);
+      await fetchCatalogueDatasets();
     } catch {
       setCatalogueImportResult({ type: "error", message: t("admin.catalogue.failed") });
     } finally {
@@ -501,14 +554,32 @@ function AdminDashboard() {
     return (a.candidateName || "").toLowerCase().includes(s) || (a.jobTitle || "").toLowerCase().includes(s) || (a.status || "").toLowerCase().includes(s);
   });
 
+  const filteredCatalogueDatasets = catalogueDatasets.filter((dataset) => {
+    const query = searchTerm.toLowerCase().trim();
+    return [dataset.name, dataset.sourceWorkbook, dataset.description, ...(dataset.sourceSheets || [])]
+      .some((value) => String(value || "").toLowerCase().includes(query));
+  });
+
+  const filteredCatalogueTasks = (selectedCatalogueDataset?.tasks || []).filter((task) => {
+    const query = taskSearchTerm.toLowerCase().trim();
+    return [task.name, task.key, task.category, ...(task.sourceSheets || [])]
+      .some((value) => String(value || "").toLowerCase().includes(query));
+  });
+
   const navItems = [
     { tab: "USERS", label: t("admin.tabs.users"), icon: <UsersIcon /> },
     { tab: "ARCHIVED_USERS", label: t("admin.tabs.archived"), icon: <ArchiveIcon /> },
     { tab: "APPLICATIONS", label: t("admin.tabs.applications"), icon: <ApplicationsIcon /> },
     { tab: "USER_PROFILES", label: t("admin.tabs.profiles"), icon: <ProfilesIcon /> },
+    { tab: "CATALOGUE", label: t("admin.tabs.catalogue"), icon: <CatalogueIcon /> },
   ];
 
-  const statsCards = isUserProfilesView ? [
+  const statsCards = isCatalogueView ? [
+    { label: "Catalogue Datasets", value: catalogueDatasets.length, bg: "#eff6ff", icon: <CatalogueIcon /> },
+    { label: "Active Datasets", value: catalogueDatasets.filter((dataset) => dataset.active).length, bg: "#f0fdf4", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg> },
+    { label: "Catalogue Tasks", value: catalogueDatasets.reduce((sum, dataset) => sum + dataset.taskCount, 0), bg: "#fff7ed", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c2410c" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> },
+    { label: "Catalogue Assessments", value: catalogueDatasets.reduce((sum, dataset) => sum + dataset.assessmentCount, 0), bg: "#f5f3ff", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg> },
+  ] : isUserProfilesView ? [
     { label: "Total Profiles", value: totalProfiles, color: "#2563eb", bg: "#eff6ff", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> },
     { label: "Completed Profiles", value: completedProfiles, color: "#16a34a", bg: "#f0fdf4", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg> },
     { label: "Pending Education", value: pendingEducationProfiles, color: "#d97706", bg: "#fffbeb", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> },
@@ -529,6 +600,10 @@ function AdminDashboard() {
     "Active Users": "admin.stats.activeUsers",
     "Verified Emails": "admin.stats.verifiedEmails",
     "Unverified Users": "admin.stats.unverifiedUsers",
+    "Catalogue Datasets": "admin.stats.catalogueDatasets",
+    "Active Datasets": "admin.stats.activeDatasets",
+    "Catalogue Tasks": "admin.stats.catalogueTasks",
+    "Catalogue Assessments": "admin.stats.catalogueAssessments",
     Admins: "admin.stats.admins",
   };
 
@@ -600,29 +675,33 @@ function AdminDashboard() {
           </div>
           <div className="dashboard-header-tools">
             <LanguageSwitcher compact />
-            <input
-              ref={catalogueInputRef}
-              type="file"
-              accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-              multiple
-              onChange={handleCatalogueImport}
-              style={{ display: "none" }}
-            />
-            <button
-              type="button"
-              onClick={() => catalogueInputRef.current?.click()}
-              disabled={catalogueImporting}
-              style={{ border: "none", borderRadius: "10px", background: catalogueImporting ? "#64748b" : "#2563eb", color: "white", padding: "10px 16px", fontSize: "13px", fontWeight: 600, cursor: catalogueImporting ? "wait" : "pointer" }}
-            >
-              {catalogueImporting ? t("admin.catalogue.importing") : t("admin.catalogue.add")}
-            </button>
+            {isCatalogueView && (
+              <>
+                <input
+                  ref={catalogueInputRef}
+                  type="file"
+                  accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                  multiple
+                  onChange={handleCatalogueImport}
+                  style={{ display: "none" }}
+                />
+                <button
+                  type="button"
+                  onClick={() => catalogueInputRef.current?.click()}
+                  disabled={catalogueImporting}
+                  style={{ border: "none", borderRadius: "10px", background: catalogueImporting ? "#64748b" : "#2563eb", color: "white", padding: "10px 16px", fontSize: "13px", fontWeight: 600, cursor: catalogueImporting ? "wait" : "pointer" }}
+                >
+                  {catalogueImporting ? t("admin.catalogue.importing") : t("admin.catalogue.add")}
+                </button>
+              </>
+            )}
           </div>
         </div>
 
         <AccessibleNotice noticeRef={messageRef} tone="success" message={message} />
         <AccessibleNotice noticeRef={errorRef} tone="error" message={error} />
 
-        {catalogueImportResult && (
+        {isCatalogueView && catalogueImportResult && (
           <div
             role={catalogueImportResult.type === "error" ? "alert" : "status"}
             style={{
@@ -671,10 +750,10 @@ function AdminDashboard() {
                 <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" style={{ position: "absolute", insetInlineStart: "12px", top: "50%", transform: "translateY(-50%)" }}>
                   <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
                 </svg>
-                <input aria-label={isUserProfilesView ? t("admin.search.profilesLabel") : t("admin.search.usersLabel")} type="search" placeholder={isUserProfilesView ? t("admin.search.profilesPlaceholder") : t("admin.search.usersPlaceholder")} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} dir="auto"
+                <input aria-label={isCatalogueView ? t("admin.catalogue.searchLabel") : isUserProfilesView ? t("admin.search.profilesLabel") : t("admin.search.usersLabel")} type="search" placeholder={isCatalogueView ? t("admin.catalogue.searchPlaceholder") : isUserProfilesView ? t("admin.search.profilesPlaceholder") : t("admin.search.usersPlaceholder")} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} dir="auto"
                   style={{ width: "100%", paddingBlock: "9px", paddingInline: "34px 12px", borderRadius: "10px", border: "1px solid #e2e8f0", fontSize: "13px", outline: "none", boxSizing: "border-box", background: "#f8fafc", fontFamily: "Inter, sans-serif", color: "#0f172a" }} />
               </div>
-              {!isUserProfilesView && !isArchivedView && (
+              {!isUserProfilesView && !isArchivedView && !isCatalogueView && (
                 <>
                   <select aria-label={t("admin.filters.roleLabel")} value={roleFilter} onChange={(e) => e.target.value === "RESET" ? setRoleFilter("") : setRoleFilter(e.target.value)}
                     style={{ padding: "9px 12px", borderRadius: "10px", border: "1px solid #e2e8f0", fontSize: "13px", background: "#f8fafc", color: "#475569", cursor: "pointer", outline: "none", fontFamily: "Inter, sans-serif" }}>
@@ -695,10 +774,116 @@ function AdminDashboard() {
               )}
               {!isUserProfilesView && (
                 <span style={{ display: "flex", alignItems: "center", fontSize: "12px", color: "#64748b", fontWeight: "400", whiteSpace: "nowrap" }}>
-                  {t("admin.search.results", { count: isUserProfilesView ? filteredProfiles.length : filteredUsers.length })}
+                  {t("admin.search.results", { count: isCatalogueView ? filteredCatalogueDatasets.length : filteredUsers.length })}
                 </span>
               )}
             </div>
+          )}
+
+          {isCatalogueView && (
+            <section aria-label={t("admin.catalogue.sectionLabel")}>
+              {loading && <p role="status" style={S.empty}>{t("admin.catalogue.loading")}</p>}
+              {catalogueDetailLoading && <p role="status" style={S.empty}>{t("admin.catalogue.loadingTasks")}</p>}
+              {!loading && !error && filteredCatalogueDatasets.length === 0 && (
+                <p style={S.empty}>{t("admin.catalogue.empty")}</p>
+              )}
+              {!loading && !error && filteredCatalogueDatasets.length > 0 && (
+                <div className="admin-catalogue-grid">
+                  {filteredCatalogueDatasets.map((dataset) => {
+                    const isOpen = selectedCatalogueDataset?.id === dataset.id;
+                    return (
+                      <article key={dataset.id} className="admin-catalogue-card">
+                        <div className="admin-catalogue-card__header">
+                          <div>
+                            <p className="admin-catalogue-card__eyebrow">{t("admin.catalogue.dataset")}</p>
+                            <h2>{dataset.name}</h2>
+                          </div>
+                          <span className={`admin-catalogue-status admin-catalogue-status--${dataset.active ? "active" : "inactive"}`}>
+                            {dataset.active ? t("admin.catalogue.active") : t("admin.catalogue.inactive")}
+                          </span>
+                        </div>
+                        <dl className="admin-catalogue-meta">
+                          <div><dt>{t("admin.catalogue.source")}</dt><dd>{dataset.sourceWorkbook || t("admin.catalogue.builtInSource")}</dd></div>
+                          <div><dt>{t("admin.catalogue.tasks")}</dt><dd>{dataset.taskCount}</dd></div>
+                          <div><dt>{t("admin.catalogue.assessments")}</dt><dd>{dataset.assessmentCount}</dd></div>
+                          <div><dt>{t("admin.catalogue.sheets")}</dt><dd>{dataset.sourceSheets?.length || 0}</dd></div>
+                        </dl>
+                        {dataset.sourceSheets?.length > 0 && (
+                          <p className="admin-catalogue-sheets">
+                            <strong>{t("admin.catalogue.sourceSheets")}:</strong> {dataset.sourceSheets.join(", ")}
+                          </p>
+                        )}
+                        <button
+                          type="button"
+                          className="admin-catalogue-toggle"
+                          aria-expanded={isOpen}
+                          aria-controls={`catalogue-tasks-${dataset.id}`}
+                          disabled={catalogueDetailLoading && !isOpen}
+                          onClick={() => toggleCatalogueDataset(dataset)}
+                        >
+                          {isOpen ? t("admin.catalogue.hideTasks") : t("admin.catalogue.viewTasks", { count: dataset.taskCount })}
+                        </button>
+
+                        {isOpen && (
+                          <div id={`catalogue-tasks-${dataset.id}`} className="admin-catalogue-detail">
+                            <label htmlFor={`catalogue-task-search-${dataset.id}`}>{t("admin.catalogue.taskSearchLabel")}</label>
+                            <input
+                              id={`catalogue-task-search-${dataset.id}`}
+                              type="search"
+                              value={taskSearchTerm}
+                              onChange={(event) => setTaskSearchTerm(event.target.value)}
+                              placeholder={t("admin.catalogue.taskSearchPlaceholder")}
+                            />
+                            <p role="status" className="admin-catalogue-result-count">
+                              {t("admin.catalogue.taskResults", { count: filteredCatalogueTasks.length })}
+                            </p>
+                            <div className="dashboard-table-scroll" tabIndex={0} role="region" aria-label={t("admin.catalogue.taskTableLabel", { name: dataset.name })}>
+                              <table className="dashboard-table admin-catalogue-task-table">
+                                <thead>
+                                  <tr>
+                                    <th>{t("admin.catalogue.position")}</th>
+                                    <th>{t("admin.catalogue.task")}</th>
+                                    <th>{t("admin.catalogue.category")}</th>
+                                    <th>{t("admin.catalogue.taskStatus")}</th>
+                                    <th>{t("admin.catalogue.assessments")}</th>
+                                    <th>{t("admin.catalogue.distribution")}</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {filteredCatalogueTasks.map((task) => (
+                                    <tr key={task.id}>
+                                      <td data-label={t("admin.catalogue.position")}>{task.position}</td>
+                                      <td data-label={t("admin.catalogue.task")}><strong>{task.name}</strong></td>
+                                      <td data-label={t("admin.catalogue.category")}>
+                                        <span className="admin-catalogue-task-category">
+                                          {task.category === "personal_education" ? t("admin.catalogue.personalEducation") : t("admin.catalogue.operational")}
+                                        </span>
+                                      </td>
+                                      <td data-label={t("admin.catalogue.taskStatus")}>
+                                        {task.mandatory ? t("admin.catalogue.mandatory") : t("admin.catalogue.standard")}
+                                      </td>
+                                      <td data-label={t("admin.catalogue.assessments")}>{task.assessmentCount}</td>
+                                      <td data-label={t("admin.catalogue.distribution")}>
+                                        <span className="admin-catalogue-distribution">
+                                          {t("admin.catalogue.feasibleShort", { count: task.assessmentCounts.feasible })}
+                                          {" · "}{t("admin.catalogue.assistanceShort", { count: task.assessmentCounts.needsAssistance })}
+                                          {" · "}{t("admin.catalogue.avoidShort", { count: task.assessmentCounts.avoid })}
+                                        </span>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                              {filteredCatalogueTasks.length === 0 && <p style={S.empty}>{t("admin.catalogue.noTasks")}</p>}
+                            </div>
+                          </div>
+                        )}
+                      </article>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
           )}
 
           {isApplicationsView && (
@@ -708,7 +893,7 @@ function AdminDashboard() {
               {!loading && !error && renderApplicationsTable(filteredApplications)}
             </div>
           )}
-          {!loading && !error && !isUserProfilesView && !isApplicationsView && (
+          {!loading && !error && !isUserProfilesView && !isApplicationsView && !isCatalogueView && (
             <div className="dashboard-table-scroll" tabIndex={0} role="region" aria-label={isArchivedView ? t("admin.users.archivedTable") : t("admin.users.table")}>
               <table className="dashboard-table dashboard-table--users" style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>

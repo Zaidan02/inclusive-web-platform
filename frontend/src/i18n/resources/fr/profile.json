@@ -97,6 +97,11 @@
     "aboutPlaceholder": "Une courte présentation, vos intérêts ou vos objectifs professionnels",
     "education": "Niveau d'études le plus élevé",
     "educationPlaceholder": "Sélectionner le niveau d'études",
+    "practicalTitle": "Éducation personnelle",
+    "practicalHelp": "Indiquez comment vous lisez, écrivez et comptez actuellement. Il s'agit de compétences éducatives personnelles, distinctes du niveau d'études. Le soutien est une façon valable de travailler.",
+    "abilities": { "readingAbility": "Lire", "writingAbility": "Écrire", "numeracyAbility": "Compter" },
+    "abilityPlaceholder": "Sélectionner une réponse",
+    "abilityLevels": { "independent": "Oui, de façon autonome", "with_support": "Oui, avec un soutien", "not_yet": "Pas encore" },
     "searchPlaceholder": "Rechercher des options",
     "searchLabel": "Rechercher des options de handicap",
     "loading": "Chargement de votre profil…",
@@ -105,7 +110,7 @@
     "complete": "Enregistrer le profil et continuer",
     "errors": {
       "load": "Votre profil n'a pas pu être chargé. Réessayez.",
-      "required": "Ajoutez votre nom, votre localisation, votre niveau d'études et au moins un handicap.",
+      "required": "Ajoutez votre nom, votre localisation, votre niveau d'études, vos capacités pratiques et au moins un handicap.",
       "save": "Votre profil n'a pas pu être enregistré. Réessayez."
     },
     "voice": {

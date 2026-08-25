@@ -97,6 +97,11 @@
     "aboutPlaceholder": "A short introduction, interests, or work goals",
     "education": "Highest education level",
     "educationPlaceholder": "Select education level",
+    "practicalTitle": "Personal education",
+    "practicalHelp": "Tell us how you currently read, write, and count. These are personal educational skills, not formal education levels. Support is a valid way of working.",
+    "abilities": { "readingAbility": "Reading", "writingAbility": "Writing", "numeracyAbility": "Counting" },
+    "abilityPlaceholder": "Select an answer",
+    "abilityLevels": { "independent": "Yes, independently", "with_support": "Yes, with support", "not_yet": "Not yet" },
     "searchPlaceholder": "Search options",
     "searchLabel": "Search disability options",
     "loading": "Loading your profile…",
@@ -105,7 +110,7 @@
     "complete": "Save profile and continue",
     "errors": {
       "load": "Your profile could not be loaded. Please try again.",
-      "required": "Add your name, location, education level, and at least one disability.",
+      "required": "Add your name, location, education level, practical abilities, and at least one disability.",
       "save": "Your profile could not be saved. Please try again."
     },
     "voice": {

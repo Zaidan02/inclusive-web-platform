@@ -11,6 +11,10 @@ class ScoringPolicy:
 
     missing_assessment_default: Feasibility = Feasibility.FEASIBLE
     highlighted_task_multiplier: float = 1.5
+    practical_abilities_share: float = 0.25
+    education_share: float = 0.10
+    supported_ability_factor: float = 0.75
+    unsupported_ability_factor: float = 0.25
     feasibility_factors: dict[EffectiveFeasibility, float] = field(
         default_factory=lambda: {
             EffectiveFeasibility.FEASIBLE: 1.0,
@@ -22,6 +26,8 @@ class ScoringPolicy:
     def __post_init__(self) -> None:
         if self.highlighted_task_multiplier <= 0:
             raise ValueError("Highlighted task multiplier must be greater than zero.")
+        if self.practical_abilities_share < 0 or self.education_share < 0 or self.practical_abilities_share + self.education_share >= 1:
+            raise ValueError("Scoring shares must be non-negative and leave weight for task compatibility.")
         missing = set(EffectiveFeasibility) - set(self.feasibility_factors)
         if missing:
             names = ", ".join(item.value for item in sorted(missing, key=lambda item: item.value))

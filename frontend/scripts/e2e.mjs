@@ -143,6 +143,11 @@ await check("saved candidate profile offers and follows the next journey step", 
   await context.addInitScript((token) => sessionStorage.setItem("token", token), tokens.candidate);
   await page.goto(`${WEB_BASE}/candidate`, { waitUntil: "networkidle" });
   await page.getByRole("button", { name: "My profile", exact: true }).click();
+  for (const label of ["Reading", "Writing", "Counting"]) {
+    const control = page.getByLabel(label, { exact: true });
+    await control.waitFor({ state: "visible" });
+    assert.ok(["independent", "with_support", "not_yet"].includes(await control.inputValue()));
+  }
   await page.getByRole("button", { name: "Save profile", exact: true }).click();
   const nextStep = page.locator(".candidate-next-step");
   await nextStep.waitFor({ state: "visible" });
@@ -151,6 +156,40 @@ await check("saved candidate profile offers and follows the next journey step", 
   assert.equal(await jobsTab.getAttribute("aria-current"), "page");
   assert.equal(await page.locator('.candidate-journey li[data-state="current"] strong').textContent(), "Match and explore");
   return { destination: "Jobs", currentJourneyStep: "Match and explore" };
+});
+
+await check("employer can configure personal-education requirements accessibly", async (page, context) => {
+  await context.addInitScript((token) => sessionStorage.setItem("token", token), tokens.employer);
+  await page.goto(`${WEB_BASE}/employer`, { waitUntil: "networkidle" });
+  for (const label of ["Education requirement", "Reading", "Writing", "Counting", "Basic position knowledge"]) {
+    const control = page.getByLabel(label, { exact: true });
+    await control.waitFor({ state: "visible" });
+    assert.ok(["not_required", "preferred", "required"].includes(await control.inputValue()));
+  }
+  return { configuredFields: 5 };
+});
+
+await check("admin can inspect imported catalogue datasets and their tasks", async (page, context) => {
+  await context.addInitScript((token) => sessionStorage.setItem("token", token), tokens.admin);
+  await page.goto(`${WEB_BASE}/admin`, { waitUntil: "networkidle" });
+  await page.getByRole("button", { name: "Dataset catalogue", exact: true }).click();
+  await page.getByRole("heading", { name: "Dataset catalogue", exact: true }).waitFor({ state: "visible" });
+
+  const dataset = page.locator(".admin-catalogue-card").first();
+  await dataset.waitFor({ state: "visible" });
+  const taskToggle = dataset.locator(".admin-catalogue-toggle");
+  assert.match((await taskToggle.textContent()) || "", /View \d+ tasks/);
+  await taskToggle.click();
+
+  const taskTable = dataset.getByRole("region", { name: /Tasks in/ });
+  await taskTable.waitFor({ state: "visible" });
+  assert.equal(await taskToggle.getAttribute("aria-expanded"), "true");
+  assert.ok(await taskTable.locator("tbody tr").count() > 0);
+  assert.equal(await dataset.getByLabel("Search tasks in this dataset").isVisible(), true);
+  return {
+    datasetName: (await dataset.getByRole("heading", { level: 2 }).textContent())?.trim(),
+    taskRows: await taskTable.locator("tbody tr").count(),
+  };
 });
 
 await browser.close();

@@ -90,8 +90,93 @@ for (const [role, endpoint] of authorizedReads) {
   });
 }
 
+await check("candidate profile exposes hospitality foundation abilities", async () => {
+  let { response, body } = await requestJson(`${API_BASE}/candidate/profile`, { headers: tokenHeaders(tokens.candidate) });
+  assert.equal(response.status, 200);
+  const allowedLevels = new Set(["independent", "with_support", "not_yet"]);
+  if (["readingAbility", "writingAbility", "numeracyAbility"].some((field) => !allowedLevels.has(body.profile?.[field]))) {
+    const updated = await requestJson(`${API_BASE}/candidate/profile`, {
+      method: "PATCH",
+      headers: { ...tokenHeaders(tokens.candidate), "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...body.profile,
+        readingAbility: "independent",
+        writingAbility: "independent",
+        numeracyAbility: "with_support",
+      }),
+    });
+    response = updated.response;
+    body = updated.body;
+    assert.equal(response.status, 200);
+  }
+  for (const field of ["readingAbility", "writingAbility", "numeracyAbility"]) {
+    assert.ok(allowedLevels.has(body.profile?.[field]), `${field} must use a supported level`);
+  }
+  return {
+    httpStatus: response.status,
+    abilities: {
+      reading: body.profile.readingAbility,
+      writing: body.profile.writingAbility,
+      numeracy: body.profile.numeracyAbility,
+    },
+  };
+});
+
+await check("employer vacancies expose controlled HR requirements", async () => {
+  const { response, body } = await requestJson(`${API_BASE}/employer/jobs`, { headers: tokenHeaders(tokens.employer) });
+  assert.equal(response.status, 200);
+  const allowedRequirements = new Set(["not_required", "preferred", "required"]);
+  for (const job of body.jobs || []) {
+    for (const field of ["educationRequirement", "readingRequirement", "writingRequirement", "numeracyRequirement", "positionKnowledgeRequirement"]) {
+      assert.ok(allowedRequirements.has(job[field]), `${field} must use a controlled requirement`);
+    }
+  }
+  return { httpStatus: response.status, vacancyCount: body.jobs?.length || 0 };
+});
+
+await check("admin can inspect catalogue datasets and task status", async () => {
+  const list = await requestJson(`${API_BASE}/admin/job-catalogue`, { headers: tokenHeaders(tokens.admin) });
+  assert.equal(list.response.status, 200);
+  assert.ok(Array.isArray(list.body.datasets));
+  assert.ok(list.body.datasets.length > 0);
+
+  const summary = list.body.datasets[0];
+  for (const field of ["id", "name", "active", "taskCount", "assessmentCount", "sourceSheets"]) {
+    assert.ok(Object.hasOwn(summary, field), `dataset summary must include ${field}`);
+  }
+
+  const detail = await requestJson(`${API_BASE}/admin/job-catalogue/${summary.id}`, { headers: tokenHeaders(tokens.admin) });
+  assert.equal(detail.response.status, 200);
+  assert.ok(Array.isArray(detail.body.dataset?.tasks));
+  for (const task of detail.body.dataset.tasks) {
+    assert.ok(["operational", "personal_education"].includes(task.category));
+    assert.ok(Number.isInteger(task.assessmentCount));
+    assert.ok(task.assessmentCounts && Number.isInteger(task.assessmentCounts.feasible));
+  }
+
+  return {
+    httpStatus: detail.response.status,
+    datasetCount: list.body.datasets.length,
+    inspectedTaskCount: detail.body.dataset.tasks.length,
+  };
+});
+
+await check("candidate matching separates personal education from operational tasks", async () => {
+  const { response, body } = await requestJson(`${API_BASE}/candidate/matches`, { headers: tokenHeaders(tokens.candidate) });
+  assert.equal(response.status, 200);
+  assert.ok(Array.isArray(body.results));
+  const structuralNames = new Set(["write", "read", "count", "personal education"]);
+  for (const result of body.results) {
+    assert.ok(Number.isFinite(result.task_score));
+    assert.ok(Array.isArray(result.ability_results));
+    assert.ok((result.task_results || []).every((task) => !structuralNames.has(String(task.task_name).trim().toLowerCase())));
+  }
+  return { httpStatus: response.status, resultCount: body.results.length };
+});
+
 const forbiddenReads = [
   ["candidate", "/admin/users"],
+  ["candidate", "/admin/job-catalogue"],
   ["candidate", "/verifier/requests"],
   ["employer", "/candidate/applications"],
   ["verifier", "/employer/applications"],

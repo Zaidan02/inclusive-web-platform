@@ -176,10 +176,11 @@ export async function deleteEmployerJob(jobId) {
   return data;
 }
 
-export async function applyToJob(jobId, applicationDocument, recommendationLetter) {
+export async function applyToJob(jobId, applicationDocument, recommendationLetter, positionKnowledgeLevel) {
   const token = getToken();
 
   const formData = new FormData();
+  formData.append("positionKnowledgeLevel", positionKnowledgeLevel);
 
   if (applicationDocument) {
     formData.append("applicationDocument", applicationDocument);

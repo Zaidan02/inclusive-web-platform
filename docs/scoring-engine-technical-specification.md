@@ -525,16 +525,24 @@ Content-Type: application/json
   "candidate": {
     "id": 43,
     "educationLevel": "high_school",
+    "readingAbility": "independent",
+    "writingAbility": "with_support",
+    "numeracyAbility": "independent",
     "disabilities": ["both-hands"]
   },
   "jobs": [{
     "id": 7,
     "title": "Chocolate / Confectionery Worker",
     "minimumEducationLevel": "middle_school",
+    "educationRequirement": "preferred",
+    "readingRequirement": "required",
+    "writingRequirement": "preferred",
+    "numeracyRequirement": "required",
+    "positionKnowledgeRequirement": "preferred",
     "assistanceAvailable": true,
     "tasks": [{
       "id": 3259,
-      "name": "Read",
+      "name": "Prepare ingredients",
       "weight": 1.0,
       "mandatory": false,
       "highlighted": true,
@@ -558,7 +566,11 @@ eligible
 score
 earned_points
 maximum_points
+task_score
+practical_ability_score
+education_score
 education
+ability_results
 task_results
 exclusion_reasons
 summary

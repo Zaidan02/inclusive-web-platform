@@ -176,6 +176,10 @@ function JobResultCard({ result, index, onOpenJob }) {
   const compatibilityBand = getCompatibilityBand(result, t);
   const hasScore = result.eligible && Number.isFinite(Number(result.score));
   const score = hasScore ? Number(result.score) : null;
+  const abilityKey = (name) => ({
+    reading: "reading", writing: "writing", counting: "counting",
+    "basic position knowledge": "positionKnowledge",
+  }[name] || name);
 
   useEffect(() => {
     function handleVoiceAction(event) {
@@ -215,8 +219,25 @@ function JobResultCard({ result, index, onOpenJob }) {
       </button>
       {expanded && (
         <div id={`scoring-explanation-${result.job_id}`} style={{ marginTop: "10px", display: "flex", flexWrap: "wrap", gap: "5px", animation: "fadeIn 0.2s ease" }}>
-          <p style={{ width: "100%", margin: "0 0 6px", fontSize: "12px", color: "#475569", lineHeight: 1.5 }}>{result.summary}</p>
-          {(result.task_results || []).slice(0, 8).map((task) => <span key={task.task_id} style={{ background: `${p.color}10`, color: task.effective_feasibility === "avoid" ? "#b91c1c" : p.color, padding: "4px 9px", borderRadius: "999px", fontSize: "11px", fontWeight: "500", border: `1px solid ${p.color}20` }}>{task.task_name}: {task.effective_feasibility.replaceAll("_", " ")}</span>)}
+          <p style={{ width: "100%", margin: "0 0 6px", fontSize: "12px", color: "#475569", lineHeight: 1.5 }}>
+            {result.eligible ? t("candidate.match.summary.eligible", { score: result.score }) : t("candidate.match.summary.review")}
+          </p>
+          <div style={{ width: "100%", display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "4px" }}>
+            <span style={{ padding: "4px 9px", borderRadius: "4px", background: "#f1f5f9", color: "#334155", fontSize: "11px" }}>{t("candidate.match.breakdown.tasks", { score: result.task_score })}</span>
+            {result.practical_ability_score !== null && result.practical_ability_score !== undefined && <span style={{ padding: "4px 9px", borderRadius: "4px", background: "#f1f5f9", color: "#334155", fontSize: "11px" }}>{t("candidate.match.breakdown.personalEducation", { score: result.practical_ability_score })}</span>}
+            {result.education_score !== null && result.education_score !== undefined && <span style={{ padding: "4px 9px", borderRadius: "4px", background: "#f1f5f9", color: "#334155", fontSize: "11px" }}>{t("candidate.match.breakdown.formalEducation", { score: result.education_score })}</span>}
+          </div>
+          {result.education?.requirement !== "not_required" && (
+            <span style={{ background: result.education.meets_requirement ? "#ecfdf5" : "#fff7ed", color: result.education.meets_requirement ? "#047857" : "#9a3412", padding: "4px 9px", borderRadius: "999px", fontSize: "11px", border: "1px solid currentColor" }}>
+              {t("candidate.match.educationRequirement", { level: t(`profile:education.${result.education.required_level}`), requirement: t(`employer.requirementLevels.${result.education.requirement}`) })}
+            </span>
+          )}
+          {(result.ability_results || []).map((ability) => (
+            <span key={ability.ability} style={{ background: ability.meets_requirement ? "#ecfdf5" : "#fff7ed", color: ability.meets_requirement ? "#047857" : "#9a3412", padding: "4px 9px", borderRadius: "999px", fontSize: "11px", border: "1px solid currentColor" }}>
+              {t(`candidate.match.abilities.${abilityKey(ability.ability)}`)}: {t(`candidate.profile.abilityLevels.${ability.candidate_level}`)} · {t(`employer.requirementLevels.${ability.requirement}`)}
+            </span>
+          ))}
+          {(result.task_results || []).slice(0, 8).map((task) => <span key={task.task_id} style={{ background: `${p.color}10`, color: task.effective_feasibility === "avoid" ? "#b91c1c" : p.color, padding: "4px 9px", borderRadius: "999px", fontSize: "11px", fontWeight: "500", border: `1px solid ${p.color}20` }}>{task.task_name}: {t(`candidate.match.feasibility.${task.effective_feasibility}`)}</span>)}
         </div>
       )}
       {onOpenJob && (
@@ -354,6 +375,7 @@ function CandidateDashboard() {
   const [candidateName, setCandidateName] = useState(() => t("candidate.role"));
   const [selectedDisabilities, setSelectedDisabilities] = useState([]);
   const [educationLevel, setEducationLevel] = useState("");
+  const [practicalAbilities, setPracticalAbilities] = useState({ readingAbility: "", writingAbility: "", numeracyAbility: "" });
   const [basicInfo, setBasicInfo] = useState({ firstName: "", lastName: "", phone: "", location: "", about: "" });
   const [confirmedTaskSkills, setConfirmedTaskSkills] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -372,6 +394,7 @@ function CandidateDashboard() {
   const [companyModalTab, setCompanyModalTab] = useState("PROFILE");
   const [applicationDocument, setApplicationDocument] = useState(null);
   const [recommendationLetter, setRecommendationLetter] = useState(null);
+  const [positionKnowledgeLevel, setPositionKnowledgeLevel] = useState("");
   const [submittingApplication, setSubmittingApplication] = useState(false);
   const [candidateApplications, setCandidateApplications] = useState([]);
   const [loadingApplications, setLoadingApplications] = useState(false);
@@ -383,10 +406,12 @@ function CandidateDashboard() {
   const [applicationErrors, setApplicationErrors] = useState({});
   const applicationDocumentRef = useRef(null);
   const recommendationLetterRef = useRef(null);
+  const positionKnowledgeRef = useRef(null);
   const profileFirstNameRef = useRef(null);
   const profileLastNameRef = useRef(null);
   const profileLocationRef = useRef(null);
   const profileEducationRef = useRef(null);
+  const profilePracticalRefs = useRef({});
   const disabilitySearchRef = useRef(null);
   const profileErrorRef = useRef(null);
   const applicationErrorRef = useRef(null);
@@ -406,8 +431,9 @@ function CandidateDashboard() {
   const profileSignature = useMemo(() => JSON.stringify({
     selectedDisabilities: [...selectedDisabilities].sort(),
     educationLevel,
+    ...practicalAbilities,
     ...basicInfo,
-  }), [basicInfo, educationLevel, selectedDisabilities]);
+  }), [basicInfo, educationLevel, practicalAbilities, selectedDisabilities]);
   function disabilityLabel(name) {
     const option = disabilityOptions.find((item) => item.name === name);
     return option ? t(`profile:disabilities.${option.key}`) : name;
@@ -416,7 +442,7 @@ function CandidateDashboard() {
   function getCompanyKey(item) { return item?.employerProfile?.companyName || item?.companyName || item?.company || ""; }
   function getCompanyJobs(ci) { const k = getCompanyKey(ci).toLowerCase(); return jobs.filter((j) => getCompanyKey(j).toLowerCase() === k); }
   function openCompanyProfile(item) { setSelectedCompany(item); setCompanyModalTab("PROFILE"); }
-  function openJobFromCompany(job) { setSelectedJob(job); setSelectedCompany(null); setApplicationDocument(null); setRecommendationLetter(null); setApplicationErrors({}); setSuccessMessage(""); setErrorMessage(""); setActiveTab("JOBS"); }
+  function openJobFromCompany(job) { setSelectedJob(job); setSelectedCompany(null); setApplicationDocument(null); setRecommendationLetter(null); setPositionKnowledgeLevel(""); setApplicationErrors({}); setSuccessMessage(""); setErrorMessage(""); setActiveTab("JOBS"); }
   function openMatchedJob(result) {
     const job = jobs.find((item) => String(item.id) === String(result.job_id));
     if (!job) {
@@ -441,6 +467,7 @@ function CandidateDashboard() {
       setCandidateName([profile.firstName, profile.lastName].filter(Boolean).join(" ") || profile.username || profile.email?.split("@")[0] || t("candidate.role"));
       setSelectedDisabilities(profile.selectedDisabilities || []);
       setEducationLevel(profile.educationLevel || "");
+      setPracticalAbilities({ readingAbility: profile.readingAbility || "", writingAbility: profile.writingAbility || "", numeracyAbility: profile.numeracyAbility || "" });
       setBasicInfo({ firstName: profile.firstName || "", lastName: profile.lastName || "", phone: profile.phone || "", location: profile.location || "", about: profile.about || "" });
       setConfirmedTaskSkills(profile.confirmedTaskSkills || []);
     } catch { setErrorMessage(t("candidate.errors.profileLoad")); } finally { setLoadingProfile(false); }
@@ -489,6 +516,7 @@ function CandidateDashboard() {
     if (!profile) return;
     setSelectedDisabilities(profile.selectedDisabilities || []);
     setEducationLevel(profile.educationLevel || "");
+    setPracticalAbilities((current) => ({ readingAbility: profile.readingAbility ?? current.readingAbility, writingAbility: profile.writingAbility ?? current.writingAbility, numeracyAbility: profile.numeracyAbility ?? current.numeracyAbility }));
     setBasicInfo({
       firstName: profile.firstName || "",
       lastName: profile.lastName || "",
@@ -522,12 +550,18 @@ function CandidateDashboard() {
       lastName: basicInfo.lastName.trim() ? "" : t("candidate.errors.lastName"),
       location: basicInfo.location.trim() ? "" : t("candidate.errors.location"),
       education: educationLevel ? "" : t("candidate.errors.education"),
+      readingAbility: practicalAbilities.readingAbility ? "" : t("candidate.errors.practicalAbility"),
+      writingAbility: practicalAbilities.writingAbility ? "" : t("candidate.errors.practicalAbility"),
+      numeracyAbility: practicalAbilities.numeracyAbility ? "" : t("candidate.errors.practicalAbility"),
       disabilities: selectedDisabilities.length ? "" : t("candidate.errors.selectDisability"),
     };
     const firstInvalid = nextErrors.firstName ? profileFirstNameRef
       : nextErrors.lastName ? profileLastNameRef
       : nextErrors.location ? profileLocationRef
       : nextErrors.education ? profileEducationRef
+      : nextErrors.readingAbility ? { current: profilePracticalRefs.current.readingAbility }
+      : nextErrors.writingAbility ? { current: profilePracticalRefs.current.writingAbility }
+      : nextErrors.numeracyAbility ? { current: profilePracticalRefs.current.numeracyAbility }
       : nextErrors.disabilities ? disabilitySearchRef
       : null;
     setProfileErrors(nextErrors);
@@ -538,7 +572,7 @@ function CandidateDashboard() {
     }
     try {
       setSavingProfile(true); setSuccessMessage(""); setProfileOutcome(""); setErrorMessage("");
-      const payload = { selectedDisabilities, educationLevel, ...basicInfo };
+      const payload = { selectedDisabilities, educationLevel, ...practicalAbilities, ...basicInfo };
       const data = await updateCandidateProfile(payload);
       setSelectedDisabilities(data.profile?.selectedDisabilities || []);
       setSavedProfileSignature(JSON.stringify({ ...payload, selectedDisabilities: [...payload.selectedDisabilities].sort() }));
@@ -553,17 +587,17 @@ function CandidateDashboard() {
   async function handleSubmitApplication(event) {
     event?.preventDefault();
     if (!selectedJob) return;
-    const nextErrors = { applicationDocument: "", recommendationLetter: "" };
+    const nextErrors = { positionKnowledge: positionKnowledgeLevel ? "" : t("candidate.errors.positionKnowledge"), applicationDocument: "", recommendationLetter: "" };
     setApplicationErrors(nextErrors);
-    if (nextErrors.applicationDocument || nextErrors.recommendationLetter) {
-      requestAnimationFrame(() => (nextErrors.applicationDocument ? applicationDocumentRef : recommendationLetterRef).current?.focus());
+    if (nextErrors.positionKnowledge || nextErrors.applicationDocument || nextErrors.recommendationLetter) {
+      requestAnimationFrame(() => (nextErrors.positionKnowledge ? positionKnowledgeRef : nextErrors.applicationDocument ? applicationDocumentRef : recommendationLetterRef).current?.focus());
       return;
     }
     try {
       setSubmittingApplication(true); setErrorMessage(""); setSuccessMessage("");
-      await applyToJob(selectedJob.id, applicationDocument, recommendationLetter);
+      await applyToJob(selectedJob.id, applicationDocument, recommendationLetter, positionKnowledgeLevel);
       setSuccessMessage(t("candidate.success.applicationSubmitted"));
-      setApplicationDocument(null); setRecommendationLetter(null);
+      setApplicationDocument(null); setRecommendationLetter(null); setPositionKnowledgeLevel("");
       setActiveTab("APPLICATIONS"); setSelectedJob(null);
       requestAnimationFrame(() => applicationStatusRef.current?.focus());
     } catch {
@@ -768,7 +802,7 @@ function CandidateDashboard() {
         {activeTab === "PROFILE" && (
           <div>
             <AiProfileBuilder
-              currentProfile={{ ...basicInfo, educationLevel, selectedDisabilities, confirmedTaskSkills }}
+              currentProfile={{ ...basicInfo, educationLevel, ...practicalAbilities, selectedDisabilities, confirmedTaskSkills }}
               onProfileConfirmed={applyConfirmedProfile}
             />
 
@@ -796,6 +830,35 @@ function CandidateDashboard() {
                 </div>
                 <label style={{ ...styles.profileFieldLabel, marginBottom: "12px" }}>{t("candidate.profile.about")} <span>{t("candidate.profile.optional")}</span><textarea dir="auto" data-voice-control="about" value={basicInfo.about} onChange={(e) => setBasicInfo((p) => ({ ...p, about: e.target.value }))} rows="3" style={{ width: "100%", border: "1px solid #e2e8f0", borderRadius: "10px", padding: "10px 12px", resize: "vertical", fontFamily: "inherit" }} /></label>
                 <label style={{ display: "grid", gap: "6px", marginBottom: "14px", fontSize: "12px", color: "#475569" }}>{t("candidate.profile.education")}<select ref={profileEducationRef} data-voice-control="education_level" value={educationLevel} required aria-invalid={Boolean(profileErrors.education)} aria-describedby={profileErrors.education ? "candidate-profile-education-error" : undefined} onChange={(e) => { setEducationLevel(e.target.value); setProfileErrors((current) => ({ ...current, education: "" })); }} style={{ ...styles.searchInput, paddingInlineStart: "12px" }}><option value="">{t("candidate.profile.educationPlaceholder")}</option>{["none", "primary", "middle_school", "high_school", "vocational", "university"].map((level) => <option key={level} value={level}>{t(`profile:education.${level}`)}</option>)}</select>{profileErrors.education && <span id="candidate-profile-education-error" style={styles.fieldError}>{profileErrors.education}</span>}</label>
+
+                <fieldset style={styles.practicalFieldset}>
+                  <legend style={styles.practicalLegend}>{t("candidate.profile.practicalTitle")}</legend>
+                  <p style={styles.fileHelp}>{t("candidate.profile.practicalHelp")}</p>
+                  <div className="candidate-dashboard__profile-fields" style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "10px" }}>
+                    {["readingAbility", "writingAbility", "numeracyAbility"].map((key) => (
+                      <label key={key} style={styles.profileFieldLabel}>
+                        {t(`candidate.profile.abilities.${key}`)}
+                        <select
+                          ref={(element) => { profilePracticalRefs.current[key] = element; }}
+                          aria-label={t(`candidate.profile.abilities.${key}`)}
+                          value={practicalAbilities[key]}
+                          required
+                          aria-invalid={Boolean(profileErrors[key])}
+                          aria-describedby={profileErrors[key] ? `candidate-profile-${key}-error` : undefined}
+                          onChange={(event) => {
+                            setPracticalAbilities((current) => ({ ...current, [key]: event.target.value }));
+                            setProfileErrors((current) => ({ ...current, [key]: "" }));
+                          }}
+                          style={{ ...styles.searchInput, paddingInlineStart: "12px" }}
+                        >
+                          <option value="">{t("candidate.profile.abilityPlaceholder")}</option>
+                          {["independent", "with_support", "not_yet"].map((level) => <option key={level} value={level}>{t(`candidate.profile.abilityLevels.${level}`)}</option>)}
+                        </select>
+                        {profileErrors[key] && <span id={`candidate-profile-${key}-error`} style={styles.fieldError}>{profileErrors[key]}</span>}
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
 
                 <div style={styles.searchWrapper}>
                   <SearchIcon />
@@ -890,7 +953,7 @@ function CandidateDashboard() {
                           type="button"
                           aria-label={t("candidate.jobs.viewDetailsFor", { title: job.title })}
                           style={styles.jobTitleButton}
-                          onClick={() => { setSelectedJob(job); setApplicationDocument(null); setRecommendationLetter(null); setApplicationErrors({}); setSuccessMessage(""); setErrorMessage(""); }}
+                          onClick={() => { setSelectedJob(job); setApplicationDocument(null); setRecommendationLetter(null); setPositionKnowledgeLevel(""); setApplicationErrors({}); setSuccessMessage(""); setErrorMessage(""); }}
                         >
                           {job.title}
                         </button>
@@ -953,7 +1016,25 @@ function CandidateDashboard() {
                   <h3 style={styles.detailsSectionTitle}>{t("candidate.applicationForm.title")}</h3>
                   {successMessage && <p style={styles.successText} role="status">{successMessage}</p>}
                   <AccessibleNotice noticeRef={applicationErrorRef} tone="error" message={errorMessage} />
-                  {(applicationErrors.applicationDocument || applicationErrors.recommendationLetter) && <p ref={applicationErrorRef} tabIndex="-1" id="application-upload-error" style={styles.errorText} role="alert">{applicationErrors.applicationDocument || applicationErrors.recommendationLetter}</p>}
+                  {(applicationErrors.positionKnowledge || applicationErrors.applicationDocument || applicationErrors.recommendationLetter) && <p ref={applicationErrorRef} tabIndex="-1" id="application-upload-error" style={styles.errorText} role="alert">{applicationErrors.positionKnowledge || applicationErrors.applicationDocument || applicationErrors.recommendationLetter}</p>}
+                  <fieldset style={styles.practicalFieldset}>
+                    <legend style={styles.practicalLegend}>{t("candidate.applicationForm.knowledgeTitle")}</legend>
+                    <label style={styles.uploadLabel} htmlFor="position-knowledge-level">{t("candidate.applicationForm.knowledgeLabel", { position: selectedJob.title })}</label>
+                    <p id="position-knowledge-help" style={styles.fileHelp}>{t("candidate.applicationForm.knowledgeHelp")}</p>
+                    <select
+                      id="position-knowledge-level"
+                      ref={positionKnowledgeRef}
+                      value={positionKnowledgeLevel}
+                      required
+                      aria-invalid={Boolean(applicationErrors.positionKnowledge)}
+                      aria-describedby={`position-knowledge-help${applicationErrors.positionKnowledge ? " application-upload-error" : ""}`}
+                      onChange={(event) => { setPositionKnowledgeLevel(event.target.value); setApplicationErrors((current) => ({ ...current, positionKnowledge: "" })); }}
+                      style={{ ...styles.searchInput, paddingInlineStart: "12px" }}
+                    >
+                      <option value="">{t("candidate.applicationForm.knowledgePlaceholder")}</option>
+                      {["independent", "with_support", "not_yet"].map((level) => <option key={level} value={level}>{t(`candidate.profile.abilityLevels.${level}`)}</option>)}
+                    </select>
+                  </fieldset>
                   <label style={styles.uploadLabel}>{t("candidate.applicationForm.document")}
                     <input ref={applicationDocumentRef} data-voice-control="application_document" type="file" accept=".pdf,.doc,.docx" aria-invalid={Boolean(applicationErrors.applicationDocument)} aria-describedby={`application-document-help${applicationErrors.applicationDocument ? " application-upload-error" : ""}`} style={styles.fileInput} onChange={(e) => { setApplicationDocument(e.target.files?.[0] || null); setApplicationErrors((current) => ({ ...current, applicationDocument: "" })); }} />
                   </label>
@@ -1121,6 +1202,8 @@ const styles = {
   text: { color: "#52617d", fontSize: "13px", lineHeight: "1.55", margin: 0, textAlign: "start" },
   selectedPill: { background: "#eef6f0", color: "#126746", border: "1px solid #b8d5c3", borderRadius: "3px", padding: "4px 11px", fontSize: "12px", fontWeight: "650", whiteSpace: "nowrap" },
   profileFieldLabel: { display: "grid", gap: "5px", color: "#475569", fontSize: "12px", fontWeight: "500" },
+  practicalFieldset: { margin: "0 0 16px", padding: "14px", border: "1px solid #d7dee9", borderRadius: "4px", background: "#f8fafc" },
+  practicalLegend: { paddingInline: "4px", color: "#0f172a", fontSize: "13px", fontWeight: "600" },
   fieldError: { color: "#b91c1c", fontSize: "12px", fontWeight: "600", lineHeight: "1.35" },
   searchWrapper: { position: "relative", marginBottom: "12px" },
   searchInput: { width: "100%", padding: "10px 12px", paddingInlineStart: "34px", borderRadius: "3px", border: "1px solid #d7d2c9", fontSize: "13px", outline: "none", boxSizing: "border-box", background: "#fff", color: "#0f172a", fontFamily: "Inter, sans-serif" },

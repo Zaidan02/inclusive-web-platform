@@ -506,6 +506,13 @@ the Admin Console. It accepts one or more `.xlsx` files, rejects duplicate job d
 imports transactionally, and does not purge existing data. Python and OpenPyXL for this UI
 workflow are already included in the PHP Docker image.
 
+The Admin Console's **Dataset catalogue** section lists every active or inactive imported job
+description with its source workbook, worksheet count, task count, and assessment count. Opening
+a dataset loads its tasks on demand and shows whether each row is an operational task or a
+Personal Education input, its mandatory status, and the feasible/assistance/avoid assessment
+distribution. Importing new workbooks refreshes this view automatically. This catalogue view is
+administrative metadata only; it does not publish employer vacancies.
+
 The direct command below is for deliberately regenerating the fixture catalogue JSON:
 
 From the repository root:

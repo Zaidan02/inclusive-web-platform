@@ -48,6 +48,11 @@
       "optional": "(optional)",
       "education": "Highest education level",
       "educationPlaceholder": "Select education level",
+      "practicalTitle": "Personal education",
+      "practicalHelp": "These answers describe how you work today. Selecting support does not exclude you and does not change the current compatibility formula.",
+      "abilities": { "readingAbility": "Reading", "writingAbility": "Writing", "numeracyAbility": "Counting" },
+      "abilityPlaceholder": "Select an answer",
+      "abilityLevels": { "independent": "Yes, independently", "with_support": "Yes, with support", "not_yet": "Not yet" },
       "searchLabel": "Search disabilities",
       "searchPlaceholder": "Search disabilities",
       "removeDisability": "Remove {{name}}",
@@ -78,12 +83,17 @@
       "showExplanation": "▼ Show scoring explanation",
       "selectDisabilities": "Select disabilities to see",
       "bands": {
-        "notEligible": "Not eligible",
+        "notEligible": "Required criteria not met",
         "strong": "Strong compatibility",
         "moderate": "Moderate compatibility",
         "limited": "Limited compatibility",
         "low": "Low compatibility"
-      }
+      },
+      "summary": { "eligible": "The configured requirements are met. Overall compatibility is {{score}}%.", "review": "One or more explicitly required criteria are not currently met. The job remains visible for transparent human review." },
+      "breakdown": { "tasks": "Operational tasks: {{score}}%", "personalEducation": "Personal education: {{score}}%", "formalEducation": "Formal education: {{score}}%" },
+      "educationRequirement": "Education: {{level}} ({{requirement}})",
+      "abilities": { "reading": "Reading", "writing": "Writing", "counting": "Counting", "positionKnowledge": "Basic position knowledge" },
+      "feasibility": { "feasible": "feasible", "feasible_with_assistance": "feasible with assistance", "avoid": "adjustment needed" }
     },
     "jobs": {
       "title": "Available jobs",
@@ -104,7 +114,11 @@
       "text": "The employer has indicated that task assistance or accommodation can be provided for this position."
     },
     "applicationForm": {
-      "title": "Application documents",
+      "title": "Application details",
+      "knowledgeTitle": "Position knowledge",
+      "knowledgeLabel": "Basic knowledge related to {{position}}",
+      "knowledgeHelp": "Describe your current knowledge. If the employer configured this skill, it is included in the application-specific compatibility result.",
+      "knowledgePlaceholder": "Select an answer",
       "document": "Application document (optional)",
       "recommendation": "Recommendation letter (optional)",
       "selected": "Selected: {{name}}",
@@ -156,7 +170,9 @@
       "lastName": "Enter your last name.",
       "location": "Enter your location.",
       "education": "Choose your highest education level.",
-      "requiredProfile": "Add your name, location, education level, and at least one disability.",
+      "practicalAbility": "Choose an answer for each practical ability.",
+      "positionKnowledge": "Choose your current level of basic knowledge for this position.",
+      "requiredProfile": "Add your name, location, education level, practical abilities, and at least one disability.",
       "profileSave": "Your profile could not be saved. Please try again.",
       "applicationSubmit": "Your application could not be submitted. Please try again."
     },
@@ -195,6 +211,15 @@
       "jobType": "Job type *",
       "workMode": "Work mode *",
       "description": "Job description *",
+      "requirementsTitle": "Education and personal educational skills",
+      "requirementsHelp": "Only configured requirements affect matching. A skill marked Not required is excluded from the score. Required skills can affect eligibility, including whether workplace assistance is available.",
+      "educationRequirement": "Education requirement",
+      "minimumEducation": "Minimum education level *",
+      "minimumEducationPlaceholder": "Select minimum level",
+      "reading": "Reading",
+      "writing": "Writing",
+      "numeracy": "Counting",
+      "positionKnowledge": "Basic position knowledge",
       "tasks": "Important tasks *",
       "tasksHint": "Select every catalogue task that is especially important for this vacancy. Important tasks receive greater scoring weight; at least one is required.",
       "searchTasks": "Search tasks…",
@@ -208,6 +233,7 @@
       "update": "Update job",
       "publish": "Publish job"
     },
+    "requirementLevels": { "not_required": "Not required", "preferred": "Preferred", "required": "Required" },
     "jobTypes": { "fullTime": "Full-time", "partTime": "Part-time", "internship": "Internship", "seasonal": "Seasonal" },
     "workModes": { "onSite": "On-site", "hybrid": "Hybrid", "remote": "Remote" },
     "myJobs": {
@@ -263,6 +289,15 @@
       "close": "Close candidate profile",
       "title": "Candidate profile",
       "intro": "Detailed candidate information",
+      "education": "Education",
+      "reading": "Reading",
+      "writing": "Writing",
+      "numeracy": "Counting",
+      "positionKnowledge": "Knowledge for this position",
+      "requirementsMet": "Configured requirements met",
+      "humanReview": "Required skill needs human review",
+      "applicationScore": "Application-specific compatibility: {{score}}%",
+      "noApplicationScore": "The scoring service was unavailable when this application was submitted.",
       "disabilities": "Selected disabilities",
       "noDisabilities": "No disabilities selected."
     },
@@ -401,8 +436,8 @@
   },
   "admin": {
     "platform": "Platform", "console": "Admin console", "tabsLabel": "Admin dashboard sections", "loading": "Loading…",
-    "tabs": { "users": "Users", "archived": "Archived users", "applications": "Applications", "profiles": "User profiles" },
-    "stats": { "totalProfiles": "Total profiles", "completedProfiles": "Completed profiles", "pendingEducation": "Pending education", "totalApplications": "Total applications", "archivedUsers": "Archived users", "activeUsers": "Active users", "verifiedEmails": "Verified emails", "unverifiedUsers": "Unverified users", "admins": "Administrators" },
+    "tabs": { "users": "Users", "archived": "Archived users", "applications": "Applications", "profiles": "User profiles", "catalogue": "Dataset catalogue" },
+    "stats": { "totalProfiles": "Total profiles", "completedProfiles": "Completed profiles", "pendingEducation": "Pending education", "totalApplications": "Total applications", "archivedUsers": "Archived users", "activeUsers": "Active users", "verifiedEmails": "Verified emails", "unverifiedUsers": "Unverified users", "admins": "Administrators", "catalogueDatasets": "Job descriptions", "activeDatasets": "Active datasets", "catalogueTasks": "Catalogue tasks", "catalogueAssessments": "Assessments" },
     "roles": { "admin": "Administrator", "employer": "Employer", "user": "User" },
     "statuses": { "pending": "Pending", "in_review": "In review", "accepted": "Accepted", "rejected": "Rejected" },
     "verification": { "verified": "Verified", "unverified": "Unverified" },
@@ -416,9 +451,9 @@
     "edit": { "title": "Edit user", "description": "Update {{name}}'s account information.", "emailHelp": "If the email changes, a new verification email will be sent.", "changePassword": "Change password", "cancelPassword": "Cancel password change", "newPassword": "New password", "saving": "Saving…", "save": "Save changes" },
     "archive": { "title": "Archive user?", "description": "You are about to archive {{name}}.", "help": "This user will be moved to Archived users.", "progress": "Archiving…" },
     "delete": { "title": "Delete user?", "description": "You are about to permanently delete {{name}}.", "help": "This action cannot be undone.", "progress": "Deleting…" },
-    "catalogue": { "add": "Add data sheets", "importing": "Importing data sheets…", "complete": "The data sheets were imported.", "failed": "The catalogue import failed. Check the workbook format and try again.", "completePrefix": "Import complete: ", "failedPrefix": "Import failed: ", "warningCount": "{{count}} extractor warnings" },
+    "catalogue": { "add": "Add data sheets", "importing": "Importing data sheets…", "complete": "The data sheets were imported.", "failed": "The catalogue import failed. Check the workbook format and try again.", "completePrefix": "Import complete: ", "failedPrefix": "Import failed: ", "warningCount": "{{count}} extractor warnings", "sectionLabel": "Imported job-description datasets", "loading": "Loading catalogue datasets…", "loadingTasks": "Loading dataset tasks…", "empty": "No catalogue datasets match your search.", "dataset": "Job-description dataset", "active": "Active", "inactive": "Inactive", "source": "Source workbook", "builtInSource": "Fixture or existing catalogue data", "tasks": "Tasks", "assessments": "Assessments", "sheets": "Source sheets", "sourceSheets": "Worksheets", "viewTasks": "View {{count}} tasks", "hideTasks": "Hide tasks", "searchLabel": "Search catalogue datasets", "searchPlaceholder": "Search by job description or source…", "taskSearchLabel": "Search tasks in this dataset", "taskSearchPlaceholder": "Search task names or source sheets…", "taskResults": "{{count}} tasks shown", "taskTableLabel": "Tasks in {{name}}", "position": "Position", "task": "Task", "category": "Category", "taskStatus": "Task status", "distribution": "Assessment distribution", "personalEducation": "Personal education input", "operational": "Operational task", "mandatory": "Mandatory", "standard": "Standard", "feasibleShort": "Feasible {{count}}", "assistanceShort": "Assistance {{count}}", "avoidShort": "Avoid {{count}}", "noTasks": "No tasks match your search." },
     "messages": { "updated": "User updated.", "updatedVerification": "User updated. A new verification email was sent.", "archived": "{{name}} was archived.", "restored": "{{name}} was restored.", "deleted": "{{name}} was deleted." },
-    "errors": { "users": "Users could not be loaded. Please try again.", "profiles": "Candidate profiles could not be loaded. Please try again.", "applications": "Applications could not be loaded. Please try again.", "update": "The user could not be updated. Please try again.", "archive": "The user could not be archived. Please try again.", "restore": "The user could not be restored. Please try again.", "delete": "The user could not be deleted. Please try again.", "document": "The document could not be opened. It may no longer be available." },
+    "errors": { "users": "Users could not be loaded. Please try again.", "profiles": "Candidate profiles could not be loaded. Please try again.", "applications": "Applications could not be loaded. Please try again.", "catalogue": "Catalogue datasets could not be loaded. Please try again.", "catalogueDetail": "The selected dataset tasks could not be loaded. Please try again.", "update": "The user could not be updated. Please try again.", "archive": "The user could not be archived. Please try again.", "restore": "The user could not be restored. Please try again.", "delete": "The user could not be deleted. Please try again.", "document": "The document could not be opened. It may no longer be available." },
     "voice": { "sensitive": "I updated {{label}} without reading it aloud. Please check it.", "fieldSet": "I set {{label}} to {{value}}. Please check it.", "selected": "I selected {{value}} for {{label}}.", "userNotFound": "I could not find a loaded user matching {{value}}.", "profileNotFound": "I could not find a loaded candidate profile matching {{value}}.", "applicationNotFound": "I could not find a loaded application matching {{value}}.", "activatedFor": "Activated {{label}} for {{name}}.", "openingProfile": "Opening the candidate profile for {{name}}.", "openingFor": "Opening {{label}} for {{name}}.", "workbookPicker": "Opening the workbook picker. Select one or more XLSX data sheets.", "activated": "Activated {{label}}." }
   }
 }
