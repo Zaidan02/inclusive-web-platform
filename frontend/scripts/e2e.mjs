@@ -148,6 +148,25 @@ await check("saved candidate profile offers and follows the next journey step", 
     await control.waitFor({ state: "visible" });
     assert.ok(["independent", "with_support", "not_yet"].includes(await control.inputValue()));
   }
+  const opportunities = page.getByRole("group", { name: "Opportunities you want" });
+  await opportunities.waitFor({ state: "visible" });
+  assert.equal(await opportunities.getByRole("radio").count(), 3);
+  await opportunities.getByRole("button", { name: "Browse hospitality positions" }).click();
+  const positionOptions = opportunities.getByRole("checkbox");
+  assert.ok(await positionOptions.count() > 0);
+  let firstPosition = null;
+  for (let index = 0; index < await positionOptions.count(); index += 1) {
+    const option = positionOptions.nth(index);
+    if (!(await option.isChecked())) {
+      firstPosition = option;
+      break;
+    }
+  }
+  assert.ok(firstPosition, "an unselected hospitality position is required for this check");
+  const originalKnowledgeSelectors = await opportunities.getByRole("combobox").count();
+  await firstPosition.check();
+  assert.equal(await opportunities.getByRole("combobox").count(), originalKnowledgeSelectors + 1);
+  await firstPosition.uncheck();
   await page.getByRole("button", { name: "Save profile", exact: true }).click();
   const nextStep = page.locator(".candidate-next-step");
   await nextStep.waitFor({ state: "visible" });
@@ -161,6 +180,11 @@ await check("saved candidate profile offers and follows the next journey step", 
 await check("employer can configure personal-education requirements accessibly", async (page, context) => {
   await context.addInitScript((token) => sessionStorage.setItem("token", token), tokens.employer);
   await page.goto(`${WEB_BASE}/employer`, { waitUntil: "networkidle" });
+  const opportunityType = page.getByLabel("Opportunity type *", { exact: true });
+  await opportunityType.waitFor({ state: "visible" });
+  await opportunityType.selectOption("training");
+  assert.equal(await opportunityType.inputValue(), "training");
+  await opportunityType.selectOption("work");
   for (const label of ["Education requirement", "Reading", "Writing", "Counting", "Basic position knowledge"]) {
     const control = page.getByLabel(label, { exact: true });
     await control.waitFor({ state: "visible" });

@@ -194,6 +194,7 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
         profileFields,
         educationLevel,
         disabilities,
+        replaceDisabilities: disabilities.length > 0,
         taskSkills,
         language: suggestionLanguage || language,
       });

@@ -120,6 +120,12 @@ final class CandidatePrivacyController extends AbstractController
                 'writingAbility' => $profile->getWritingAbility(),
                 'numeracyAbility' => $profile->getNumeracyAbility(),
                 'selectedDisabilities' => $profile->getSelectedDisabilities(),
+                'opportunityPreference' => $profile->getOpportunityPreference(),
+                'positionInterests' => array_values(array_map(static fn ($interest) => [
+                    'jobDefinitionId' => $interest->getJobDefinition()?->getId(),
+                    'position' => $interest->getJobDefinition()?->getName(),
+                    'knowledgeLevel' => $interest->getKnowledgeLevel(),
+                ], $profile->getPositionInterests()->toArray())),
                 'taskSkills' => array_map(static fn ($skill) => [
                     'taskId' => $skill->getTask()?->getId(),
                     'taskName' => $skill->getTask()?->getName(),
@@ -131,6 +137,7 @@ final class CandidatePrivacyController extends AbstractController
             'applications' => array_map(static fn (JobApplication $application) => [
                 'id' => $application->getId(),
                 'jobTitle' => $application->getJobPost()?->getJobDefinition()?->getName(),
+                'opportunityType' => $application->getJobPost()?->getOpportunityType(),
                 'status' => $application->getStatus(),
                 'positionKnowledgeLevel' => $application->getPositionKnowledgeLevel(),
                 'compatibilityScore' => $application->getCompatibilityScore(),

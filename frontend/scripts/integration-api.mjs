@@ -50,7 +50,7 @@ await check("public overview returns aggregates and safe published-job fields", 
   assert.ok(Array.isArray(body.latestJobs));
   assert.ok(body.latestJobs.length <= 6);
 
-  const allowedJobFields = new Set(["id", "title", "companyName", "location", "jobType", "workMode", "createdAt"]);
+  const allowedJobFields = new Set(["id", "title", "jobDefinitionSlug", "companyName", "location", "jobType", "workMode", "createdAt"]);
   for (const job of body.latestJobs) {
     assert.ok(Object.keys(job).every((key) => allowedJobFields.has(key)));
   }
@@ -126,12 +126,124 @@ await check("employer vacancies expose controlled HR requirements", async () => 
   const { response, body } = await requestJson(`${API_BASE}/employer/jobs`, { headers: tokenHeaders(tokens.employer) });
   assert.equal(response.status, 200);
   const allowedRequirements = new Set(["not_required", "preferred", "required"]);
+  const allowedOpportunityTypes = new Set(["work", "training"]);
   for (const job of body.jobs || []) {
+    assert.ok(allowedOpportunityTypes.has(job.opportunityType), "opportunityType must be work or training");
     for (const field of ["educationRequirement", "readingRequirement", "writingRequirement", "numeracyRequirement", "positionKnowledgeRequirement"]) {
       assert.ok(allowedRequirements.has(job[field]), `${field} must use a controlled requirement`);
     }
   }
   return { httpStatus: response.status, vacancyCount: body.jobs?.length || 0 };
+});
+
+await check("employer can publish a hospitality training program", async () => {
+  const definitions = await requestJson(`${API_BASE}/job-definitions`);
+  assert.equal(definitions.response.status, 200);
+  const definition = definitions.body.jobs?.[0];
+  assert.ok(definition?.id);
+  const detail = await requestJson(`${API_BASE}/employer/job-definitions/${definition.id}`, { headers: tokenHeaders(tokens.employer) });
+  assert.equal(detail.response.status, 200);
+  const taskId = detail.body.job?.tasks?.[0]?.id;
+  assert.ok(taskId);
+  let createdId = null;
+  try {
+    const created = await requestJson(`${API_BASE}/employer/jobs`, {
+      method: "POST",
+      headers: { ...tokenHeaders(tokens.employer), "Content-Type": "application/json" },
+      body: JSON.stringify({
+        opportunityType: "training",
+        jobDefinitionId: definition.id,
+        location: "Beirut, Lebanon",
+        jobType: "Internship",
+        workMode: "On-site",
+        description: "Integration test hospitality training program.",
+        applicationDeadline: "2099-12-31",
+        assistanceAvailable: true,
+        educationRequirement: "not_required",
+        minimumEducationLevel: "",
+        readingRequirement: "preferred",
+        writingRequirement: "not_required",
+        numeracyRequirement: "not_required",
+        positionKnowledgeRequirement: "preferred",
+        highlightedTaskIds: [taskId],
+      }),
+    });
+    assert.equal(created.response.status, 201);
+    assert.equal(created.body.job?.opportunityType, "training");
+    createdId = created.body.job.id;
+  } finally {
+    if (createdId !== null) {
+      const removed = await requestJson(`${API_BASE}/employer/jobs/${createdId}`, { method: "DELETE", headers: tokenHeaders(tokens.employer) });
+      assert.equal(removed.response.status, 200);
+    }
+  }
+  return { httpStatus: 201, opportunityType: "training" };
+});
+
+await check("candidate preferences replace old selections and focus matching", async () => {
+  const original = await requestJson(`${API_BASE}/candidate/profile`, { headers: tokenHeaders(tokens.candidate) });
+  assert.equal(original.response.status, 200);
+  const originalProfile = original.body.profile;
+  const catalogue = await requestJson(`${API_BASE}/jobs`);
+  assert.equal(catalogue.response.status, 200);
+  const targetJob = (catalogue.body.jobs || []).find((job) => (job.opportunityType || "work") === "work");
+  assert.ok(targetJob?.jobDefinitionId, "a published work opportunity is required for this check");
+
+  const profilePayload = (profile, overrides = {}) => ({
+    selectedDisabilities: profile.selectedDisabilities,
+    educationLevel: profile.educationLevel,
+    readingAbility: profile.readingAbility,
+    writingAbility: profile.writingAbility,
+    numeracyAbility: profile.numeracyAbility,
+    firstName: profile.firstName,
+    lastName: profile.lastName,
+    phone: profile.phone,
+    location: profile.location,
+    about: profile.about,
+    opportunityPreference: profile.opportunityPreference || "both",
+    positionInterests: (profile.positionInterests || []).map(({ jobDefinitionId, knowledgeLevel }) => ({ jobDefinitionId, knowledgeLevel })),
+    ...overrides,
+  });
+
+  try {
+    const firstUpdate = await requestJson(`${API_BASE}/candidate/profile`, {
+      method: "PATCH",
+      headers: { ...tokenHeaders(tokens.candidate), "Content-Type": "application/json" },
+      body: JSON.stringify(profilePayload(originalProfile, {
+        selectedDisabilities: ["Ankle", "Hand"],
+        opportunityPreference: "work",
+        positionInterests: [{ jobDefinitionId: targetJob.jobDefinitionId, knowledgeLevel: "independent" }],
+      })),
+    });
+    assert.equal(firstUpdate.response.status, 200);
+    assert.deepEqual(new Set(firstUpdate.body.profile.selectedDisabilities), new Set(["Ankle", "Hand"]));
+
+    const replacement = await requestJson(`${API_BASE}/candidate/profile`, {
+      method: "PATCH",
+      headers: { ...tokenHeaders(tokens.candidate), "Content-Type": "application/json" },
+      body: JSON.stringify(profilePayload(firstUpdate.body.profile, { selectedDisabilities: ["Hand"] })),
+    });
+    assert.equal(replacement.response.status, 200);
+    assert.deepEqual(replacement.body.profile.selectedDisabilities, ["Hand"]);
+    assert.equal(replacement.body.profile.positionInterests.length, 1);
+
+    const matches = await requestJson(`${API_BASE}/candidate/matches`, { headers: tokenHeaders(tokens.candidate) });
+    assert.equal(matches.response.status, 200);
+    const jobsById = new Map((catalogue.body.jobs || []).map((job) => [Number(job.id), job]));
+    for (const result of matches.body.results || []) {
+      const matchedJob = jobsById.get(Number(result.job_id));
+      assert.equal(Number(matchedJob?.jobDefinitionId), Number(targetJob.jobDefinitionId));
+      assert.equal(result.opportunityType, "work");
+    }
+  } finally {
+    await requestJson(`${API_BASE}/candidate/profile`, {
+      method: "PATCH",
+      headers: { ...tokenHeaders(tokens.candidate), "Content-Type": "application/json" },
+      body: JSON.stringify(profilePayload(originalProfile)),
+    });
+  }
+
+  return { httpStatus: 200, filteredJobDefinitionId: targetJob.jobDefinitionId };
 });
 
 await check("admin can inspect catalogue datasets and task status", async () => {

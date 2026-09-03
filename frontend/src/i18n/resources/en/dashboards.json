@@ -10,7 +10,7 @@
     "tabs": { "JOBS": "Jobs", "APPLICATIONS": "My applications", "PROFILE": "My profile", "PRIVACY": "Privacy and data" },
     "header": {
       "greeting": "Welcome, {{name}}",
-      "title": "Find hospitality work that fits your abilities",
+      "title": "Find hospitality work and training that fit your abilities",
       "openProfile": "Open my profile"
     },
     "steps": { "profile": "Complete your profile", "match": "Calculate matches", "apply": "Apply to jobs" },
@@ -22,7 +22,7 @@
     },
     "nextStep": {
       "title": "Your profile is ready.",
-      "text": "Continue to calculate compatibility and explore suitable hospitality jobs.",
+      "text": "Continue to calculate compatibility and explore suitable hospitality opportunities.",
       "action": "Continue to job matching"
     },
     "common": {
@@ -53,6 +53,15 @@
       "abilities": { "readingAbility": "Reading", "writingAbility": "Writing", "numeracyAbility": "Counting" },
       "abilityPlaceholder": "Select an answer",
       "abilityLevels": { "independent": "Yes, independently", "with_support": "Yes, with support", "not_yet": "Not yet" },
+      "opportunities": {
+        "title": "Opportunities you want",
+        "help": "Choose work, hospitality training, or both. Your preference controls which opportunities appear in Match and explore.",
+        "preferences": { "work": "Work", "training": "Training programs", "both": "Work and training" },
+        "positionsTitle": "Hospitality positions of interest.",
+        "positionsHelp": "Optional. Select positions to focus your results and, if you know it, record your current knowledge for each one.",
+        "knowledgeLabel": "Current knowledge for {{position}}",
+        "knowledgeOptional": "Knowledge not provided (optional)"
+      },
       "searchLabel": "Search disabilities",
       "searchPlaceholder": "Search disabilities",
       "removeDisability": "Remove {{name}}",
@@ -74,6 +83,7 @@
       "conditionsAnalysed_many": "{{count}} conditions analysed",
       "conditionsAnalysed_other": "{{count}} conditions analysed",
       "empty": "Your compatibility scores will appear here after analysis.",
+      "noPreferenceMatches": "No published opportunities match your saved work/training and position preferences.",
       "percentAria": "{{percent}}% compatibility",
       "shortLabel": "match",
       "notScoredAria": "No compatibility percentage because this offer is not eligible",
@@ -96,10 +106,11 @@
       "feasibility": { "feasible": "feasible", "feasible_with_assistance": "feasible with assistance", "avoid": "adjustment needed" }
     },
     "jobs": {
-      "title": "Available jobs",
-      "intro": "Browse posted jobs and select a title to view full details.",
+      "title": "Available opportunities",
+      "intro": "Browse published work and hospitality training programs, then select a title to view full details.",
       "loading": "Loading jobs…",
       "empty": "No jobs have been posted yet.",
+      "emptyForPreferences": "No published opportunities match your current profile preferences. You can update them from My profile.",
       "viewDetailsFor": "View details for {{title}}",
       "viewApply": "View job and apply",
       "viewDetails": "View job details",
@@ -174,7 +185,8 @@
       "positionKnowledge": "Choose your current level of basic knowledge for this position.",
       "requiredProfile": "Add your name, location, education level, practical abilities, and at least one disability.",
       "profileSave": "Your profile could not be saved. Please try again.",
-      "applicationSubmit": "Your application could not be submitted. Please try again."
+      "applicationSubmit": "Your application could not be submitted. Please try again.",
+      "positionsLoad": "Hospitality positions could not be loaded. Please try again."
     },
     "voice": {
       "fieldSet": "I set {{field}} to {{value}}. Please check it.",
@@ -188,18 +200,21 @@
       "opening": "Opening {{value}}.",
       "fileFocused": "I focused the {{field}} picker. Choose the local file using the visible file control.",
       "activated": "Activated {{action}}."
-    }
+    },
+    "opportunityTypes": { "work": "Work opportunity", "training": "Hospitality training program" }
   },
   "employer": {
     "platform": "Platform",
     "console": "Employer console",
     "role": "Employer",
     "tabsLabel": "Employer dashboard sections",
-    "tabs": { "postJob": "Post a job", "editJob": "Edit job", "myJobs": "My jobs", "applications": "Applications", "profile": "Company profile" },
+    "tabs": { "postJob": "Post an opportunity", "editJob": "Edit opportunity", "myJobs": "My opportunities", "applications": "Applications", "profile": "Company profile" },
     "common": { "loading": "Loading…", "saving": "Saving…", "view": "View", "download": "Download", "edit": "Edit", "delete": "Delete", "notProvided": "Not provided", "notSpecified": "Not specified" },
     "jobForm": {
-      "title": "Job details",
+      "title": "Opportunity details",
       "requiredHelp": "Fields marked with * are required.",
+      "opportunityType": "Opportunity type *",
+      "opportunityTypeHint": "Choose employment or a structured hospitality training program.",
       "postingAs": "Posting as",
       "profileRequired": "Company profile required",
       "completeProfile": "Complete profile",
@@ -210,7 +225,7 @@
       "deadline": "Application deadline *",
       "jobType": "Job type *",
       "workMode": "Work mode *",
-      "description": "Job description *",
+      "description": "Opportunity description *",
       "requirementsTitle": "Education and personal educational skills",
       "requirementsHelp": "Only configured requirements affect matching. A skill marked Not required is excluded from the score. Required skills can affect eligibility, including whether workplace assistance is available.",
       "educationRequirement": "Education requirement",
@@ -234,10 +249,11 @@
       "publish": "Publish job"
     },
     "requirementLevels": { "not_required": "Not required", "preferred": "Preferred", "required": "Required" },
+    "opportunityTypes": { "work": "Work opportunity", "training": "Hospitality training program" },
     "jobTypes": { "fullTime": "Full-time", "partTime": "Part-time", "internship": "Internship", "seasonal": "Seasonal" },
     "workModes": { "onSite": "On-site", "hybrid": "Hybrid", "remote": "Remote" },
     "myJobs": {
-      "title": "Posted jobs",
+      "title": "Published opportunities",
       "count_zero": "{{count}} jobs",
       "count_one": "{{count}} job",
       "count_two": "{{count}} jobs",

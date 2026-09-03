@@ -216,6 +216,9 @@ class CandidateProfileAiController extends AbstractController
         if (!is_array($profileFields) || !is_array($disabilityNames) || !is_array($taskSkills)) {
             return $this->json(['message' => 'Confirmed suggestions have an invalid format.'], 400);
         }
+        if (array_key_exists('replaceDisabilities', $data) && !is_bool($data['replaceDisabilities'])) {
+            return $this->json(['message' => 'replaceDisabilities must be a boolean.'], 400);
+        }
 
         $profile = $user->getCandidateProfile();
         if (!$profile) {
@@ -242,6 +245,7 @@ class CandidateProfileAiController extends AbstractController
             $profile->setEducationLevel($data['educationLevel']);
         }
 
+        $confirmedDisabilities = [];
         foreach (array_unique($disabilityNames) as $name) {
             if (!is_string($name)) {
                 return $this->json(['message' => 'A confirmed disability is invalid.'], 400);
@@ -253,7 +257,10 @@ class CandidateProfileAiController extends AbstractController
             if (!$disability) {
                 return $this->json(['message' => "Unknown or inactive disability: {$name}"], 400);
             }
-            $profile->addDisability($disability);
+            $confirmedDisabilities[] = $disability;
+        }
+        if (($data['replaceDisabilities'] ?? false) === true) {
+            $profile->replaceDisabilities($confirmedDisabilities);
         }
 
         foreach ($taskSkills as $confirmedSkill) {
@@ -462,6 +469,16 @@ class CandidateProfileAiController extends AbstractController
             'phone' => $profile->getPhone(),
             'location' => $profile->getLocation(),
             'about' => $profile->getAbout(),
+            'opportunityPreference' => $profile->getOpportunityPreference(),
+            'positionInterests' => array_values($profile->getPositionInterests()->map(static function ($interest): array {
+                $definition = $interest->getJobDefinition();
+                return [
+                    'jobDefinitionId' => $definition?->getId(),
+                    'slug' => $definition?->getSlug(),
+                    'name' => $definition?->getName(),
+                    'knowledgeLevel' => $interest->getKnowledgeLevel(),
+                ];
+            })->toArray()),
             'confirmedTaskSkills' => $profile->getTaskSkills()->map(static function (CandidateTaskSkill $skill): array {
                 $task = $skill->getTask();
                 return [

@@ -3,10 +3,12 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getToken, logout } from "../services/authService";
 import { applyToJob, getCandidateApplications, getCandidateMatches } from "../services/candidateApi";
-import { getCandidateProfile, updateCandidateProfile } from "../services/candidateProfileApi";
+import { getCandidateJobDefinitions, getCandidateProfile, updateCandidateProfile } from "../services/candidateProfileApi";
 import { isCandidateProfileComplete } from "../features/candidate/profile/profileCompletion";
 import { disabilityOptions } from "../features/candidate/profile/profileOptions";
 import AiProfileBuilder from "../features/candidate/profile/AiProfileBuilder";
+import PositionInterestSelector from "../features/candidate/profile/PositionInterestSelector";
+import { localizeJobDefinition } from "../i18n/jobDefinitions";
 import CandidatePrivacyPanel from "../features/candidate/privacy/CandidatePrivacyPanel";
 import "../features/candidate/privacy/candidatePrivacy.css";
 import { API_BASE_URL, BACKEND_BASE_URL } from "../config";
@@ -166,6 +168,7 @@ function getCompatibilityBand(result, t) {
 
 function JobResultCard({ result, index, onOpenJob }) {
   const { t } = useTranslation("dashboards");
+  const localizedTitle = localizeJobDefinition(t, result);
   const [expanded, setExpanded] = useState(false);
   const palettes = [
     { color: "#2563eb", light: "#eff6ff", border: "#bfdbfe" },
@@ -191,11 +194,11 @@ function JobResultCard({ result, index, onOpenJob }) {
       if (ordinalIndex !== index && title !== value && !title.includes(value) && !value.includes(title)) return;
       setExpanded(true);
       event.detail.handled = true;
-      event.detail.feedback = t("candidate.voice.scoringExplanation", { title: result.job_title });
+      event.detail.feedback = t("candidate.voice.scoringExplanation", { title: localizedTitle });
     }
     window.addEventListener("join:voice-action", handleVoiceAction);
     return () => window.removeEventListener("join:voice-action", handleVoiceAction);
-  }, [index, result.job_title, t]);
+  }, [index, localizedTitle, result.job_title, t]);
 
   return (
     <article className="result-card-in" style={{ border: `1px solid ${index === 0 ? p.border : "#d9e1ec"}`, borderRadius: "12px", padding: "18px", marginBottom: "10px", background: "#ffffff" }}>
@@ -207,7 +210,7 @@ function JobResultCard({ result, index, onOpenJob }) {
             {index === 0 && result.eligible && <span style={{ background: p.color, color: "#fff", fontSize: "9px", fontWeight: "600", padding: "2px 7px", borderRadius: "999px", letterSpacing: "0.4px" }}>{t("candidate.match.highestRanked")}</span>}
             <span style={{ background: compatibilityBand.background, color: compatibilityBand.color, border: `1px solid ${compatibilityBand.border}`, fontSize: "9px", fontWeight: "600", padding: "2px 7px", borderRadius: "999px", letterSpacing: "0.2px" }}>{compatibilityBand.label}</span>
           </div>
-          <p style={{ margin: "0 0 2px", fontSize: "16px", fontWeight: "600", color: "#0f172a", letterSpacing: "-0.2px" }}>{result.job_title}</p>
+          <p style={{ margin: "0 0 2px", fontSize: "16px", fontWeight: "600", color: "#0f172a", letterSpacing: "-0.2px" }}>{localizedTitle}</p>
           <p style={{ margin: "0 0 8px", fontSize: "11px", color: "#64748b" }}>{result.companyName}{result.assistanceAvailable ? ` · ${t("candidate.accommodation.offered")}` : ""}</p>
           <div style={{ height: "4px", background: "#e2e8f0", borderRadius: "999px", overflow: "hidden" }}>
             <div style={{ width: `${score ?? 0}%`, height: "100%", background: hasScore ? `linear-gradient(90deg, ${p.color}, ${p.color}aa)` : "transparent", borderRadius: "999px", transition: "width 1.2s ease" }} />
@@ -359,6 +362,7 @@ function AiJobMatchCard({ aiLoading, aiError, aiResults, selectedDisabilities, o
             <span style={{ fontSize: "13px", fontWeight: "600", color: "#0f172a" }}>{t("candidate.match.results")}</span>
             <span style={{ fontSize: "11px", color: "#64748b", fontWeight: "400" }}>{t("candidate.match.conditionsAnalysed", { count: selectedDisabilities.length })}</span>
           </div>
+          {aiResults.results.length === 0 && <div style={styles.emptyBox}>{t("candidate.match.noPreferenceMatches")}</div>}
           {aiResults.results.map((result, index) => <JobResultCard key={result.job_id} result={result} index={index} onOpenJob={onOpenJob} />)}
         </div>
       )}
@@ -378,6 +382,9 @@ function CandidateDashboard() {
   const [practicalAbilities, setPracticalAbilities] = useState({ readingAbility: "", writingAbility: "", numeracyAbility: "" });
   const [basicInfo, setBasicInfo] = useState({ firstName: "", lastName: "", phone: "", location: "", about: "" });
   const [confirmedTaskSkills, setConfirmedTaskSkills] = useState([]);
+  const [opportunityPreference, setOpportunityPreference] = useState("both");
+  const [positionInterests, setPositionInterests] = useState([]);
+  const [jobDefinitions, setJobDefinitions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -433,16 +440,26 @@ function CandidateDashboard() {
     educationLevel,
     ...practicalAbilities,
     ...basicInfo,
-  }), [basicInfo, educationLevel, practicalAbilities, selectedDisabilities]);
+    opportunityPreference,
+    positionInterests: positionInterests.map(({ jobDefinitionId, knowledgeLevel }) => ({ jobDefinitionId, knowledgeLevel })).sort((a, b) => Number(a.jobDefinitionId) - Number(b.jobDefinitionId)),
+  }), [basicInfo, educationLevel, opportunityPreference, positionInterests, practicalAbilities, selectedDisabilities]);
+  const visibleJobs = useMemo(() => {
+    const selectedIds = new Set(positionInterests.map((item) => Number(item.jobDefinitionId)));
+    return jobs.filter((job) => (opportunityPreference === "both" || (job.opportunityType || "work") === opportunityPreference)
+      && (selectedIds.size === 0 || selectedIds.has(Number(job.jobDefinitionId))));
+  }, [jobs, opportunityPreference, positionInterests]);
   function disabilityLabel(name) {
     const option = disabilityOptions.find((item) => item.name === name);
     return option ? t(`profile:disabilities.${option.key}`) : name;
   }
 
   function getCompanyKey(item) { return item?.employerProfile?.companyName || item?.companyName || item?.company || ""; }
-  function getCompanyJobs(ci) { const k = getCompanyKey(ci).toLowerCase(); return jobs.filter((j) => getCompanyKey(j).toLowerCase() === k); }
+  function getCompanyJobs(ci) { const k = getCompanyKey(ci).toLowerCase(); return visibleJobs.filter((j) => getCompanyKey(j).toLowerCase() === k); }
   function openCompanyProfile(item) { setSelectedCompany(item); setCompanyModalTab("PROFILE"); }
-  function openJobFromCompany(job) { setSelectedJob(job); setSelectedCompany(null); setApplicationDocument(null); setRecommendationLetter(null); setPositionKnowledgeLevel(""); setApplicationErrors({}); setSuccessMessage(""); setErrorMessage(""); setActiveTab("JOBS"); }
+  function knowledgeForJob(job) {
+    return positionInterests.find((item) => Number(item.jobDefinitionId) === Number(job?.jobDefinitionId))?.knowledgeLevel || "";
+  }
+  function openJobFromCompany(job) { setSelectedJob(job); setSelectedCompany(null); setApplicationDocument(null); setRecommendationLetter(null); setPositionKnowledgeLevel(knowledgeForJob(job)); setApplicationErrors({}); setSuccessMessage(""); setErrorMessage(""); setActiveTab("JOBS"); }
   function openMatchedJob(result) {
     const job = jobs.find((item) => String(item.id) === String(result.job_id));
     if (!job) {
@@ -470,6 +487,8 @@ function CandidateDashboard() {
       setPracticalAbilities({ readingAbility: profile.readingAbility || "", writingAbility: profile.writingAbility || "", numeracyAbility: profile.numeracyAbility || "" });
       setBasicInfo({ firstName: profile.firstName || "", lastName: profile.lastName || "", phone: profile.phone || "", location: profile.location || "", about: profile.about || "" });
       setConfirmedTaskSkills(profile.confirmedTaskSkills || []);
+      setOpportunityPreference(profile.opportunityPreference || "both");
+      setPositionInterests(profile.positionInterests || []);
     } catch { setErrorMessage(t("candidate.errors.profileLoad")); } finally { setLoadingProfile(false); }
   }, [navigate, t]);
 
@@ -481,6 +500,15 @@ function CandidateDashboard() {
       if (!res.ok) throw new Error("jobs_load_failed");
       setJobs(data.jobs || []);
     } catch { setJobsError(t("candidate.errors.jobsLoad")); } finally { setLoadingJobs(false); }
+  }, [t]);
+
+  const fetchJobDefinitions = useCallback(async () => {
+    try {
+      const data = await getCandidateJobDefinitions();
+      setJobDefinitions(data.jobs || []);
+    } catch {
+      setErrorMessage(t("candidate.errors.positionsLoad"));
+    }
   }, [t]);
 
   const fetchCandidateApplications = useCallback(async () => {
@@ -505,12 +533,27 @@ function CandidateDashboard() {
     setSelectedDisabilities((prev) => prev.includes(name) ? prev.filter((i) => i !== name) : [...prev, name]);
   }
 
+  function togglePositionInterest(definition) {
+    setSuccessMessage("");
+    setPositionInterests((current) => current.some((item) => Number(item.jobDefinitionId) === Number(definition.id))
+      ? current.filter((item) => Number(item.jobDefinitionId) !== Number(definition.id))
+      : [...current, { jobDefinitionId: definition.id, slug: definition.slug, name: definition.name, knowledgeLevel: null }]);
+  }
+
+  function updatePositionKnowledge(definitionId, knowledgeLevel) {
+    setSuccessMessage("");
+    setPositionInterests((current) => current.map((item) => Number(item.jobDefinitionId) === Number(definitionId)
+      ? { ...item, knowledgeLevel: knowledgeLevel || null }
+      : item));
+  }
+
   useEffect(() => {
     if (activeTab === "JOBS") fetchJobs();
     if (activeTab === "APPLICATIONS") fetchCandidateApplications();
   }, [activeTab, fetchCandidateApplications, fetchJobs]);
 
   useEffect(() => { fetchCandidateProfile(); }, [fetchCandidateProfile]);
+  useEffect(() => { fetchJobDefinitions(); }, [fetchJobDefinitions]);
 
   function applyConfirmedProfile(profile) {
     if (!profile) return;
@@ -525,6 +568,8 @@ function CandidateDashboard() {
       about: profile.about || "",
     });
     setConfirmedTaskSkills(profile.confirmedTaskSkills || []);
+    if (profile.opportunityPreference) setOpportunityPreference(profile.opportunityPreference);
+    if (profile.positionInterests) setPositionInterests(profile.positionInterests);
     setSuccessMessage(t("candidate.success.aiSuggestions"));
     setProfileOutcome("ai");
     setErrorMessage("");
@@ -572,10 +617,12 @@ function CandidateDashboard() {
     }
     try {
       setSavingProfile(true); setSuccessMessage(""); setProfileOutcome(""); setErrorMessage("");
-      const payload = { selectedDisabilities, educationLevel, ...practicalAbilities, ...basicInfo };
+      const payload = { selectedDisabilities, educationLevel, ...practicalAbilities, ...basicInfo, opportunityPreference, positionInterests: positionInterests.map(({ jobDefinitionId, knowledgeLevel }) => ({ jobDefinitionId, knowledgeLevel })) };
       const data = await updateCandidateProfile(payload);
       setSelectedDisabilities(data.profile?.selectedDisabilities || []);
-      setSavedProfileSignature(JSON.stringify({ ...payload, selectedDisabilities: [...payload.selectedDisabilities].sort() }));
+      setOpportunityPreference(data.profile?.opportunityPreference || opportunityPreference);
+      setPositionInterests(data.profile?.positionInterests || positionInterests);
+      setSavedProfileSignature(JSON.stringify({ ...payload, selectedDisabilities: [...payload.selectedDisabilities].sort(), positionInterests: payload.positionInterests.sort((a, b) => Number(a.jobDefinitionId) - Number(b.jobDefinitionId)) }));
       setSuccessMessage(t("candidate.success.profileSaved"));
       setProfileOutcome("saved");
     } catch {
@@ -860,6 +907,26 @@ function CandidateDashboard() {
                   </div>
                 </fieldset>
 
+                <fieldset style={{ ...styles.practicalFieldset, background: "#ffffff" }}>
+                  <legend style={styles.practicalLegend}>{t("candidate.profile.opportunities.title")}</legend>
+                  <p style={styles.fileHelp}>{t("candidate.profile.opportunities.help")}</p>
+                  <div className="candidate-dashboard__profile-fields" style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: "8px", marginBottom: "16px" }}>
+                    {["work", "training", "both"].map((preference) => (
+                      <label key={preference} style={{ display: "flex", alignItems: "center", gap: "8px", minHeight: "44px", padding: "9px", border: `1px solid ${opportunityPreference === preference ? "#16835a" : "#cbd5e1"}`, background: opportunityPreference === preference ? "#eef6f0" : "#f8fafc", borderRadius: "4px", fontSize: "12px", color: "#334155" }}>
+                        <input type="radio" name="candidateOpportunityPreference" value={preference} checked={opportunityPreference === preference} onChange={(event) => { setOpportunityPreference(event.target.value); setSuccessMessage(""); }} />
+                        {t(`candidate.profile.opportunities.preferences.${preference}`)}
+                      </label>
+                    ))}
+                  </div>
+                  <PositionInterestSelector
+                    definitions={jobDefinitions}
+                    interests={positionInterests}
+                    onToggle={togglePositionInterest}
+                    onKnowledgeChange={updatePositionKnowledge}
+                    translationPrefix="profile:setup.opportunities"
+                  />
+                </fieldset>
+
                 <div style={styles.searchWrapper}>
                   <SearchIcon />
                   <input ref={disabilitySearchRef} aria-label={t("candidate.profile.searchLabel")} data-voice-control="disability_search" type="search" placeholder={t("candidate.profile.searchPlaceholder")} value={searchTerm}
@@ -943,23 +1010,26 @@ function CandidateDashboard() {
                 <p style={styles.text}>{t("candidate.jobs.intro")}</p>
                 {loadingJobs && <p style={styles.infoText} role="status">{t("candidate.jobs.loading")}</p>}
                 {jobsError && <p style={styles.errorText} role="alert">{jobsError}</p>}
-                {!loadingJobs && jobs.length === 0 && <div style={styles.emptyBox} role="status">{t("candidate.jobs.empty")}</div>}
+                {!loadingJobs && visibleJobs.length === 0 && <div style={styles.emptyBox} role="status">{t("candidate.jobs.emptyForPreferences")}</div>}
                 <div style={styles.jobsGrid} className="candidate-dashboard__jobs-grid">
-                  {jobs.map((job) => (
+                  {visibleJobs.map((job) => (
                     <article key={job.id} style={styles.jobCard}>
                       <CompanyLogo item={job} />
                       <div style={styles.jobCardContent}>
                         <button
                           type="button"
-                          aria-label={t("candidate.jobs.viewDetailsFor", { title: job.title })}
+                          aria-label={t("candidate.jobs.viewDetailsFor", { title: localizeJobDefinition(t, job) })}
                           style={styles.jobTitleButton}
-                          onClick={() => { setSelectedJob(job); setApplicationDocument(null); setRecommendationLetter(null); setPositionKnowledgeLevel(""); setApplicationErrors({}); setSuccessMessage(""); setErrorMessage(""); }}
+                          onClick={() => openJobFromCompany(job)}
                         >
-                          {job.title}
+                          {localizeJobDefinition(t, job)}
                         </button>
                         <button type="button" style={styles.companyNameButton} onClick={() => openCompanyProfile(job)}>
                           {job.companyName}
                         </button>
+                        <span style={{ alignSelf: "flex-start", marginTop: "5px", padding: "3px 7px", borderRadius: "4px", background: job.opportunityType === "training" ? "#fff7ed" : "#eef6f0", color: job.opportunityType === "training" ? "#9a3412" : "#126746", fontSize: "10px", fontWeight: 700 }}>
+                          {t(`candidate.opportunityTypes.${job.opportunityType || "work"}`)}
+                        </span>
                         {job.assistanceAvailable && <AccommodationBadge compact />}
                       </div>
                     </article>
@@ -974,10 +1044,10 @@ function CandidateDashboard() {
                 <div style={styles.jobDetailsHeader}>
                   <CompanyLogo item={selectedJob} size="large" />
                   <div style={{ flex: 1 }}>
-                    <h2 style={styles.jobDetailsTitle}>{selectedJob.title}</h2>
+                    <h2 style={styles.jobDetailsTitle}>{localizeJobDefinition(t, selectedJob)}</h2>
                     <button data-voice-control="open_selected_company" type="button" style={styles.companyNameLink} onClick={() => openCompanyProfile(selectedJob)}>{selectedJob.companyName}</button>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "8px" }}>
-                      {[selectedJob.location, selectedJob.jobType, selectedJob.workMode].filter(Boolean).map((meta) => (
+                      {[t(`candidate.opportunityTypes.${selectedJob.opportunityType || "work"}`), selectedJob.location, selectedJob.jobType, selectedJob.workMode].filter(Boolean).map((meta) => (
                         <span key={meta} style={{ background: "#f1f5f9", color: "#475569", padding: "4px 10px", borderRadius: "999px", fontSize: "12px", fontWeight: "400" }}>
                           {meta}
                         </span>
@@ -1084,7 +1154,7 @@ function CandidateDashboard() {
                     <div style={styles.applicationCompanyIcon}><BuildingIcon size={26} /></div>
                   )}
                   <div style={styles.applicationInfo}>
-                    <h3 style={styles.applicationJobTitle}>{application.jobTitle}</h3>
+                    <h3 style={styles.applicationJobTitle}>{localizeJobDefinition(t, application)}</h3>
                     <button type="button" style={styles.applicationCompanyButton} onClick={() => { const j = jobs.find((job) => job.companyName === application.companyName || job.title === application.jobTitle) || application; openCompanyProfile(j); }}>
                       <CompanySmallIcon size={13} />{application.companyName}
                     </button>
@@ -1161,7 +1231,7 @@ function CandidateDashboard() {
                 {companyJobs.map((job) => (
                   <div key={job.id} style={{ border: "1px solid #e8edf5", borderRadius: "12px", padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "14px", background: "#fafbfc" }}>
                     <div>
-                      <h3 style={{ margin: "0 0 3px", color: "#0f172a", fontSize: "14px", fontWeight: "600" }}>{job.title}</h3>
+                      <h3 style={{ margin: "0 0 3px", color: "#0f172a", fontSize: "14px", fontWeight: "600" }}>{localizeJobDefinition(t, job)}</h3>
                       <p style={{ margin: 0, color: "#64748b", fontSize: "12px" }}>{job.location} · {job.jobType} · {job.workMode}</p>
                       {job.assistanceAvailable && <AccommodationBadge compact />}
                     </div>

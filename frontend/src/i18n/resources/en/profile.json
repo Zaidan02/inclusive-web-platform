@@ -48,6 +48,11 @@
     "vocational": "vocational education",
     "university": "university"
   },
+  "jobDefinitions": {
+    "chocolate-confectionery-worker": "Chocolate / Confectionery Worker",
+    "ice-cream-maker": "Ice Cream Maker",
+    "bakery-pastry-worker": "Bakery / Pastry Worker"
+  },
   "confidence": {
     "high": "High confidence",
     "medium": "Medium confidence",
@@ -105,6 +110,25 @@
     "abilities": { "readingAbility": "Reading", "writingAbility": "Writing", "numeracyAbility": "Counting" },
     "abilityPlaceholder": "Select an answer",
     "abilityLevels": { "independent": "Yes, independently", "with_support": "Yes, with support", "not_yet": "Not yet" },
+    "opportunities": {
+      "title": "Opportunities you want",
+      "help": "Choose whether you want work, a hospitality training program, or both.",
+      "preferences": { "work": "Work", "training": "Training programs", "both": "Work and training" },
+      "positionsTitle": "Hospitality positions of interest.",
+      "positionsHelp": "Optional. Selecting positions focuses Match and explore. You can also record your current knowledge for each position.",
+      "selectedPositions": "{{count}} selected",
+      "noPositions": "No position selected. All suitable positions will remain available in your results.",
+      "browseCatalogue": "Browse hospitality positions",
+      "closeCatalogue": "Close position catalogue",
+      "searchPositions": "Search hospitality positions",
+      "searchPlaceholder": "Type a position name",
+      "noSearchResults": "No position matches your search.",
+      "remove": "Remove",
+      "removePosition": "Remove {{position}} from your interests",
+      "knowledgeFor": "Your current knowledge",
+      "knowledgeLabel": "Current knowledge for {{position}}",
+      "knowledgeOptional": "Knowledge not provided (optional)"
+    },
     "searchPlaceholder": "Search options",
     "searchLabel": "Search disability options",
     "loading": "Loading your profile…",
@@ -114,7 +138,8 @@
     "errors": {
       "load": "Your profile could not be loaded. Please try again.",
       "required": "Add your name, location, education level, practical abilities, and at least one disability.",
-      "save": "Your profile could not be saved. Please try again."
+      "save": "Your profile could not be saved. Please try again.",
+      "positionsLoad": "Hospitality positions could not be loaded. Please try again."
     },
     "voice": {
       "fieldSet": "I set {{field}} to {{value}}. Please check it.",

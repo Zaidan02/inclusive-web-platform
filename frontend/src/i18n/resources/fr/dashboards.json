@@ -10,7 +10,7 @@
     "tabs": { "JOBS": "Emplois", "APPLICATIONS": "Mes candidatures", "PROFILE": "Mon profil", "PRIVACY": "Confidentialité et données" },
     "header": {
       "greeting": "Bienvenue, {{name}}",
-      "title": "Trouvez un emploi dans l’hôtellerie adapté à vos capacités",
+      "title": "Trouvez un emploi ou une formation en hôtellerie adapté à vos capacités",
       "openProfile": "Ouvrir mon profil"
     },
     "steps": { "profile": "Compléter votre profil", "match": "Calculer les correspondances", "apply": "Postuler aux emplois" },
@@ -22,7 +22,7 @@
     },
     "nextStep": {
       "title": "Votre profil est prêt.",
-      "text": "Continuez pour calculer la compatibilité et explorer les emplois adaptés dans l’hôtellerie.",
+      "text": "Continuez pour calculer la compatibilité et explorer les opportunités adaptées dans l’hôtellerie.",
       "action": "Continuer vers la mise en relation"
     },
     "common": {
@@ -53,6 +53,15 @@
       "abilities": { "readingAbility": "Lire", "writingAbility": "Écrire", "numeracyAbility": "Compter" },
       "abilityPlaceholder": "Sélectionner une réponse",
       "abilityLevels": { "independent": "Oui, de façon autonome", "with_support": "Oui, avec un soutien", "not_yet": "Pas encore" },
+      "opportunities": {
+        "title": "Opportunités recherchées",
+        "help": "Choisissez l'emploi, la formation en hôtellerie, ou les deux. Ce choix contrôle les offres affichées dans la recherche et les correspondances.",
+        "preferences": { "work": "Emploi", "training": "Programmes de formation", "both": "Emploi et formation" },
+        "positionsTitle": "Postes d'hôtellerie qui vous intéressent.",
+        "positionsHelp": "Facultatif. Sélectionnez des postes pour cibler vos résultats et indiquez vos connaissances actuelles si vous les connaissez.",
+        "knowledgeLabel": "Connaissances actuelles pour {{position}}",
+        "knowledgeOptional": "Connaissances non indiquées (facultatif)"
+      },
       "searchLabel": "Rechercher des handicaps",
       "searchPlaceholder": "Rechercher des handicaps",
       "removeDisability": "Retirer {{name}}",
@@ -74,6 +83,7 @@
       "conditionsAnalysed_many": "{{count}} situations analysées",
       "conditionsAnalysed_other": "{{count}} situations analysées",
       "empty": "Vos scores de compatibilité apparaîtront ici après l'analyse.",
+      "noPreferenceMatches": "Aucune opportunité publiée ne correspond à vos préférences enregistrées de travail, de formation et de poste.",
       "percentAria": "{{percent}} % de compatibilité",
       "shortLabel": "score",
       "notScoredAria": "Aucun pourcentage de compatibilité car cette offre n'est pas admissible",
@@ -96,10 +106,11 @@
       "feasibility": { "feasible": "réalisable", "feasible_with_assistance": "réalisable avec aide", "avoid": "adaptation nécessaire" }
     },
     "jobs": {
-      "title": "Emplois disponibles",
-      "intro": "Parcourez les emplois publiés et sélectionnez un titre pour afficher tous les détails.",
+      "title": "Opportunités disponibles",
+      "intro": "Parcourez les emplois et les programmes de formation en hôtellerie, puis sélectionnez un titre pour voir les détails.",
       "loading": "Chargement des emplois…",
       "empty": "Aucun emploi n'a encore été publié.",
+      "emptyForPreferences": "Aucune offre publiée ne correspond à vos préférences actuelles. Vous pouvez les modifier dans Mon profil.",
       "viewDetailsFor": "Afficher les détails de {{title}}",
       "viewApply": "Voir l'emploi et postuler",
       "viewDetails": "Afficher les détails de l'emploi",
@@ -174,7 +185,8 @@
       "positionKnowledge": "Indiquez votre niveau actuel de connaissances de base pour ce poste.",
       "requiredProfile": "Ajoutez votre nom, votre localisation, votre niveau d'études, vos capacités pratiques et au moins un handicap.",
       "profileSave": "Votre profil n'a pas pu être enregistré. Réessayez.",
-      "applicationSubmit": "Votre candidature n'a pas pu être envoyée. Réessayez."
+      "applicationSubmit": "Votre candidature n'a pas pu être envoyée. Réessayez.",
+      "positionsLoad": "Les postes d'hôtellerie n'ont pas pu être chargés. Réessayez."
     },
     "voice": {
       "fieldSet": "J'ai défini {{field}} sur {{value}}. Veuillez vérifier.",
@@ -188,18 +200,21 @@
       "opening": "Ouverture de {{value}}.",
       "fileFocused": "J'ai placé le focus sur le sélecteur {{field}}. Choisissez le fichier local avec le contrôle visible.",
       "activated": "Action {{action}} activée."
-    }
+    },
+    "opportunityTypes": { "work": "Offre d'emploi", "training": "Programme de formation en hôtellerie" }
   },
   "employer": {
     "platform": "Plateforme",
     "console": "Console employeur",
     "role": "Employeur",
     "tabsLabel": "Sections du tableau de bord employeur",
-    "tabs": { "postJob": "Publier un emploi", "editJob": "Modifier l'emploi", "myJobs": "Mes emplois", "applications": "Candidatures", "profile": "Profil de l'entreprise" },
+    "tabs": { "postJob": "Publier une opportunité", "editJob": "Modifier l'opportunité", "myJobs": "Mes opportunités", "applications": "Candidatures", "profile": "Profil de l'entreprise" },
     "common": { "loading": "Chargement…", "saving": "Enregistrement…", "view": "Voir", "download": "Télécharger", "edit": "Modifier", "delete": "Supprimer", "notProvided": "Non fourni", "notSpecified": "Non précisé" },
     "jobForm": {
-      "title": "Détails de l'emploi",
+      "title": "Détails de l'opportunité",
       "requiredHelp": "Les champs marqués d'un * sont obligatoires.",
+      "opportunityType": "Type d'opportunité *",
+      "opportunityTypeHint": "Choisissez un emploi ou un programme structuré de formation en hôtellerie.",
       "postingAs": "Publication au nom de",
       "profileRequired": "Profil d'entreprise obligatoire",
       "completeProfile": "Compléter le profil",
@@ -210,7 +225,7 @@
       "deadline": "Date limite de candidature *",
       "jobType": "Type d'emploi *",
       "workMode": "Mode de travail *",
-      "description": "Description de l'emploi *",
+      "description": "Description de l'opportunité *",
       "requirementsTitle": "Formation et compétences éducatives personnelles",
       "requirementsHelp": "Seules les exigences configurées influencent la compatibilité. Une compétence non requise est exclue du score. Une compétence obligatoire peut modifier l'admissibilité selon l'aide disponible.",
       "educationRequirement": "Exigence de formation",
@@ -234,10 +249,11 @@
       "publish": "Publier l'emploi"
     },
     "requirementLevels": { "not_required": "Non requis", "preferred": "Souhaité", "required": "Obligatoire" },
+    "opportunityTypes": { "work": "Offre d'emploi", "training": "Programme de formation en hôtellerie" },
     "jobTypes": { "fullTime": "Temps plein", "partTime": "Temps partiel", "internship": "Stage", "seasonal": "Saisonnier" },
     "workModes": { "onSite": "Sur site", "hybrid": "Hybride", "remote": "À distance" },
     "myJobs": {
-      "title": "Emplois publiés",
+      "title": "Opportunités publiées",
       "count_zero": "{{count}} emploi",
       "count_one": "{{count}} emploi",
       "count_two": "{{count}} emplois",

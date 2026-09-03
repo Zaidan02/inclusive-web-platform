@@ -27,15 +27,31 @@ final class CandidateMatchController extends AbstractController
         }
 
         $jobs = $em->getRepository(JobPost::class)->findBy(['status' => 'published'], ['id' => 'DESC']);
+        $preference = $profile->getOpportunityPreference();
+        $interestsByDefinition = [];
+        foreach ($profile->getPositionInterests() as $interest) {
+            $definitionId = $interest->getJobDefinition()?->getId();
+            if ($definitionId !== null) $interestsByDefinition[$definitionId] = $interest->getKnowledgeLevel();
+        }
+        $jobs = array_values(array_filter($jobs, static function (JobPost $job) use ($preference, $interestsByDefinition): bool {
+            if ($preference !== 'both' && $job->getOpportunityType() !== $preference) return false;
+            if ($interestsByDefinition !== [] && !array_key_exists((int) $job->getJobDefinition()?->getId(), $interestsByDefinition)) return false;
+            return true;
+        }));
+        $positionKnowledgeByJob = [];
+        foreach ($jobs as $job) {
+            $level = $interestsByDefinition[(int) $job->getJobDefinition()?->getId()] ?? null;
+            if ($level !== null) $positionKnowledgeByJob[(int) $job->getId()] = $level;
+        }
         try {
-            $data = ['results' => $this->scoringService->score($candidate, $jobs)];
+            $data = ['results' => $jobs === [] ? [] : $this->scoringService->score($candidate, $jobs, $positionKnowledgeByJob)];
         } catch (\Throwable) {
             return $this->json(['message' => 'The scoring service is currently unavailable.'], 503);
         }
 
         $metadata = [];
         foreach ($jobs as $job) {
-            $metadata[(string) $job->getId()] = ['companyName' => $job->getEmployer()?->getEmployerProfile()?->getCompanyName(), 'assistanceAvailable' => $job->isAssistanceAvailable()];
+            $metadata[(string) $job->getId()] = ['companyName' => $job->getEmployer()?->getEmployerProfile()?->getCompanyName(), 'assistanceAvailable' => $job->isAssistanceAvailable(), 'opportunityType' => $job->getOpportunityType(), 'jobDefinitionSlug' => $job->getJobDefinition()?->getSlug()];
         }
         foreach ($data['results'] ?? [] as $index => $result) {
             $data['results'][$index] = array_merge($result, $metadata[(string) ($result['job_id'] ?? '')] ?? []);

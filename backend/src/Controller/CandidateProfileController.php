@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\CandidateProfile;
+use App\Entity\CandidatePositionInterest;
 use App\Entity\Disability;
+use App\Entity\JobDefinition;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
@@ -15,6 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class CandidateProfileController extends AbstractController
 {
     private const PRACTICAL_ABILITY_LEVELS = ['independent', 'with_support', 'not_yet'];
+    private const OPPORTUNITY_PREFERENCES = ['work', 'training', 'both'];
 
     private function serializeProfile(User $user, ?CandidateProfile $profile): array
     {
@@ -31,6 +34,18 @@ class CandidateProfileController extends AbstractController
             'phone' => $profile?->getPhone(),
             'location' => $profile?->getLocation(),
             'about' => $profile?->getAbout(),
+            'opportunityPreference' => $profile?->getOpportunityPreference() ?? 'both',
+            'positionInterests' => $profile
+                ? array_values($profile->getPositionInterests()->map(static function (CandidatePositionInterest $interest): array {
+                    $definition = $interest->getJobDefinition();
+                    return [
+                        'jobDefinitionId' => $definition?->getId(),
+                        'slug' => $definition?->getSlug(),
+                        'name' => $definition?->getName(),
+                        'knowledgeLevel' => $interest->getKnowledgeLevel(),
+                    ];
+                  })->toArray())
+                : [],
             'confirmedTaskSkills' => $profile
                 ? $profile->getTaskSkills()->map(static function ($skill): array {
                     $task = $skill->getTask();
@@ -159,6 +174,41 @@ class CandidateProfileController extends AbstractController
         foreach (['firstName', 'lastName', 'location'] as $field) {
             if (!isset($data[$field]) || trim((string) $data[$field]) === '') return $this->json(['message' => "$field is required."], 400);
         }
+
+        $opportunityPreference = (string) ($data['opportunityPreference'] ?? 'both');
+        if (!in_array($opportunityPreference, self::OPPORTUNITY_PREFERENCES, true)) {
+            return $this->json(['message' => 'opportunityPreference must be work, training, or both.'], 400);
+        }
+
+        $positionInterests = null;
+        if (array_key_exists('positionInterests', $data)) {
+            if (!is_array($data['positionInterests'])) {
+                return $this->json(['message' => 'positionInterests must be an array.'], 400);
+            }
+            $positionInterests = [];
+            $seenDefinitionIds = [];
+            foreach ($data['positionInterests'] as $item) {
+                $rawDefinitionId = is_array($item) ? ($item['jobDefinitionId'] ?? null) : null;
+                if (!is_array($item) || (!is_int($rawDefinitionId) && !(is_string($rawDefinitionId) && ctype_digit($rawDefinitionId)))) {
+                    return $this->json(['message' => 'Each position interest must identify a job definition.'], 400);
+                }
+                $definitionId = (int) $rawDefinitionId;
+                if (isset($seenDefinitionIds[$definitionId])) {
+                    return $this->json(['message' => 'Each interested position can be selected only once.'], 400);
+                }
+                $definition = $entityManager->getRepository(JobDefinition::class)->find($definitionId);
+                if (!$definition || !$definition->isActive()) {
+                    return $this->json(['message' => 'An interested position is unknown or inactive.'], 400);
+                }
+                $knowledgeLevel = $item['knowledgeLevel'] ?? null;
+                if ($knowledgeLevel === '') $knowledgeLevel = null;
+                if ($knowledgeLevel !== null && (!is_string($knowledgeLevel) || !in_array($knowledgeLevel, self::PRACTICAL_ABILITY_LEVELS, true))) {
+                    return $this->json(['message' => 'Position knowledge must be independent, with_support, not_yet, or empty.'], 400);
+                }
+                $positionInterests[] = [$definition, $knowledgeLevel];
+                $seenDefinitionIds[$definitionId] = true;
+            }
+        }
         if (mb_strlen(trim((string) $data['firstName'])) > 100 || mb_strlen(trim((string) $data['lastName'])) > 100 || mb_strlen(trim((string) $data['location'])) > 255) {
             return $this->json(['message' => 'Candidate profile information is too long.'], 400);
         }
@@ -180,6 +230,28 @@ class CandidateProfileController extends AbstractController
         $profile->setPhone(trim((string) ($data['phone'] ?? '')) ?: null);
         $profile->setLocation(trim((string) $data['location']));
         $profile->setAbout(trim((string) ($data['about'] ?? '')) ?: null);
+        $profile->setOpportunityPreference($opportunityPreference);
+        if ($positionInterests !== null) {
+            $requestedByDefinition = [];
+            foreach ($positionInterests as [$definition, $knowledgeLevel]) {
+                $requestedByDefinition[(int) $definition->getId()] = [$definition, $knowledgeLevel];
+            }
+            $existingByDefinition = [];
+            foreach ($profile->getPositionInterests()->toArray() as $existingInterest) {
+                $definitionId = (int) $existingInterest->getJobDefinition()?->getId();
+                if (!isset($requestedByDefinition[$definitionId])) {
+                    $profile->removePositionInterest($existingInterest);
+                    continue;
+                }
+                $existingByDefinition[$definitionId] = $existingInterest;
+            }
+            foreach ($positionInterests as [$definition, $knowledgeLevel]) {
+                $definitionId = (int) $definition->getId();
+                $interest = $existingByDefinition[$definitionId] ?? (new CandidatePositionInterest())->setJobDefinition($definition);
+                $interest->setKnowledgeLevel($knowledgeLevel);
+                $profile->addPositionInterest($interest);
+            }
+        }
         $profile->setUpdatedAt(new \DateTimeImmutable());
 
         $entityManager->persist($profile);

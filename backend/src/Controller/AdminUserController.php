@@ -193,6 +193,12 @@ final class AdminUserController extends AbstractController
                 'phone' => $profile?->getPhone(),
                 'location' => $profile?->getLocation(),
                 'about' => $profile?->getAbout(),
+                'opportunityPreference' => $profile?->getOpportunityPreference(),
+                'positionInterests' => $profile ? array_values(array_map(static fn ($interest) => [
+                    'jobDefinitionId' => $interest->getJobDefinition()?->getId(),
+                    'position' => $interest->getJobDefinition()?->getName(),
+                    'knowledgeLevel' => $interest->getKnowledgeLevel(),
+                ], $profile->getPositionInterests()->toArray())) : [],
                 'updatedAt' => $profile && $profile->getUpdatedAt()
                     ? $profile->getUpdatedAt()->format('Y-m-d H:i:s')
                     : null,

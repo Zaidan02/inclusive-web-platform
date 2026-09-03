@@ -120,6 +120,7 @@
   }
 
   .candidate-dashboard__profile-fields,
+  .candidate-dashboard__position-interest,
   .candidate-dashboard__company-meta {
     grid-template-columns: minmax(0, 1fr) !important;
   }

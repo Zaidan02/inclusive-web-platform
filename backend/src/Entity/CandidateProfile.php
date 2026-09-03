@@ -29,6 +29,14 @@ class CandidateProfile
     #[ORM\OrderBy(['confirmedAt' => 'DESC'])]
     private Collection $taskSkills;
 
+    /** @var Collection<int, CandidatePositionInterest> */
+    #[ORM\OneToMany(mappedBy: 'candidateProfile', targetEntity: CandidatePositionInterest::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['id' => 'ASC'])]
+    private Collection $positionInterests;
+
+    #[ORM\Column(length: 20, options: ['default' => 'both'])]
+    private string $opportunityPreference = 'both';
+
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
@@ -63,6 +71,7 @@ class CandidateProfile
     {
         $this->disabilities = new ArrayCollection();
         $this->taskSkills = new ArrayCollection();
+        $this->positionInterests = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -132,6 +141,33 @@ class CandidateProfile
     public function removeTaskSkill(CandidateTaskSkill $taskSkill): static
     {
         $this->taskSkills->removeElement($taskSkill);
+        return $this;
+    }
+
+    public function getOpportunityPreference(): string { return $this->opportunityPreference; }
+    public function setOpportunityPreference(string $preference): static { $this->opportunityPreference = $preference; return $this; }
+
+    /** @return Collection<int, CandidatePositionInterest> */
+    public function getPositionInterests(): Collection { return $this->positionInterests; }
+
+    public function addPositionInterest(CandidatePositionInterest $interest): static
+    {
+        if (!$this->positionInterests->contains($interest)) {
+            $this->positionInterests->add($interest);
+            $interest->setCandidateProfile($this);
+        }
+        return $this;
+    }
+
+    public function clearPositionInterests(): static
+    {
+        $this->positionInterests->clear();
+        return $this;
+    }
+
+    public function removePositionInterest(CandidatePositionInterest $interest): static
+    {
+        $this->positionInterests->removeElement($interest);
         return $this;
     }
 

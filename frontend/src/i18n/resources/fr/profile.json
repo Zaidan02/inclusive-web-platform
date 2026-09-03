@@ -48,6 +48,11 @@
     "vocational": "formation professionnelle",
     "university": "université"
   },
+  "jobDefinitions": {
+    "chocolate-confectionery-worker": "Ouvrier / Ouvrière en chocolaterie-confiserie",
+    "ice-cream-maker": "Glacier / Glacière",
+    "bakery-pastry-worker": "Ouvrier / Ouvrière en boulangerie-pâtisserie"
+  },
   "confidence": {
     "high": "Confiance élevée",
     "medium": "Confiance moyenne",
@@ -105,6 +110,25 @@
     "abilities": { "readingAbility": "Lire", "writingAbility": "Écrire", "numeracyAbility": "Compter" },
     "abilityPlaceholder": "Sélectionner une réponse",
     "abilityLevels": { "independent": "Oui, de façon autonome", "with_support": "Oui, avec un soutien", "not_yet": "Pas encore" },
+    "opportunities": {
+      "title": "Opportunités recherchées",
+      "help": "Choisissez si vous recherchez un emploi, un programme de formation en hôtellerie, ou les deux.",
+      "preferences": { "work": "Emploi", "training": "Programmes de formation", "both": "Emploi et formation" },
+      "positionsTitle": "Postes d'hôtellerie qui vous intéressent.",
+      "positionsHelp": "Facultatif. Vos choix ciblent la recherche et les correspondances. Vous pouvez aussi indiquer vos connaissances pour chaque poste.",
+      "selectedPositions": "{{count}} sélectionné(s)",
+      "noPositions": "Aucun poste sélectionné. Tous les postes adaptés resteront disponibles dans vos résultats.",
+      "browseCatalogue": "Parcourir les postes d'hôtellerie",
+      "closeCatalogue": "Fermer le catalogue des postes",
+      "searchPositions": "Rechercher des postes d'hôtellerie",
+      "searchPlaceholder": "Saisissez le nom d'un poste",
+      "noSearchResults": "Aucun poste ne correspond à votre recherche.",
+      "remove": "Retirer",
+      "removePosition": "Retirer {{position}} de vos intérêts",
+      "knowledgeFor": "Vos connaissances actuelles",
+      "knowledgeLabel": "Connaissances actuelles pour {{position}}",
+      "knowledgeOptional": "Connaissances non indiquées (facultatif)"
+    },
     "searchPlaceholder": "Rechercher des options",
     "searchLabel": "Rechercher des options de handicap",
     "loading": "Chargement de votre profil…",
@@ -114,7 +138,8 @@
     "errors": {
       "load": "Votre profil n'a pas pu être chargé. Réessayez.",
       "required": "Ajoutez votre nom, votre localisation, votre niveau d'études, vos capacités pratiques et au moins un handicap.",
-      "save": "Votre profil n'a pas pu être enregistré. Réessayez."
+      "save": "Votre profil n'a pas pu être enregistré. Réessayez.",
+      "positionsLoad": "Les postes d'hôtellerie n'ont pas pu être chargés. Réessayez."
     },
     "voice": {
       "fieldSet": "J'ai défini {{field}} sur {{value}}. Veuillez vérifier.",

@@ -93,6 +93,14 @@ class CandidateApplicationController extends AbstractController
         $applicationDocument = $request->files->get('applicationDocument');
         $recommendationLetter = $request->files->get('recommendationLetter');
         $positionKnowledgeLevel = (string) $request->request->get('positionKnowledgeLevel', '');
+        if ($positionKnowledgeLevel === '') {
+            foreach ($candidate->getCandidateProfile()?->getPositionInterests() ?? [] as $interest) {
+                if ($interest->getJobDefinition()?->getId() === $job->getJobDefinition()?->getId()) {
+                    $positionKnowledgeLevel = (string) ($interest->getKnowledgeLevel() ?? '');
+                    break;
+                }
+            }
+        }
         if (!in_array($positionKnowledgeLevel, self::POSITION_KNOWLEDGE_LEVELS, true)) {
             return $this->json(['message' => 'Select a valid basic position knowledge level.'], 400);
         }
@@ -188,10 +196,12 @@ class CandidateApplicationController extends AbstractController
                 return [
                     'id' => $application->getId(),
                     'jobTitle' => $job?->getJobDefinition()?->getName(),
+                    'jobDefinitionSlug' => $job?->getJobDefinition()?->getSlug(),
                     'companyName' => $job?->getEmployer()?->getEmployerProfile()?->getCompanyName(),
                     'companyLogoUrl' => $job?->getEmployer()?->getEmployerProfile()?->getLogoUrl(),
                     'location' => $job?->getLocation(),
                     'jobType' => $job?->getJobType(),
+                    'opportunityType' => $job?->getOpportunityType(),
                     'status' => $application->getStatus(),
                     'positionKnowledgeLevel' => $application->getPositionKnowledgeLevel(),
                     'compatibilityScore' => $application->getCompatibilityScore(),

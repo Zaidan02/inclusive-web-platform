@@ -10,7 +10,7 @@
     "tabs": { "JOBS": "الوظائف", "APPLICATIONS": "طلباتي", "PROFILE": "ملفي الشخصي", "PRIVACY": "الخصوصية والبيانات" },
     "header": {
       "greeting": "أهلًا بك، {{name}}",
-      "title": "اعثر على عمل في الضيافة يناسب قدراتك",
+      "title": "اعثر على عمل أو تدريب في الضيافة يناسب قدراتك",
       "openProfile": "فتح ملفي الشخصي"
     },
     "steps": { "profile": "أكمل ملفك", "match": "احسب التوافق", "apply": "تقدّم للوظائف" },
@@ -22,7 +22,7 @@
     },
     "nextStep": {
       "title": "ملفك جاهز.",
-      "text": "تابع لحساب التوافق واستكشاف وظائف الضيافة المناسبة.",
+      "text": "تابع لحساب التوافق واستكشاف فرص الضيافة المناسبة.",
       "action": "المتابعة إلى مطابقة الوظائف"
     },
     "common": {
@@ -53,6 +53,15 @@
       "abilities": { "readingAbility": "القراءة", "writingAbility": "الكتابة", "numeracyAbility": "العدّ" },
       "abilityPlaceholder": "اختر إجابة",
       "abilityLevels": { "independent": "نعم، باستقلالية", "with_support": "نعم، مع الدعم", "not_yet": "ليس بعد" },
+      "opportunities": {
+        "title": "الفرص التي تبحث عنها",
+        "help": "اختر العمل أو التدريب في الضيافة أو كليهما. يحدد هذا الاختيار الفرص الظاهرة في البحث والمطابقة.",
+        "preferences": { "work": "عمل", "training": "برامج تدريب", "both": "عمل وتدريب" },
+        "positionsTitle": "وظائف الضيافة التي تهمك.",
+        "positionsHelp": "اختياري. اختر الوظائف لتركيز النتائج، وحدد معرفتك الحالية بكل وظيفة إن كنت تعرفها.",
+        "knowledgeLabel": "المعرفة الحالية لوظيفة {{position}}",
+        "knowledgeOptional": "لم تُحدَّد المعرفة (اختياري)"
+      },
       "searchLabel": "البحث في حالات الإعاقة",
       "searchPlaceholder": "ابحث في حالات الإعاقة",
       "removeDisability": "إزالة {{name}}",
@@ -74,6 +83,7 @@
       "conditionsAnalysed_many": "تم تحليل {{count}} حالة",
       "conditionsAnalysed_other": "تم تحليل {{count}} حالة",
       "empty": "ستظهر درجات توافقك هنا بعد التحليل.",
+      "noPreferenceMatches": "لا توجد فرص منشورة تطابق تفضيلات العمل أو التدريب والوظائف المحفوظة في ملفك.",
       "percentAria": "توافق بنسبة {{percent}}٪",
       "shortLabel": "توافق",
       "notScoredAria": "لا توجد نسبة توافق لأن هذا العرض غير مؤهل",
@@ -96,10 +106,11 @@
       "feasibility": { "feasible": "قابل للتنفيذ", "feasible_with_assistance": "قابل للتنفيذ مع المساعدة", "avoid": "بحاجة إلى تكييف" }
     },
     "jobs": {
-      "title": "الوظائف المتاحة",
-      "intro": "تصفح الوظائف المنشورة وحدد العنوان لعرض التفاصيل كاملة.",
+      "title": "الفرص المتاحة",
+      "intro": "تصفح فرص العمل وبرامج التدريب في الضيافة، ثم اختر العنوان لعرض التفاصيل كاملة.",
       "loading": "جارٍ تحميل الوظائف…",
       "empty": "لم تُنشر أي وظائف بعد.",
+      "emptyForPreferences": "لا توجد فرص منشورة تطابق تفضيلات ملفك الحالية. يمكنك تعديلها من ملفي.",
       "viewDetailsFor": "عرض تفاصيل {{title}}",
       "viewApply": "عرض الوظيفة والتقديم",
       "viewDetails": "عرض تفاصيل الوظيفة",
@@ -174,7 +185,8 @@
       "positionKnowledge": "اختر مستواك الحالي في المعرفة الأساسية لهذه الوظيفة.",
       "requiredProfile": "أضف اسمك وموقعك ومستواك التعليمي وقدراتك العملية وحالة إعاقة واحدة على الأقل.",
       "profileSave": "تعذر حفظ ملفك. حاول مرة أخرى.",
-      "applicationSubmit": "تعذر إرسال طلبك. حاول مرة أخرى."
+      "applicationSubmit": "تعذر إرسال طلبك. حاول مرة أخرى.",
+      "positionsLoad": "تعذر تحميل وظائف الضيافة. حاول مرة أخرى."
     },
     "voice": {
       "fieldSet": "ضبطت {{field}} على {{value}}. يرجى التحقق.",
@@ -188,18 +200,21 @@
       "opening": "جارٍ فتح {{value}}.",
       "fileFocused": "نقلت التركيز إلى منتقي {{field}}. اختر الملف المحلي باستخدام أداة الملف الظاهرة.",
       "activated": "تم تفعيل {{action}}."
-    }
+    },
+    "opportunityTypes": { "work": "فرصة عمل", "training": "برنامج تدريب في الضيافة" }
   },
   "employer": {
     "platform": "المنصة",
     "console": "لوحة صاحب العمل",
     "role": "صاحب العمل",
     "tabsLabel": "أقسام لوحة تحكم صاحب العمل",
-    "tabs": { "postJob": "نشر وظيفة", "editJob": "تعديل الوظيفة", "myJobs": "وظائفي", "applications": "الطلبات", "profile": "ملف الشركة" },
+    "tabs": { "postJob": "نشر فرصة", "editJob": "تعديل الفرصة", "myJobs": "فرصي", "applications": "الطلبات", "profile": "ملف الشركة" },
     "common": { "loading": "جارٍ التحميل…", "saving": "جارٍ الحفظ…", "view": "عرض", "download": "تنزيل", "edit": "تعديل", "delete": "حذف", "notProvided": "غير مقدم", "notSpecified": "غير محدد" },
     "jobForm": {
-      "title": "تفاصيل الوظيفة",
+      "title": "تفاصيل الفرصة",
       "requiredHelp": "الحقول المشار إليها بعلامة * مطلوبة.",
+      "opportunityType": "نوع الفرصة *",
+      "opportunityTypeHint": "اختر فرصة عمل أو برنامج تدريب منظّم في الضيافة.",
       "postingAs": "النشر باسم",
       "profileRequired": "ملف الشركة مطلوب",
       "completeProfile": "إكمال الملف",
@@ -210,7 +225,7 @@
       "deadline": "الموعد النهائي للتقديم *",
       "jobType": "نوع الوظيفة *",
       "workMode": "نمط العمل *",
-      "description": "وصف الوظيفة *",
+      "description": "وصف الفرصة *",
       "requirementsTitle": "التعليم ومهارات التعليم الشخصي",
       "requirementsHelp": "تؤثر المتطلبات المحددة فقط في التوافق. تُستبعد المهارة غير المطلوبة من الدرجة، وقد تؤثر المهارة الإلزامية في الأهلية بحسب توفر المساعدة.",
       "educationRequirement": "متطلب التعليم",
@@ -234,10 +249,11 @@
       "publish": "نشر الوظيفة"
     },
     "requirementLevels": { "not_required": "غير مطلوب", "preferred": "مفضّل", "required": "مطلوب" },
+    "opportunityTypes": { "work": "فرصة عمل", "training": "برنامج تدريب في الضيافة" },
     "jobTypes": { "fullTime": "دوام كامل", "partTime": "دوام جزئي", "internship": "تدريب", "seasonal": "موسمي" },
     "workModes": { "onSite": "في موقع العمل", "hybrid": "هجين", "remote": "عن بُعد" },
     "myJobs": {
-      "title": "الوظائف المنشورة",
+      "title": "الفرص المنشورة",
       "count_zero": "لا توجد وظائف",
       "count_one": "وظيفة واحدة",
       "count_two": "وظيفتان",

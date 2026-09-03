@@ -5,6 +5,7 @@ import ArrowIcon from "../components/common/ArrowIcon";
 import SiteHeader from "../components/layout/SiteHeader";
 import SiteFooter from "../components/layout/SiteFooter";
 import { getPublicOverview } from "../services/publicOverviewApi";
+import { localizeJobDefinition } from "../i18n/jobDefinitions";
 import "../styles/landing.css";
 
 const JOB_TYPE_KEYS = {
@@ -182,13 +183,14 @@ export default function WelcomePage() {
 
                 {overview.data.latestJobs.length > 0 ? (
                   <div className="latest-jobs-grid">
-                    {overview.data.latestJobs.map((job) => (
-                      <article className="latest-job-card" key={job.id}>
+                    {overview.data.latestJobs.map((job) => {
+                      const localizedTitle = localizeJobDefinition(t, job);
+                      return <article className="latest-job-card" key={job.id}>
                         <div className="latest-job-card__main">
-                          <h4>{job.title}</h4>
+                          <h4>{localizedTitle}</h4>
                           <p>{job.companyName || t("welcome.opportunities.employerFallback")}</p>
                         </div>
-                        <ul className="latest-job-card__meta" aria-label={t("welcome.opportunities.jobDetails", { title: job.title })}>
+                        <ul className="latest-job-card__meta" aria-label={t("welcome.opportunities.jobDetails", { title: localizedTitle })}>
                           {job.location && <li>{job.location}</li>}
                           {job.jobType && <li>{localizeOption(job.jobType, JOB_TYPE_KEYS, "jobTypes")}</li>}
                           {job.workMode && <li>{localizeOption(job.workMode, WORK_MODE_KEYS, "workModes")}</li>}
@@ -198,8 +200,8 @@ export default function WelcomePage() {
                             {t("welcome.opportunities.posted", { date: dateFormatter.format(new Date(job.createdAt)) })}
                           </p>
                         )}
-                      </article>
-                    ))}
+                      </article>;
+                    })}
                   </div>
                 ) : (
                   <p className="opportunity-status">{t("welcome.opportunities.empty")}</p>

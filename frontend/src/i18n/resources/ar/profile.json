@@ -48,6 +48,11 @@
     "vocational": "تعليم مهني",
     "university": "تعليم جامعي"
   },
+  "jobDefinitions": {
+    "chocolate-confectionery-worker": "عامل / عاملة في صناعة الشوكولاتة والحلويات",
+    "ice-cream-maker": "صانع / صانعة المثلجات",
+    "bakery-pastry-worker": "عامل / عاملة في المخبوزات والمعجنات"
+  },
   "confidence": {
     "high": "ثقة مرتفعة",
     "medium": "ثقة متوسطة",
@@ -105,6 +110,25 @@
     "abilities": { "readingAbility": "القراءة", "writingAbility": "الكتابة", "numeracyAbility": "العدّ" },
     "abilityPlaceholder": "اختر إجابة",
     "abilityLevels": { "independent": "نعم، باستقلالية", "with_support": "نعم، مع الدعم", "not_yet": "ليس بعد" },
+    "opportunities": {
+      "title": "الفرص التي تبحث عنها",
+      "help": "اختر ما إذا كنت تبحث عن عمل أو برنامج تدريب في الضيافة أو كليهما.",
+      "preferences": { "work": "عمل", "training": "برامج تدريب", "both": "عمل وتدريب" },
+      "positionsTitle": "وظائف الضيافة التي تهمك.",
+      "positionsHelp": "اختياري. تساعد اختياراتك في تركيز البحث والمطابقة، ويمكنك تحديد معرفتك الحالية بكل وظيفة.",
+      "selectedPositions": "تم تحديد {{count}}",
+      "noPositions": "لم تحدد أي وظيفة. ستبقى جميع الوظائف المناسبة متاحة في نتائجك.",
+      "browseCatalogue": "تصفح وظائف الضيافة",
+      "closeCatalogue": "إغلاق دليل الوظائف",
+      "searchPositions": "البحث في وظائف الضيافة",
+      "searchPlaceholder": "اكتب اسم الوظيفة",
+      "noSearchResults": "لا توجد وظيفة تطابق بحثك.",
+      "remove": "إزالة",
+      "removePosition": "إزالة {{position}} من اهتماماتك",
+      "knowledgeFor": "معرفتك الحالية",
+      "knowledgeLabel": "المعرفة الحالية لوظيفة {{position}}",
+      "knowledgeOptional": "لم تُحدَّد المعرفة (اختياري)"
+    },
     "searchPlaceholder": "ابحث في الخيارات",
     "searchLabel": "البحث في خيارات الإعاقة",
     "loading": "جارٍ تحميل ملفك…",
@@ -114,7 +138,8 @@
     "errors": {
       "load": "تعذر تحميل ملفك. حاول مرة أخرى.",
       "required": "أضف اسمك وموقعك ومستواك التعليمي وقدراتك العملية وحالة إعاقة واحدة على الأقل.",
-      "save": "تعذر حفظ ملفك. حاول مرة أخرى."
+      "save": "تعذر حفظ ملفك. حاول مرة أخرى.",
+      "positionsLoad": "تعذر تحميل وظائف الضيافة. حاول مرة أخرى."
     },
     "voice": {
       "fieldSet": "ضبطت {{field}} على {{value}}. يرجى التحقق.",

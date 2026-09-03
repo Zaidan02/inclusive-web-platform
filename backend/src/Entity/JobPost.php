@@ -29,6 +29,9 @@ class JobPost
     #[ORM\Column(length: 50)]
     private ?string $jobType = null;
 
+    #[ORM\Column(length: 20, options: ['default' => 'work'])]
+    private string $opportunityType = 'work';
+
     #[ORM\Column(length: 50)]
     private ?string $workMode = null;
 
@@ -118,6 +121,14 @@ class JobPost
     public function setJobType(string $jobType): static
     {
         $this->jobType = $jobType;
+        return $this;
+    }
+
+    public function getOpportunityType(): string { return $this->opportunityType; }
+
+    public function setOpportunityType(string $opportunityType): static
+    {
+        $this->opportunityType = $opportunityType;
         return $this;
     }
 

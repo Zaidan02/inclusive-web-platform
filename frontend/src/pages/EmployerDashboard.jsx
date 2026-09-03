@@ -23,6 +23,7 @@ import useDialogFocus from "../hooks/useDialogFocus";
 import AccessibleNotice from "../components/accessibility/AccessibleNotice";
 import { disabilityOptions } from "../features/candidate/profile/profileOptions";
 import LanguageSwitcher from "../components/localization/LanguageSwitcher";
+import { localizeJobDefinition } from "../i18n/jobDefinitions";
 
 const globalStyles = `
   * { box-sizing: border-box; }
@@ -35,7 +36,7 @@ const globalStyles = `
 `;
 
 const emptyForm = {
-  jobDefinitionId: "", location: "", jobType: "Full-time",
+  opportunityType: "work", jobDefinitionId: "", location: "", jobType: "Full-time",
   workMode: "On-site", description: "",
   applicationDeadline: "",
   assistanceAvailable: false,
@@ -193,7 +194,7 @@ function EmployerDashboard() {
   function handleEditJob(job) {
     setMessage(""); setError(""); setEditingJobId(job.id);
     setFormData({
-      jobDefinitionId: String(job.jobDefinitionId || ""), location: job.location || "", jobType: job.jobType || "Full-time",
+      opportunityType: job.opportunityType || "work", jobDefinitionId: String(job.jobDefinitionId || ""), location: job.location || "", jobType: job.jobType || "Full-time",
       workMode: job.workMode || "On-site", description: job.description || "", applicationDeadline: job.applicationDeadline || "",
       assistanceAvailable: Boolean(job.assistanceAvailable), educationRequirement: job.educationRequirement || "not_required",
       minimumEducationLevel: job.minimumEducationLevel || "", readingRequirement: job.readingRequirement || "not_required",
@@ -500,8 +501,14 @@ function EmployerDashboard() {
               <p style={{ margin: "0 0 20px", fontSize: "12px", color: "#64748b" }}>{t("employer.jobForm.requiredHelp")}</p>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", padding: "12px 14px", marginBottom: "18px", borderRadius: "12px", background: employerProfile.companyName ? "#f0fdf4" : "#fff7ed", border: `1px solid ${employerProfile.companyName ? "#bbf7d0" : "#fed7aa"}` }}><div><span style={{ display: "block", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.6px", color: "#64748b" }}>{t("employer.jobForm.postingAs")}</span><strong dir="auto" style={{ color: "#0f172a" }}>{employerProfile.companyName || t("employer.jobForm.profileRequired")}</strong></div>{!employerProfile.companyName && <button type="button" onClick={() => switchTab("PROFILE")} style={{ border: "none", borderRadius: "8px", padding: "8px 11px", background: "#c2410c", color: "#fff", cursor: "pointer" }}>{t("employer.jobForm.completeProfile")}</button>}</div>
               <div className="dashboard-form-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0 20px" }}>
+                <Field label={t("employer.jobForm.opportunityType")} hint={t("employer.jobForm.opportunityTypeHint")}>
+                  <select className="input-field" style={inputStyle} name="opportunityType" value={formData.opportunityType} onChange={handleChange} required>
+                    <option value="work">{t("employer.opportunityTypes.work")}</option>
+                    <option value="training">{t("employer.opportunityTypes.training")}</option>
+                  </select>
+                </Field>
                 <Field label={t("employer.jobForm.position")} hint={t("employer.jobForm.positionHint")}>
-                  <select className="input-field" style={inputStyle} name="jobDefinitionId" value={formData.jobDefinitionId} onChange={handleJobDefinitionChange} required><option value="">{t("employer.jobForm.positionPlaceholder")}</option>{jobDefinitions.map((job) => <option key={job.id} value={job.id}>{job.name}</option>)}</select>
+                  <select className="input-field" style={inputStyle} name="jobDefinitionId" value={formData.jobDefinitionId} onChange={handleJobDefinitionChange} required><option value="">{t("employer.jobForm.positionPlaceholder")}</option>{jobDefinitions.map((job) => <option key={job.id} value={job.id}>{localizeJobDefinition(t, job)}</option>)}</select>
                 </Field>
                 <Field label={t("employer.jobForm.location")}>
                   <input dir="auto" className="input-field" style={inputStyle} name="location" value={formData.location} onChange={handleChange} required />
@@ -609,9 +616,9 @@ function EmployerDashboard() {
               {myJobs.map((job) => (
                 <div key={job.id} className="dashboard-item-row" style={{ border: "1px solid #e8edf5", borderRadius: "14px", padding: "16px 20px", background: "#f8fafc", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "16px" }}>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <h3 style={{ margin: "0 0 4px", fontSize: "15px", fontWeight: "600", color: "#0f172a" }}>{job.title}</h3>
+                    <h3 style={{ margin: "0 0 4px", fontSize: "15px", fontWeight: "600", color: "#0f172a" }}>{localizeJobDefinition(t, job)}</h3>
                     <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                      {[job.companyName, job.location, job.jobType, job.workMode].filter(Boolean).map((tag) => (
+                      {[t(`employer.opportunityTypes.${job.opportunityType || "work"}`), job.companyName, job.location, job.jobType, job.workMode].filter(Boolean).map((tag) => (
                         <span key={tag} style={{ background: "#f1f5f9", color: "#475569", padding: "3px 8px", borderRadius: "999px", fontSize: "11px", fontWeight: "400" }}>{tag}</span>
                       ))}
                       {job.applicationDeadline && (
@@ -659,7 +666,7 @@ function EmployerDashboard() {
                     {applications.map((app) => (
                       <tr key={app.id} className="row-hover" style={{ transition: "background 0.15s" }}>
                         <td style={{ padding: "13px 12px", borderBottom: "1px solid #f1f5f9", fontSize: "13px", textAlign: "center", fontWeight: "500", color: "#0f172a" }}>{app.candidateName}</td>
-                        <td style={{ padding: "13px 12px", borderBottom: "1px solid #f1f5f9", fontSize: "13px", textAlign: "center", color: "#64748b" }}>{app.jobTitle}</td>
+                        <td style={{ padding: "13px 12px", borderBottom: "1px solid #f1f5f9", fontSize: "13px", textAlign: "center", color: "#64748b" }}>{localizeJobDefinition(t, app)}</td>
                         <td style={{ padding: "13px 12px", borderBottom: "1px solid #f1f5f9", fontSize: "13px", textAlign: "center" }}>
                           <button type="button" aria-label={t("employer.applications.viewProfileFor", { name: app.candidateName || t("candidate.role") })} onClick={() => handleViewProfile(app)} style={{ border: "none", background: "#f1f5f9", color: "#475569", padding: "5px 10px", borderRadius: "7px", cursor: "pointer", fontSize: "11px", fontWeight: "500", fontFamily: "Inter, sans-serif" }}>{t("employer.common.view")}</button>
                         </td>

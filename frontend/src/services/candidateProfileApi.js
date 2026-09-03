@@ -14,6 +14,11 @@ export async function getCandidateProfile() {
   return readJson(response);
 }
 
+export async function getCandidateJobDefinitions() {
+  const response = await fetch(`${API_BASE_URL}/job-definitions`);
+  return readJson(response);
+}
+
 export async function updateCandidateProfile(profileData) {
   const response = await fetch(`${API_BASE_URL}/candidate/profile`, {
     method: "PATCH",

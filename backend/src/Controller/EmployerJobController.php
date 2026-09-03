@@ -18,6 +18,7 @@ final class EmployerJobController extends AbstractController
 {
     private const REQUIREMENT_LEVELS = ['not_required', 'preferred', 'required'];
     private const EDUCATION_LEVELS = ['none', 'primary', 'middle_school', 'high_school', 'vocational', 'university'];
+    private const OPPORTUNITY_TYPES = ['work', 'training'];
 
     private function isEducationalSkillTask(JobDefinitionTask $task): bool
     {
@@ -59,7 +60,7 @@ final class EmployerJobController extends AbstractController
             'jobDefinition' => $definition ? $this->formatDefinition($definition) : null,
             'companyName' => $profile?->getCompanyName(), 'companyLogoUrl' => $profile?->getLogoUrl(),
             'employerProfile' => $profile ? ['companyName' => $profile->getCompanyName(), 'industry' => $profile->getIndustry(), 'location' => $profile->getLocation(), 'website' => $profile->getWebsite(), 'logoUrl' => $profile->getLogoUrl(), 'description' => $profile->getDescription(), 'accessibilityStatement' => $profile->getAccessibilityStatement()] : null,
-            'location' => $job->getLocation(), 'jobType' => $job->getJobType(), 'workMode' => $job->getWorkMode(),
+            'location' => $job->getLocation(), 'jobType' => $job->getJobType(), 'opportunityType' => $job->getOpportunityType(), 'workMode' => $job->getWorkMode(),
             'description' => $job->getDescription(), 'applicationDeadline' => $job->getApplicationDeadline()?->format('Y-m-d'),
             'cvRequired' => $job->isCvRequired(), 'coverLetterRequired' => $job->isCoverLetterRequired(),
             'assistanceAvailable' => $job->isAssistanceAvailable(), 'status' => $job->getStatus(),
@@ -99,6 +100,10 @@ final class EmployerJobController extends AbstractController
         if (!$definition || !$definition->isActive()) return $this->json(['message' => 'Select a valid active job from the catalogue.'], 400);
         $companyProfile = $job->getEmployer()?->getEmployerProfile();
         if (!$companyProfile || trim((string) $companyProfile->getCompanyName()) === '') return $this->json(['message' => 'Complete your company profile before posting a job.'], 400);
+        $opportunityType = (string) ($data['opportunityType'] ?? 'work');
+        if (!in_array($opportunityType, self::OPPORTUNITY_TYPES, true)) {
+            return $this->json(['message' => 'opportunityType must be work or training.'], 400);
+        }
         $taskIds = array_values(array_unique(array_map('intval', is_array($data['highlightedTaskIds'] ?? null) ? $data['highlightedTaskIds'] : [])));
         if (count($taskIds) < 1) return $this->json(['message' => 'Select at least one important task.'], 400);
         $tasks = array_values(array_filter(
@@ -123,7 +128,7 @@ final class EmployerJobController extends AbstractController
             $minimumEducationLevel = null;
         }
         $job->setJobDefinition($definition)->setLocation(trim($data['location']))
-            ->setJobType(trim($data['jobType']))->setWorkMode(trim($data['workMode']))->setDescription(trim($data['description']))
+            ->setJobType(trim($data['jobType']))->setOpportunityType($opportunityType)->setWorkMode(trim($data['workMode']))->setDescription(trim($data['description']))
             ->setApplicationDeadline($deadline)->setCvRequired(false)
             ->setCoverLetterRequired(false)
             ->setAssistanceAvailable((bool) ($data['assistanceAvailable'] ?? false))

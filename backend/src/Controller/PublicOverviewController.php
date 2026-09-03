@@ -31,6 +31,7 @@ final class PublicOverviewController extends AbstractController
                 return [
                     'id' => $job->getId(),
                     'title' => $job->getJobDefinition()?->getName(),
+                    'jobDefinitionSlug' => $job->getJobDefinition()?->getSlug(),
                     'companyName' => $profile?->getCompanyName(),
                     'location' => $job->getLocation(),
                     'jobType' => $job->getJobType(),

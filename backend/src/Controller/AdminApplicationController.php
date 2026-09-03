@@ -92,6 +92,7 @@ class AdminApplicationController extends AbstractController
             'candidateName' => $candidate?->getUsername(),
             'candidateEmail' => $candidate?->getEmail(),
             'jobTitle' => $job?->getJobDefinition()?->getName(),
+            'opportunityType' => $job?->getOpportunityType(),
             'status' => $application->getStatus(),
             'positionKnowledgeLevel' => $application->getPositionKnowledgeLevel(),
             'compatibilityScore' => $application->getCompatibilityScore(),

@@ -131,6 +131,8 @@ class EmployerApplicationController extends AbstractController
                     'candidateLocation' => $profile?->getLocation(),
                     'candidateAbout' => $profile?->getAbout(),
                     'jobTitle' => $job?->getJobDefinition()?->getName(),
+                    'jobDefinitionSlug' => $job?->getJobDefinition()?->getSlug(),
+                    'opportunityType' => $job?->getOpportunityType(),
                     'status' => $application->getStatus(),
                     'applicationOriginalName' => $application->getApplicationOriginalName(),
                     'hasApplicationDocument' => $application->getApplicationFileName() !== null,

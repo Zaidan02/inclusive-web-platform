@@ -3,8 +3,9 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import Brand from "../../../components/common/Brand";
 import LanguageSwitcher from "../../../components/localization/LanguageSwitcher";
-import { getCandidateProfile, updateCandidateProfile } from "../../../services/candidateProfileApi";
+import { getCandidateJobDefinitions, getCandidateProfile, updateCandidateProfile } from "../../../services/candidateProfileApi";
 import AiProfileBuilder from "./AiProfileBuilder";
+import PositionInterestSelector from "./PositionInterestSelector";
 import { isCandidateProfileComplete } from "./profileCompletion";
 import { disabilityOptions } from "./profileOptions";
 import "./candidateProfile.css";
@@ -21,6 +22,9 @@ export default function CandidateProfileSetup() {
   const [practicalAbilities, setPracticalAbilities] = useState({ readingAbility: "", writingAbility: "", numeracyAbility: "" });
   const [basicInfo, setBasicInfo] = useState({ firstName: "", lastName: "", phone: "", location: "", about: "" });
   const [confirmedTaskSkills, setConfirmedTaskSkills] = useState([]);
+  const [opportunityPreference, setOpportunityPreference] = useState("both");
+  const [positionInterests, setPositionInterests] = useState([]);
+  const [jobDefinitions, setJobDefinitions] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -56,11 +60,21 @@ export default function CandidateProfileSetup() {
           about: profile.about || "",
         });
         setConfirmedTaskSkills(profile.confirmedTaskSkills || []);
+        setOpportunityPreference(profile.opportunityPreference || "both");
+        setPositionInterests(profile.positionInterests || []);
       })
       .catch(() => active && setError(t("setup.errors.load")))
       .finally(() => active && setLoading(false));
     return () => { active = false; };
   }, [navigate, t]);
+
+  useEffect(() => {
+    let active = true;
+    getCandidateJobDefinitions()
+      .then((data) => active && setJobDefinitions(data.jobs || []))
+      .catch(() => active && setError(t("setup.errors.positionsLoad")));
+    return () => { active = false; };
+  }, [t]);
 
   const filteredOptions = useMemo(() => {
     const locale = i18n.resolvedLanguage || "en";
@@ -72,6 +86,18 @@ export default function CandidateProfileSetup() {
     setError("");
     setAttemptedSave(false);
     setSelected((current) => current.includes(name) ? current.filter((item) => item !== name) : [...current, name]);
+  }
+
+  function togglePosition(definition) {
+    setPositionInterests((current) => current.some((item) => Number(item.jobDefinitionId) === Number(definition.id))
+      ? current.filter((item) => Number(item.jobDefinitionId) !== Number(definition.id))
+      : [...current, { jobDefinitionId: definition.id, slug: definition.slug, name: definition.name, knowledgeLevel: null }]);
+  }
+
+  function updatePositionKnowledge(definitionId, knowledgeLevel) {
+    setPositionInterests((current) => current.map((item) => Number(item.jobDefinitionId) === Number(definitionId)
+      ? { ...item, knowledgeLevel: knowledgeLevel || null }
+      : item));
   }
 
   function applyConfirmedProfile(profile) {
@@ -111,7 +137,7 @@ export default function CandidateProfileSetup() {
     try {
       setSaving(true);
       setError("");
-      await updateCandidateProfile({ selectedDisabilities: selected, educationLevel, ...practicalAbilities, ...basicInfo });
+      await updateCandidateProfile({ selectedDisabilities: selected, educationLevel, ...practicalAbilities, ...basicInfo, opportunityPreference, positionInterests });
       navigate("/candidate", { replace: true });
     } catch {
       setError(t("setup.errors.save"));
@@ -240,6 +266,25 @@ export default function CandidateProfileSetup() {
                 </label>
               ))}
             </div>
+          </fieldset>
+          <fieldset className="profile-setup__opportunities">
+            <legend>{t("setup.opportunities.title")}</legend>
+            <p>{t("setup.opportunities.help")}</p>
+            <div className="profile-setup__preference-options">
+              {["work", "training", "both"].map((preference) => (
+                <label key={preference}>
+                  <input type="radio" name="opportunityPreference" value={preference} checked={opportunityPreference === preference} onChange={(event) => setOpportunityPreference(event.target.value)} />
+                  <span>{t(`setup.opportunities.preferences.${preference}`)}</span>
+                </label>
+              ))}
+            </div>
+            <PositionInterestSelector
+              definitions={jobDefinitions}
+              interests={positionInterests}
+              onToggle={togglePosition}
+              onKnowledgeChange={updatePositionKnowledge}
+              translationPrefix="profile:setup.opportunities"
+            />
           </fieldset>
           <label className="profile-setup__search">
             <span aria-hidden="true">⌕</span>
