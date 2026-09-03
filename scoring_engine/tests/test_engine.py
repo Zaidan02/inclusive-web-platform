@@ -11,8 +11,8 @@ class ScoringEngineTest(unittest.TestCase):
         self.engine = ScoringEngine()
         self.candidate = Candidate(1, "high_school", ("ankle",))
 
-    def job(self, *tasks: Task, assistance: bool = False, education: str = "none") -> Job:
-        return Job(10, "Test Job", education, assistance, tasks)
+    def job(self, *tasks: Task, assistance: bool = False, education: str = "none", **requirements) -> Job:
+        return Job(10, "Test Job", education, assistance, tasks, **requirements)
 
     def test_all_feasible_tasks_score_one_hundred(self) -> None:
         result = self.engine.evaluate(
@@ -72,14 +72,63 @@ class ScoringEngineTest(unittest.TestCase):
         self.assertEqual(0.0, result.score)
         self.assertEqual(EffectiveFeasibility.AVOID, result.task_results[0].effective_feasibility)
 
-    def test_education_failure_excludes_candidate(self) -> None:
+    def test_unconfigured_education_is_ignored(self) -> None:
         result = self.engine.evaluate(
             Candidate(1, "primary", ("ankle",)),
             self.job(Task(1, "Task"), education="high_school"),
         )
+        self.assertTrue(result.eligible)
+        self.assertEqual(100.0, result.score)
+        self.assertTrue(result.education.meets_requirement)
+
+    def test_required_education_failure_excludes_candidate(self) -> None:
+        result = self.engine.evaluate(
+            Candidate(1, "primary", ("ankle",)),
+            self.job(Task(1, "Task"), education="high_school", education_requirement="required"),
+        )
         self.assertFalse(result.eligible)
         self.assertIsNone(result.score)
-        self.assertFalse(result.education.meets_requirement)
+
+    def test_unrequired_practical_ability_does_not_affect_score(self) -> None:
+        candidate = Candidate(1, "high_school", ("ankle",), writing_ability="not_yet")
+        result = self.engine.evaluate(candidate, self.job(Task(1, "Task")))
+        self.assertTrue(result.eligible)
+        self.assertEqual(100.0, result.score)
+        self.assertEqual((), result.ability_results)
+
+    def test_required_practical_ability_excludes_when_not_yet(self) -> None:
+        candidate = Candidate(1, "high_school", ("ankle",), writing_ability="not_yet")
+        result = self.engine.evaluate(candidate, self.job(Task(1, "Task"), writing_requirement="required"))
+        self.assertFalse(result.eligible)
+        self.assertIsNone(result.score)
+        self.assertFalse(result.ability_results[0].meets_requirement)
+
+    def test_supported_required_ability_uses_assistance(self) -> None:
+        candidate = Candidate(1, "high_school", ("ankle",), writing_ability="with_support")
+        result = self.engine.evaluate(candidate, self.job(Task(1, "Task"), assistance=True, writing_requirement="required"))
+        self.assertTrue(result.eligible)
+        self.assertEqual(93.75, result.score)
+        self.assertEqual(0.75, result.ability_results[0].factor)
+
+    def test_required_support_without_employer_assistance_excludes(self) -> None:
+        candidate = Candidate(1, "high_school", ("ankle",), reading_ability="with_support")
+        result = self.engine.evaluate(candidate, self.job(Task(1, "Task"), reading_requirement="required"))
+        self.assertFalse(result.eligible)
+
+    def test_position_knowledge_is_added_only_for_application_scoring(self) -> None:
+        discovery = self.engine.evaluate(
+            Candidate(1, "high_school", ("ankle",)),
+            self.job(Task(1, "Task"), position_knowledge_requirement="required"),
+        )
+        self.assertTrue(discovery.eligible)
+        self.assertEqual((), discovery.ability_results)
+
+        application = self.engine.evaluate(
+            Candidate(1, "high_school", ("ankle",), position_knowledge="not_yet"),
+            self.job(Task(1, "Task"), position_knowledge_requirement="required"),
+        )
+        self.assertFalse(application.eligible)
+        self.assertEqual("basic position knowledge", application.ability_results[0].ability)
 
     def test_highlighted_multiplier_changes_weighted_score(self) -> None:
         result = self.engine.evaluate(

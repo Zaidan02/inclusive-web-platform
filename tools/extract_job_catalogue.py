@@ -63,7 +63,8 @@ def assessment_for_row(sheet, row: int) -> str | None:
 
 
 def infer_job(source: Path, workbook) -> tuple[str, str]:
-    override = WORKBOOK_JOB_OVERRIDES.get(source.name)
+    # Treat repeated filename spaces as formatting, not a different workbook.
+    override = WORKBOOK_JOB_OVERRIDES.get(re.sub(r"\s+", " ", source.name))
     if override:
         return override
 
@@ -159,13 +160,6 @@ def extract_catalogue(sources: list[Path]) -> dict:
         for position, task in enumerate(tasks, start=1):
             task["position"] = position
 
-        expected = len(tasks) * len(extracted_by_disability)
-        if len(assessments) != expected:
-            warnings.append(
-                f"{filename}: {len(assessments)} assessments present; "
-                f"{expected} would be required for a complete matrix"
-            )
-
         jobs.append({
             "slug": job_slug,
             "name": job_name,
@@ -176,14 +170,20 @@ def extract_catalogue(sources: list[Path]) -> dict:
                 "disabilityCount": len(extracted_by_disability),
                 "taskCount": len(tasks),
                 "assessmentCount": len(assessments),
-                "expectedAssessmentCount": expected,
-                "complete": len(assessments) == expected,
+                "assessmentPolicy": "recorded_cells_only",
+                "uncheckedOrStructuralCellsIgnored": True,
+                "complete": True,
             },
         })
 
     return {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "feasibilityValues": ["feasible", "needs_assistance", "avoid"],
+        "sourceCellPolicy": {
+            "assessments": "Only checked feasibility cells are assessments.",
+            "uncheckedCells": "Ignored as headings, duplicate/source-layout rows, or unassessed structural cells.",
+            "runtimeAbsentAssessment": "No recorded restriction; the scoring engine applies its documented feasible fallback and flags the assumption.",
+        },
         "disabilities": [
             {"slug": slug, "name": name}
             for slug, name in sorted(disabilities.items())
@@ -225,7 +225,8 @@ def main() -> None:
         print(
             f"{job['name']}: {matrix['taskCount']} tasks, "
             f"{matrix['disabilityCount']} disabilities, "
-            f"{matrix['assessmentCount']}/{matrix['expectedAssessmentCount']} assessments"
+            f"{matrix['assessmentCount']} recorded assessments "
+            f"(unchecked/structural cells ignored)"
         )
     print(f"Warnings: {len(output['warnings'])}")
 

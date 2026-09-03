@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import secrets
 
 from flask import Flask, Response, jsonify, request
 from flask_cors import CORS
@@ -12,6 +13,7 @@ from audio.transcription import OpenAITranscriber
 from classification.classifier import OpenAIRequestClassifier
 from config import Settings
 from orchestration.orchestrator import VoiceOrchestrator
+from profile.extractor import OpenAIProfileExtractor
 from specialists.actions.interpreter import OpenAIActionInterpreter
 from specialists.actions.registry import ActionRegistry
 from specialists.navigation.interpreter import OpenAINavigationInterpreter
@@ -23,7 +25,14 @@ def create_app(settings: Settings | None = None) -> Flask:
     active_settings = settings or Settings()
     app = Flask(__name__)
     app.config["MAX_CONTENT_LENGTH"] = active_settings.max_audio_bytes
-    CORS(app, origins=[active_settings.allowed_origin])
+    CORS(
+        app,
+        origins=[
+            origin.strip()
+            for origin in active_settings.allowed_origin.split(",")
+            if origin.strip()
+        ],
+    )
 
     registry = NavigationRegistry()
     action_registry = ActionRegistry()
@@ -72,11 +81,11 @@ def create_app(settings: Settings | None = None) -> Flask:
         if not audio:
             return jsonify({"error": "empty_audio", "message": "The uploaded audio is empty."}), 400
         spoken_language = request.form.get("spokenLanguage", "en").lower()
-        if spoken_language not in {"en", "ar"}:
+        if spoken_language not in {"en", "fr", "ar"}:
             return jsonify(
                 {
                     "error": "unsupported_language",
-                    "message": "Spoken language must be 'en' or 'ar'.",
+                    "message": "Spoken language must be 'en', 'fr', or 'ar'.",
                 }
             ), 400
         try:
@@ -102,6 +111,72 @@ def create_app(settings: Settings | None = None) -> Flask:
             page_context,
         )
         _trace_result(result, request.form.get("currentContext", "home"))
+        return jsonify(result.model_dump()), 200
+
+    @app.post("/api/profile/transcribe")
+    def profile_transcribe() -> tuple[Response, int]:
+        uploaded = request.files.get("audio")
+        if uploaded is None or not uploaded.filename:
+            return jsonify({"error": "audio_required", "message": "An audio file is required."}), 400
+        audio = uploaded.read()
+        if not audio:
+            return jsonify({"error": "empty_audio", "message": "The uploaded audio is empty."}), 400
+        language = request.form.get("language", "en").lower()
+        if language not in {"en", "fr", "ar"}:
+            return jsonify(
+                {
+                    "error": "unsupported_language",
+                    "message": "Language must be English, French, or Arabic.",
+                }
+            ), 400
+        transcriber = OpenAITranscriber(
+            require_client(),
+            active_settings.transcription_model,
+            (
+                "JoIn candidate employment profile. Preserve names, locations, education, "
+                "work experience, skills, and disability terms exactly as spoken."
+            ),
+        )
+        transcript = transcriber.transcribe(audio, uploaded.filename, language)
+        if len(transcript) > 4000:
+            return jsonify(
+                {"error": "transcript_too_long", "message": "The transcript exceeds 4000 characters."}
+            ), 400
+        return jsonify({"transcript": transcript, "language": language}), 200
+
+    @app.post("/api/profile/extract")
+    def profile_extract() -> tuple[Response, int]:
+        supplied_token = request.headers.get("X-Profile-AI-Token", "")
+        if (
+            not active_settings.profile_ai_token
+            or not secrets.compare_digest(supplied_token, active_settings.profile_ai_token)
+        ):
+            return jsonify({"error": "forbidden", "message": "Profile assistant access denied."}), 403
+        data = request.get_json(silent=True)
+        if not isinstance(data, dict):
+            raise ValueError("A valid JSON body is required.")
+        narrative = " ".join(str(data.get("narrative", "")).split())
+        if len(narrative) < 10 or len(narrative) > 4000:
+            raise ValueError("Narrative must contain 10 to 4000 characters.")
+        language = str(data.get("language", "en")).lower()
+        if language not in {"en", "fr", "ar"}:
+            raise ValueError("Language must be English, French, or Arabic.")
+        existing_profile = data.get("existingProfile", {})
+        allowed_disabilities = data.get("allowedDisabilities", [])
+        task_vocabulary = data.get("taskVocabulary", [])
+        if not isinstance(existing_profile, dict):
+            raise ValueError("existingProfile must be an object.")
+        if not isinstance(allowed_disabilities, list) or not isinstance(task_vocabulary, list):
+            raise ValueError("Controlled vocabularies must be arrays.")
+
+        extractor = OpenAIProfileExtractor(require_client(), active_settings.intent_model)
+        result = extractor.extract(
+            narrative,
+            language,
+            existing_profile,
+            allowed_disabilities,
+            task_vocabulary,
+        )
         return jsonify(result.model_dump()), 200
 
     @app.post("/api/voice/speech")

@@ -48,3 +48,35 @@ class EffectiveFeasibility(str, Enum):
     FEASIBLE = "feasible"
     FEASIBLE_WITH_ASSISTANCE = "feasible_with_assistance"
     AVOID = "avoid"
+
+
+class AbilityLevel(str, Enum):
+    INDEPENDENT = "independent"
+    WITH_SUPPORT = "with_support"
+    NOT_YET = "not_yet"
+
+    @classmethod
+    def from_value(cls, value: AbilityLevel | str) -> AbilityLevel:
+        if isinstance(value, cls):
+            return value
+        try:
+            return cls(str(value).strip().lower())
+        except ValueError as error:
+            allowed = ", ".join(item.value for item in cls)
+            raise ValueError(f"Unknown ability level {value!r}. Expected one of: {allowed}.") from error
+
+
+class RequirementLevel(str, Enum):
+    NOT_REQUIRED = "not_required"
+    PREFERRED = "preferred"
+    REQUIRED = "required"
+
+    @classmethod
+    def from_value(cls, value: RequirementLevel | str) -> RequirementLevel:
+        if isinstance(value, cls):
+            return value
+        try:
+            return cls(str(value).strip().lower())
+        except ValueError as error:
+            allowed = ", ".join(item.value for item in cls)
+            raise ValueError(f"Unknown requirement level {value!r}. Expected one of: {allowed}.") from error

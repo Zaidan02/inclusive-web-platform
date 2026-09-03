@@ -1,4 +1,8 @@
+import { useTranslation } from "react-i18next";
+
 export default function SkipLink() {
+  const { t } = useTranslation("common");
+
   function moveToMain(event) {
     const main = document.querySelector("#main-content main") || document.getElementById("main-content");
     if (!main) return;
@@ -9,7 +13,7 @@ export default function SkipLink() {
 
   return (
     <a className="skip-link" href="#main-content" onClick={moveToMain}>
-      Skip to main content
+      {t("accessibility.skipToMain")}
     </a>
   );
 }

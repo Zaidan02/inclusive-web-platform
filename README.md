@@ -1,378 +1,167 @@
-# Inclusive Employment Platform
+# JoIn Inclusive Employment Platform
 
-> A Final Year Project in Computer Engineering focused on improving disability inclusion in employment through ability-based and task-based candidate–job matching.
+JoIn is a Final Year Project focused on accessible, task-based employment for people with disabilities. It provides separate candidate, employer, and administrator experiences, deterministic candidate-job compatibility scoring, keyboard and voice access, and an optional AI-assisted candidate profile workflow.
 
----
+## Current capabilities
 
-## Table of Contents
+- Candidate registration with mandatory private disability-card review, email verification, profile management, job browsing, matching, and applications.
+- Employer company profiles, catalogue-backed job publishing, and application management.
+- Administrator user, application, and job-catalogue management.
+- Authorized verifier dashboard for reviewing and deciding candidate eligibility requests.
+- Job definitions decomposed into controlled tasks imported from the project workbooks.
+- Transparent deterministic compatibility scoring using education, selected disabilities, task feasibility, task importance, mandatory tasks, and assistance availability.
+- Keyboard navigation in addition to mouse interaction.
+- Voice navigation, website questions, form actions, and generated spoken feedback.
+- AI-assisted profile building in English, French, and Arabic with editable transcripts, explicit consent, evidence, confidence, and per-suggestion confirmation.
+- Versioned privacy consent, private document storage, audited verifier access, scheduled card-retention cleanup, candidate data export, consent withdrawal, and account deletion.
 
-- [Introduction](#introduction)
-- [Project Objectives](#project-objectives)
-- [Technology Stack](#technology-stack)
-- [System Architecture](#system-architecture)
-- [Repository Structure](#repository-structure)
-- [User Roles](#user-roles)
-- [Local Installation](#local-installation)
-  - [Prerequisites](#prerequisites)
-  - [Backend Setup](#backend-setup)
-  - [Frontend Setup](#frontend-setup)
-  - [Docker Setup](#docker-setup)
-- [Authentication System](#authentication-system)
-- [Email Verification](#email-verification)
-- [AI Matching Module](#ai-matching-module)
-- [Database Overview](#database-overview)
-- [Deployment](#deployment)
-- [Known Issues & Lessons Learned](#known-issues--lessons-learned)
-- [Future Improvements](#future-improvements)
-- [Team Contributions](#team-contributions)
-- [Acknowledgements](#acknowledgements)
+## Architecture
 
----
+```text
+React + Vite :5173
+    |
+    +--> Symfony API :8081 --> PostgreSQL
+    |                         |
+    |                         +--> deterministic scoring service :5001
+    |
+    +--> voice/profile AI service :5002 --> OpenAI APIs
+```
 
-## Introduction
-
-Traditional employment platforms generally evaluate candidates based on job titles, qualifications, or disability labels. Through field research and discussions with organizations supporting people with disabilities, it became clear that employment barriers are often caused by employers being unable to visualize what a candidate can actually do.
-
-This platform was designed around the concept of **remaining functional abilities** rather than disabilities. Jobs are decomposed into tasks, tasks are associated with required abilities, and candidates are evaluated according to their capabilities. An AI-based matching engine then generates compatibility evaluations between candidates and available jobs.
-
-The platform contains dedicated interfaces for **candidates**, **employers**, and **administrators**, and includes authentication, profile management, job posting, application management, and AI-powered compatibility assessment.
-
----
-
-## Project Objectives
-
-- Help employers understand candidate capabilities through task-based evaluations.
-- Provide candidates with personalized compatibility assessments.
-- Reduce bias associated with disability labels.
-- Encourage employers to focus on abilities rather than limitations.
-- Create a scalable digital platform that can be extended in future research or commercial initiatives.
-
----
-
-## Technology Stack
-
-| Layer | Technologies |
+| Layer | Technology |
 |---|---|
-| **Frontend** | React, Vite, React Router, Axios |
-| **Backend** | Symfony, API Platform, Doctrine ORM, JWT Authentication |
-| **Database** | PostgreSQL |
-| **AI** | Python, Scikit-Learn, Gradient Boosting Regressor |
-| **Email** | SendGrid, Symfony Mailer |
-| **Deployment** | Render |
-| **Dev Environment** | Docker, Docker Compose |
-| **Version Control** | Git, GitHub |
+| Frontend | React 19, Vite, React Router |
+| Backend | PHP 8.4, Symfony 8, Doctrine ORM, JWT |
+| Database | PostgreSQL 16 |
+| Matching | Python 3.12 deterministic scoring service |
+| Voice/profile assistance | Flask, Pydantic structured outputs, OpenAI transcription and generation |
+| Local runtime | Docker Compose plus a host Vite server |
 
----
+The scoring engine is not machine learning or generative AI. Identical scoring inputs produce identical results. The generative AI service assists interaction and profile extraction but does not calculate or modify compatibility scores.
 
-## System Architecture
+## Quick start on Windows
 
-The application follows a **client-server architecture**.
+### Requirements
 
-```
-User → React Frontend → Symfony API → PostgreSQL Database
-```
+- Docker Desktop
+- Node.js and npm
+- Git
 
-For compatibility calculations:
+PHP, Composer, PostgreSQL, and Python are containerized for normal local use.
 
-```
-User Data + Job Requirements → AI Model → Compatibility Score → Frontend Display
-```
+### 1. Create local environment files
 
-- The **frontend** handles user interaction and communicates with the backend via REST APIs.
-- The **Symfony backend** contains business logic, authentication, compatibility calculations, and database interactions.
-- The **PostgreSQL database** stores all persistent data: users, jobs, tasks, abilities, applications, and compatibility data.
-- The **AI module** is trained separately and provides compatibility predictions based on collected datasets.
+From the repository root:
 
----
-
-## Repository Structure
-
-```
-├── ai_service/
-│   ├── app.py
-│   ├── model_compatibility...
-│   ├── model_constant...
-│   ├── model_remaining...
-│   └── requirements.txt
-│
-├── backend/
-│   ├── bin/
-│   ├── config/
-│   ├── migrations/
-│   ├── public/
-│   ├── src/
-│   ├── templates/
-│   ├── .editorconfig
-│   ├── .env
-│   ├── .env.dev
-│   ├── .gitignore
-│   ├── compose.override...
-│   ├── compose.yaml
-│   ├── composer.json
-│   ├── composer.lock
-│   ├── Dockerfile
-│   ├── Dockerfile.render
-│   └── symfony.lock
-│
-├── frontend/
-│   ├── node_modules/
-│   ├── public/
-│   ├── src/
-│   ├── .gitignore
-│   ├── eslint.config.js
-│   ├── index.html
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── README.md
-│   └── vite.config.js
-│
-└── database.sql
+```powershell
+Copy-Item backend\.env.example backend\.env
+Copy-Item backend\voice_navigation\.env.example backend\voice_navigation\.env
+Copy-Item frontend\.env.example frontend\.env.local
 ```
 
----
+Set `OPENAI_API_KEY` in `backend/voice_navigation/.env`.
 
-## User Roles
+Generate one strong random value and use it as `PROFILE_AI_TOKEN` in `backend/.env`. Use the same value in `backend/voice_navigation/.env` when running the Python service outside Compose. Never commit either local `.env` file.
 
-### Candidate
-- Register and verify their account.
-- Complete their profile and functional assessments.
-- Browse jobs and view compatibility evaluations.
-- Submit applications.
+### 2. Start backend services
 
-### Employer
-- Create and manage job postings.
-- Define tasks associated with jobs.
-- Review applications and view compatibility evaluations.
+From the repository root:
 
-### Administrator
-- Manage users, jobs, tasks, and abilities.
-- Monitor platform activity and resolve content issues.
-
----
-
-## Local Installation
-
-### Prerequisites
-
-Ensure the following software is installed before proceeding:
-
-- [Git](https://git-scm.com/)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- [Node.js](https://nodejs.org/) v18 or later
-- [Composer](https://getcomposer.org/)
-- PHP 8.2 or later
-- PostgreSQL 14
-
----
-
-### Backend Setup
-
-```bash
-# Navigate to the backend folder
-cd fyp-backend
-
-# Install dependencies
-composer install
-
-# Create a local environment file
-cp .env .env.local
+```powershell
+cd backend
+docker compose up -d --build
+docker compose exec php php bin/console doctrine:migrations:migrate --no-interaction
+docker compose ps
 ```
 
-Configure the database connection in `.env.local`:
+If your prompt already ends in `\backend>`, run `docker compose ...` directly. Do not use `-f backend/compose.yaml` from inside `backend`, because that resolves to the nonexistent `backend\backend\compose.yaml`.
 
-```env
-DATABASE_URL="postgresql://postgres:password@localhost:5432/inclusive_platform?serverVersion=14&charset=utf8"
+### 3. Start the frontend
+
+In a second PowerShell window, from the repository root:
+
+```powershell
+cd frontend
+npm.cmd install
+npm.cmd run dev
 ```
 
-```bash
-# Generate JWT keys
-php bin/console lexik:jwt:generate-keypair
+Open http://127.0.0.1:5173.
 
-# Create the database
-php bin/console doctrine:database:create
+## Service addresses
 
-# Run migrations
-php bin/console doctrine:migrations:migrate
-
-# Start the backend
-symfony server:start
-```
-
-The API will be available at: `http://localhost:8000`
-
----
-
-### Frontend Setup
-
-```bash
-# Navigate to the frontend folder
-cd fyp-frontend
-
-# Install dependencies
-npm install
-```
-
-Create a `.env` file:
-
-```env
-VITE_API_URL=http://localhost:8000/api
-```
-
-```bash
-# Start the application
-npm run dev
-```
-
-The frontend will be available at: `http://localhost:5173`
-
----
-
-### Docker Setup
-
-```bash
-# Build the containers
-docker compose build
-
-# Start containers
-docker compose up -d
-
-# Stop containers
-docker compose down
-```
-
-Docker automatically starts the Symfony backend and PostgreSQL database. It is **strongly recommended** for consistent development environments.
-
----
-
-## Authentication System
-
-Authentication is handled through **JWT tokens**.
-
-1. User submits credentials.
-2. Symfony validates and generates a JWT token.
-3. The token is returned to and stored by the frontend.
-4. Every protected request includes the token in its headers.
-5. Protected routes verify the token before granting access.
-
-Role-based authorization separates candidate, employer, and administrator functionality.
-
----
-
-## Email Verification
-
-Email verification is handled through **SendGrid**.
-
-1. A verification token is generated on registration.
-2. A verification email is sent to the user.
-3. The user clicks the verification link.
-4. The backend validates the token and marks the account as verified.
-
-Required environment variables:
-
-```env
-MAILER_DSN=
-SENDGRID_API_KEY=
-```
-
-> Email verification will fail if SendGrid sender identities are not verified in your SendGrid account.
-
----
-
-## AI Matching Module
-
-The matching engine uses a **Gradient Boosting Regressor**, selected after evaluating several algorithms during experimentation.
-
-- **R² Score:** ~0.986 on the available dataset.
-- The model predicts functional abilities and contributes to compatibility score calculations.
-
-Training data consists of structured records containing:
-- Functional ability indicators
-- Job and task requirements
-- Compatibility outcomes
-
-**To retrain the model:**
-
-```bash
-python train_model.py
-```
-
-Replace the existing file in the `AI/models/` directory with the newly generated model file.
-
----
-
-## Database Overview
-
-| Entity | Description |
+| Service | URL |
 |---|---|
-| **Users** | Authentication and profile information |
-| **Jobs** | Employer-created job opportunities |
-| **Tasks** | Detailed work activities associated with jobs |
-| **Abilities** | Functional abilities required to perform tasks |
-| **Applications** | Candidate submissions |
-| **Compatibility Evaluations** | Generated matching results |
+| Frontend | http://127.0.0.1:5173 |
+| Symfony API | http://127.0.0.1:8081/api |
+| Scoring health | http://127.0.0.1:5001/health |
+| Voice/profile AI health | http://127.0.0.1:5002/health |
 
-Relationships are managed using **Doctrine ORM**. Future teams are encouraged to review Entity definitions before modifying the schema.
+## AI-assisted profile workflow
 
----
+Candidates can type or record a description in English, French, or Arabic. Audio is transcribed into editable text. Analysis requires explicit consent and produces unsaved suggestions only.
 
-## Deployment
+The candidate must individually accept profile fields, education, explicit disability statements, and catalogue-backed task skills. Symfony validates every accepted item before persistence. The application records privacy-safe consent and outcome events without storing audio or narrative text in the audit log.
 
-The platform was deployed using **[Render](https://render.com)**.
+Confirmed task skills enrich the profile but are deliberately excluded from the current scoring payload. See [AI profile workflow](docs/AI_PROFILE_WORKFLOW.md).
 
-| Service | Description |
-|---|---|
-| Backend Service | Symfony API |
-| Frontend Service | React Application |
-| Database Service | PostgreSQL |
+## Candidate eligibility verification
 
-Deployment requires:
-- Environment variables
-- Database configuration
-- SendGrid configuration
-- JWT keys
+New candidate registration requires a PDF, JPEG, or PNG disability card no larger than 5 MB. The card is MIME-validated, assigned a random server filename, and stored under Symfony's private `var` directory rather than the public web root. A candidate can sign in only after both email verification and approval by an authorized verifier. The verifier dashboard is available at `/verifier`; review documents are fetched through authenticated API requests and approval or rejection is recorded with the reviewer and time.
 
-Future teams may redeploy using Render, Railway, AWS, Azure, or any compatible cloud provider.
+The fixture verifier is `verifier@join.local` and uses the shared development password `Pass123!@#`. Existing candidate records created before this migration remain usable; every candidate created by the updated registration endpoint receives the new verification gate. Reviewed disability-card files are retained for 30 days and then removed by the scheduled purge command. See [candidate verification workflow](docs/CANDIDATE_VERIFICATION.md).
 
----
+## Validation
 
-## Known Issues & Lessons Learned
+```powershell
+# Frontend
+cd frontend
+npm.cmd run build
+.\node_modules\.bin\eslint.cmd src
+npm.cmd run test:integration
+npm.cmd run test:e2e
+npm.cmd run test:performance
 
-- **PostgreSQL version mismatch** — The server version must match what is specified in `DATABASE_URL`. A mismatch will cause migration errors.
-- **JWT keys** — Must be generated before authentication can function.
-- **Environment variables** — Must be fully configured before deployment.
-- **SendGrid sender identity** — Must be verified or email verification will fail.
-- **Foreign key relationships** — Review carefully before deleting any entities to avoid cascade issues.
-- **Docker** — Strongly recommended for development consistency.
+# Backend and Python services, from backend
+cd ..\backend
+docker compose exec php php bin/console doctrine:schema:validate
+docker compose exec php php bin/console doctrine:migrations:status
+docker compose exec voice-navigation python -m unittest discover -s tests -v
 
----
+# Scoring tests, from the repository root
+cd ..
+docker compose -f backend\compose.yaml run --rm scoring-engine python -m unittest discover -s scoring_engine/tests -v
+```
 
-## Future Improvements
+## Documentation
 
-- Arabic language support
-- Mobile application development
-- Advanced explainable AI features
-- Employer analytics dashboards
-- Interview scheduling functionality
-- Recommendation systems
-- Expanded datasets for AI training
-- NGO integration
-- Accessibility enhancements
+- [Project run commands](docs/run-project-commands.md)
+- [Setup and Docker guide](docs/project-setup-and-docker-guide.md)
+- [AI-assisted profile workflow](docs/AI_PROFILE_WORKFLOW.md)
+- [Candidate verification workflow](docs/CANDIDATE_VERIFICATION.md)
+- [Authentication and route authorization](docs/AUTHORIZATION_SECURITY.md)
+- [Consent, private storage, and privacy controls](docs/PRIVACY_CONTROLS.md)
+- [Outcome logging and accessible notifications](docs/OUTCOME_LOGGING_AND_ACCESSIBLE_NOTIFICATIONS.md)
+- [Integration, E2E, and performance verification](docs/testing/INTEGRATION_E2E_PERFORMANCE.md)
+- [Scoring engine specification](docs/scoring-engine-technical-specification.md)
+- [Voice navigation specification](docs/voice-navigation-technical-specification.md)
+- [English, French, and Arabic multilingual experience architecture](docs/MULTILINGUAL_FRONTEND_STRATEGY.md)
+- [Multilingual implementation, examples, verification, and remaining work](docs/MULTILINGUAL_IMPLEMENTATION.md)
+- [Keyboard navigation test plan](docs/keyboard-navigation-test-plan.md)
+- [Responsive and WCAG 2.1 AA baseline audit](docs/wcag-audit/BASELINE_AUDIT.md)
+- [WCAG baseline issue matrix](docs/wcag-audit/ISSUE_MATRIX.md)
+- [Responsive foundation implementation](docs/wcag-audit/RESPONSIVE_FOUNDATION.md)
+- [Public and authentication accessibility review](docs/wcag-audit/PUBLIC_AUTHENTICATION_ACCESSIBILITY.md)
+- [Candidate experience accessibility review](docs/wcag-audit/CANDIDATE_EXPERIENCE_ACCESSIBILITY.md)
+- [Management dashboards accessibility review](docs/wcag-audit/MANAGEMENT_DASHBOARDS_ACCESSIBILITY.md)
+- [Shared WCAG 2.1 AA corrections](docs/wcag-audit/SHARED_WCAG_CORRECTIONS.md)
+- [WCAG 2.1 AA final audit report and retest requirements](docs/wcag-audit/WCAG_2_1_AA_FINAL_AUDIT_REPORT.md)
+- [Frontend accessibility revamp](docs/frontend-revamp.md)
+- [Professional frontend design refresh](docs/FRONTEND_DESIGN_REFRESH.md)
 
----
+## Important operational notes
 
-## Team Contributions
-
-This project was developed as part of a Final Year Project in Computer Engineering.
-
-> Future teams should update this section with their own contributions and modifications to maintain project continuity.
-
----
-
-## Acknowledgements
-
-We would like to thank our academic supervisors, participating organizations, employers, and **Arc-en-Ciel** for their support, insights, and contributions throughout the development of this project. Their feedback significantly influenced the design philosophy and practical direction of the platform.
-
----
-
-> **Note for future teams:** Before making major modifications, first understand the relationship between **jobs, tasks, abilities, and compatibility calculations** — these concepts form the core foundation of the platform. Any future development should preserve the original objective of evaluating individuals based on their abilities and potential contributions rather than limitations.
-
+- Run every pending Doctrine migration after pulling entity changes.
+- `docker compose down` preserves database volumes; `docker compose down -v` deletes local database data.
+- The PHP container refreshes the production Symfony cache when it starts so newly added routes are available.
+- Use `docker compose logs --tail 100 php voice-navigation scoring-engine database` when diagnosing failures.
+- Keep API keys, JWT secrets, database backups, uploaded documents, and local environment files out of Git.

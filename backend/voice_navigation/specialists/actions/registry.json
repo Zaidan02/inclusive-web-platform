@@ -127,8 +127,6 @@
         "task_search": { "kind": "field", "label": "task search", "aliases": ["task search", "search tasks"], "editable": true, "valueType": "text", "risk": 0 },
         "job_type": { "kind": "select", "label": "job type", "aliases": ["job type", "employment type"], "editable": true, "valueType": "enum", "options": ["Full-time", "Part-time", "Contract"], "risk": 0 },
         "work_mode": { "kind": "select", "label": "work mode", "aliases": ["work mode", "working mode"], "editable": true, "valueType": "enum", "options": ["On-site", "Remote", "Hybrid"], "risk": 0 },
-        "cv_required": { "kind": "select", "label": "CV requirement", "aliases": ["CV required", "resume required"], "editable": true, "valueType": "enum", "options": ["yes", "no"], "risk": 0 },
-        "cover_letter_required": { "kind": "select", "label": "cover-letter requirement", "aliases": ["cover letter required", "recommendation required"], "editable": true, "valueType": "enum", "options": ["yes", "no"], "risk": 0 },
         "assistance_available": { "kind": "select", "label": "accommodation availability", "aliases": ["accommodation", "assistance available", "help offered"], "editable": true, "valueType": "enum", "options": ["yes", "no"], "risk": 0 },
         "job_definition": { "kind": "collection", "label": "job position", "aliases": ["job position", "position", "job definition"], "valueType": "text", "risk": 0 },
         "job_task": { "kind": "multi_select", "label": "highlighted task", "aliases": ["task", "job task", "highlighted task", "important task"], "editable": true, "valueType": "text", "risk": 0 },

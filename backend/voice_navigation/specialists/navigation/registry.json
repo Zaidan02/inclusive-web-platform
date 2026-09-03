@@ -27,6 +27,7 @@
     "candidate_jobs": { "path": "/candidate", "description": "Candidate available-jobs view", "aliases": ["candidate jobs", "available jobs", "jobs page", "job listings"], "action": { "type": "route_and_tab", "value": "/candidate", "tab": "JOBS" } },
     "candidate_applications": { "path": "/candidate", "description": "Candidate's own applications view", "aliases": ["my applications", "candidate applications", "applications I submitted", "application history"], "action": { "type": "route_and_tab", "value": "/candidate", "tab": "APPLICATIONS" } },
     "candidate_profile": { "path": "/candidate", "description": "Candidate profile editing view", "aliases": ["my profile", "candidate profile", "edit my profile", "disability profile"], "action": { "type": "route_and_tab", "value": "/candidate", "tab": "PROFILE" } },
+    "candidate_privacy": { "path": "/candidate", "description": "Candidate privacy, consent, export, retention, and account controls", "aliases": ["privacy and data", "my privacy", "my data", "data export", "privacy controls"], "action": { "type": "route_and_tab", "value": "/candidate", "tab": "PRIVACY" } },
     "candidate_setup": { "path": "/candidate/setup", "description": "Protected candidate profile setup", "aliases": ["candidate setup", "profile setup", "complete my candidate profile"] },
     "employer_dashboard": { "path": "/employer", "description": "Protected employer console default Post a Job view", "aliases": ["employer dashboard", "employer console", "my company dashboard"], "action": { "type": "route_and_tab", "value": "/employer", "tab": "POST_JOB" } },
     "employer_post_job": { "path": "/employer", "description": "Employer Post a Job view", "aliases": ["post a job", "create a job", "new job", "job posting form"], "action": { "type": "route_and_tab", "value": "/employer", "tab": "POST_JOB" } },
@@ -77,7 +78,7 @@
     },
     "candidate": {
       "commands": ["NAVIGATE", "READ_SECTION", "GO_BACK", "HELP", "REPEAT", "STOP_SPEAKING", "PAUSE_LISTENING", "CANCEL", "DISABLE_VOICE", "CLARIFY", "UNKNOWN"],
-      "navigationTargets": ["home", "voice_help", "candidate_dashboard", "candidate_jobs", "candidate_applications", "candidate_profile", "candidate_setup"],
+      "navigationTargets": ["home", "voice_help", "candidate_dashboard", "candidate_jobs", "candidate_applications", "candidate_profile", "candidate_privacy", "candidate_setup"],
       "sectionTargets": ["candidate-dashboard"]
     },
     "candidate_setup": {

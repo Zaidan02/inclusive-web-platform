@@ -1,0 +1,4401 @@
+{
+  "generatedAt": "2026-08-24T11:47:36.080Z",
+  "standard": "WCAG 2.1 Level A and AA",
+  "browser": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+  "notes": [
+    "The zoom-200 scenario uses CSS zoom in headless Chromium and requires manual browser-zoom confirmation.",
+    "Automated findings are evidence, not a complete conformance determination.",
+    "Keyboard automation records tab stops; focus visibility and interaction quality require manual review."
+  ],
+  "routes": [
+    {
+      "path": "/",
+      "name": "Welcome",
+      "area": "public"
+    },
+    {
+      "path": "/signin",
+      "name": "Sign in",
+      "area": "authentication"
+    },
+    {
+      "path": "/signup",
+      "name": "Sign up",
+      "area": "authentication"
+    },
+    {
+      "path": "/forgot-password",
+      "name": "Forgot password",
+      "area": "authentication"
+    },
+    {
+      "path": "/reset-password",
+      "name": "Reset password",
+      "area": "authentication"
+    },
+    {
+      "path": "/employers",
+      "name": "Employers",
+      "area": "public"
+    },
+    {
+      "path": "/voice-help",
+      "name": "Voice help",
+      "area": "public"
+    },
+    {
+      "path": "/privacy",
+      "name": "Privacy notice",
+      "area": "public"
+    },
+    {
+      "path": "/candidate",
+      "name": "Candidate dashboard",
+      "area": "candidate",
+      "role": "candidate"
+    },
+    {
+      "path": "/candidate/setup",
+      "name": "Candidate setup",
+      "area": "candidate",
+      "role": "candidate"
+    },
+    {
+      "path": "/employer",
+      "name": "Employer dashboard",
+      "area": "employer",
+      "role": "employer"
+    },
+    {
+      "path": "/admin",
+      "name": "Administrator dashboard",
+      "area": "administrator",
+      "role": "admin"
+    },
+    {
+      "path": "/verifier",
+      "name": "Verifier dashboard",
+      "area": "verifier",
+      "role": "verifier"
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "width-320",
+      "width": 320,
+      "height": 800
+    },
+    {
+      "name": "width-375",
+      "width": 375,
+      "height": 812
+    },
+    {
+      "name": "width-768",
+      "width": 768,
+      "height": 1024
+    },
+    {
+      "name": "width-1024",
+      "width": 1024,
+      "height": 768
+    },
+    {
+      "name": "width-1440",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "name": "landscape-667x375",
+      "width": 667,
+      "height": 375,
+      "landscape": true
+    },
+    {
+      "name": "zoom-200",
+      "width": 640,
+      "height": 900,
+      "zoom": 2
+    },
+    {
+      "name": "text-spacing-375",
+      "width": 375,
+      "height": 812,
+      "textSpacing": true
+    }
+  ],
+  "results": [
+    {
+      "route": {
+        "path": "/",
+        "name": "Welcome",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 3,
+        "interactiveCount": 21
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/",
+        "name": "Welcome",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 3,
+        "interactiveCount": 21
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/",
+        "name": "Welcome",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-768",
+        "width": 768,
+        "height": 1024
+      },
+      "url": "http://127.0.0.1:5173/",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 3,
+        "interactiveCount": 23
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/",
+        "name": "Welcome",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-1024",
+        "width": 1024,
+        "height": 768
+      },
+      "url": "http://127.0.0.1:5173/",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1024,
+        "scrollWidth": 1024,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 3,
+        "interactiveCount": 25
+      },
+      "axe": [],
+      "keyboard": {
+        "expectedInteractiveCount": 35,
+        "observedTabStops": [
+          "a:Skip to main content",
+          "button:Activate voice navigation",
+          "button:Close",
+          "button:Commands",
+          "a:JoIn Hospitality home",
+          "button:Job seekers",
+          "button:For employers",
+          "button:About JoIn",
+          "select#interface-language:EnglishFrançaisالعربية",
+          "a:Sign in",
+          "a:Sign up",
+          "a:Find your opportunity",
+          "a:For employers",
+          "a:Sign in to view all published jobs",
+          "a:Become a candidate",
+          "a:Create your account",
+          "a:Our purpose",
+          "a:How it works",
+          "a:Get started",
+          "a:Candidate account",
+          "a:Employer account",
+          "body"
+        ],
+        "firstTabStop": "a:Skip to main content",
+        "bodyReceivedFocus": true,
+        "cycleDetected": true
+      },
+      "finalUrl": "http://127.0.0.1:5173/",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/",
+        "name": "Welcome",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 3,
+        "interactiveCount": 25
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/",
+        "name": "Welcome",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "landscape-667x375",
+        "width": 667,
+        "height": 375,
+        "landscape": true
+      },
+      "url": "http://127.0.0.1:5173/",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 667,
+        "scrollWidth": 667,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 3,
+        "interactiveCount": 22
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/",
+        "name": "Welcome",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "zoom-200",
+        "width": 640,
+        "height": 900,
+        "zoom": 2
+      },
+      "url": "http://127.0.0.1:5173/",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 640,
+        "scrollWidth": 640,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 3,
+        "interactiveCount": 21
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/",
+        "name": "Welcome",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "text-spacing-375",
+        "width": 375,
+        "height": 812,
+        "textSpacing": true
+      },
+      "url": "http://127.0.0.1:5173/",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 3,
+        "interactiveCount": 21
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/signin",
+        "name": "Sign in",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/signin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Sign in | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 11
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/signin",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/signin",
+        "name": "Sign in",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/signin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Sign in | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 11
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/signin",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/signin",
+        "name": "Sign in",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-768",
+        "width": 768,
+        "height": 1024
+      },
+      "url": "http://127.0.0.1:5173/signin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Sign in | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 12
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/signin",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/signin",
+        "name": "Sign in",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-1024",
+        "width": 1024,
+        "height": 768
+      },
+      "url": "http://127.0.0.1:5173/signin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Sign in | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1024,
+        "scrollWidth": 1024,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 12
+      },
+      "axe": [],
+      "keyboard": {
+        "expectedInteractiveCount": 12,
+        "observedTabStops": [
+          "a:Skip to main content",
+          "button:Activate voice navigation",
+          "button:Close",
+          "button:Commands",
+          "a:JoIn Hospitality",
+          "select#interface-language:EnglishFrançaisالعربية",
+          "input#email:email",
+          "a:Forgot password?",
+          "input#password:password",
+          "button:Show password",
+          "button:Sign In→",
+          "a:Don’t have an account? Create one",
+          "body"
+        ],
+        "firstTabStop": "a:Skip to main content",
+        "bodyReceivedFocus": true,
+        "cycleDetected": true
+      },
+      "finalUrl": "http://127.0.0.1:5173/signin",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/signin",
+        "name": "Sign in",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/signin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Sign in | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 12
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/signin",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/signin",
+        "name": "Sign in",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "landscape-667x375",
+        "width": 667,
+        "height": 375,
+        "landscape": true
+      },
+      "url": "http://127.0.0.1:5173/signin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Sign in | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 667,
+        "scrollWidth": 667,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 12
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/signin",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/signin",
+        "name": "Sign in",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "zoom-200",
+        "width": 640,
+        "height": 900,
+        "zoom": 2
+      },
+      "url": "http://127.0.0.1:5173/signin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Sign in | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 640,
+        "scrollWidth": 640,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 11
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/signin",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/signin",
+        "name": "Sign in",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "text-spacing-375",
+        "width": 375,
+        "height": 812,
+        "textSpacing": true
+      },
+      "url": "http://127.0.0.1:5173/signin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Sign in | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 11
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/signin",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/signup",
+        "name": "Sign up",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/signup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Create account | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 17
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/signup",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/signup",
+        "name": "Sign up",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/signup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Create account | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 17
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/signup",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/signup",
+        "name": "Sign up",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-768",
+        "width": 768,
+        "height": 1024
+      },
+      "url": "http://127.0.0.1:5173/signup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Create account | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 18
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/signup",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/signup",
+        "name": "Sign up",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-1024",
+        "width": 1024,
+        "height": 768
+      },
+      "url": "http://127.0.0.1:5173/signup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Create account | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1024,
+        "scrollWidth": 1024,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 18
+      },
+      "axe": [],
+      "keyboard": {
+        "expectedInteractiveCount": 18,
+        "observedTabStops": [
+          "a:Skip to main content",
+          "button:Activate voice navigation",
+          "button:Close",
+          "button:Commands",
+          "a:JoIn Hospitality",
+          "select#interface-language:EnglishFrançaisالعربية",
+          "button:Candidate account type",
+          "button:Employer account type",
+          "input#username:username",
+          "input#email:email",
+          "input#password:password",
+          "button:Show password",
+          "input#disabilityCard:disabilityCard",
+          "input#privacyAccepted",
+          "a:privacy notice",
+          "input#disabilityVerificationConsent",
+          "button:Create Account→",
+          "a:Already have an account? Sign in",
+          "body"
+        ],
+        "firstTabStop": "a:Skip to main content",
+        "bodyReceivedFocus": true,
+        "cycleDetected": true
+      },
+      "finalUrl": "http://127.0.0.1:5173/signup",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/signup",
+        "name": "Sign up",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/signup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Create account | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 18
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/signup",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/signup",
+        "name": "Sign up",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "landscape-667x375",
+        "width": 667,
+        "height": 375,
+        "landscape": true
+      },
+      "url": "http://127.0.0.1:5173/signup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Create account | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 667,
+        "scrollWidth": 667,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 18
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/signup",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/signup",
+        "name": "Sign up",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "zoom-200",
+        "width": 640,
+        "height": 900,
+        "zoom": 2
+      },
+      "url": "http://127.0.0.1:5173/signup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Create account | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 640,
+        "scrollWidth": 640,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 17
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/signup",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/signup",
+        "name": "Sign up",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "text-spacing-375",
+        "width": 375,
+        "height": 812,
+        "textSpacing": true
+      },
+      "url": "http://127.0.0.1:5173/signup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Create account | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 17
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/signup",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/forgot-password",
+        "name": "Forgot password",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/forgot-password",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Forgot password | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 8
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/forgot-password",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/forgot-password",
+        "name": "Forgot password",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/forgot-password",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Forgot password | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 8
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/forgot-password",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/forgot-password",
+        "name": "Forgot password",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-768",
+        "width": 768,
+        "height": 1024
+      },
+      "url": "http://127.0.0.1:5173/forgot-password",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Forgot password | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 9
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/forgot-password",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/forgot-password",
+        "name": "Forgot password",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-1024",
+        "width": 1024,
+        "height": 768
+      },
+      "url": "http://127.0.0.1:5173/forgot-password",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Forgot password | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1024,
+        "scrollWidth": 1024,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 9
+      },
+      "axe": [],
+      "keyboard": {
+        "expectedInteractiveCount": 9,
+        "observedTabStops": [
+          "a:Skip to main content",
+          "button:Activate voice navigation",
+          "button:Close",
+          "button:Commands",
+          "a:JoIn Hospitality",
+          "select#interface-language:EnglishFrançaisالعربية",
+          "input#email:email",
+          "button:Send Reset Link→",
+          "a:Remembered your password? Sign in",
+          "body"
+        ],
+        "firstTabStop": "a:Skip to main content",
+        "bodyReceivedFocus": true,
+        "cycleDetected": true
+      },
+      "finalUrl": "http://127.0.0.1:5173/forgot-password",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/forgot-password",
+        "name": "Forgot password",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/forgot-password",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Forgot password | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 9
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/forgot-password",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/forgot-password",
+        "name": "Forgot password",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "landscape-667x375",
+        "width": 667,
+        "height": 375,
+        "landscape": true
+      },
+      "url": "http://127.0.0.1:5173/forgot-password",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Forgot password | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 667,
+        "scrollWidth": 667,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 9
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/forgot-password",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/forgot-password",
+        "name": "Forgot password",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "zoom-200",
+        "width": 640,
+        "height": 900,
+        "zoom": 2
+      },
+      "url": "http://127.0.0.1:5173/forgot-password",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Forgot password | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 640,
+        "scrollWidth": 640,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 8
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/forgot-password",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/forgot-password",
+        "name": "Forgot password",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "text-spacing-375",
+        "width": 375,
+        "height": 812,
+        "textSpacing": true
+      },
+      "url": "http://127.0.0.1:5173/forgot-password",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Forgot password | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 8
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/forgot-password",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/reset-password",
+        "name": "Reset password",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/reset-password",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Reset password | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 9
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/reset-password",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/reset-password",
+        "name": "Reset password",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/reset-password",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Reset password | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 9
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/reset-password",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/reset-password",
+        "name": "Reset password",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-768",
+        "width": 768,
+        "height": 1024
+      },
+      "url": "http://127.0.0.1:5173/reset-password",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Reset password | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 10
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/reset-password",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/reset-password",
+        "name": "Reset password",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-1024",
+        "width": 1024,
+        "height": 768
+      },
+      "url": "http://127.0.0.1:5173/reset-password",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Reset password | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1024,
+        "scrollWidth": 1024,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 10
+      },
+      "axe": [],
+      "keyboard": {
+        "expectedInteractiveCount": 10,
+        "observedTabStops": [
+          "a:Skip to main content",
+          "button:Activate voice navigation",
+          "button:Close",
+          "button:Commands",
+          "a:JoIn Hospitality",
+          "select#interface-language:EnglishFrançaisالعربية",
+          "input#newPassword:newPassword",
+          "button:Show password",
+          "input#confirmPassword:confirmPassword",
+          "a:Sign in",
+          "body"
+        ],
+        "firstTabStop": "a:Skip to main content",
+        "bodyReceivedFocus": true,
+        "cycleDetected": true
+      },
+      "finalUrl": "http://127.0.0.1:5173/reset-password",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/reset-password",
+        "name": "Reset password",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/reset-password",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Reset password | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 10
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/reset-password",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/reset-password",
+        "name": "Reset password",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "landscape-667x375",
+        "width": 667,
+        "height": 375,
+        "landscape": true
+      },
+      "url": "http://127.0.0.1:5173/reset-password",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Reset password | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 667,
+        "scrollWidth": 667,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 10
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/reset-password",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/reset-password",
+        "name": "Reset password",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "zoom-200",
+        "width": 640,
+        "height": 900,
+        "zoom": 2
+      },
+      "url": "http://127.0.0.1:5173/reset-password",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Reset password | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 640,
+        "scrollWidth": 640,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 9
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/reset-password",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/reset-password",
+        "name": "Reset password",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "text-spacing-375",
+        "width": 375,
+        "height": 812,
+        "textSpacing": true
+      },
+      "url": "http://127.0.0.1:5173/reset-password",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Reset password | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 9
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/reset-password",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/employers",
+        "name": "Employers",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/employers",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "For employers | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 8
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/employers",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/employers",
+        "name": "Employers",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/employers",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "For employers | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 8
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/employers",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/employers",
+        "name": "Employers",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-768",
+        "width": 768,
+        "height": 1024
+      },
+      "url": "http://127.0.0.1:5173/employers",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "For employers | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 9
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/employers",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/employers",
+        "name": "Employers",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-1024",
+        "width": 1024,
+        "height": 768
+      },
+      "url": "http://127.0.0.1:5173/employers",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "For employers | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1024,
+        "scrollWidth": 1024,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 9
+      },
+      "axe": [],
+      "keyboard": {
+        "expectedInteractiveCount": 9,
+        "observedTabStops": [
+          "a:Skip to main content",
+          "button:Activate voice navigation",
+          "button:Close",
+          "button:Commands",
+          "a:JoIn Hospitality home",
+          "a:Back to home",
+          "select#interface-language:EnglishFrançaisالعربية",
+          "a:Create an employer account",
+          "a:Employer sign in",
+          "body"
+        ],
+        "firstTabStop": "a:Skip to main content",
+        "bodyReceivedFocus": true,
+        "cycleDetected": true
+      },
+      "finalUrl": "http://127.0.0.1:5173/employers",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/employers",
+        "name": "Employers",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/employers",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "For employers | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 9
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/employers",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/employers",
+        "name": "Employers",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "landscape-667x375",
+        "width": 667,
+        "height": 375,
+        "landscape": true
+      },
+      "url": "http://127.0.0.1:5173/employers",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "For employers | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 667,
+        "scrollWidth": 667,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 9
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/employers",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/employers",
+        "name": "Employers",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "zoom-200",
+        "width": 640,
+        "height": 900,
+        "zoom": 2
+      },
+      "url": "http://127.0.0.1:5173/employers",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "For employers | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 640,
+        "scrollWidth": 640,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 8
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/employers",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/employers",
+        "name": "Employers",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "text-spacing-375",
+        "width": 375,
+        "height": 812,
+        "textSpacing": true
+      },
+      "url": "http://127.0.0.1:5173/employers",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "For employers | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 8
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/employers",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/voice-help",
+        "name": "Voice help",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/voice-help",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Voice navigation help | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 5
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/voice-help",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/voice-help",
+        "name": "Voice help",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/voice-help",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Voice navigation help | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 5
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/voice-help",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/voice-help",
+        "name": "Voice help",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-768",
+        "width": 768,
+        "height": 1024
+      },
+      "url": "http://127.0.0.1:5173/voice-help",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Voice navigation help | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 6
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/voice-help",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/voice-help",
+        "name": "Voice help",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-1024",
+        "width": 1024,
+        "height": 768
+      },
+      "url": "http://127.0.0.1:5173/voice-help",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Voice navigation help | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1024,
+        "scrollWidth": 1024,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 6
+      },
+      "axe": [],
+      "keyboard": {
+        "expectedInteractiveCount": 6,
+        "observedTabStops": [
+          "a:Skip to main content",
+          "button:Activate voice navigation",
+          "button:Close",
+          "button:Commands",
+          "a:← Back to JoIn",
+          "select#interface-language:EnglishFrançaisالعربية",
+          "body"
+        ],
+        "firstTabStop": "a:Skip to main content",
+        "bodyReceivedFocus": true,
+        "cycleDetected": true
+      },
+      "finalUrl": "http://127.0.0.1:5173/voice-help",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/voice-help",
+        "name": "Voice help",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/voice-help",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Voice navigation help | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 6
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/voice-help",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/voice-help",
+        "name": "Voice help",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "landscape-667x375",
+        "width": 667,
+        "height": 375,
+        "landscape": true
+      },
+      "url": "http://127.0.0.1:5173/voice-help",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Voice navigation help | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 667,
+        "scrollWidth": 667,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 6
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/voice-help",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/voice-help",
+        "name": "Voice help",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "zoom-200",
+        "width": 640,
+        "height": 900,
+        "zoom": 2
+      },
+      "url": "http://127.0.0.1:5173/voice-help",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Voice navigation help | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 640,
+        "scrollWidth": 640,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 5
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/voice-help",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/voice-help",
+        "name": "Voice help",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "text-spacing-375",
+        "width": 375,
+        "height": 812,
+        "textSpacing": true
+      },
+      "url": "http://127.0.0.1:5173/voice-help",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Voice navigation help | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 5
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/voice-help",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/privacy",
+        "name": "Privacy notice",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/privacy",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Privacy notice | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 7
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/privacy",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/privacy",
+        "name": "Privacy notice",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/privacy",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Privacy notice | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 7
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/privacy",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/privacy",
+        "name": "Privacy notice",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-768",
+        "width": 768,
+        "height": 1024
+      },
+      "url": "http://127.0.0.1:5173/privacy",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Privacy notice | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 8
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/privacy",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/privacy",
+        "name": "Privacy notice",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-1024",
+        "width": 1024,
+        "height": 768
+      },
+      "url": "http://127.0.0.1:5173/privacy",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Privacy notice | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1024,
+        "scrollWidth": 1024,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 8
+      },
+      "axe": [],
+      "keyboard": {
+        "expectedInteractiveCount": 8,
+        "observedTabStops": [
+          "a:Skip to main content",
+          "button:Activate voice navigation",
+          "button:Close",
+          "button:Commands",
+          "a:Back to home",
+          "select#interface-language:EnglishFrançaisالعربية",
+          "a:Return to registration",
+          "a:Sign in",
+          "body"
+        ],
+        "firstTabStop": "a:Skip to main content",
+        "bodyReceivedFocus": true,
+        "cycleDetected": true
+      },
+      "finalUrl": "http://127.0.0.1:5173/privacy",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/privacy",
+        "name": "Privacy notice",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/privacy",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Privacy notice | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 8
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/privacy",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/privacy",
+        "name": "Privacy notice",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "landscape-667x375",
+        "width": 667,
+        "height": 375,
+        "landscape": true
+      },
+      "url": "http://127.0.0.1:5173/privacy",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Privacy notice | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 667,
+        "scrollWidth": 667,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 8
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/privacy",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/privacy",
+        "name": "Privacy notice",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "zoom-200",
+        "width": 640,
+        "height": 900,
+        "zoom": 2
+      },
+      "url": "http://127.0.0.1:5173/privacy",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Privacy notice | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 640,
+        "scrollWidth": 640,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 7
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/privacy",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/privacy",
+        "name": "Privacy notice",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "text-spacing-375",
+        "width": 375,
+        "height": 812,
+        "textSpacing": true
+      },
+      "url": "http://127.0.0.1:5173/privacy",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Privacy notice | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 7
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/privacy",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate",
+        "name": "Candidate dashboard",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/candidate",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 2,
+        "interactiveCount": 61
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate",
+        "name": "Candidate dashboard",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/candidate",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 2,
+        "interactiveCount": 61
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate",
+        "name": "Candidate dashboard",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "width-768",
+        "width": 768,
+        "height": 1024
+      },
+      "url": "http://127.0.0.1:5173/candidate",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 2,
+        "interactiveCount": 63
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate",
+        "name": "Candidate dashboard",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "width-1024",
+        "width": 1024,
+        "height": 768
+      },
+      "url": "http://127.0.0.1:5173/candidate",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1024,
+        "scrollWidth": 1024,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 2,
+        "interactiveCount": 63
+      },
+      "axe": [],
+      "keyboard": {
+        "expectedInteractiveCount": 63,
+        "observedTabStops": [
+          "a:Skip to main content",
+          "button:Activate voice navigation",
+          "button:Close",
+          "button:Commands",
+          "select#interface-language:EnglishFrançaisالعربية",
+          "button:Open my profile",
+          "button:Sign out",
+          "button:Jobs",
+          "button:My applications",
+          "button:My profile",
+          "button:Privacy and data",
+          "button:1Build your profileConfirm your abilities and preferences",
+          "button:2Match and exploreCompare your profile with real job tasks",
+          "button:3Apply and trackFollow the progress of your applications",
+          "button:Calculate compatibility",
+          "button:View details for Bakery / Pastry Worker",
+          "button:Beirut Artisan Bakery",
+          "button:North Scoop",
+          "button:Cedar Sweets",
+          "button:JoIn Hospitality Demo",
+          "button:View details for Ice Cream Maker",
+          "button:View details for Chocolate / Confectionery Worker",
+          "body"
+        ],
+        "firstTabStop": "a:Skip to main content",
+        "bodyReceivedFocus": true,
+        "cycleDetected": true
+      },
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate",
+        "name": "Candidate dashboard",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/candidate",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 2,
+        "interactiveCount": 63
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate",
+        "name": "Candidate dashboard",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "landscape-667x375",
+        "width": 667,
+        "height": 375,
+        "landscape": true
+      },
+      "url": "http://127.0.0.1:5173/candidate",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 667,
+        "scrollWidth": 667,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 2,
+        "interactiveCount": 63
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate",
+        "name": "Candidate dashboard",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "zoom-200",
+        "width": 640,
+        "height": 900,
+        "zoom": 2
+      },
+      "url": "http://127.0.0.1:5173/candidate",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 640,
+        "scrollWidth": 640,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 2,
+        "interactiveCount": 62
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate",
+        "name": "Candidate dashboard",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "text-spacing-375",
+        "width": 375,
+        "height": 812,
+        "textSpacing": true
+      },
+      "url": "http://127.0.0.1:5173/candidate",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 2,
+        "interactiveCount": 61
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate/setup",
+        "name": "Candidate setup",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/candidate/setup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 2,
+        "interactiveCount": 61
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate/setup",
+        "name": "Candidate setup",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/candidate/setup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 2,
+        "interactiveCount": 61
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate/setup",
+        "name": "Candidate setup",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "width-768",
+        "width": 768,
+        "height": 1024
+      },
+      "url": "http://127.0.0.1:5173/candidate/setup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 2,
+        "interactiveCount": 63
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate/setup",
+        "name": "Candidate setup",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "width-1024",
+        "width": 1024,
+        "height": 768
+      },
+      "url": "http://127.0.0.1:5173/candidate/setup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1024,
+        "scrollWidth": 1024,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 2,
+        "interactiveCount": 63
+      },
+      "axe": [],
+      "keyboard": {
+        "expectedInteractiveCount": 63,
+        "observedTabStops": [
+          "button:1Build your profileConfirm your abilities and preferences",
+          "button:2Match and exploreCompare your profile with real job tasks",
+          "button:3Apply and trackFollow the progress of your applications",
+          "button:Calculate compatibility",
+          "button:View details for Bakery / Pastry Worker",
+          "button:Beirut Artisan Bakery",
+          "button:North Scoop",
+          "button:Cedar Sweets",
+          "button:JoIn Hospitality Demo",
+          "button:View details for Ice Cream Maker",
+          "button:View details for Chocolate / Confectionery Worker",
+          "body",
+          "a:Skip to main content",
+          "button:Activate voice navigation",
+          "button:Close",
+          "button:Commands",
+          "select#interface-language:EnglishFrançaisالعربية",
+          "button:Open my profile",
+          "button:Sign out",
+          "button:Jobs",
+          "button:My applications",
+          "button:My profile",
+          "button:Privacy and data"
+        ],
+        "firstTabStop": "button:1Build your profileConfirm your abilities and preferences",
+        "bodyReceivedFocus": true,
+        "cycleDetected": true
+      },
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate/setup",
+        "name": "Candidate setup",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/candidate/setup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 2,
+        "interactiveCount": 63
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate/setup",
+        "name": "Candidate setup",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "landscape-667x375",
+        "width": 667,
+        "height": 375,
+        "landscape": true
+      },
+      "url": "http://127.0.0.1:5173/candidate/setup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 667,
+        "scrollWidth": 667,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 2,
+        "interactiveCount": 63
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate/setup",
+        "name": "Candidate setup",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "zoom-200",
+        "width": 640,
+        "height": 900,
+        "zoom": 2
+      },
+      "url": "http://127.0.0.1:5173/candidate/setup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 640,
+        "scrollWidth": 640,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 2,
+        "interactiveCount": 62
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate/setup",
+        "name": "Candidate setup",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "text-spacing-375",
+        "width": 375,
+        "height": 812,
+        "textSpacing": true
+      },
+      "url": "http://127.0.0.1:5173/candidate/setup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 2,
+        "interactiveCount": 61
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/employer",
+        "name": "Employer dashboard",
+        "area": "employer",
+        "role": "employer"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/employer",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Employer dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 17
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/employer",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/employer",
+        "name": "Employer dashboard",
+        "area": "employer",
+        "role": "employer"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/employer",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Employer dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 17
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/employer",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/employer",
+        "name": "Employer dashboard",
+        "area": "employer",
+        "role": "employer"
+      },
+      "scenario": {
+        "name": "width-768",
+        "width": 768,
+        "height": 1024
+      },
+      "url": "http://127.0.0.1:5173/employer",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Employer dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 18
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/employer",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/employer",
+        "name": "Employer dashboard",
+        "area": "employer",
+        "role": "employer"
+      },
+      "scenario": {
+        "name": "width-1024",
+        "width": 1024,
+        "height": 768
+      },
+      "url": "http://127.0.0.1:5173/employer",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Employer dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1024,
+        "scrollWidth": 1024,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 18
+      },
+      "axe": [],
+      "keyboard": {
+        "expectedInteractiveCount": 18,
+        "observedTabStops": [
+          "a:Skip to main content",
+          "button:Activate voice navigation",
+          "button:Close",
+          "button:Commands",
+          "button:Post a job",
+          "button:My jobs",
+          "button:Applications",
+          "button:Company profile",
+          "button:Sign out",
+          "select#interface-language:EnglishFrançaisالعربية",
+          "select#_r_0_:Select a positionBakery / Pastry WorkerChocolate / Confectionery WorkerIce Cream",
+          "input#_r_1_:location",
+          "input#_r_2_:applicationDeadline",
+          "select#_r_3_:Full-timePart-timeInternshipSeasonal",
+          "select#_r_4_:On-siteHybridRemote",
+          "textarea#_r_5_:description",
+          "input:assistanceAvailable",
+          "button:Publish job",
+          "body"
+        ],
+        "firstTabStop": "a:Skip to main content",
+        "bodyReceivedFocus": true,
+        "cycleDetected": true
+      },
+      "finalUrl": "http://127.0.0.1:5173/employer",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/employer",
+        "name": "Employer dashboard",
+        "area": "employer",
+        "role": "employer"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/employer",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Employer dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 18
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/employer",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/employer",
+        "name": "Employer dashboard",
+        "area": "employer",
+        "role": "employer"
+      },
+      "scenario": {
+        "name": "landscape-667x375",
+        "width": 667,
+        "height": 375,
+        "landscape": true
+      },
+      "url": "http://127.0.0.1:5173/employer",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Employer dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 667,
+        "scrollWidth": 667,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 18
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/employer",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/employer",
+        "name": "Employer dashboard",
+        "area": "employer",
+        "role": "employer"
+      },
+      "scenario": {
+        "name": "zoom-200",
+        "width": 640,
+        "height": 900,
+        "zoom": 2
+      },
+      "url": "http://127.0.0.1:5173/employer",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Employer dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 640,
+        "scrollWidth": 640,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 17
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/employer",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/employer",
+        "name": "Employer dashboard",
+        "area": "employer",
+        "role": "employer"
+      },
+      "scenario": {
+        "name": "text-spacing-375",
+        "width": 375,
+        "height": 812,
+        "textSpacing": true
+      },
+      "url": "http://127.0.0.1:5173/employer",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Employer dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 17
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/employer",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/admin",
+        "name": "Administrator dashboard",
+        "area": "administrator",
+        "role": "admin"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/admin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Admin dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 41
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/admin",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/admin",
+        "name": "Administrator dashboard",
+        "area": "administrator",
+        "role": "admin"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/admin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Admin dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 41
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/admin",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/admin",
+        "name": "Administrator dashboard",
+        "area": "administrator",
+        "role": "admin"
+      },
+      "scenario": {
+        "name": "width-768",
+        "width": 768,
+        "height": 1024
+      },
+      "url": "http://127.0.0.1:5173/admin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Admin dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": false,
+        "overflowElements": [
+          {
+            "selector": "table.dashboard-table.dashboard-table--users",
+            "left": 281,
+            "right": 1053,
+            "width": 772,
+            "text": "#UsernameEmailRoleVerifiedActions1adminadmin@join.localAdministratorVerifiedEditArchiveDelete2employeremployer@join.loca",
+            "html": "<table class=\"dashboard-table dashboard-table--users\" style=\"width: 100%; border-collapse: collapse;\"><thead><tr style=\"background: rgb(248, 250, 252);\"><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">#</th><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacin"
+          },
+          {
+            "selector": "thead",
+            "left": 281,
+            "right": 1053,
+            "width": 772,
+            "text": "#UsernameEmailRoleVerifiedActions",
+            "html": "<thead><tr style=\"background: rgb(248, 250, 252);\"><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">#</th><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">Username</th><th style=\"pad"
+          },
+          {
+            "selector": "tr",
+            "left": 281,
+            "right": 1053,
+            "width": 772,
+            "text": "#UsernameEmailRoleVerifiedActions",
+            "html": "<tr style=\"background: rgb(248, 250, 252);\"><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">#</th><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">Username</th><th style=\"padding: 1"
+          },
+          {
+            "selector": "th",
+            "left": 761,
+            "right": 845,
+            "width": 85,
+            "text": "Verified",
+            "html": "<th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">Verified</th>"
+          },
+          {
+            "selector": "th",
+            "left": 845,
+            "right": 1053,
+            "width": 207,
+            "text": "Actions",
+            "html": "<th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: center;\">Actions</th>"
+          },
+          {
+            "selector": "tbody",
+            "left": 281,
+            "right": 1053,
+            "width": 772,
+            "text": "1adminadmin@join.localAdministratorVerifiedEditArchiveDelete2employeremployer@join.localEmployerVerifiedEditArchiveDelet",
+            "html": "<tbody><tr class=\"row-hover\" style=\"transition: background 0.15s;\"><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(100, 116, 139); width: 40px;\">1</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(55, 65, 81); font-weight: 500;\">admin</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); fo"
+          },
+          {
+            "selector": "tr.row-hover",
+            "left": 281,
+            "right": 1053,
+            "width": 772,
+            "text": "1adminadmin@join.localAdministratorVerifiedEditArchiveDelete",
+            "html": "<tr class=\"row-hover\" style=\"transition: background 0.15s;\"><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(100, 116, 139); width: 40px;\">1</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(55, 65, 81); font-weight: 500;\">admin</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size"
+          },
+          {
+            "selector": "td",
+            "left": 761,
+            "right": 845,
+            "width": 85,
+            "text": "Verified",
+            "html": "<td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(55, 65, 81);\"><span style=\"padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; white-space: nowrap; display: inline-block; background: rgb(240, 253, 244); color: rgb(18, 99, 59);\">Verified</span></td>"
+          },
+          {
+            "selector": "span",
+            "left": 775,
+            "right": 831,
+            "width": 57,
+            "text": "Verified",
+            "html": "<span style=\"padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; white-space: nowrap; display: inline-block; background: rgb(240, 253, 244); color: rgb(18, 99, 59);\">Verified</span>"
+          },
+          {
+            "selector": "td",
+            "left": 845,
+            "right": 1053,
+            "width": 207,
+            "text": "EditArchiveDelete",
+            "html": "<td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: center; color: rgb(55, 65, 81);\"><div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit admin\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-"
+          },
+          {
+            "selector": "div",
+            "left": 859,
+            "right": 1039,
+            "width": 179,
+            "text": "EditArchiveDelete",
+            "html": "<div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit admin\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Edit</button><button type=\"button\" class=\"action-btn\" aria-label=\"Ar"
+          },
+          {
+            "selector": "button.action-btn",
+            "left": 859,
+            "right": 904,
+            "width": 45,
+            "text": "Edit admin",
+            "html": "<button type=\"button\" class=\"action-btn\" aria-label=\"Edit admin\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Edit</button>"
+          },
+          {
+            "selector": "button.action-btn",
+            "left": 910,
+            "right": 974,
+            "width": 64,
+            "text": "Archive admin",
+            "html": "<button type=\"button\" class=\"action-btn\" aria-label=\"Archive admin\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(241, 245, 249); color: rgb(71, 85, 105); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Archive</button>"
+          },
+          {
+            "selector": "button.action-btn",
+            "left": 980,
+            "right": 1039,
+            "width": 59,
+            "text": "Delete admin",
+            "html": "<button type=\"button\" class=\"action-btn\" aria-label=\"Delete admin\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(254, 242, 242); color: rgb(161, 19, 31); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Delete</button>"
+          },
+          {
+            "selector": "tr.row-hover",
+            "left": 281,
+            "right": 1053,
+            "width": 772,
+            "text": "2employeremployer@join.localEmployerVerifiedEditArchiveDelete",
+            "html": "<tr class=\"row-hover\" style=\"transition: background 0.15s;\"><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(100, 116, 139); width: 40px;\">2</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(55, 65, 81); font-weight: 500;\">employer</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-s"
+          },
+          {
+            "selector": "td",
+            "left": 761,
+            "right": 845,
+            "width": 85,
+            "text": "Verified",
+            "html": "<td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(55, 65, 81);\"><span style=\"padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; white-space: nowrap; display: inline-block; background: rgb(240, 253, 244); color: rgb(18, 99, 59);\">Verified</span></td>"
+          },
+          {
+            "selector": "span",
+            "left": 775,
+            "right": 831,
+            "width": 57,
+            "text": "Verified",
+            "html": "<span style=\"padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; white-space: nowrap; display: inline-block; background: rgb(240, 253, 244); color: rgb(18, 99, 59);\">Verified</span>"
+          },
+          {
+            "selector": "td",
+            "left": 845,
+            "right": 1053,
+            "width": 207,
+            "text": "EditArchiveDelete",
+            "html": "<td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: center; color: rgb(55, 65, 81);\"><div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit employer\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; fo"
+          },
+          {
+            "selector": "div",
+            "left": 859,
+            "right": 1039,
+            "width": 179,
+            "text": "EditArchiveDelete",
+            "html": "<div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit employer\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Edit</button><button type=\"button\" class=\"action-btn\" aria-label="
+          },
+          {
+            "selector": "button.action-btn",
+            "left": 859,
+            "right": 904,
+            "width": 45,
+            "text": "Edit employer",
+            "html": "<button type=\"button\" class=\"action-btn\" aria-label=\"Edit employer\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Edit</button>"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 42
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/admin",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/admin",
+        "name": "Administrator dashboard",
+        "area": "administrator",
+        "role": "admin"
+      },
+      "scenario": {
+        "name": "width-1024",
+        "width": 1024,
+        "height": 768
+      },
+      "url": "http://127.0.0.1:5173/admin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Admin dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1024,
+        "scrollWidth": 1024,
+        "horizontalOverflow": false,
+        "overflowElements": [
+          {
+            "selector": "table.dashboard-table.dashboard-table--users",
+            "left": 281,
+            "right": 1053,
+            "width": 772,
+            "text": "#UsernameEmailRoleVerifiedActions1adminadmin@join.localAdministratorVerifiedEditArchiveDelete2employeremployer@join.loca",
+            "html": "<table class=\"dashboard-table dashboard-table--users\" style=\"width: 100%; border-collapse: collapse;\"><thead><tr style=\"background: rgb(248, 250, 252);\"><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">#</th><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacin"
+          },
+          {
+            "selector": "thead",
+            "left": 281,
+            "right": 1053,
+            "width": 772,
+            "text": "#UsernameEmailRoleVerifiedActions",
+            "html": "<thead><tr style=\"background: rgb(248, 250, 252);\"><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">#</th><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">Username</th><th style=\"pad"
+          },
+          {
+            "selector": "tr",
+            "left": 281,
+            "right": 1053,
+            "width": 772,
+            "text": "#UsernameEmailRoleVerifiedActions",
+            "html": "<tr style=\"background: rgb(248, 250, 252);\"><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">#</th><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">Username</th><th style=\"padding: 1"
+          },
+          {
+            "selector": "th",
+            "left": 845,
+            "right": 1053,
+            "width": 207,
+            "text": "Actions",
+            "html": "<th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: center;\">Actions</th>"
+          },
+          {
+            "selector": "tbody",
+            "left": 281,
+            "right": 1053,
+            "width": 772,
+            "text": "1adminadmin@join.localAdministratorVerifiedEditArchiveDelete2employeremployer@join.localEmployerVerifiedEditArchiveDelet",
+            "html": "<tbody><tr class=\"row-hover\" style=\"transition: background 0.15s;\"><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(100, 116, 139); width: 40px;\">1</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(55, 65, 81); font-weight: 500;\">admin</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); fo"
+          },
+          {
+            "selector": "tr.row-hover",
+            "left": 281,
+            "right": 1053,
+            "width": 772,
+            "text": "1adminadmin@join.localAdministratorVerifiedEditArchiveDelete",
+            "html": "<tr class=\"row-hover\" style=\"transition: background 0.15s;\"><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(100, 116, 139); width: 40px;\">1</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(55, 65, 81); font-weight: 500;\">admin</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size"
+          },
+          {
+            "selector": "td",
+            "left": 845,
+            "right": 1053,
+            "width": 207,
+            "text": "EditArchiveDelete",
+            "html": "<td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: center; color: rgb(55, 65, 81);\"><div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit admin\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-"
+          },
+          {
+            "selector": "div",
+            "left": 859,
+            "right": 1039,
+            "width": 179,
+            "text": "EditArchiveDelete",
+            "html": "<div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit admin\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Edit</button><button type=\"button\" class=\"action-btn\" aria-label=\"Ar"
+          },
+          {
+            "selector": "button.action-btn",
+            "left": 980,
+            "right": 1039,
+            "width": 59,
+            "text": "Delete admin",
+            "html": "<button type=\"button\" class=\"action-btn\" aria-label=\"Delete admin\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(254, 242, 242); color: rgb(161, 19, 31); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Delete</button>"
+          },
+          {
+            "selector": "tr.row-hover",
+            "left": 281,
+            "right": 1053,
+            "width": 772,
+            "text": "2employeremployer@join.localEmployerVerifiedEditArchiveDelete",
+            "html": "<tr class=\"row-hover\" style=\"transition: background 0.15s;\"><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(100, 116, 139); width: 40px;\">2</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(55, 65, 81); font-weight: 500;\">employer</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-s"
+          },
+          {
+            "selector": "td",
+            "left": 845,
+            "right": 1053,
+            "width": 207,
+            "text": "EditArchiveDelete",
+            "html": "<td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: center; color: rgb(55, 65, 81);\"><div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit employer\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; fo"
+          },
+          {
+            "selector": "div",
+            "left": 859,
+            "right": 1039,
+            "width": 179,
+            "text": "EditArchiveDelete",
+            "html": "<div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit employer\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Edit</button><button type=\"button\" class=\"action-btn\" aria-label="
+          },
+          {
+            "selector": "button.action-btn",
+            "left": 980,
+            "right": 1039,
+            "width": 59,
+            "text": "Delete employer",
+            "html": "<button type=\"button\" class=\"action-btn\" aria-label=\"Delete employer\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(254, 242, 242); color: rgb(161, 19, 31); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Delete</button>"
+          },
+          {
+            "selector": "tr.row-hover",
+            "left": 281,
+            "right": 1053,
+            "width": 772,
+            "text": "3cedar_sweetscedar.sweets@join.localEmployerVerifiedEditArchiveDelete",
+            "html": "<tr class=\"row-hover\" style=\"transition: background 0.15s;\"><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(100, 116, 139); width: 40px;\">3</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(55, 65, 81); font-weight: 500;\">cedar_sweets</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); fo"
+          },
+          {
+            "selector": "td",
+            "left": 845,
+            "right": 1053,
+            "width": 207,
+            "text": "EditArchiveDelete",
+            "html": "<td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: center; color: rgb(55, 65, 81);\"><div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit cedar_sweets\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer"
+          },
+          {
+            "selector": "div",
+            "left": 859,
+            "right": 1039,
+            "width": 179,
+            "text": "EditArchiveDelete",
+            "html": "<div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit cedar_sweets\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Edit</button><button type=\"button\" class=\"action-btn\" aria-la"
+          },
+          {
+            "selector": "button.action-btn",
+            "left": 980,
+            "right": 1039,
+            "width": 59,
+            "text": "Delete cedar_sweets",
+            "html": "<button type=\"button\" class=\"action-btn\" aria-label=\"Delete cedar_sweets\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(254, 242, 242); color: rgb(161, 19, 31); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Delete</button>"
+          },
+          {
+            "selector": "tr.row-hover",
+            "left": 281,
+            "right": 1053,
+            "width": 772,
+            "text": "4north_scoopnorth.scoop@join.localEmployerVerifiedEditArchiveDelete",
+            "html": "<tr class=\"row-hover\" style=\"transition: background 0.15s;\"><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(100, 116, 139); width: 40px;\">4</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(55, 65, 81); font-weight: 500;\">north_scoop</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); fon"
+          },
+          {
+            "selector": "td",
+            "left": 845,
+            "right": 1053,
+            "width": 207,
+            "text": "EditArchiveDelete",
+            "html": "<td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: center; color: rgb(55, 65, 81);\"><div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit north_scoop\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer;"
+          },
+          {
+            "selector": "div",
+            "left": 859,
+            "right": 1039,
+            "width": 179,
+            "text": "EditArchiveDelete",
+            "html": "<div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit north_scoop\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Edit</button><button type=\"button\" class=\"action-btn\" aria-lab"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 42
+      },
+      "axe": [],
+      "keyboard": {
+        "expectedInteractiveCount": 43,
+        "observedTabStops": [
+          "a:Skip to main content",
+          "button:Activate voice navigation",
+          "button:Close",
+          "button:Commands",
+          "button:Users",
+          "button:Archived users",
+          "button:Applications",
+          "button:User profiles",
+          "button:Sign out",
+          "select#interface-language:EnglishFrançaisالعربية",
+          "button:Add data sheets",
+          "input:Search users",
+          "select:Filter users by role",
+          "select:Filter users by verification status",
+          "div:Users table",
+          "button:Edit admin",
+          "button:Archive admin",
+          "button:Delete admin",
+          "button:Edit employer",
+          "button:Archive employer",
+          "button:Delete employer",
+          "button:Edit cedar_sweets",
+          "button:Archive cedar_sweets",
+          "button:Delete cedar_sweets",
+          "button:Edit north_scoop",
+          "button:Archive north_scoop",
+          "button:Delete north_scoop",
+          "button:Edit artisan_bakery",
+          "button:Archive artisan_bakery",
+          "button:Delete artisan_bakery",
+          "button:Edit candidate",
+          "button:Archive candidate",
+          "button:Delete candidate",
+          "button:Edit zaidanm",
+          "button:Archive zaidanm",
+          "button:Delete zaidanm",
+          "button:Edit verifier",
+          "button:Archive verifier",
+          "button:Delete verifier",
+          "button:Edit Mahmoud Waari",
+          "button:Archive Mahmoud Waari",
+          "button:Delete Mahmoud Waari",
+          "body"
+        ],
+        "firstTabStop": "a:Skip to main content",
+        "bodyReceivedFocus": true,
+        "cycleDetected": true
+      },
+      "finalUrl": "http://127.0.0.1:5173/admin",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/admin",
+        "name": "Administrator dashboard",
+        "area": "administrator",
+        "role": "admin"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/admin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Admin dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 42
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/admin",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/admin",
+        "name": "Administrator dashboard",
+        "area": "administrator",
+        "role": "admin"
+      },
+      "scenario": {
+        "name": "landscape-667x375",
+        "width": 667,
+        "height": 375,
+        "landscape": true
+      },
+      "url": "http://127.0.0.1:5173/admin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Admin dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 667,
+        "scrollWidth": 667,
+        "horizontalOverflow": false,
+        "overflowElements": [
+          {
+            "selector": "table.dashboard-table.dashboard-table--users",
+            "left": 37,
+            "right": 809,
+            "width": 772,
+            "text": "#UsernameEmailRoleVerifiedActions1adminadmin@join.localAdministratorVerifiedEditArchiveDelete2employeremployer@join.loca",
+            "html": "<table class=\"dashboard-table dashboard-table--users\" style=\"width: 100%; border-collapse: collapse;\"><thead><tr style=\"background: rgb(248, 250, 252);\"><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">#</th><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacin"
+          },
+          {
+            "selector": "thead",
+            "left": 37,
+            "right": 809,
+            "width": 772,
+            "text": "#UsernameEmailRoleVerifiedActions",
+            "html": "<thead><tr style=\"background: rgb(248, 250, 252);\"><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">#</th><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">Username</th><th style=\"pad"
+          },
+          {
+            "selector": "tr",
+            "left": 37,
+            "right": 809,
+            "width": 772,
+            "text": "#UsernameEmailRoleVerifiedActions",
+            "html": "<tr style=\"background: rgb(248, 250, 252);\"><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">#</th><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">Username</th><th style=\"padding: 1"
+          },
+          {
+            "selector": "th",
+            "left": 601,
+            "right": 809,
+            "width": 207,
+            "text": "Actions",
+            "html": "<th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: center;\">Actions</th>"
+          },
+          {
+            "selector": "tbody",
+            "left": 37,
+            "right": 809,
+            "width": 772,
+            "text": "1adminadmin@join.localAdministratorVerifiedEditArchiveDelete2employeremployer@join.localEmployerVerifiedEditArchiveDelet",
+            "html": "<tbody><tr class=\"row-hover\" style=\"transition: background 0.15s;\"><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(100, 116, 139); width: 40px;\">1</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(55, 65, 81); font-weight: 500;\">admin</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); fo"
+          },
+          {
+            "selector": "tr.row-hover",
+            "left": 37,
+            "right": 809,
+            "width": 772,
+            "text": "1adminadmin@join.localAdministratorVerifiedEditArchiveDelete",
+            "html": "<tr class=\"row-hover\" style=\"transition: background 0.15s;\"><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(100, 116, 139); width: 40px;\">1</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(55, 65, 81); font-weight: 500;\">admin</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size"
+          },
+          {
+            "selector": "td",
+            "left": 601,
+            "right": 809,
+            "width": 207,
+            "text": "EditArchiveDelete",
+            "html": "<td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: center; color: rgb(55, 65, 81);\"><div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit admin\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-"
+          },
+          {
+            "selector": "div",
+            "left": 615,
+            "right": 795,
+            "width": 179,
+            "text": "EditArchiveDelete",
+            "html": "<div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit admin\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Edit</button><button type=\"button\" class=\"action-btn\" aria-label=\"Ar"
+          },
+          {
+            "selector": "button.action-btn",
+            "left": 666,
+            "right": 730,
+            "width": 64,
+            "text": "Archive admin",
+            "html": "<button type=\"button\" class=\"action-btn\" aria-label=\"Archive admin\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(241, 245, 249); color: rgb(71, 85, 105); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Archive</button>"
+          },
+          {
+            "selector": "button.action-btn",
+            "left": 736,
+            "right": 795,
+            "width": 59,
+            "text": "Delete admin",
+            "html": "<button type=\"button\" class=\"action-btn\" aria-label=\"Delete admin\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(254, 242, 242); color: rgb(161, 19, 31); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Delete</button>"
+          },
+          {
+            "selector": "tr.row-hover",
+            "left": 37,
+            "right": 809,
+            "width": 772,
+            "text": "2employeremployer@join.localEmployerVerifiedEditArchiveDelete",
+            "html": "<tr class=\"row-hover\" style=\"transition: background 0.15s;\"><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(100, 116, 139); width: 40px;\">2</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(55, 65, 81); font-weight: 500;\">employer</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-s"
+          },
+          {
+            "selector": "td",
+            "left": 601,
+            "right": 809,
+            "width": 207,
+            "text": "EditArchiveDelete",
+            "html": "<td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: center; color: rgb(55, 65, 81);\"><div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit employer\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; fo"
+          },
+          {
+            "selector": "div",
+            "left": 615,
+            "right": 795,
+            "width": 179,
+            "text": "EditArchiveDelete",
+            "html": "<div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit employer\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Edit</button><button type=\"button\" class=\"action-btn\" aria-label="
+          },
+          {
+            "selector": "button.action-btn",
+            "left": 666,
+            "right": 730,
+            "width": 64,
+            "text": "Archive employer",
+            "html": "<button type=\"button\" class=\"action-btn\" aria-label=\"Archive employer\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(241, 245, 249); color: rgb(71, 85, 105); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Archive</button>"
+          },
+          {
+            "selector": "button.action-btn",
+            "left": 736,
+            "right": 795,
+            "width": 59,
+            "text": "Delete employer",
+            "html": "<button type=\"button\" class=\"action-btn\" aria-label=\"Delete employer\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(254, 242, 242); color: rgb(161, 19, 31); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Delete</button>"
+          },
+          {
+            "selector": "tr.row-hover",
+            "left": 37,
+            "right": 809,
+            "width": 772,
+            "text": "3cedar_sweetscedar.sweets@join.localEmployerVerifiedEditArchiveDelete",
+            "html": "<tr class=\"row-hover\" style=\"transition: background 0.15s;\"><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(100, 116, 139); width: 40px;\">3</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(55, 65, 81); font-weight: 500;\">cedar_sweets</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); fo"
+          },
+          {
+            "selector": "td",
+            "left": 601,
+            "right": 809,
+            "width": 207,
+            "text": "EditArchiveDelete",
+            "html": "<td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: center; color: rgb(55, 65, 81);\"><div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit cedar_sweets\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer"
+          },
+          {
+            "selector": "div",
+            "left": 615,
+            "right": 795,
+            "width": 179,
+            "text": "EditArchiveDelete",
+            "html": "<div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit cedar_sweets\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Edit</button><button type=\"button\" class=\"action-btn\" aria-la"
+          },
+          {
+            "selector": "button.action-btn",
+            "left": 666,
+            "right": 730,
+            "width": 64,
+            "text": "Archive cedar_sweets",
+            "html": "<button type=\"button\" class=\"action-btn\" aria-label=\"Archive cedar_sweets\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(241, 245, 249); color: rgb(71, 85, 105); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Archive</button>"
+          },
+          {
+            "selector": "button.action-btn",
+            "left": 736,
+            "right": 795,
+            "width": 59,
+            "text": "Delete cedar_sweets",
+            "html": "<button type=\"button\" class=\"action-btn\" aria-label=\"Delete cedar_sweets\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(254, 242, 242); color: rgb(161, 19, 31); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Delete</button>"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 42
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/admin",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/admin",
+        "name": "Administrator dashboard",
+        "area": "administrator",
+        "role": "admin"
+      },
+      "scenario": {
+        "name": "zoom-200",
+        "width": 640,
+        "height": 900,
+        "zoom": 2
+      },
+      "url": "http://127.0.0.1:5173/admin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Admin dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 640,
+        "scrollWidth": 640,
+        "horizontalOverflow": false,
+        "overflowElements": [
+          {
+            "selector": "table.dashboard-table.dashboard-table--users",
+            "left": 62,
+            "right": 1605,
+            "width": 1543,
+            "text": "#UsernameEmailRoleVerifiedActions1adminadmin@join.localAdministratorVerifiedEditArchiveDelete2employeremployer@join.loca",
+            "html": "<table class=\"dashboard-table dashboard-table--users\" style=\"width: 100%; border-collapse: collapse;\"><thead><tr style=\"background: rgb(248, 250, 252);\"><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">#</th><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacin"
+          },
+          {
+            "selector": "thead",
+            "left": 62,
+            "right": 1605,
+            "width": 1543,
+            "text": "#UsernameEmailRoleVerifiedActions",
+            "html": "<thead><tr style=\"background: rgb(248, 250, 252);\"><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">#</th><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">Username</th><th style=\"pad"
+          },
+          {
+            "selector": "tr",
+            "left": 62,
+            "right": 1605,
+            "width": 1543,
+            "text": "#UsernameEmailRoleVerifiedActions",
+            "html": "<tr style=\"background: rgb(248, 250, 252);\"><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">#</th><th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">Username</th><th style=\"padding: 1"
+          },
+          {
+            "selector": "th",
+            "left": 359,
+            "right": 796,
+            "width": 436,
+            "text": "Email",
+            "html": "<th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">Email</th>"
+          },
+          {
+            "selector": "th",
+            "left": 796,
+            "right": 1021,
+            "width": 226,
+            "text": "Role",
+            "html": "<th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">Role</th>"
+          },
+          {
+            "selector": "th",
+            "left": 1021,
+            "right": 1190,
+            "width": 169,
+            "text": "Verified",
+            "html": "<th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: start;\">Verified</th>"
+          },
+          {
+            "selector": "th",
+            "left": 1190,
+            "right": 1605,
+            "width": 415,
+            "text": "Actions",
+            "html": "<th style=\"padding: 11px 14px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: center;\">Actions</th>"
+          },
+          {
+            "selector": "tbody",
+            "left": 62,
+            "right": 1605,
+            "width": 1543,
+            "text": "1adminadmin@join.localAdministratorVerifiedEditArchiveDelete2employeremployer@join.localEmployerVerifiedEditArchiveDelet",
+            "html": "<tbody><tr class=\"row-hover\" style=\"transition: background 0.15s;\"><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(100, 116, 139); width: 40px;\">1</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(55, 65, 81); font-weight: 500;\">admin</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); fo"
+          },
+          {
+            "selector": "tr.row-hover",
+            "left": 62,
+            "right": 1605,
+            "width": 1543,
+            "text": "1adminadmin@join.localAdministratorVerifiedEditArchiveDelete",
+            "html": "<tr class=\"row-hover\" style=\"transition: background 0.15s;\"><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(100, 116, 139); width: 40px;\">1</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(55, 65, 81); font-weight: 500;\">admin</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size"
+          },
+          {
+            "selector": "td",
+            "left": 359,
+            "right": 796,
+            "width": 436,
+            "text": "admin@join.local",
+            "html": "<td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(100, 116, 139);\">admin@join.local</td>"
+          },
+          {
+            "selector": "td",
+            "left": 796,
+            "right": 1021,
+            "width": 226,
+            "text": "Administrator",
+            "html": "<td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(55, 65, 81);\"><span style=\"padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; white-space: nowrap; display: inline-block; background: rgb(238, 242, 255); color: rgb(67, 56, 202);\">Administrator</span></td>"
+          },
+          {
+            "selector": "span",
+            "left": 824,
+            "right": 993,
+            "width": 170,
+            "text": "Administrator",
+            "html": "<span style=\"padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; white-space: nowrap; display: inline-block; background: rgb(238, 242, 255); color: rgb(67, 56, 202);\">Administrator</span>"
+          },
+          {
+            "selector": "td",
+            "left": 1021,
+            "right": 1190,
+            "width": 169,
+            "text": "Verified",
+            "html": "<td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(55, 65, 81);\"><span style=\"padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; white-space: nowrap; display: inline-block; background: rgb(240, 253, 244); color: rgb(18, 99, 59);\">Verified</span></td>"
+          },
+          {
+            "selector": "span",
+            "left": 1049,
+            "right": 1162,
+            "width": 113,
+            "text": "Verified",
+            "html": "<span style=\"padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; white-space: nowrap; display: inline-block; background: rgb(240, 253, 244); color: rgb(18, 99, 59);\">Verified</span>"
+          },
+          {
+            "selector": "td",
+            "left": 1190,
+            "right": 1605,
+            "width": 415,
+            "text": "EditArchiveDelete",
+            "html": "<td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: center; color: rgb(55, 65, 81);\"><div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit admin\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-"
+          },
+          {
+            "selector": "div",
+            "left": 1218,
+            "right": 1577,
+            "width": 359,
+            "text": "EditArchiveDelete",
+            "html": "<div style=\"display: flex; gap: 6px; justify-content: center;\"><button type=\"button\" class=\"action-btn\" aria-label=\"Edit admin\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Edit</button><button type=\"button\" class=\"action-btn\" aria-label=\"Ar"
+          },
+          {
+            "selector": "button.action-btn",
+            "left": 1218,
+            "right": 1308,
+            "width": 89,
+            "text": "Edit admin",
+            "html": "<button type=\"button\" class=\"action-btn\" aria-label=\"Edit admin\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Edit</button>"
+          },
+          {
+            "selector": "button.action-btn",
+            "left": 1320,
+            "right": 1448,
+            "width": 128,
+            "text": "Archive admin",
+            "html": "<button type=\"button\" class=\"action-btn\" aria-label=\"Archive admin\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(241, 245, 249); color: rgb(71, 85, 105); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Archive</button>"
+          },
+          {
+            "selector": "button.action-btn",
+            "left": 1460,
+            "right": 1577,
+            "width": 117,
+            "text": "Delete admin",
+            "html": "<button type=\"button\" class=\"action-btn\" aria-label=\"Delete admin\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(254, 242, 242); color: rgb(161, 19, 31); padding: 6px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif; transition: filter 0.15s;\">Delete</button>"
+          },
+          {
+            "selector": "tr.row-hover",
+            "left": 62,
+            "right": 1605,
+            "width": 1543,
+            "text": "2employeremployer@join.localEmployerVerifiedEditArchiveDelete",
+            "html": "<tr class=\"row-hover\" style=\"transition: background 0.15s;\"><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(100, 116, 139); width: 40px;\">2</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-size: 13px; vertical-align: middle; text-align: left; color: rgb(55, 65, 81); font-weight: 500;\">employer</td><td style=\"padding: 14px; border-bottom: 1px solid rgb(241, 245, 249); font-s"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 41
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/admin",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/admin",
+        "name": "Administrator dashboard",
+        "area": "administrator",
+        "role": "admin"
+      },
+      "scenario": {
+        "name": "text-spacing-375",
+        "width": 375,
+        "height": 812,
+        "textSpacing": true
+      },
+      "url": "http://127.0.0.1:5173/admin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Admin dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 41
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/admin",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/verifier",
+        "name": "Verifier dashboard",
+        "area": "verifier",
+        "role": "verifier"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/verifier",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Verifier dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 10
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/verifier",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/verifier",
+        "name": "Verifier dashboard",
+        "area": "verifier",
+        "role": "verifier"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/verifier",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Verifier dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 10
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/verifier",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/verifier",
+        "name": "Verifier dashboard",
+        "area": "verifier",
+        "role": "verifier"
+      },
+      "scenario": {
+        "name": "width-768",
+        "width": 768,
+        "height": 1024
+      },
+      "url": "http://127.0.0.1:5173/verifier",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Verifier dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 768,
+        "scrollWidth": 768,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 11
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/verifier",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/verifier",
+        "name": "Verifier dashboard",
+        "area": "verifier",
+        "role": "verifier"
+      },
+      "scenario": {
+        "name": "width-1024",
+        "width": 1024,
+        "height": 768
+      },
+      "url": "http://127.0.0.1:5173/verifier",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Verifier dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1024,
+        "scrollWidth": 1024,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 11
+      },
+      "axe": [],
+      "keyboard": {
+        "expectedInteractiveCount": 11,
+        "observedTabStops": [
+          "a:Skip to main content",
+          "button:Activate voice navigation",
+          "button:Close",
+          "button:Commands",
+          "button:Pending0",
+          "button:Approved1",
+          "button:Rejected0",
+          "button:All",
+          "select#interface-language:EnglishFrançaisالعربية",
+          "button:Sign out",
+          "button:Refresh",
+          "body"
+        ],
+        "firstTabStop": "a:Skip to main content",
+        "bodyReceivedFocus": true,
+        "cycleDetected": true
+      },
+      "finalUrl": "http://127.0.0.1:5173/verifier",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/verifier",
+        "name": "Verifier dashboard",
+        "area": "verifier",
+        "role": "verifier"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/verifier",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Verifier dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 11
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/verifier",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/verifier",
+        "name": "Verifier dashboard",
+        "area": "verifier",
+        "role": "verifier"
+      },
+      "scenario": {
+        "name": "landscape-667x375",
+        "width": 667,
+        "height": 375,
+        "landscape": true
+      },
+      "url": "http://127.0.0.1:5173/verifier",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Verifier dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 667,
+        "scrollWidth": 667,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 11
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/verifier",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/verifier",
+        "name": "Verifier dashboard",
+        "area": "verifier",
+        "role": "verifier"
+      },
+      "scenario": {
+        "name": "zoom-200",
+        "width": 640,
+        "height": 900,
+        "zoom": 2
+      },
+      "url": "http://127.0.0.1:5173/verifier",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Verifier dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 640,
+        "scrollWidth": 640,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 10
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/verifier",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/verifier",
+        "name": "Verifier dashboard",
+        "area": "verifier",
+        "role": "verifier"
+      },
+      "scenario": {
+        "name": "text-spacing-375",
+        "width": 375,
+        "height": 812,
+        "textSpacing": true
+      },
+      "url": "http://127.0.0.1:5173/verifier",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Verifier dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 10
+      },
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/verifier",
+      "consoleErrors": [],
+      "failedRequests": []
+    }
+  ]
+}

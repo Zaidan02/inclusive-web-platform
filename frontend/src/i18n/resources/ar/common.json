@@ -1,0 +1,35 @@
+{
+  "loadingPage": "جارٍ تحميل الصفحة…",
+  "brand": {
+    "home": "الصفحة الرئيسية لمنصة JoIn Hospitality",
+    "logoAlt": "شعار JoIn Hospitality"
+  },
+  "language": {
+    "region": "لغة الواجهة",
+    "label": "اللغة",
+    "changed": "تم تغيير لغة الواجهة إلى {{language}}."
+  },
+  "languages": {
+    "en": "الإنجليزية",
+    "fr": "الفرنسية",
+    "ar": "العربية"
+  },
+  "accessibility": {
+    "skipToMain": "الانتقال إلى المحتوى الرئيسي"
+  },
+  "routes": {
+    "home": "JoIn Hospitality",
+    "signin": "تسجيل الدخول | JoIn Hospitality",
+    "signup": "إنشاء حساب | JoIn Hospitality",
+    "forgotPassword": "نسيت كلمة المرور | JoIn Hospitality",
+    "resetPassword": "إعادة تعيين كلمة المرور | JoIn Hospitality",
+    "employers": "لأصحاب العمل | JoIn Hospitality",
+    "voiceHelp": "مساعدة التنقل الصوتي | JoIn Hospitality",
+    "privacy": "إشعار الخصوصية | JoIn Hospitality",
+    "candidate": "لوحة تحكم المرشح | JoIn Hospitality",
+    "candidateSetup": "إعداد ملف المرشح | JoIn Hospitality",
+    "employer": "لوحة تحكم صاحب العمل | JoIn Hospitality",
+    "admin": "لوحة تحكم المسؤول | JoIn Hospitality",
+    "verifier": "لوحة تحكم المدقق | JoIn Hospitality"
+  }
+}

@@ -16,7 +16,9 @@
 .voice-help dt { color:#1d4ed8; font-weight:800; }
 .voice-help dd { margin-top:4px; font-size:13px; }
 .voice-help__note { margin-top:18px; border-color:#fcd34d; background:#fffbeb; }
+.voice-help__note h2 { margin:0;color:#713f12;font-size:1rem; }
 .voice-help__note p { margin-bottom:0; color:#78350f; }
 .voice-help__note--conversation { border-color:#bfdbfe; background:#eff6ff; }
+.voice-help__note--conversation h2 { color:#1e3a8a; }
 .voice-help__note--conversation p { color:#1e3a8a; }
 @media(max-width:760px){.voice-help__steps,.voice-help__commands{grid-template-columns:1fr}.voice-help{padding:40px 16px}.voice-help__hero{margin:36px 0}}

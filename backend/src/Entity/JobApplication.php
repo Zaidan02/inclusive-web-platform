@@ -35,6 +35,18 @@ class JobApplication
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $recommendationOriginalName = null;
 
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $positionKnowledgeLevel = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $compatibilityScore = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $compatibilityEligible = null;
+
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $compatibilitySnapshot = null;
+
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -106,6 +118,21 @@ class JobApplication
         $this->recommendationOriginalName = $recommendationOriginalName;
         return $this;
     }
+
+    public function getPositionKnowledgeLevel(): ?string { return $this->positionKnowledgeLevel; }
+
+    public function setPositionKnowledgeLevel(?string $positionKnowledgeLevel): static
+    {
+        $this->positionKnowledgeLevel = $positionKnowledgeLevel;
+        return $this;
+    }
+
+    public function getCompatibilityScore(): ?float { return $this->compatibilityScore; }
+    public function setCompatibilityScore(?float $value): static { $this->compatibilityScore = $value; return $this; }
+    public function isCompatibilityEligible(): ?bool { return $this->compatibilityEligible; }
+    public function setCompatibilityEligible(?bool $value): static { $this->compatibilityEligible = $value; return $this; }
+    public function getCompatibilitySnapshot(): ?array { return $this->compatibilitySnapshot; }
+    public function setCompatibilitySnapshot(?array $value): static { $this->compatibilitySnapshot = $value; return $this; }
 
     public function getCreatedAt(): ?\DateTimeImmutable { return $this->createdAt; }
 

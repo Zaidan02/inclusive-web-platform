@@ -1,0 +1,2345 @@
+{
+  "generatedAt": "2026-08-03T11:58:32.606Z",
+  "standard": "WCAG 2.1 Level A and AA",
+  "browser": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+  "notes": [
+    "The zoom-200 scenario uses CSS zoom in headless Chromium and requires manual browser-zoom confirmation.",
+    "Automated findings are evidence, not a complete conformance determination.",
+    "Keyboard automation records tab stops; focus visibility and interaction quality require manual review."
+  ],
+  "routes": [
+    {
+      "path": "/candidate",
+      "name": "Candidate applications",
+      "area": "candidate",
+      "role": "candidate",
+      "activateLabel": "My Applications"
+    },
+    {
+      "path": "/candidate",
+      "name": "Candidate profile",
+      "area": "candidate",
+      "role": "candidate",
+      "activateLabel": "My Profile"
+    },
+    {
+      "path": "/candidate",
+      "name": "Candidate privacy",
+      "area": "candidate",
+      "role": "candidate",
+      "activateLabel": "Privacy & data"
+    },
+    {
+      "path": "/employer",
+      "name": "Employer jobs",
+      "area": "employer",
+      "role": "employer",
+      "activateLabel": "My Jobs"
+    },
+    {
+      "path": "/employer",
+      "name": "Employer applications",
+      "area": "employer",
+      "role": "employer",
+      "activateLabel": "Applications"
+    },
+    {
+      "path": "/employer",
+      "name": "Employer company profile",
+      "area": "employer",
+      "role": "employer",
+      "activateLabel": "Company Profile"
+    },
+    {
+      "path": "/admin",
+      "name": "Archived users",
+      "area": "administrator",
+      "role": "admin",
+      "activateLabel": "Archived Users"
+    },
+    {
+      "path": "/admin",
+      "name": "Admin applications",
+      "area": "administrator",
+      "role": "admin",
+      "activateLabel": "Applications"
+    },
+    {
+      "path": "/admin",
+      "name": "Candidate profiles",
+      "area": "administrator",
+      "role": "admin",
+      "activateLabel": "User Profiles"
+    },
+    {
+      "path": "/verifier",
+      "name": "Approved verifications",
+      "area": "verifier",
+      "role": "verifier",
+      "activateLabel": "Approved"
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "width-375",
+      "width": 375,
+      "height": 812
+    },
+    {
+      "name": "width-1440",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "results": [
+    {
+      "route": {
+        "path": "/candidate",
+        "name": "Candidate applications",
+        "area": "candidate",
+        "role": "candidate",
+        "activateLabel": "My Applications"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/candidate",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 11
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "section > div:nth-child(2)"
+              ],
+              "html": "<div style=\"margin-top: 14px; border: 1.5px dashed rgb(226, 232, 240); border-radius: 12px; padding: 24px; text-align: center; color: rgb(148, 163, 184); font-weight: 400; font-size: 13px;\">You have not submitted any applications yet.</div>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 2
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/candidate",
+        "name": "Candidate applications",
+        "area": "candidate",
+        "role": "candidate",
+        "activateLabel": "My Applications"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/candidate",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 11
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "section > div:nth-child(2)"
+              ],
+              "html": "<div style=\"margin-top: 14px; border: 1.5px dashed rgb(226, 232, 240); border-radius: 12px; padding: 24px; text-align: center; color: rgb(148, 163, 184); font-weight: 400; font-size: 13px;\">You have not submitted any applications yet.</div>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 2
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/candidate",
+        "name": "Candidate profile",
+        "area": "candidate",
+        "role": "candidate",
+        "activateLabel": "My Profile"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/candidate",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 406,
+        "horizontalOverflow": true,
+        "overflowElements": [
+          {
+            "selector": "div",
+            "left": -31,
+            "right": 157,
+            "width": 188,
+            "text": "Complete your profile",
+            "html": "<div style=\"display: flex; align-items: center; gap: 6px;\"><div style=\"width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: rgb(37, 99, 235); transition: background 0.4s;\"></div><span style=\"font-size: 11px; font-weight: 500; white-space: nowrap; color: rgb(37, 99, 235); transition: color 0.4s;\">Complete your profile</span><div style=\"width: 44px; height: 1px; background: rgb(226, 232, 240); margin: 0px 8px;\"></div></div>"
+          },
+          {
+            "selector": "div",
+            "left": -31,
+            "right": -24,
+            "width": 7,
+            "text": "",
+            "html": "<div style=\"width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: rgb(37, 99, 235); transition: background 0.4s;\"></div>"
+          },
+          {
+            "selector": "span",
+            "left": -18,
+            "right": 91,
+            "width": 109,
+            "text": "Complete your profile",
+            "html": "<span style=\"font-size: 11px; font-weight: 500; white-space: nowrap; color: rgb(37, 99, 235); transition: color 0.4s;\">Complete your profile</span>"
+          },
+          {
+            "selector": "div",
+            "left": 326,
+            "right": 406,
+            "width": 79,
+            "text": "Apply to jobs",
+            "html": "<div style=\"display: flex; align-items: center; gap: 6px;\"><div style=\"width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: rgb(203, 213, 225); transition: background 0.4s;\"></div><span style=\"font-size: 11px; font-weight: 500; white-space: nowrap; color: rgb(148, 163, 184); transition: color 0.4s;\">Apply to jobs</span></div>"
+          },
+          {
+            "selector": "span",
+            "left": 339,
+            "right": 406,
+            "width": 66,
+            "text": "Apply to jobs",
+            "html": "<span style=\"font-size: 11px; font-weight: 500; white-space: nowrap; color: rgb(148, 163, 184); transition: color 0.4s;\">Apply to jobs</span>"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 42
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div > div > div:nth-child(2) > span"
+              ],
+              "html": "<span style=\"font-size: 11px; font-weight: 500; white-space: nowrap; color: rgb(148, 163, 184); transition: color 0.4s;\">Calculate matches</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.43 (foreground color: #94a3b8, background color: #f7f9fd, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "button[data-voice-control=\"clear_disabilities\"]"
+              ],
+              "html": "<button type=\"button\" data-voice-control=\"clear_disabilities\" style=\"background: none; border: 1px solid rgb(226, 232, 240); color: rgb(148, 163, 184); cursor: pointer; font-size: 11px; font-weight: 400; padding: 4px 9px; border-radius: 999px; font-family: Inter, sans-serif;\">Clear all</button>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 3
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/candidate",
+        "name": "Candidate profile",
+        "area": "candidate",
+        "role": "candidate",
+        "activateLabel": "My Profile"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/candidate",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 42
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div > div > div:nth-child(2) > span"
+              ],
+              "html": "<span style=\"font-size: 11px; font-weight: 500; white-space: nowrap; color: rgb(148, 163, 184); transition: color 0.4s;\">Calculate matches</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.43 (foreground color: #94a3b8, background color: #f7f9fd, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(3) > span"
+              ],
+              "html": "<span style=\"font-size: 11px; font-weight: 500; white-space: nowrap; color: rgb(148, 163, 184); transition: color 0.4s;\">Apply to jobs</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.43 (foreground color: #94a3b8, background color: #f7f9fd, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "button[data-voice-control=\"clear_disabilities\"]"
+              ],
+              "html": "<button type=\"button\" data-voice-control=\"clear_disabilities\" style=\"background: none; border: 1px solid rgb(226, 232, 240); color: rgb(148, 163, 184); cursor: pointer; font-size: 11px; font-weight: 400; padding: 4px 9px; border-radius: 999px; font-family: Inter, sans-serif;\">Clear all</button>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 4
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/candidate",
+        "name": "Candidate privacy",
+        "area": "candidate",
+        "role": "candidate",
+        "activateLabel": "Privacy & data"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/candidate",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 15
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 1
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/candidate",
+        "name": "Candidate privacy",
+        "area": "candidate",
+        "role": "candidate",
+        "activateLabel": "Privacy & data"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/candidate",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 15
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 1
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/employer",
+        "name": "Employer jobs",
+        "area": "employer",
+        "role": "employer",
+        "activateLabel": "My Jobs"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/employer",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Employer dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [
+          {
+            "selector": "div",
+            "left": 288,
+            "right": 407,
+            "width": 119,
+            "text": "EditDelete",
+            "html": "<div style=\"display: flex; gap: 8px; flex-shrink: 0;\"><button style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif;\">Edit</button><button style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(254, 242, 242); color: rgb"
+          },
+          {
+            "selector": "button",
+            "left": 345,
+            "right": 407,
+            "width": 63,
+            "text": "Delete",
+            "html": "<button style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(254, 242, 242); color: rgb(220, 38, 38); padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif;\">Delete</button>"
+          },
+          {
+            "selector": "div",
+            "left": 288,
+            "right": 407,
+            "width": 119,
+            "text": "EditDelete",
+            "html": "<div style=\"display: flex; gap: 8px; flex-shrink: 0;\"><button style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif;\">Edit</button><button style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(254, 242, 242); color: rgb"
+          },
+          {
+            "selector": "button",
+            "left": 345,
+            "right": 407,
+            "width": 63,
+            "text": "Delete",
+            "html": "<button style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(254, 242, 242); color: rgb(220, 38, 38); padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif;\">Delete</button>"
+          },
+          {
+            "selector": "div",
+            "left": 288,
+            "right": 407,
+            "width": 119,
+            "text": "EditDelete",
+            "html": "<div style=\"display: flex; gap: 8px; flex-shrink: 0;\"><button style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(239, 246, 255); color: rgb(37, 99, 235); padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif;\">Edit</button><button style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(254, 242, 242); color: rgb"
+          },
+          {
+            "selector": "button",
+            "left": 345,
+            "right": 407,
+            "width": 63,
+            "text": "Delete",
+            "html": "<button style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(254, 242, 242); color: rgb(220, 38, 38); padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif;\">Delete</button>"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 15
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                "main > div:nth-child(1) > p"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184); text-transform: uppercase; letter-spacing: 0.8px;\">Employer</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.43 (foreground color: #94a3b8, background color: #f7f9fd, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(1) > div:nth-child(1) > div > span:nth-child(5)"
+              ],
+              "html": "<span style=\"background: rgb(255, 251, 235); color: rgb(217, 119, 6); padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 400;\">Deadline: 2027-01-24</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.07 (foreground color: #d97706, background color: #fffbeb, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(1) > div:nth-child(2) > button:nth-child(2)"
+              ],
+              "html": "<button style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(254, 242, 242); color: rgb(220, 38, 38); padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif;\">",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.41 (foreground color: #dc2626, background color: #fef2f2, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(2) > div:nth-child(1) > div > span:nth-child(5)"
+              ],
+              "html": "<span style=\"background: rgb(255, 251, 235); color: rgb(217, 119, 6); padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 400;\">Deadline: 2027-01-24</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.07 (foreground color: #d97706, background color: #fffbeb, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(2) > div:nth-child(2) > button:nth-child(2)"
+              ],
+              "html": "<button style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(254, 242, 242); color: rgb(220, 38, 38); padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif;\">",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.41 (foreground color: #dc2626, background color: #fef2f2, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(3) > div:nth-child(1) > div > span:nth-child(5)"
+              ],
+              "html": "<span style=\"background: rgb(255, 251, 235); color: rgb(217, 119, 6); padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 400;\">Deadline: 2027-01-24</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.07 (foreground color: #d97706, background color: #fffbeb, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(3) > div:nth-child(2) > button:nth-child(2)"
+              ],
+              "html": "<button style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(254, 242, 242); color: rgb(220, 38, 38); padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif;\">",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.41 (foreground color: #dc2626, background color: #fef2f2, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 7
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/employer",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/employer",
+        "name": "Employer jobs",
+        "area": "employer",
+        "role": "employer",
+        "activateLabel": "My Jobs"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/employer",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Employer dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 15
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "main > div:nth-child(1) > p"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184); text-transform: uppercase; letter-spacing: 0.8px;\">Employer</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.43 (foreground color: #94a3b8, background color: #f7f9fd, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(1) > span"
+              ],
+              "html": "<span style=\"font-size: 12px; color: rgb(148, 163, 184);\">3 jobs</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(1) > div:nth-child(1) > div > span:nth-child(5)"
+              ],
+              "html": "<span style=\"background: rgb(255, 251, 235); color: rgb(217, 119, 6); padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 400;\">Deadline: 2027-01-24</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.07 (foreground color: #d97706, background color: #fffbeb, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(1) > div:nth-child(2) > button:nth-child(2)"
+              ],
+              "html": "<button style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(254, 242, 242); color: rgb(220, 38, 38); padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif;\">",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.41 (foreground color: #dc2626, background color: #fef2f2, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(2) > div:nth-child(1) > div > span:nth-child(5)"
+              ],
+              "html": "<span style=\"background: rgb(255, 251, 235); color: rgb(217, 119, 6); padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 400;\">Deadline: 2027-01-24</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.07 (foreground color: #d97706, background color: #fffbeb, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(2) > div:nth-child(2) > button:nth-child(2)"
+              ],
+              "html": "<button style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(254, 242, 242); color: rgb(220, 38, 38); padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif;\">",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.41 (foreground color: #dc2626, background color: #fef2f2, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(3) > div:nth-child(1) > div > span:nth-child(5)"
+              ],
+              "html": "<span style=\"background: rgb(255, 251, 235); color: rgb(217, 119, 6); padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 400;\">Deadline: 2027-01-24</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.07 (foreground color: #d97706, background color: #fffbeb, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 9
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/employer",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/employer",
+        "name": "Employer applications",
+        "area": "employer",
+        "role": "employer",
+        "activateLabel": "Applications"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/employer",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Employer dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [
+          {
+            "selector": "span",
+            "left": 347,
+            "right": 410,
+            "width": 63,
+            "text": "0 applications",
+            "html": "<span style=\"font-size: 12px; color: rgb(148, 163, 184);\">0 applications</span>"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 9
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                "main > div:nth-child(1) > p"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184); text-transform: uppercase; letter-spacing: 0.8px;\">Employer</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.43 (foreground color: #94a3b8, background color: #f7f9fd, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(2) > p"
+              ],
+              "html": "<p style=\"color: rgb(148, 163, 184); font-size: 13px; margin: 0px;\">No applications yet.</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 2
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/employer",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/employer",
+        "name": "Employer applications",
+        "area": "employer",
+        "role": "employer",
+        "activateLabel": "Applications"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/employer",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Employer dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 9
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "main > div:nth-child(1) > p"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184); text-transform: uppercase; letter-spacing: 0.8px;\">Employer</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.43 (foreground color: #94a3b8, background color: #f7f9fd, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(1) > span"
+              ],
+              "html": "<span style=\"font-size: 12px; color: rgb(148, 163, 184);\">0 applications</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(2) > p"
+              ],
+              "html": "<p style=\"color: rgb(148, 163, 184); font-size: 13px; margin: 0px;\">No applications yet.</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 4
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/employer",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/employer",
+        "name": "Employer company profile",
+        "area": "employer",
+        "role": "employer",
+        "activateLabel": "Company Profile"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/employer",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Employer dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [
+          {
+            "selector": "div",
+            "left": 226,
+            "right": 466,
+            "width": 240,
+            "text": "Company LogoUpload LogoPNG, JPG, WebP or GIF. Max 3MB.",
+            "html": "<div style=\"background: rgb(255, 255, 255); border-radius: 20px; padding: 24px; border: 1px solid rgb(232, 237, 245); box-shadow: rgba(15, 23, 42, 0.05) 0px 1px 8px; display: flex; flex-direction: column; align-items: center; gap: 14px;\"><p style=\"margin: 0px; font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px; align-self: flex-start;\">Company Logo</p><div style=\"width: 160px; height: 160px; border-radius: 16px; background: rgb(248, 250, "
+          },
+          {
+            "selector": "div",
+            "left": 266,
+            "right": 426,
+            "width": 160,
+            "text": "",
+            "html": "<div style=\"width: 160px; height: 160px; border-radius: 16px; background: rgb(248, 250, 252); border: 1.5px dashed rgb(203, 213, 225); display: flex; align-items: center; justify-content: center; overflow: hidden;\"><img alt=\"Logo\" src=\"/join-hospitality-logo.png.jpeg\" style=\"width: 100%; height: 100%; object-fit: contain;\"></div>"
+          },
+          {
+            "selector": "img",
+            "left": 267,
+            "right": 425,
+            "width": 158,
+            "text": "",
+            "html": "<img alt=\"Logo\" src=\"/join-hospitality-logo.png.jpeg\" style=\"width: 100%; height: 100%; object-fit: contain;\">"
+          },
+          {
+            "selector": "button",
+            "left": 296,
+            "right": 396,
+            "width": 100,
+            "text": "Upload Logo",
+            "html": "<button data-voice-control=\"company_logo\" type=\"button\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: rgb(37, 99, 235); color: rgb(255, 255, 255); padding: 9px 16px; border-radius: 9px; cursor: pointer; font-size: 12px; font-weight: 500; font-family: Inter, sans-serif;\">Upload Logo</button>"
+          },
+          {
+            "selector": "p",
+            "left": 258,
+            "right": 434,
+            "width": 176,
+            "text": "PNG, JPG, WebP or GIF. Max 3MB.",
+            "html": "<p style=\"margin: 0px; font-size: 11px; color: rgb(148, 163, 184); text-align: center;\">PNG, JPG, WebP or GIF. Max 3MB.</p>"
+          },
+          {
+            "selector": "div",
+            "left": 486,
+            "right": 684,
+            "width": 198,
+            "text": "Company NameIndustryLocationWebsiteCompany DescriptionJoIn Hospitality Demo is a fixture company used to demonstrate inc",
+            "html": "<div style=\"background: rgb(255, 255, 255); border-radius: 20px; padding: 24px; border: 1px solid rgb(232, 237, 245); box-shadow: rgba(15, 23, 42, 0.05) 0px 1px 8px;\"><div style=\"display: grid; grid-template-columns: repeat(2, 1fr); gap: 0px 20px;\"><div style=\"display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px;\"><label for=\"_r_7_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Company Name</label><input clas"
+          },
+          {
+            "selector": "div",
+            "left": 511,
+            "right": 659,
+            "width": 148,
+            "text": "Company NameIndustryLocationWebsite",
+            "html": "<div style=\"display: grid; grid-template-columns: repeat(2, 1fr); gap: 0px 20px;\"><div style=\"display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px;\"><label for=\"_r_7_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Company Name</label><input class=\"input-field\" id=\"_r_7_\" value=\"JoIn Hospitality Demo\" name=\"companyName\" style=\"width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgb(226, 232,"
+          },
+          {
+            "selector": "div",
+            "left": 511,
+            "right": 575,
+            "width": 64,
+            "text": "Company Name",
+            "html": "<div style=\"display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px;\"><label for=\"_r_7_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Company Name</label><input class=\"input-field\" id=\"_r_7_\" value=\"JoIn Hospitality Demo\" name=\"companyName\" style=\"width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgb(226, 232, 240); font-size: 13px; outline: none; font-family: Inter, sans-serif; color: rgb("
+          },
+          {
+            "selector": "label",
+            "left": 511,
+            "right": 575,
+            "width": 64,
+            "text": "Company Name",
+            "html": "<label for=\"_r_7_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Company Name</label>"
+          },
+          {
+            "selector": "input#_r_7_.input-field",
+            "left": 511,
+            "right": 575,
+            "width": 64,
+            "text": "",
+            "html": "<input class=\"input-field\" id=\"_r_7_\" value=\"JoIn Hospitality Demo\" name=\"companyName\" style=\"width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgb(226, 232, 240); font-size: 13px; outline: none; font-family: Inter, sans-serif; color: rgb(15, 23, 42); background: rgb(248, 250, 252); transition: border-color 0.15s, box-shadow 0.15s;\">"
+          },
+          {
+            "selector": "div",
+            "left": 595,
+            "right": 659,
+            "width": 64,
+            "text": "Industry",
+            "html": "<div style=\"display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px;\"><label for=\"_r_8_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Industry</label><input class=\"input-field\" id=\"_r_8_\" value=\"Food and Beverage\" name=\"industry\" style=\"width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgb(226, 232, 240); font-size: 13px; outline: none; font-family: Inter, sans-serif; color: rgb(15, 23, 42)"
+          },
+          {
+            "selector": "label",
+            "left": 595,
+            "right": 659,
+            "width": 64,
+            "text": "Industry",
+            "html": "<label for=\"_r_8_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Industry</label>"
+          },
+          {
+            "selector": "input#_r_8_.input-field",
+            "left": 595,
+            "right": 659,
+            "width": 64,
+            "text": "",
+            "html": "<input class=\"input-field\" id=\"_r_8_\" value=\"Food and Beverage\" name=\"industry\" style=\"width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgb(226, 232, 240); font-size: 13px; outline: none; font-family: Inter, sans-serif; color: rgb(15, 23, 42); background: rgb(248, 250, 252); transition: border-color 0.15s, box-shadow 0.15s;\">"
+          },
+          {
+            "selector": "div",
+            "left": 511,
+            "right": 575,
+            "width": 64,
+            "text": "Location",
+            "html": "<div style=\"display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px;\"><label for=\"_r_9_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Location</label><input class=\"input-field\" id=\"_r_9_\" value=\"Beirut, Lebanon\" name=\"location\" style=\"width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgb(226, 232, 240); font-size: 13px; outline: none; font-family: Inter, sans-serif; color: rgb(15, 23, 42); "
+          },
+          {
+            "selector": "label",
+            "left": 511,
+            "right": 575,
+            "width": 64,
+            "text": "Location",
+            "html": "<label for=\"_r_9_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Location</label>"
+          },
+          {
+            "selector": "input#_r_9_.input-field",
+            "left": 511,
+            "right": 575,
+            "width": 64,
+            "text": "",
+            "html": "<input class=\"input-field\" id=\"_r_9_\" value=\"Beirut, Lebanon\" name=\"location\" style=\"width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgb(226, 232, 240); font-size: 13px; outline: none; font-family: Inter, sans-serif; color: rgb(15, 23, 42); background: rgb(248, 250, 252); transition: border-color 0.15s, box-shadow 0.15s;\">"
+          },
+          {
+            "selector": "div",
+            "left": 595,
+            "right": 659,
+            "width": 64,
+            "text": "Website",
+            "html": "<div style=\"display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px;\"><label for=\"_r_a_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Website</label><input class=\"input-field\" id=\"_r_a_\" value=\"https://example.com\" name=\"website\" style=\"width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgb(226, 232, 240); font-size: 13px; outline: none; font-family: Inter, sans-serif; color: rgb(15, 23, 42)"
+          },
+          {
+            "selector": "label",
+            "left": 595,
+            "right": 659,
+            "width": 64,
+            "text": "Website",
+            "html": "<label for=\"_r_a_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Website</label>"
+          },
+          {
+            "selector": "input#_r_a_.input-field",
+            "left": 595,
+            "right": 659,
+            "width": 64,
+            "text": "",
+            "html": "<input class=\"input-field\" id=\"_r_a_\" value=\"https://example.com\" name=\"website\" style=\"width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgb(226, 232, 240); font-size: 13px; outline: none; font-family: Inter, sans-serif; color: rgb(15, 23, 42); background: rgb(248, 250, 252); transition: border-color 0.15s, box-shadow 0.15s;\">"
+          },
+          {
+            "selector": "div",
+            "left": 511,
+            "right": 659,
+            "width": 148,
+            "text": "Company DescriptionJoIn Hospitality Demo is a fixture company used to demonstrate inclusive job matching.",
+            "html": "<div style=\"display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px;\"><label for=\"_r_b_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Company Description</label><textarea class=\"input-field\" name=\"description\" id=\"_r_b_\" style=\"width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgb(226, 232, 240); font-size: 13px; outline: none; font-family: Inter, sans-serif; color: rgb(15, 23, 42); backgro"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 17
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                "main > div:nth-child(1) > p"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184); text-transform: uppercase; letter-spacing: 0.8px;\">Employer</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.43 (foreground color: #94a3b8, background color: #f7f9fd, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "p:nth-child(5)"
+              ],
+              "html": "<p style=\"margin: 0px; font-size: 11px; color: rgb(148, 163, 184); text-align: center;\">PNG, JPG, WebP or GIF. Max 3MB.</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 2
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/employer",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/employer",
+        "name": "Employer company profile",
+        "area": "employer",
+        "role": "employer",
+        "activateLabel": "Company Profile"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/employer",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Employer dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 17
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "main > div:nth-child(1) > p"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184); text-transform: uppercase; letter-spacing: 0.8px;\">Employer</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.43 (foreground color: #94a3b8, background color: #f7f9fd, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "p:nth-child(5)"
+              ],
+              "html": "<p style=\"margin: 0px; font-size: 11px; color: rgb(148, 163, 184); text-align: center;\">PNG, JPG, WebP or GIF. Max 3MB.</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 3
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/employer",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/admin",
+        "name": "Archived users",
+        "area": "administrator",
+        "role": "admin",
+        "activateLabel": "Archived Users"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/admin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Admin dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [
+          {
+            "selector": "div",
+            "left": 334,
+            "right": 407,
+            "width": 73,
+            "text": "Add data sheets",
+            "html": "<div><input accept=\".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\" multiple=\"\" type=\"file\" style=\"display: none;\"><button type=\"button\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 10px; background: rgb(37, 99, 235); color: white; padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer;\">Add data sheets</button></div>"
+          },
+          {
+            "selector": "button",
+            "left": 334,
+            "right": 407,
+            "width": 73,
+            "text": "Add data sheets",
+            "html": "<button type=\"button\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 10px; background: rgb(37, 99, 235); color: white; padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer;\">Add data sheets</button>"
+          },
+          {
+            "selector": "div.card-stat",
+            "left": 331,
+            "right": 413,
+            "width": 82,
+            "text": "Verified Emails0",
+            "html": "<div class=\"card-stat\" style=\"background: rgb(255, 255, 255); border-radius: 16px; padding: 20px; border: 1px solid rgb(232, 237, 245); box-shadow: rgba(15, 23, 42, 0.05) 0px 1px 8px; transition: 0.2s; cursor: default; display: flex; flex-direction: column; align-items: center;\"><div style=\"width: 38px; height: 38px; border-radius: 10px; background: rgb(240, 253, 244); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 2"
+          },
+          {
+            "selector": "div",
+            "left": 353,
+            "right": 391,
+            "width": 38,
+            "text": "",
+            "html": "<div style=\"width: 38px; height: 38px; border-radius: 10px; background: rgb(240, 253, 244); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#16a34a\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"></polyline></svg></div>"
+          },
+          {
+            "selector": "svg",
+            "left": 364,
+            "right": 380,
+            "width": 16,
+            "text": "",
+            "html": "<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#16a34a\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"></polyline></svg>"
+          },
+          {
+            "selector": "p",
+            "left": 352,
+            "right": 392,
+            "width": 40,
+            "text": "Verified Emails",
+            "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Verified Emails</p>"
+          },
+          {
+            "selector": "p",
+            "left": 364,
+            "right": 379,
+            "width": 15,
+            "text": "0",
+            "html": "<p style=\"margin: 0px; font-size: 28px; font-weight: 600; color: rgb(15, 23, 42); letter-spacing: -0.5px;\">0</p>"
+          },
+          {
+            "selector": "div.card-stat",
+            "left": 429,
+            "right": 525,
+            "width": 96,
+            "text": "Unverified Users0",
+            "html": "<div class=\"card-stat\" style=\"background: rgb(255, 255, 255); border-radius: 16px; padding: 20px; border: 1px solid rgb(232, 237, 245); box-shadow: rgba(15, 23, 42, 0.05) 0px 1px 8px; transition: 0.2s; cursor: default; display: flex; flex-direction: column; align-items: center;\"><div style=\"width: 38px; height: 38px; border-radius: 10px; background: rgb(255, 251, 235); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 2"
+          },
+          {
+            "selector": "div",
+            "left": 458,
+            "right": 496,
+            "width": 38,
+            "text": "",
+            "html": "<div style=\"width: 38px; height: 38px; border-radius: 10px; background: rgb(255, 251, 235); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#d97706\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"12\"></line><line x1=\"12\" y1=\"16\" x2=\"12.01\" y2=\"16\"></line></svg></div>"
+          },
+          {
+            "selector": "svg",
+            "left": 469,
+            "right": 485,
+            "width": 16,
+            "text": "",
+            "html": "<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#d97706\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"12\"></line><line x1=\"12\" y1=\"16\" x2=\"12.01\" y2=\"16\"></line></svg>"
+          },
+          {
+            "selector": "circle",
+            "left": 470,
+            "right": 483,
+            "width": 13,
+            "text": "",
+            "html": "<circle cx=\"12\" cy=\"12\" r=\"10\"></circle>"
+          },
+          {
+            "selector": "p",
+            "left": 450,
+            "right": 504,
+            "width": 54,
+            "text": "Unverified Users",
+            "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Unverified Users</p>"
+          },
+          {
+            "selector": "p",
+            "left": 469,
+            "right": 484,
+            "width": 15,
+            "text": "0",
+            "html": "<p style=\"margin: 0px; font-size: 28px; font-weight: 600; color: rgb(15, 23, 42); letter-spacing: -0.5px;\">0</p>"
+          },
+          {
+            "selector": "div.card-stat",
+            "left": 541,
+            "right": 623,
+            "width": 82,
+            "text": "Admins0",
+            "html": "<div class=\"card-stat\" style=\"background: rgb(255, 255, 255); border-radius: 16px; padding: 20px; border: 1px solid rgb(232, 237, 245); box-shadow: rgba(15, 23, 42, 0.05) 0px 1px 8px; transition: 0.2s; cursor: default; display: flex; flex-direction: column; align-items: center;\"><div style=\"width: 38px; height: 38px; border-radius: 10px; background: rgb(245, 243, 255); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 2"
+          },
+          {
+            "selector": "div",
+            "left": 563,
+            "right": 601,
+            "width": 38,
+            "text": "",
+            "html": "<div style=\"width: 38px; height: 38px; border-radius: 10px; background: rgb(245, 243, 255); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3L19 6V11C19 15.5 16.2 19.4 12 21C7.8 19.4 5 15.5 5 11V6L12 3Z\"></path><polyline points=\"9.5 12 11.3 13.8 15 10\"></polyline></svg></div>"
+          },
+          {
+            "selector": "svg",
+            "left": 574,
+            "right": 590,
+            "width": 16,
+            "text": "",
+            "html": "<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3L19 6V11C19 15.5 16.2 19.4 12 21C7.8 19.4 5 15.5 5 11V6L12 3Z\"></path><polyline points=\"9.5 12 11.3 13.8 15 10\"></polyline></svg>"
+          },
+          {
+            "selector": "path",
+            "left": 577,
+            "right": 586,
+            "width": 9,
+            "text": "",
+            "html": "<path d=\"M12 3L19 6V11C19 15.5 16.2 19.4 12 21C7.8 19.4 5 15.5 5 11V6L12 3Z\"></path>"
+          },
+          {
+            "selector": "polyline",
+            "left": 580,
+            "right": 584,
+            "width": 4,
+            "text": "",
+            "html": "<polyline points=\"9.5 12 11.3 13.8 15 10\"></polyline>"
+          },
+          {
+            "selector": "p",
+            "left": 562,
+            "right": 602,
+            "width": 40,
+            "text": "Admins",
+            "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Admins</p>"
+          },
+          {
+            "selector": "p",
+            "left": 574,
+            "right": 589,
+            "width": 15,
+            "text": "0",
+            "html": "<p style=\"margin: 0px; font-size: 28px; font-weight: 600; color: rgb(15, 23, 42); letter-spacing: -0.5px;\">0</p>"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 11
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                "div:nth-child(1) > div:nth-child(1) > p"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184); text-transform: uppercase; letter-spacing: 0.8px;\">Archived Users</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.43 (foreground color: #94a3b8, background color: #f7f9fd, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(1) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Archived Users</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(2) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Verified Emails</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(3) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Unverified Users</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(4) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Admins</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(1) > span"
+              ],
+              "html": "<span style=\"display: flex; align-items: center; font-size: 12px; color: rgb(148, 163, 184); font-weight: 400; white-space: nowrap;\">0 results</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(3) > div:nth-child(2) > p"
+              ],
+              "html": "<p style=\"color: rgb(148, 163, 184); text-align: center; padding: 32px; font-size: 13px; font-weight: 400;\">No users match your search.</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 7
+        },
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+          "help": "Scrollable region must have keyboard access",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/scrollable-region-focusable?application=playwright",
+          "tags": [
+            "wcag2a",
+            "wcag211",
+            "wcag213"
+          ],
+          "nodes": [
+            {
+              "target": [
+                "div:nth-child(3) > div:nth-child(2)"
+              ],
+              "html": "<div style=\"overflow-x: auto;\">",
+              "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+            }
+          ],
+          "nodeCount": 1
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/admin",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/admin",
+        "name": "Archived users",
+        "area": "administrator",
+        "role": "admin",
+        "activateLabel": "Archived Users"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/admin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Admin dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 11
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(1) > div:nth-child(1) > p"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184); text-transform: uppercase; letter-spacing: 0.8px;\">Archived Users</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.43 (foreground color: #94a3b8, background color: #f7f9fd, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(1) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Archived Users</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(2) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Verified Emails</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(3) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Unverified Users</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(4) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Admins</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(1) > span"
+              ],
+              "html": "<span style=\"display: flex; align-items: center; font-size: 12px; color: rgb(148, 163, 184); font-weight: 400; white-space: nowrap;\">0 results</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(3) > div:nth-child(2) > p"
+              ],
+              "html": "<p style=\"color: rgb(148, 163, 184); text-align: center; padding: 32px; font-size: 13px; font-weight: 400;\">No users match your search.</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 8
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/admin",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/admin",
+        "name": "Admin applications",
+        "area": "administrator",
+        "role": "admin",
+        "activateLabel": "Applications"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/admin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Admin dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [
+          {
+            "selector": "div",
+            "left": 377,
+            "right": 450,
+            "width": 73,
+            "text": "Add data sheets",
+            "html": "<div><input accept=\".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\" multiple=\"\" type=\"file\" style=\"display: none;\"><button type=\"button\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 10px; background: rgb(37, 99, 235); color: white; padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer;\">Add data sheets</button></div>"
+          },
+          {
+            "selector": "button",
+            "left": 377,
+            "right": 450,
+            "width": 73,
+            "text": "Add data sheets",
+            "html": "<button type=\"button\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 10px; background: rgb(37, 99, 235); color: white; padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer;\">Add data sheets</button>"
+          },
+          {
+            "selector": "div",
+            "left": 251,
+            "right": 451,
+            "width": 200,
+            "text": "",
+            "html": "<div style=\"position: relative; flex: 1 1 0%; min-width: 200px;\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#94a3b8\" stroke-width=\"2\" stroke-linecap=\"round\" style=\"position: absolute; left: 12px; top: 50%; transform: translateY(-50%);\"><circle cx=\"11\" cy=\"11\" r=\"8\"></circle><path d=\"m21 21-4.35-4.35\"></path></svg><input aria-label=\"Search applications\" placeholder=\"Search by candidate, job or status...\" type=\"search\" value=\"\" style=\"width: 100%; padding: 9px 12px 9px 34p"
+          },
+          {
+            "selector": "input",
+            "left": 251,
+            "right": 451,
+            "width": 200,
+            "text": "Search applications",
+            "html": "<input aria-label=\"Search applications\" placeholder=\"Search by candidate, job or status...\" type=\"search\" value=\"\" style=\"width: 100%; padding: 9px 12px 9px 34px; border-radius: 10px; border: 1px solid rgb(226, 232, 240); font-size: 13px; outline: none; background: rgb(248, 250, 252); font-family: Inter, sans-serif; color: rgb(15, 23, 42); box-sizing: border-box;\">"
+          },
+          {
+            "selector": "table",
+            "left": 251,
+            "right": 808,
+            "width": 557,
+            "text": "#CandidateJobStatusApplicationRecommendationApplied",
+            "html": "<table style=\"width: 100%; border-collapse: collapse;\"><thead><tr style=\"background: rgb(248, 250, 252);\"><th style=\"padding: 11px 12px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: center;\">#</th><th style=\"padding: 11px 12px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 23"
+          },
+          {
+            "selector": "thead",
+            "left": 251,
+            "right": 808,
+            "width": 557,
+            "text": "#CandidateJobStatusApplicationRecommendationApplied",
+            "html": "<thead><tr style=\"background: rgb(248, 250, 252);\"><th style=\"padding: 11px 12px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: center;\">#</th><th style=\"padding: 11px 12px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: center;\">Candidate</th><th style=\""
+          },
+          {
+            "selector": "tr",
+            "left": 251,
+            "right": 808,
+            "width": 557,
+            "text": "#CandidateJobStatusApplicationRecommendationApplied",
+            "html": "<tr style=\"background: rgb(248, 250, 252);\"><th style=\"padding: 11px 12px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: center;\">#</th><th style=\"padding: 11px 12px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: center;\">Candidate</th><th style=\"padding"
+          },
+          {
+            "selector": "th",
+            "left": 374,
+            "right": 422,
+            "width": 48,
+            "text": "Job",
+            "html": "<th style=\"padding: 11px 12px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: center;\">Job</th>"
+          },
+          {
+            "selector": "th",
+            "left": 422,
+            "right": 492,
+            "width": 69,
+            "text": "Status",
+            "html": "<th style=\"padding: 11px 12px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: center;\">Status</th>"
+          },
+          {
+            "selector": "th",
+            "left": 492,
+            "right": 595,
+            "width": 103,
+            "text": "Application",
+            "html": "<th style=\"padding: 11px 12px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: center;\">Application</th>"
+          },
+          {
+            "selector": "th",
+            "left": 595,
+            "right": 733,
+            "width": 138,
+            "text": "Recommendation",
+            "html": "<th style=\"padding: 11px 12px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: center;\">Recommendation</th>"
+          },
+          {
+            "selector": "th",
+            "left": 733,
+            "right": 808,
+            "width": 75,
+            "text": "Applied",
+            "html": "<th style=\"padding: 11px 12px; font-size: 11px; font-weight: 600; color: rgb(100, 116, 139); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgb(232, 237, 245); text-align: center;\">Applied</th>"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 12
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                "div:nth-child(1) > div:nth-child(1) > p"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184); text-transform: uppercase; letter-spacing: 0.8px;\">Applications</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.43 (foreground color: #94a3b8, background color: #f7f9fd, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(2) > div > p"
+              ],
+              "html": "<p style=\"color: rgb(148, 163, 184); font-size: 13px; margin: 0px; font-weight: 400;\">No applications found</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 2
+        },
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+          "help": "Scrollable region must have keyboard access",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/scrollable-region-focusable?application=playwright",
+          "tags": [
+            "wcag2a",
+            "wcag211",
+            "wcag213"
+          ],
+          "nodes": [
+            {
+              "target": [
+                "div:nth-child(2) > div > div > div:nth-child(2)"
+              ],
+              "html": "<div style=\"overflow-x: auto;\">",
+              "failureSummary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+            }
+          ],
+          "nodeCount": 1
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/admin",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/admin",
+        "name": "Admin applications",
+        "area": "administrator",
+        "role": "admin",
+        "activateLabel": "Applications"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/admin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Admin dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 12
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(1) > div:nth-child(1) > p"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184); text-transform: uppercase; letter-spacing: 0.8px;\">Applications</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.43 (foreground color: #94a3b8, background color: #f7f9fd, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(1) > span"
+              ],
+              "html": "<span style=\"font-size: 12px; color: rgb(148, 163, 184); white-space: nowrap;\">0 applications</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(2) > div > p"
+              ],
+              "html": "<p style=\"color: rgb(148, 163, 184); font-size: 13px; margin: 0px; font-weight: 400;\">No applications found</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 4
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/admin",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/admin",
+        "name": "Candidate profiles",
+        "area": "administrator",
+        "role": "admin",
+        "activateLabel": "User Profiles"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/admin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Admin dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [
+          {
+            "selector": "div",
+            "left": 318,
+            "right": 391,
+            "width": 73,
+            "text": "Add data sheets",
+            "html": "<div><input accept=\".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\" multiple=\"\" type=\"file\" style=\"display: none;\"><button type=\"button\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 10px; background: rgb(37, 99, 235); color: white; padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer;\">Add data sheets</button></div>"
+          },
+          {
+            "selector": "button",
+            "left": 318,
+            "right": 391,
+            "width": 73,
+            "text": "Add data sheets",
+            "html": "<button type=\"button\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 10px; background: rgb(37, 99, 235); color: white; padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer;\">Add data sheets</button>"
+          },
+          {
+            "selector": "div.card-stat",
+            "left": 324,
+            "right": 424,
+            "width": 100,
+            "text": "Completed Profiles2",
+            "html": "<div class=\"card-stat\" style=\"background: rgb(255, 255, 255); border-radius: 16px; padding: 20px; border: 1px solid rgb(232, 237, 245); box-shadow: rgba(15, 23, 42, 0.05) 0px 1px 8px; transition: 0.2s; cursor: default; display: flex; flex-direction: column; align-items: center;\"><div style=\"width: 38px; height: 38px; border-radius: 10px; background: rgb(240, 253, 244); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 2"
+          },
+          {
+            "selector": "div",
+            "left": 355,
+            "right": 393,
+            "width": 38,
+            "text": "",
+            "html": "<div style=\"width: 38px; height: 38px; border-radius: 10px; background: rgb(240, 253, 244); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#16a34a\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"></polyline></svg></div>"
+          },
+          {
+            "selector": "svg",
+            "left": 366,
+            "right": 382,
+            "width": 16,
+            "text": "",
+            "html": "<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#16a34a\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"></polyline></svg>"
+          },
+          {
+            "selector": "polyline",
+            "left": 369,
+            "right": 379,
+            "width": 11,
+            "text": "",
+            "html": "<polyline points=\"20 6 9 17 4 12\"></polyline>"
+          },
+          {
+            "selector": "p",
+            "left": 345,
+            "right": 403,
+            "width": 58,
+            "text": "Completed Profiles",
+            "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Completed Profiles</p>"
+          },
+          {
+            "selector": "p",
+            "left": 366,
+            "right": 382,
+            "width": 15,
+            "text": "2",
+            "html": "<p style=\"margin: 0px; font-size: 28px; font-weight: 600; color: rgb(15, 23, 42); letter-spacing: -0.5px;\">2</p>"
+          },
+          {
+            "selector": "div.card-stat",
+            "left": 440,
+            "right": 535,
+            "width": 95,
+            "text": "Pending Education1",
+            "html": "<div class=\"card-stat\" style=\"background: rgb(255, 255, 255); border-radius: 16px; padding: 20px; border: 1px solid rgb(232, 237, 245); box-shadow: rgba(15, 23, 42, 0.05) 0px 1px 8px; transition: 0.2s; cursor: default; display: flex; flex-direction: column; align-items: center;\"><div style=\"width: 38px; height: 38px; border-radius: 10px; background: rgb(255, 251, 235); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 2"
+          },
+          {
+            "selector": "div",
+            "left": 469,
+            "right": 507,
+            "width": 38,
+            "text": "",
+            "html": "<div style=\"width: 38px; height: 38px; border-radius: 10px; background: rgb(255, 251, 235); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#d97706\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"12\"></line><line x1=\"12\" y1=\"16\" x2=\"12.01\" y2=\"16\"></line></svg></div>"
+          },
+          {
+            "selector": "svg",
+            "left": 480,
+            "right": 496,
+            "width": 16,
+            "text": "",
+            "html": "<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#d97706\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"12\"></line><line x1=\"12\" y1=\"16\" x2=\"12.01\" y2=\"16\"></line></svg>"
+          },
+          {
+            "selector": "circle",
+            "left": 481,
+            "right": 494,
+            "width": 13,
+            "text": "",
+            "html": "<circle cx=\"12\" cy=\"12\" r=\"10\"></circle>"
+          },
+          {
+            "selector": "p",
+            "left": 461,
+            "right": 514,
+            "width": 53,
+            "text": "Pending Education",
+            "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Pending Education</p>"
+          },
+          {
+            "selector": "p",
+            "left": 480,
+            "right": 495,
+            "width": 15,
+            "text": "1",
+            "html": "<p style=\"margin: 0px; font-size: 28px; font-weight: 600; color: rgb(15, 23, 42); letter-spacing: -0.5px;\">1</p>"
+          },
+          {
+            "selector": "div.card-stat",
+            "left": 551,
+            "right": 658,
+            "width": 107,
+            "text": "Total Applications0",
+            "html": "<div class=\"card-stat\" style=\"background: rgb(255, 255, 255); border-radius: 16px; padding: 20px; border: 1px solid rgb(232, 237, 245); box-shadow: rgba(15, 23, 42, 0.05) 0px 1px 8px; transition: 0.2s; cursor: default; display: flex; flex-direction: column; align-items: center;\"><div style=\"width: 38px; height: 38px; border-radius: 10px; background: rgb(245, 243, 255); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 2"
+          },
+          {
+            "selector": "div",
+            "left": 586,
+            "right": 624,
+            "width": 38,
+            "text": "",
+            "html": "<div style=\"width: 38px; height: 38px; border-radius: 10px; background: rgb(245, 243, 255); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"></path><polyline points=\"14 2 14 8 20 8\"></polyline><line x1=\"16\" y1=\"13\" x2=\"8\" y2=\"13\"></line><line x1=\"16\" y1="
+          },
+          {
+            "selector": "svg",
+            "left": 597,
+            "right": 613,
+            "width": 16,
+            "text": "",
+            "html": "<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"></path><polyline points=\"14 2 14 8 20 8\"></polyline><line x1=\"16\" y1=\"13\" x2=\"8\" y2=\"13\"></line><line x1=\"16\" y1=\"17\" x2=\"8\" y2=\"17\"></line></svg>"
+          },
+          {
+            "selector": "path",
+            "left": 599,
+            "right": 610,
+            "width": 11,
+            "text": "",
+            "html": "<path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"></path>"
+          },
+          {
+            "selector": "polyline",
+            "left": 606,
+            "right": 610,
+            "width": 4,
+            "text": "",
+            "html": "<polyline points=\"14 2 14 8 20 8\"></polyline>"
+          },
+          {
+            "selector": "p",
+            "left": 572,
+            "right": 637,
+            "width": 65,
+            "text": "Total Applications",
+            "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Total Applications</p>"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 14
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                "div:nth-child(1) > div:nth-child(1) > p"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184); text-transform: uppercase; letter-spacing: 0.8px;\">User Profiles</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.43 (foreground color: #94a3b8, background color: #f7f9fd, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(1) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Total Profiles</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(2) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Completed Profiles</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(3) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Pending Education</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(4) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Total Applications</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > p:nth-child(3)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 12px; font-size: 12px; color: rgb(148, 163, 184); word-break: break-word;\">candidate@join.local</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.45 (foreground color: #94a3b8, background color: #f8fafc, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > p:nth-child(3)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 12px; font-size: 12px; color: rgb(148, 163, 184); word-break: break-word;\">zaidanmnsr2002@gmail.com</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.45 (foreground color: #94a3b8, background color: #f8fafc, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(3) > div:nth-child(2) > div:nth-child(3) > p:nth-child(3)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 12px; font-size: 12px; color: rgb(148, 163, 184); word-break: break-word;\">zeidanmansour2002@gmail.com</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.45 (foreground color: #94a3b8, background color: #f8fafc, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 8
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/admin",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/admin",
+        "name": "Candidate profiles",
+        "area": "administrator",
+        "role": "admin",
+        "activateLabel": "User Profiles"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/admin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Admin dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 14
+      },
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(1) > div:nth-child(1) > p"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184); text-transform: uppercase; letter-spacing: 0.8px;\">User Profiles</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.43 (foreground color: #94a3b8, background color: #f7f9fd, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(1) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Total Profiles</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(2) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Completed Profiles</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(3) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Pending Education</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(4) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Total Applications</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > p:nth-child(3)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 12px; font-size: 12px; color: rgb(148, 163, 184); word-break: break-word;\">candidate@join.local</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.45 (foreground color: #94a3b8, background color: #f8fafc, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > p:nth-child(3)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 12px; font-size: 12px; color: rgb(148, 163, 184); word-break: break-word;\">zaidanmnsr2002@gmail.com</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.45 (foreground color: #94a3b8, background color: #f8fafc, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 9
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/admin",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/verifier",
+        "name": "Approved verifications",
+        "area": "verifier",
+        "role": "verifier",
+        "activateLabel": "Approved"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/verifier",
+      "scanError": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Approved', exact: true })\u001b[22m\n\n    at main (C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\frontend\\scripts\\wcag-baseline-audit.mjs:191:88)",
+      "httpStatus": 200
+    },
+    {
+      "route": {
+        "path": "/verifier",
+        "name": "Approved verifications",
+        "area": "verifier",
+        "role": "verifier",
+        "activateLabel": "Approved"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/verifier",
+      "scanError": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Approved', exact: true })\u001b[22m\n\n    at main (C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\frontend\\scripts\\wcag-baseline-audit.mjs:191:88)",
+      "httpStatus": 200
+    }
+  ]
+}

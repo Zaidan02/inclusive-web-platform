@@ -24,11 +24,25 @@ class CandidateProfile
     #[ORM\JoinTable(name: 'candidate_profile_disability')]
     private Collection $disabilities;
 
+    /** @var Collection<int, CandidateTaskSkill> */
+    #[ORM\OneToMany(mappedBy: 'candidateProfile', targetEntity: CandidateTaskSkill::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['confirmedAt' => 'DESC'])]
+    private Collection $taskSkills;
+
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $educationLevel = null;
+
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $readingAbility = null;
+
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $writingAbility = null;
+
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $numeracyAbility = null;
 
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $firstName = null;
@@ -48,6 +62,7 @@ class CandidateProfile
     public function __construct()
     {
         $this->disabilities = new ArrayCollection();
+        $this->taskSkills = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -91,6 +106,35 @@ class CandidateProfile
         return $this;
     }
 
+    public function addDisability(Disability $disability): static
+    {
+        if (!$this->disabilities->contains($disability)) {
+            $this->disabilities->add($disability);
+        }
+        return $this;
+    }
+
+    /** @return Collection<int, CandidateTaskSkill> */
+    public function getTaskSkills(): Collection
+    {
+        return $this->taskSkills;
+    }
+
+    public function addTaskSkill(CandidateTaskSkill $taskSkill): static
+    {
+        if (!$this->taskSkills->contains($taskSkill)) {
+            $this->taskSkills->add($taskSkill);
+            $taskSkill->setCandidateProfile($this);
+        }
+        return $this;
+    }
+
+    public function removeTaskSkill(CandidateTaskSkill $taskSkill): static
+    {
+        $this->taskSkills->removeElement($taskSkill);
+        return $this;
+    }
+
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
@@ -104,6 +148,12 @@ class CandidateProfile
 
     public function getEducationLevel(): ?string { return $this->educationLevel; }
     public function setEducationLevel(?string $level): static { $this->educationLevel = $level; return $this; }
+    public function getReadingAbility(): ?string { return $this->readingAbility; }
+    public function setReadingAbility(?string $value): static { $this->readingAbility = $value; return $this; }
+    public function getWritingAbility(): ?string { return $this->writingAbility; }
+    public function setWritingAbility(?string $value): static { $this->writingAbility = $value; return $this; }
+    public function getNumeracyAbility(): ?string { return $this->numeracyAbility; }
+    public function setNumeracyAbility(?string $value): static { $this->numeracyAbility = $value; return $this; }
     public function getFirstName(): ?string { return $this->firstName; }
     public function setFirstName(?string $value): static { $this->firstName = $value; return $this; }
     public function getLastName(): ?string { return $this->lastName; }

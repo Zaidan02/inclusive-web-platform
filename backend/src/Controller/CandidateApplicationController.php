@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\ApplicationOutcomeEvent;
 use App\Entity\JobApplication;
 use App\Entity\JobPost;
 use App\Entity\User;
+use App\Service\ApplicationDocumentStorage;
+use App\Service\CompatibilityScoringService;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,6 +18,8 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class CandidateApplicationController extends AbstractController
 {
+    private const POSITION_KNOWLEDGE_LEVELS = ['independent', 'with_support', 'not_yet'];
+
     private function getUserFromToken(Request $request, JWTEncoderInterface $jwtEncoder, EntityManagerInterface $entityManager): User|JsonResponse
     {
         $token = $request->headers->get('X-Auth-Token');
@@ -45,21 +50,14 @@ class CandidateApplicationController extends AbstractController
             return $this->json(['message' => 'User not found.'], 404);
         }
 
-        return $user;
-    }
-
-    private function saveUploadedFile(UploadedFile $file, string $uploadDir): string
-    {
-        $extension = strtolower($file->guessExtension() ?: $file->getClientOriginalExtension());
-
-        if (!in_array($extension, ['pdf', 'doc', 'docx'], true)) {
-            throw new \RuntimeException('Only PDF, DOC, and DOCX files are allowed.');
+        $roles = $user->getRoles();
+        if (in_array('ROLE_EMPLOYER', $roles, true)
+            || in_array('ROLE_ADMIN', $roles, true)
+            || in_array('ROLE_VERIFIER', $roles, true)) {
+            return $this->json(['message' => 'Candidate access is required.'], 403);
         }
 
-        $fileName = uniqid('application_', true) . '.' . $extension;
-        $file->move($uploadDir, $fileName);
-
-        return $fileName;
+        return $user;
     }
 
     #[Route('/api/candidate/jobs/{id}/apply', name: 'candidate_apply_job', methods: ['POST'])]
@@ -67,7 +65,9 @@ class CandidateApplicationController extends AbstractController
         int $id,
         Request $request,
         EntityManagerInterface $entityManager,
-        JWTEncoderInterface $jwtEncoder
+        JWTEncoderInterface $jwtEncoder,
+        ApplicationDocumentStorage $documentStorage,
+        CompatibilityScoringService $scoringService
     ): JsonResponse {
         $candidate = $this->getUserFromToken($request, $jwtEncoder, $entityManager);
 
@@ -92,42 +92,72 @@ class CandidateApplicationController extends AbstractController
 
         $applicationDocument = $request->files->get('applicationDocument');
         $recommendationLetter = $request->files->get('recommendationLetter');
-
-        if ($job->isCvRequired() && !$applicationDocument) {
-            return $this->json(['message' => 'Application document is required.'], 400);
-        }
-
-        if ($job->isCoverLetterRequired() && !$recommendationLetter) {
-            return $this->json(['message' => 'Recommendation letter is required.'], 400);
-        }
-
-        $uploadDir = $this->getParameter('kernel.project_dir') . '/public/uploads/applications';
-
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0775, true);
+        $positionKnowledgeLevel = (string) $request->request->get('positionKnowledgeLevel', '');
+        if (!in_array($positionKnowledgeLevel, self::POSITION_KNOWLEDGE_LEVELS, true)) {
+            return $this->json(['message' => 'Select a valid basic position knowledge level.'], 400);
         }
 
         $application = new JobApplication();
         $application->setCandidate($candidate);
         $application->setJobPost($job);
         $application->setStatus('pending');
+        $application->setPositionKnowledgeLevel($positionKnowledgeLevel);
 
         try {
+            $match = $scoringService->score($candidate, [$job], [$job->getId() => $positionKnowledgeLevel])[0] ?? null;
+            if (is_array($match)) {
+                $application->setCompatibilityScore(is_numeric($match['score'] ?? null) ? (float) $match['score'] : null);
+                $application->setCompatibilityEligible(isset($match['eligible']) ? (bool) $match['eligible'] : null);
+                $application->setCompatibilitySnapshot([
+                    'taskScore' => $match['task_score'] ?? null,
+                    'personalEducationScore' => $match['practical_ability_score'] ?? null,
+                    'educationScore' => $match['education_score'] ?? null,
+                    'education' => $match['education'] ?? null,
+                    'abilityResults' => $match['ability_results'] ?? [],
+                    'exclusionReasons' => $match['exclusion_reasons'] ?? [],
+                    'summary' => $match['summary'] ?? null,
+                ]);
+            }
+        } catch (\Throwable) {
+            // Application submission remains available if the scoring service is temporarily unavailable.
+        }
+
+        $storedNames = [];
+        try {
             if ($applicationDocument instanceof UploadedFile) {
-                $application->setApplicationFileName($this->saveUploadedFile($applicationDocument, $uploadDir));
-                $application->setApplicationOriginalName($applicationDocument->getClientOriginalName());
+                $stored = $documentStorage->store($applicationDocument);
+                $storedNames[] = $stored['storedName'];
+                $application->setApplicationFileName($stored['storedName']);
+                $application->setApplicationOriginalName($stored['originalName']);
             }
 
             if ($recommendationLetter instanceof UploadedFile) {
-                $application->setRecommendationFileName($this->saveUploadedFile($recommendationLetter, $uploadDir));
-                $application->setRecommendationOriginalName($recommendationLetter->getClientOriginalName());
+                $stored = $documentStorage->store($recommendationLetter);
+                $storedNames[] = $stored['storedName'];
+                $application->setRecommendationFileName($stored['storedName']);
+                $application->setRecommendationOriginalName($stored['originalName']);
             }
-        } catch (\RuntimeException $e) {
+            $entityManager->persist($application);
+            $entityManager->persist(
+                (new ApplicationOutcomeEvent())
+                    ->setApplication($application)
+                    ->setActor($candidate)
+                    ->setPreviousStatus(null)
+                    ->setNewStatus('pending')
+                    ->setNotificationStatus('not_required')
+            );
+            $entityManager->flush();
+        } catch (\InvalidArgumentException $e) {
+            foreach ($storedNames as $storedName) {
+                $documentStorage->delete($storedName);
+            }
             return $this->json(['message' => $e->getMessage()], 400);
+        } catch (\Throwable) {
+            foreach ($storedNames as $storedName) {
+                $documentStorage->delete($storedName);
+            }
+            return $this->json(['message' => 'The application could not be stored securely. Please try again.'], 500);
         }
-
-        $entityManager->persist($application);
-        $entityManager->flush();
 
         return $this->json([
             'message' => 'Application submitted successfully.',
@@ -163,7 +193,11 @@ class CandidateApplicationController extends AbstractController
                     'location' => $job?->getLocation(),
                     'jobType' => $job?->getJobType(),
                     'status' => $application->getStatus(),
+                    'positionKnowledgeLevel' => $application->getPositionKnowledgeLevel(),
+                    'compatibilityScore' => $application->getCompatibilityScore(),
+                    'compatibilityEligible' => $application->isCompatibilityEligible(),
                     'createdAt' => $application->getCreatedAt()?->format('Y-m-d H:i:s'),
+                    'statusUpdatedAt' => $application->getUpdatedAt()?->format('Y-m-d H:i:s'),
                 ];
             }, $applications),
         ]);

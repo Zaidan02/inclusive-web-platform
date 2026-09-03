@@ -35,6 +35,10 @@ def _candidate_from_dict(data: dict) -> Candidate:
         candidate_id=data["id"],
         education_level=data["educationLevel"],
         disability_slugs=tuple(data.get("disabilities", ())),
+        reading_ability=data.get("readingAbility") or "not_yet",
+        writing_ability=data.get("writingAbility") or "not_yet",
+        numeracy_ability=data.get("numeracyAbility") or "not_yet",
+        position_knowledge=data.get("positionKnowledgeLevel"),
     )
 
 
@@ -44,6 +48,11 @@ def _job_from_dict(data: dict) -> Job:
         title=data["title"],
         minimum_education_level=data.get("minimumEducationLevel") or "none",
         assistance_available=bool(data.get("assistanceAvailable", False)),
+        education_requirement=data.get("educationRequirement") or "not_required",
+        reading_requirement=data.get("readingRequirement") or "not_required",
+        writing_requirement=data.get("writingRequirement") or "not_required",
+        numeracy_requirement=data.get("numeracyRequirement") or "not_required",
+        position_knowledge_requirement=data.get("positionKnowledgeRequirement") or "not_required",
         tasks=tuple(
             Task(
                 task_id=task["id"],

@@ -1,0 +1,1250 @@
+{
+  "generatedAt": "2026-08-03T11:46:58.138Z",
+  "standard": "WCAG 2.1 Level A and AA",
+  "browser": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+  "notes": [
+    "The zoom-200 scenario uses CSS zoom in headless Chromium and requires manual browser-zoom confirmation.",
+    "Automated findings are evidence, not a complete conformance determination.",
+    "Keyboard automation records tab stops; focus visibility and interaction quality require manual review."
+  ],
+  "routes": [
+    {
+      "path": "/",
+      "name": "Welcome",
+      "area": "public"
+    },
+    {
+      "path": "/signin",
+      "name": "Sign in",
+      "area": "authentication"
+    },
+    {
+      "path": "/signup",
+      "name": "Sign up",
+      "area": "authentication"
+    },
+    {
+      "path": "/forgot-password",
+      "name": "Forgot password",
+      "area": "authentication"
+    },
+    {
+      "path": "/reset-password",
+      "name": "Reset password",
+      "area": "authentication"
+    },
+    {
+      "path": "/employers",
+      "name": "Employers",
+      "area": "public"
+    },
+    {
+      "path": "/voice-help",
+      "name": "Voice help",
+      "area": "public"
+    },
+    {
+      "path": "/privacy",
+      "name": "Privacy notice",
+      "area": "public"
+    },
+    {
+      "path": "/candidate",
+      "name": "Candidate dashboard",
+      "area": "candidate",
+      "role": "candidate"
+    },
+    {
+      "path": "/candidate/setup",
+      "name": "Candidate setup",
+      "area": "candidate",
+      "role": "candidate"
+    },
+    {
+      "path": "/employer",
+      "name": "Employer dashboard",
+      "area": "employer",
+      "role": "employer"
+    },
+    {
+      "path": "/admin",
+      "name": "Administrator dashboard",
+      "area": "administrator",
+      "role": "admin"
+    },
+    {
+      "path": "/verifier",
+      "name": "Verifier dashboard",
+      "area": "verifier",
+      "role": "verifier"
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "width-320",
+      "width": 320,
+      "height": 800
+    }
+  ],
+  "results": [
+    {
+      "route": {
+        "path": "/",
+        "name": "Welcome",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [
+          {
+            "selector": "div.hero-visual__glow",
+            "left": -55,
+            "right": 375,
+            "width": 430,
+            "text": "",
+            "html": "<div class=\"hero-visual__glow\"></div>"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 20
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\home-width-320.png",
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/signin",
+        "name": "Sign in",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/signin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Sign in | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 10
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\signin-width-320.png",
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/signin",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/signup",
+        "name": "Sign up",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/signup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Create account | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 16
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\signup-width-320.png",
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/signup",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/forgot-password",
+        "name": "Forgot password",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/forgot-password",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Forgot password | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 7
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\forgot-password-width-320.png",
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/forgot-password",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/reset-password",
+        "name": "Reset password",
+        "area": "authentication"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/reset-password",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Reset password | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 9
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\reset-password-width-320.png",
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/reset-password",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/employers",
+        "name": "Employers",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/employers",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "For employers | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 8
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\employers-width-320.png",
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/employers",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/voice-help",
+        "name": "Voice help",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/voice-help",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Voice navigation help | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 5
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\voice-help-width-320.png",
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/voice-help",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/privacy",
+        "name": "Privacy notice",
+        "area": "public"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/privacy",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 5
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\privacy-width-320.png",
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 1
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/privacy",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/candidate",
+        "name": "Candidate dashboard",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/candidate",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 378,
+        "horizontalOverflow": true,
+        "overflowElements": [
+          {
+            "selector": "button",
+            "left": 281,
+            "right": 352,
+            "width": 71,
+            "text": "Privacy & data",
+            "html": "<button type=\"button\" style=\"background: transparent; border-width: medium medium 2px; border-style: none none solid; border-color: currentcolor currentcolor transparent; border-image: none; padding: 15px 14px; cursor: pointer; font-size: 13px; font-weight: 400; color: rgb(100, 116, 139); transition: 0.15s; border-radius: 0px; font-family: Inter, sans-serif;\">Privacy &amp; data</button>"
+          },
+          {
+            "selector": "span",
+            "left": 274,
+            "right": 378,
+            "width": 104,
+            "text": "✓ Accommodation offered",
+            "html": "<span style=\"display: inline-flex; align-items: center; gap: 5px; width: fit-content; margin-top: 5px; padding: 3px 7px; border-radius: 999px; background: rgb(236, 253, 245); border: 1px solid rgb(167, 243, 208); color: rgb(4, 120, 87); font-size: 10px; font-weight: 600;\"><span aria-hidden=\"true\">✓</span> Accommodation offered</span>"
+          },
+          {
+            "selector": "button",
+            "left": 274,
+            "right": 330,
+            "width": 55,
+            "text": "JoIn Hospitality Demo",
+            "html": "<button type=\"button\" style=\"display: block; margin: 0px; padding: 0px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: transparent; color: rgb(100, 116, 139); font-size: 12px; font-weight: 400; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; font-family: Inter, sans-serif; text-align: left;\">JoIn Hospitality Demo</button>"
+          },
+          {
+            "selector": "span",
+            "left": 274,
+            "right": 378,
+            "width": 104,
+            "text": "✓ Accommodation offered",
+            "html": "<span style=\"display: inline-flex; align-items: center; gap: 5px; width: fit-content; margin-top: 5px; padding: 3px 7px; border-radius: 999px; background: rgb(236, 253, 245); border: 1px solid rgb(167, 243, 208); color: rgb(4, 120, 87); font-size: 10px; font-weight: 600;\"><span aria-hidden=\"true\">✓</span> Accommodation offered</span>"
+          },
+          {
+            "selector": "span",
+            "left": 274,
+            "right": 378,
+            "width": 104,
+            "text": "✓ Accommodation offered",
+            "html": "<span style=\"display: inline-flex; align-items: center; gap: 5px; width: fit-content; margin-top: 5px; padding: 3px 7px; border-radius: 999px; background: rgb(236, 253, 245); border: 1px solid rgb(167, 243, 208); color: rgb(4, 120, 87); font-size: 10px; font-weight: 600;\"><span aria-hidden=\"true\">✓</span> Accommodation offered</span>"
+          },
+          {
+            "selector": "button",
+            "left": 274,
+            "right": 368,
+            "width": 94,
+            "text": "View details for Chocolate / Confectionery Worker",
+            "html": "<button type=\"button\" aria-label=\"View details for Chocolate / Confectionery Worker\" style=\"display: block; margin: 0px 0px 3px; padding: 0px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: transparent; color: rgb(15, 23, 42); font-size: 14px; font-weight: 600; text-align: left; cursor: pointer; font-family: Inter, sans-serif;\">Chocolate / Confectionery Worker</button>"
+          },
+          {
+            "selector": "button",
+            "left": 274,
+            "right": 368,
+            "width": 94,
+            "text": "View details for Chocolate / Confectionery Worker",
+            "html": "<button type=\"button\" aria-label=\"View details for Chocolate / Confectionery Worker\" style=\"display: block; margin: 0px 0px 3px; padding: 0px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: transparent; color: rgb(15, 23, 42); font-size: 14px; font-weight: 600; text-align: left; cursor: pointer; font-family: Inter, sans-serif;\">Chocolate / Confectionery Worker</button>"
+          },
+          {
+            "selector": "span",
+            "left": 274,
+            "right": 378,
+            "width": 104,
+            "text": "✓ Accommodation offered",
+            "html": "<span style=\"display: inline-flex; align-items: center; gap: 5px; width: fit-content; margin-top: 5px; padding: 3px 7px; border-radius: 999px; background: rgb(236, 253, 245); border: 1px solid rgb(167, 243, 208); color: rgb(4, 120, 87); font-size: 10px; font-weight: 600;\"><span aria-hidden=\"true\">✓</span> Accommodation offered</span>"
+          },
+          {
+            "selector": "button",
+            "left": 274,
+            "right": 368,
+            "width": 94,
+            "text": "View details for Chocolate / Confectionery Worker",
+            "html": "<button type=\"button\" aria-label=\"View details for Chocolate / Confectionery Worker\" style=\"display: block; margin: 0px 0px 3px; padding: 0px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: transparent; color: rgb(15, 23, 42); font-size: 14px; font-weight: 600; text-align: left; cursor: pointer; font-family: Inter, sans-serif;\">Chocolate / Confectionery Worker</button>"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 59
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\candidate-width-320.png",
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                "div:nth-child(1) > div:nth-child(2) > p"
+              ],
+              "html": "<p style=\"margin: 1px 0px 0px; font-size: 11px; color: rgb(148, 163, 184); font-weight: 400;\">Powered by transparent mathematical rules</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(4) > p"
+              ],
+              "html": "<p style=\"color: rgb(148, 163, 184); font-size: 12px; font-weight: 400; line-height: 1.5; margin: 0px;\">Your compatibility scores will appear here after analysis</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 2
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/candidate/setup",
+        "name": "Candidate setup",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/candidate/setup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 378,
+        "horizontalOverflow": true,
+        "overflowElements": [
+          {
+            "selector": "button",
+            "left": 281,
+            "right": 352,
+            "width": 71,
+            "text": "Privacy & data",
+            "html": "<button type=\"button\" style=\"background: transparent; border-width: medium medium 2px; border-style: none none solid; border-color: currentcolor currentcolor transparent; border-image: none; padding: 15px 14px; cursor: pointer; font-size: 13px; font-weight: 400; color: rgb(100, 116, 139); transition: 0.15s; border-radius: 0px; font-family: Inter, sans-serif;\">Privacy &amp; data</button>"
+          },
+          {
+            "selector": "span",
+            "left": 274,
+            "right": 378,
+            "width": 104,
+            "text": "✓ Accommodation offered",
+            "html": "<span style=\"display: inline-flex; align-items: center; gap: 5px; width: fit-content; margin-top: 5px; padding: 3px 7px; border-radius: 999px; background: rgb(236, 253, 245); border: 1px solid rgb(167, 243, 208); color: rgb(4, 120, 87); font-size: 10px; font-weight: 600;\"><span aria-hidden=\"true\">✓</span> Accommodation offered</span>"
+          },
+          {
+            "selector": "button",
+            "left": 274,
+            "right": 330,
+            "width": 55,
+            "text": "JoIn Hospitality Demo",
+            "html": "<button type=\"button\" style=\"display: block; margin: 0px; padding: 0px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: transparent; color: rgb(100, 116, 139); font-size: 12px; font-weight: 400; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; font-family: Inter, sans-serif; text-align: left;\">JoIn Hospitality Demo</button>"
+          },
+          {
+            "selector": "span",
+            "left": 274,
+            "right": 378,
+            "width": 104,
+            "text": "✓ Accommodation offered",
+            "html": "<span style=\"display: inline-flex; align-items: center; gap: 5px; width: fit-content; margin-top: 5px; padding: 3px 7px; border-radius: 999px; background: rgb(236, 253, 245); border: 1px solid rgb(167, 243, 208); color: rgb(4, 120, 87); font-size: 10px; font-weight: 600;\"><span aria-hidden=\"true\">✓</span> Accommodation offered</span>"
+          },
+          {
+            "selector": "span",
+            "left": 274,
+            "right": 378,
+            "width": 104,
+            "text": "✓ Accommodation offered",
+            "html": "<span style=\"display: inline-flex; align-items: center; gap: 5px; width: fit-content; margin-top: 5px; padding: 3px 7px; border-radius: 999px; background: rgb(236, 253, 245); border: 1px solid rgb(167, 243, 208); color: rgb(4, 120, 87); font-size: 10px; font-weight: 600;\"><span aria-hidden=\"true\">✓</span> Accommodation offered</span>"
+          },
+          {
+            "selector": "button",
+            "left": 274,
+            "right": 368,
+            "width": 94,
+            "text": "View details for Chocolate / Confectionery Worker",
+            "html": "<button type=\"button\" aria-label=\"View details for Chocolate / Confectionery Worker\" style=\"display: block; margin: 0px 0px 3px; padding: 0px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: transparent; color: rgb(15, 23, 42); font-size: 14px; font-weight: 600; text-align: left; cursor: pointer; font-family: Inter, sans-serif;\">Chocolate / Confectionery Worker</button>"
+          },
+          {
+            "selector": "button",
+            "left": 274,
+            "right": 368,
+            "width": 94,
+            "text": "View details for Chocolate / Confectionery Worker",
+            "html": "<button type=\"button\" aria-label=\"View details for Chocolate / Confectionery Worker\" style=\"display: block; margin: 0px 0px 3px; padding: 0px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: transparent; color: rgb(15, 23, 42); font-size: 14px; font-weight: 600; text-align: left; cursor: pointer; font-family: Inter, sans-serif;\">Chocolate / Confectionery Worker</button>"
+          },
+          {
+            "selector": "span",
+            "left": 274,
+            "right": 378,
+            "width": 104,
+            "text": "✓ Accommodation offered",
+            "html": "<span style=\"display: inline-flex; align-items: center; gap: 5px; width: fit-content; margin-top: 5px; padding: 3px 7px; border-radius: 999px; background: rgb(236, 253, 245); border: 1px solid rgb(167, 243, 208); color: rgb(4, 120, 87); font-size: 10px; font-weight: 600;\"><span aria-hidden=\"true\">✓</span> Accommodation offered</span>"
+          },
+          {
+            "selector": "button",
+            "left": 274,
+            "right": 368,
+            "width": 94,
+            "text": "View details for Chocolate / Confectionery Worker",
+            "html": "<button type=\"button\" aria-label=\"View details for Chocolate / Confectionery Worker\" style=\"display: block; margin: 0px 0px 3px; padding: 0px; border-width: medium; border-style: none; border-color: currentcolor; border-image: none; background: transparent; color: rgb(15, 23, 42); font-size: 14px; font-weight: 600; text-align: left; cursor: pointer; font-family: Inter, sans-serif;\">Chocolate / Confectionery Worker</button>"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 59
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\candidate-setup-width-320.png",
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                "div:nth-child(1) > div:nth-child(2) > p"
+              ],
+              "html": "<p style=\"margin: 1px 0px 0px; font-size: 11px; color: rgb(148, 163, 184); font-weight: 400;\">Powered by transparent mathematical rules</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div:nth-child(4) > p"
+              ],
+              "html": "<p style=\"color: rgb(148, 163, 184); font-size: 12px; font-weight: 400; line-height: 1.5; margin: 0px;\">Your compatibility scores will appear here after analysis</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 2
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/employer",
+        "name": "Employer dashboard",
+        "area": "employer",
+        "role": "employer"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/employer",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Employer dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [
+          {
+            "selector": "div",
+            "left": 270,
+            "right": 352,
+            "width": 82,
+            "text": "Posting asJoIn Hospitality Demo",
+            "html": "<div><span style=\"display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; color: rgb(100, 116, 139);\">Posting as</span><strong style=\"color: rgb(15, 23, 42);\">JoIn Hospitality Demo</strong></div>"
+          },
+          {
+            "selector": "span",
+            "left": 270,
+            "right": 352,
+            "width": 82,
+            "text": "Posting as",
+            "html": "<span style=\"display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; color: rgb(100, 116, 139);\">Posting as</span>"
+          },
+          {
+            "selector": "strong",
+            "left": 270,
+            "right": 352,
+            "width": 82,
+            "text": "JoIn Hospitality Demo",
+            "html": "<strong style=\"color: rgb(15, 23, 42);\">JoIn Hospitality Demo</strong>"
+          },
+          {
+            "selector": "div",
+            "left": 255,
+            "right": 394,
+            "width": 139,
+            "text": "Job Position *Positions are controlled by the platform administrator.Select a positionBakery / Pastry WorkerChocolate / ",
+            "html": "<div style=\"display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px;\"><label for=\"_r_0_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Job Position *</label><p id=\"_r_0_-hint\" style=\"margin: 0px; font-size: 11px; color: rgb(100, 116, 139);\">Positions are controlled by the platform administrator.</p><select class=\"input-field\" name=\"jobDefinitionId\" required=\"\" id=\"_r_0_\" aria-describedby=\"_r_0_-hint\" style=\"widt"
+          },
+          {
+            "selector": "label",
+            "left": 255,
+            "right": 394,
+            "width": 139,
+            "text": "Job Position *",
+            "html": "<label for=\"_r_0_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Job Position *</label>"
+          },
+          {
+            "selector": "p#_r_0_-hint",
+            "left": 255,
+            "right": 394,
+            "width": 139,
+            "text": "Positions are controlled by the platform administrator.",
+            "html": "<p id=\"_r_0_-hint\" style=\"margin: 0px; font-size: 11px; color: rgb(100, 116, 139);\">Positions are controlled by the platform administrator.</p>"
+          },
+          {
+            "selector": "select#_r_0_.input-field",
+            "left": 255,
+            "right": 394,
+            "width": 139,
+            "text": "Select a positionBakery / Pastry WorkerChocolate / Confectionery WorkerIce Cream Maker",
+            "html": "<select class=\"input-field\" name=\"jobDefinitionId\" required=\"\" id=\"_r_0_\" aria-describedby=\"_r_0_-hint\" style=\"width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgb(226, 232, 240); font-size: 13px; outline: none; font-family: Inter, sans-serif; color: rgb(15, 23, 42); background: rgb(248, 250, 252); transition: border-color 0.15s, box-shadow 0.15s;\"><option value=\"\">Select a position</option><option value=\"3\">Bakery / Pastry Worker</option><option value=\"1\">Chocolate / Confe"
+          },
+          {
+            "selector": "div",
+            "left": 414,
+            "right": 478,
+            "width": 64,
+            "text": "Location *",
+            "html": "<div style=\"display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px;\"><label for=\"_r_1_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Location *</label><input class=\"input-field\" required=\"\" id=\"_r_1_\" value=\"Beirut, Lebanon\" name=\"location\" style=\"width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgb(226, 232, 240); font-size: 13px; outline: none; font-family: Inter, sans-serif; color: rgb"
+          },
+          {
+            "selector": "label",
+            "left": 414,
+            "right": 478,
+            "width": 64,
+            "text": "Location *",
+            "html": "<label for=\"_r_1_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Location *</label>"
+          },
+          {
+            "selector": "input#_r_1_.input-field",
+            "left": 414,
+            "right": 478,
+            "width": 64,
+            "text": "",
+            "html": "<input class=\"input-field\" required=\"\" id=\"_r_1_\" value=\"Beirut, Lebanon\" name=\"location\" style=\"width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgb(226, 232, 240); font-size: 13px; outline: none; font-family: Inter, sans-serif; color: rgb(15, 23, 42); background: rgb(248, 250, 252); transition: border-color 0.15s, box-shadow 0.15s;\">"
+          },
+          {
+            "selector": "div",
+            "left": 255,
+            "right": 394,
+            "width": 139,
+            "text": "Application Deadline *",
+            "html": "<div style=\"display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px;\"><label for=\"_r_2_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Application Deadline *</label><input class=\"input-field\" min=\"2026-08-03\" required=\"\" id=\"_r_2_\" type=\"date\" value=\"\" name=\"applicationDeadline\" style=\"width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgb(226, 232, 240); font-size: 13px; outline: none; font-"
+          },
+          {
+            "selector": "label",
+            "left": 255,
+            "right": 394,
+            "width": 139,
+            "text": "Application Deadline *",
+            "html": "<label for=\"_r_2_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Application Deadline *</label>"
+          },
+          {
+            "selector": "input#_r_2_.input-field",
+            "left": 255,
+            "right": 394,
+            "width": 139,
+            "text": "",
+            "html": "<input class=\"input-field\" min=\"2026-08-03\" required=\"\" id=\"_r_2_\" type=\"date\" value=\"\" name=\"applicationDeadline\" style=\"width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgb(226, 232, 240); font-size: 13px; outline: none; font-family: Inter, sans-serif; color: rgb(15, 23, 42); background: rgb(248, 250, 252); transition: border-color 0.15s, box-shadow 0.15s; cursor: pointer; color-scheme: light;\">"
+          },
+          {
+            "selector": "div",
+            "left": 414,
+            "right": 478,
+            "width": 64,
+            "text": "Job Type *Full-timePart-timeInternshipSeasonal",
+            "html": "<div style=\"display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px;\"><label for=\"_r_3_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Job Type *</label><select class=\"input-field\" name=\"jobType\" id=\"_r_3_\" style=\"width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgb(226, 232, 240); font-size: 13px; outline: none; font-family: Inter, sans-serif; color: rgb(15, 23, 42); background: rgb(248, 2"
+          },
+          {
+            "selector": "label",
+            "left": 414,
+            "right": 478,
+            "width": 64,
+            "text": "Job Type *",
+            "html": "<label for=\"_r_3_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Job Type *</label>"
+          },
+          {
+            "selector": "select#_r_3_.input-field",
+            "left": 414,
+            "right": 478,
+            "width": 64,
+            "text": "Full-timePart-timeInternshipSeasonal",
+            "html": "<select class=\"input-field\" name=\"jobType\" id=\"_r_3_\" style=\"width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgb(226, 232, 240); font-size: 13px; outline: none; font-family: Inter, sans-serif; color: rgb(15, 23, 42); background: rgb(248, 250, 252); transition: border-color 0.15s, box-shadow 0.15s;\"><option>Full-time</option><option>Part-time</option><option>Internship</option><option>Seasonal</option></select>"
+          },
+          {
+            "selector": "div",
+            "left": 255,
+            "right": 394,
+            "width": 139,
+            "text": "Work Mode *On-siteHybridRemote",
+            "html": "<div style=\"display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px;\"><label for=\"_r_4_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Work Mode *</label><select class=\"input-field\" name=\"workMode\" id=\"_r_4_\" style=\"width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgb(226, 232, 240); font-size: 13px; outline: none; font-family: Inter, sans-serif; color: rgb(15, 23, 42); background: rgb(248,"
+          },
+          {
+            "selector": "label",
+            "left": 255,
+            "right": 394,
+            "width": 139,
+            "text": "Work Mode *",
+            "html": "<label for=\"_r_4_\" style=\"font-size: 12px; font-weight: 500; color: rgb(71, 85, 105); text-transform: uppercase; letter-spacing: 0.4px;\">Work Mode *</label>"
+          },
+          {
+            "selector": "select#_r_4_.input-field",
+            "left": 255,
+            "right": 394,
+            "width": 139,
+            "text": "On-siteHybridRemote",
+            "html": "<select class=\"input-field\" name=\"workMode\" id=\"_r_4_\" style=\"width: 100%; padding: 10px 12px; border-radius: 9px; border: 1px solid rgb(226, 232, 240); font-size: 13px; outline: none; font-family: Inter, sans-serif; color: rgb(15, 23, 42); background: rgb(248, 250, 252); transition: border-color 0.15s, box-shadow 0.15s;\"><option>On-site</option><option>Hybrid</option><option>Remote</option></select>"
+          },
+          {
+            "selector": "label",
+            "left": 255,
+            "right": 347,
+            "width": 92,
+            "text": "Application document required",
+            "html": "<label style=\"display: flex; align-items: center; gap: 8px; font-size: 13px; color: rgb(71, 85, 105); cursor: pointer;\"><input type=\"checkbox\" checked=\"\" name=\"cvRequired\" style=\"accent-color: rgb(37, 99, 235);\">Application document required</label>"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 19
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\employer-width-320.png",
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                "main > div > p"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184); text-transform: uppercase; letter-spacing: 0.8px;\">Employer</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.43 (foreground color: #94a3b8, background color: #f7f9fd, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 1
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/employer",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/admin",
+        "name": "Administrator dashboard",
+        "area": "administrator",
+        "role": "admin"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/admin",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Admin dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [
+          {
+            "selector": "div",
+            "left": 296,
+            "right": 369,
+            "width": 73,
+            "text": "Add data sheets",
+            "html": "<div><input accept=\".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\" multiple=\"\" type=\"file\" style=\"display: none;\"><button type=\"button\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 10px; background: rgb(37, 99, 235); color: white; padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer;\">Add data sheets</button></div>"
+          },
+          {
+            "selector": "button",
+            "left": 296,
+            "right": 369,
+            "width": 73,
+            "text": "Add data sheets",
+            "html": "<button type=\"button\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: none; border-radius: 10px; background: rgb(37, 99, 235); color: white; padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer;\">Add data sheets</button>"
+          },
+          {
+            "selector": "div.card-stat",
+            "left": 322,
+            "right": 404,
+            "width": 82,
+            "text": "Verified Emails9",
+            "html": "<div class=\"card-stat\" style=\"background: rgb(255, 255, 255); border-radius: 16px; padding: 20px; border: 1px solid rgb(232, 237, 245); box-shadow: rgba(15, 23, 42, 0.05) 0px 1px 8px; transition: 0.2s; cursor: default; display: flex; flex-direction: column; align-items: center;\"><div style=\"width: 38px; height: 38px; border-radius: 10px; background: rgb(240, 253, 244); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 2"
+          },
+          {
+            "selector": "div",
+            "left": 344,
+            "right": 382,
+            "width": 38,
+            "text": "",
+            "html": "<div style=\"width: 38px; height: 38px; border-radius: 10px; background: rgb(240, 253, 244); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#16a34a\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"></polyline></svg></div>"
+          },
+          {
+            "selector": "svg",
+            "left": 355,
+            "right": 371,
+            "width": 16,
+            "text": "",
+            "html": "<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#16a34a\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"20 6 9 17 4 12\"></polyline></svg>"
+          },
+          {
+            "selector": "polyline",
+            "left": 358,
+            "right": 368,
+            "width": 11,
+            "text": "",
+            "html": "<polyline points=\"20 6 9 17 4 12\"></polyline>"
+          },
+          {
+            "selector": "p",
+            "left": 343,
+            "right": 383,
+            "width": 40,
+            "text": "Verified Emails",
+            "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Verified Emails</p>"
+          },
+          {
+            "selector": "p",
+            "left": 355,
+            "right": 371,
+            "width": 15,
+            "text": "9",
+            "html": "<p style=\"margin: 0px; font-size: 28px; font-weight: 600; color: rgb(15, 23, 42); letter-spacing: -0.5px;\">9</p>"
+          },
+          {
+            "selector": "div.card-stat",
+            "left": 420,
+            "right": 516,
+            "width": 96,
+            "text": "Unverified Users0",
+            "html": "<div class=\"card-stat\" style=\"background: rgb(255, 255, 255); border-radius: 16px; padding: 20px; border: 1px solid rgb(232, 237, 245); box-shadow: rgba(15, 23, 42, 0.05) 0px 1px 8px; transition: 0.2s; cursor: default; display: flex; flex-direction: column; align-items: center;\"><div style=\"width: 38px; height: 38px; border-radius: 10px; background: rgb(255, 251, 235); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 2"
+          },
+          {
+            "selector": "div",
+            "left": 449,
+            "right": 487,
+            "width": 38,
+            "text": "",
+            "html": "<div style=\"width: 38px; height: 38px; border-radius: 10px; background: rgb(255, 251, 235); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#d97706\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"12\"></line><line x1=\"12\" y1=\"16\" x2=\"12.01\" y2=\"16\"></line></svg></div>"
+          },
+          {
+            "selector": "svg",
+            "left": 460,
+            "right": 476,
+            "width": 16,
+            "text": "",
+            "html": "<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#d97706\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"12\"></line><line x1=\"12\" y1=\"16\" x2=\"12.01\" y2=\"16\"></line></svg>"
+          },
+          {
+            "selector": "circle",
+            "left": 461,
+            "right": 475,
+            "width": 13,
+            "text": "",
+            "html": "<circle cx=\"12\" cy=\"12\" r=\"10\"></circle>"
+          },
+          {
+            "selector": "p",
+            "left": 441,
+            "right": 495,
+            "width": 54,
+            "text": "Unverified Users",
+            "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Unverified Users</p>"
+          },
+          {
+            "selector": "p",
+            "left": 461,
+            "right": 476,
+            "width": 15,
+            "text": "0",
+            "html": "<p style=\"margin: 0px; font-size: 28px; font-weight: 600; color: rgb(15, 23, 42); letter-spacing: -0.5px;\">0</p>"
+          },
+          {
+            "selector": "div.card-stat",
+            "left": 532,
+            "right": 614,
+            "width": 82,
+            "text": "Admins1",
+            "html": "<div class=\"card-stat\" style=\"background: rgb(255, 255, 255); border-radius: 16px; padding: 20px; border: 1px solid rgb(232, 237, 245); box-shadow: rgba(15, 23, 42, 0.05) 0px 1px 8px; transition: 0.2s; cursor: default; display: flex; flex-direction: column; align-items: center;\"><div style=\"width: 38px; height: 38px; border-radius: 10px; background: rgb(245, 243, 255); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 2"
+          },
+          {
+            "selector": "div",
+            "left": 554,
+            "right": 592,
+            "width": 38,
+            "text": "",
+            "html": "<div style=\"width: 38px; height: 38px; border-radius: 10px; background: rgb(245, 243, 255); display: flex; align-items: center; justify-content: center; margin-bottom: 14px;\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3L19 6V11C19 15.5 16.2 19.4 12 21C7.8 19.4 5 15.5 5 11V6L12 3Z\"></path><polyline points=\"9.5 12 11.3 13.8 15 10\"></polyline></svg></div>"
+          },
+          {
+            "selector": "svg",
+            "left": 565,
+            "right": 581,
+            "width": 16,
+            "text": "",
+            "html": "<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3L19 6V11C19 15.5 16.2 19.4 12 21C7.8 19.4 5 15.5 5 11V6L12 3Z\"></path><polyline points=\"9.5 12 11.3 13.8 15 10\"></polyline></svg>"
+          },
+          {
+            "selector": "path",
+            "left": 568,
+            "right": 578,
+            "width": 9,
+            "text": "",
+            "html": "<path d=\"M12 3L19 6V11C19 15.5 16.2 19.4 12 21C7.8 19.4 5 15.5 5 11V6L12 3Z\"></path>"
+          },
+          {
+            "selector": "polyline",
+            "left": 571,
+            "right": 575,
+            "width": 4,
+            "text": "",
+            "html": "<polyline points=\"9.5 12 11.3 13.8 15 10\"></polyline>"
+          },
+          {
+            "selector": "p",
+            "left": 553,
+            "right": 593,
+            "width": 40,
+            "text": "Admins",
+            "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Admins</p>"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 40
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\admin-width-320.png",
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                "div:nth-child(1) > div:nth-child(1) > p"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184); text-transform: uppercase; letter-spacing: 0.8px;\">Users</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.43 (foreground color: #94a3b8, background color: #f7f9fd, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(1) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Active Users</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(2) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Verified Emails</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(3) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Unverified Users</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".card-stat:nth-child(4) > p:nth-child(2)"
+              ],
+              "html": "<p style=\"margin: 0px 0px 4px; font-size: 12px; font-weight: 400; color: rgb(148, 163, 184);\">Admins</p>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".row-hover:nth-child(1) > td:nth-child(5) > span"
+              ],
+              "html": "<span style=\"padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; white-space: nowrap; display: inline-block; background: rgb(240, 253, 244); color: rgb(22, 163, 74);\">Verified</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.14 (foreground color: #16a34a, background color: #f0fdf4, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".row-hover:nth-child(1) > td:nth-child(6) > div > .action-btn:nth-child(3)"
+              ],
+              "html": "<button class=\"action-btn\" style=\"border-width: medium...\">",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.41 (foreground color: #dc2626, background color: #fef2f2, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".row-hover:nth-child(2) > td:nth-child(5) > span"
+              ],
+              "html": "<span style=\"padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 500; white-space: nowrap; display: inline-block; background: rgb(240, 253, 244); color: rgb(22, 163, 74);\">Verified</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.14 (foreground color: #16a34a, background color: #f0fdf4, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 23
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/admin",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/verifier",
+        "name": "Verifier dashboard",
+        "area": "verifier",
+        "role": "verifier"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/verifier",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 320,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 10
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\verifier-width-320.png",
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 1
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/verifier",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    }
+  ]
+}

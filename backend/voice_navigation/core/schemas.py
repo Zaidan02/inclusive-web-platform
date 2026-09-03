@@ -179,3 +179,62 @@ class VoiceTurnResult(BaseModel):
         | ActionRejected
     )
     feedback: str
+
+
+ProfileFieldName = Literal["firstName", "lastName", "phone", "location", "about"]
+EducationLevel = Literal[
+    "none",
+    "primary",
+    "middle_school",
+    "high_school",
+    "vocational",
+    "university",
+]
+
+
+class ProfileFieldSuggestion(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    field: ProfileFieldName
+    value: str = Field(min_length=1, max_length=3000)
+    confidence: float = Field(ge=0, le=1)
+    evidence: str = Field(min_length=1, max_length=500)
+
+
+class EducationSuggestion(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    value: EducationLevel
+    confidence: float = Field(ge=0, le=1)
+    evidence: str = Field(min_length=1, max_length=500)
+
+
+class DisabilitySuggestion(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    name: str = Field(min_length=1, max_length=255)
+    confidence: float = Field(ge=0, le=1)
+    evidence: str = Field(min_length=1, max_length=500)
+    explicit_statement: bool
+
+
+class TaskSkillSuggestion(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    task_id: int = Field(gt=0)
+    task_name: str = Field(min_length=1, max_length=500)
+    job_name: str = Field(min_length=1, max_length=255)
+    confidence: float = Field(ge=0, le=1)
+    evidence: str = Field(min_length=1, max_length=500)
+    note: str | None = Field(default=None, max_length=500)
+
+
+class ProfileExtractionResult(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    language: str = Field(min_length=2, max_length=16)
+    profile_fields: list[ProfileFieldSuggestion] = Field(default_factory=list, max_length=5)
+    education_level: EducationSuggestion | None = None
+    disabilities: list[DisabilitySuggestion] = Field(default_factory=list, max_length=10)
+    task_skills: list[TaskSkillSuggestion] = Field(default_factory=list, max_length=12)
+    unmapped_statements: list[str] = Field(default_factory=list, max_length=10)

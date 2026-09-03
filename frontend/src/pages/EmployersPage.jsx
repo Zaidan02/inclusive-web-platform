@@ -1,28 +1,34 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Brand from "../components/common/Brand";
 import ArrowIcon from "../components/common/ArrowIcon";
+import LanguageSwitcher from "../components/localization/LanguageSwitcher";
 import "../styles/employersPage.css";
 
 export default function EmployersPage() {
+  const { t } = useTranslation("public");
   return (
     <main className="employers-placeholder">
       <header className="employers-placeholder__header">
         <Brand />
-        <Link to="/" className="employers-placeholder__home">Back to home</Link>
+        <div className="public-page-header__actions">
+          <Link to="/" className="employers-placeholder__home">{t("employers.back")}</Link>
+          <LanguageSwitcher compact />
+        </div>
       </header>
       <section className="employers-placeholder__content">
         <div className="employers-placeholder__visual" aria-hidden="true">
           <span>🏗</span>
           <i /><i /><i />
         </div>
-        <span className="employers-placeholder__eyebrow">For employers</span>
-        <h1>This page is under construction.</h1>
-        <p>We’re preparing a dedicated space explaining inclusive hiring, task-based job creation, and how JoIn helps employers discover ability-led talent.</p>
+        <span className="employers-placeholder__eyebrow">{t("employers.eyebrow")}</span>
+        <h1>{t("employers.title")}</h1>
+        <p>{t("employers.text")}</p>
         <div className="employers-placeholder__actions">
-          <Link to="/signup?role=employer" className="button button--primary">Create an employer account <ArrowIcon /></Link>
-          <Link to="/signin" className="button button--secondary">Employer sign in</Link>
+          <Link to="/signup?role=employer" className="button button--primary">{t("employers.create")} <ArrowIcon /></Link>
+          <Link to="/signin" className="button button--secondary">{t("employers.signIn")}</Link>
         </div>
-        <small>The employer dashboard remains available to registered employer accounts after sign in.</small>
+        <small>{t("employers.note")}</small>
       </section>
     </main>
   );

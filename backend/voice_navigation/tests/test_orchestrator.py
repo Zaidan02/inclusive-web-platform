@@ -2,7 +2,14 @@ from __future__ import annotations
 
 import unittest
 
-from core.schemas import ActionProposal, IntentProposal, RequestClassification, WebsiteQuestionAnswer
+from core.schemas import (
+    ActionProposal,
+    ActionRejected,
+    AuthorizedAction,
+    IntentProposal,
+    RequestClassification,
+    WebsiteQuestionAnswer,
+)
 from specialists.actions.registry import ActionRegistry
 from orchestration.orchestrator import VoiceOrchestrator
 from specialists.navigation.registry import NavigationRegistry
@@ -113,6 +120,44 @@ class OrchestratorDispatchTest(unittest.TestCase):
         self.assertEqual("ACTION", result.classification.category)
         self.assertEqual("CONFIRM", result.route.command)
         self.assertEqual(0, navigator.calls)
+
+    def test_french_confirmation_reply_is_recognized_and_language_tagged(self) -> None:
+        history = [
+            {
+                "transcript": "envoyer",
+                "command": "PRESS",
+                "target": "submit",
+                "status": "needs_confirmation",
+            }
+        ]
+        self.assertTrue(VoiceOrchestrator._is_pending_action_reply("oui", history))
+        self.assertEqual("fr", VoiceOrchestrator._reply_language("oui"))
+
+    def test_action_confirmation_feedback_uses_french(self) -> None:
+        route = ActionRejected(
+            status="needs_confirmation",
+            command="PRESS",
+            target="sign_in",
+            reason="English registry reason",
+            action={"type": "press", "target": "sign_in", "label": "sign in"},
+        )
+        self.assertEqual(
+            "Veuillez confirmer l’action demandée.",
+            VoiceOrchestrator._action_feedback(route, "fr"),
+        )
+
+    def test_authorized_action_feedback_uses_arabic(self) -> None:
+        route = AuthorizedAction(
+            status="authorized",
+            command="PRESS",
+            target="sign_in",
+            risk=1,
+            action={"type": "press", "target": "sign_in", "label": "sign in"},
+        )
+        self.assertEqual(
+            "جارٍ تنفيذ العملية المطلوبة.",
+            VoiceOrchestrator._action_feedback(route, "ar"),
+        )
 
 
 if __name__ == "__main__":

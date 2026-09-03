@@ -1,23 +1,83 @@
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import heroImage from "../assets/hero.png";
+import { useTranslation } from "react-i18next";
 import ArrowIcon from "../components/common/ArrowIcon";
 import SiteHeader from "../components/layout/SiteHeader";
 import SiteFooter from "../components/layout/SiteFooter";
+import { getPublicOverview } from "../services/publicOverviewApi";
 import "../styles/landing.css";
 
-const steps = [
-  { number: "01", title: "Share what you can do", text: "Candidates build an ability-led profile focused on strengths, preferences, and practical potential." },
-  { number: "02", title: "Describe the real work", text: "Employers break opportunities into clear tasks and the abilities each task actually requires." },
-  { number: "03", title: "Discover better matches", text: "Our platform brings both sides together with transparent, task-based compatibility insights." },
-];
+const JOB_TYPE_KEYS = {
+  "full-time": "fullTime",
+  "part-time": "partTime",
+  internship: "internship",
+  seasonal: "seasonal",
+};
 
-const principles = [
-  ["Ability first", "We start with strengths and practical capabilities—not labels or assumptions."],
-  ["Clear by design", "Jobs, tasks, and expectations are presented in a way people can understand."],
-  ["Human at heart", "Technology supports better decisions while people remain at the center."],
-];
+const WORK_MODE_KEYS = {
+  "on-site": "onSite",
+  hybrid: "hybrid",
+  remote: "remote",
+};
 
 export default function WelcomePage() {
+  const { t, i18n } = useTranslation("public");
+  const [overview, setOverview] = useState({ status: "loading", data: null });
+  const steps = t("welcome.steps", { returnObjects: true });
+  const principles = t("welcome.principles", { returnObjects: true });
+  const trust = t("welcome.trust", { returnObjects: true });
+  const candidateBenefits = t("welcome.candidateBenefits", { returnObjects: true });
+  const employerBenefits = t("welcome.employerBenefits", { returnObjects: true });
+  const matchingSteps = t("welcome.matchingSteps", { returnObjects: true });
+  const numberFormatter = useMemo(
+    () => new Intl.NumberFormat(i18n.resolvedLanguage || "en"),
+    [i18n.resolvedLanguage],
+  );
+  const dateFormatter = useMemo(
+    () => new Intl.DateTimeFormat(i18n.resolvedLanguage || "en", { dateStyle: "medium" }),
+    [i18n.resolvedLanguage],
+  );
+
+  useEffect(() => {
+    let active = true;
+
+    getPublicOverview()
+      .then((data) => {
+        if (active) setOverview({ status: "ready", data });
+      })
+      .catch(() => {
+        if (active) setOverview({ status: "error", data: null });
+      });
+
+    return () => { active = false; };
+  }, []);
+
+  const localizeOption = (value, keys, translationGroup) => {
+    const key = keys[String(value || "").toLowerCase()];
+    return key ? t(`welcome.opportunities.${translationGroup}.${key}`) : value;
+  };
+
+  const statistics = overview.data ? [
+    {
+      key: "registeredCandidates",
+      value: overview.data.stats.registeredCandidates,
+      label: t("welcome.opportunities.stats.candidates.label"),
+      description: t("welcome.opportunities.stats.candidates.description"),
+    },
+    {
+      key: "publishedJobPosts",
+      value: overview.data.stats.publishedJobPosts,
+      label: t("welcome.opportunities.stats.posts.label"),
+      description: t("welcome.opportunities.stats.posts.description"),
+    },
+    {
+      key: "activeJobDescriptions",
+      value: overview.data.stats.activeJobDescriptions,
+      label: t("welcome.opportunities.stats.descriptions.label"),
+      description: t("welcome.opportunities.stats.descriptions.description"),
+    },
+  ] : [];
+
   return (
     <div className="landing-page">
       <SiteHeader />
@@ -25,48 +85,154 @@ export default function WelcomePage() {
         <section className="hero-section" id="hero" data-voice-section="hero">
           <div className="landing-container hero-grid">
             <div className="hero-copy">
-              <span className="eyebrow"><i /> Inclusive hospitality starts here</span>
-              <h1>Opportunity should be shaped by <em>ability.</em></h1>
-              <p>JoIn connects candidates and hospitality employers through a clearer, more human way of matching people to the work they can thrive in.</p>
+              <span className="eyebrow"><i /> {t("welcome.heroEyebrow")}</span>
+              <h1>{t("welcome.heroStart")} <strong>{t("welcome.heroEmphasis")}</strong></h1>
+              <p>{t("welcome.heroText")}</p>
               <div className="hero-actions">
-                <Link className="button button--primary" to="/signup?role=candidate">Find your opportunity <ArrowIcon /></Link>
-                <a className="button button--secondary" href="#purpose">Explore our purpose</a>
+                <Link className="button button--primary" to="/signup?role=candidate">{t("welcome.findOpportunity")} <ArrowIcon /></Link>
+                <Link className="button button--secondary" to="/employers">{t("welcome.forEmployersAction")}</Link>
               </div>
-              <div className="hero-trust"><span><b>✓</b> Ability-led profiles</span><span><b>✓</b> Task-based matching</span><span><b>✓</b> Inclusive by design</span></div>
+              <div className="hero-trust">{trust.map((item) => <span key={item}><b>✓</b> {item}</span>)}</div>
             </div>
-            <div className="hero-visual" aria-label="Inclusive hospitality illustration">
-              <div className="hero-visual__glow" />
-              <div className="hero-visual__frame"><img src={heroImage} alt="People connecting through inclusive employment" /></div>
-              <div className="floating-card floating-card--top"><span className="floating-icon">✦</span><div><strong>Strengths recognized</strong><small>Potential made visible</small></div></div>
-              <div className="floating-card floating-card--bottom"><span className="match-ring">92<small>%</small></span><div><strong>Great match</strong><small>Based on real tasks</small></div></div>
+            <aside className="matching-preview" aria-labelledby="matching-preview-title">
+              <div className="matching-preview__header">
+                <span className="matching-preview__label">{t("welcome.matchingLabel")}</span>
+                <h2 id="matching-preview-title">{t("welcome.matchingTitle")}</h2>
+                <p>{t("welcome.matchingText")}</p>
+              </div>
+              <ol className="matching-preview__steps">
+                {matchingSteps.map((step, index) => (
+                  <li key={step.title}>
+                    <span className="matching-preview__number" aria-hidden="true">{index + 1}</span>
+                    <div><h3>{step.title}</h3><p>{step.text}</p></div>
+                  </li>
+                ))}
+              </ol>
+              <p className="matching-preview__note">{t("welcome.matchingNote")}</p>
+            </aside>
+          </div>
+        </section>
+
+        <section className="mission-vision-section" id="mission-vision" aria-labelledby="mission-vision-title">
+          <div className="landing-container">
+            <h2 id="mission-vision-title" className="visually-hidden">{t("welcome.missionVisionTitle")}</h2>
+            <div className="mission-vision-grid">
+              <article className="mission-vision-card">
+                <span className="mission-vision-card__label">{t("welcome.visionTitle")}</span>
+                <p>{t("welcome.visionText")}</p>
+              </article>
+              <article className="mission-vision-card">
+                <span className="mission-vision-card__label">{t("welcome.missionTitle")}</span>
+                <p>{t("welcome.missionText")}</p>
+              </article>
             </div>
+          </div>
+        </section>
+
+        <section className="opportunity-section section" id="opportunities" aria-labelledby="opportunity-title">
+          <div className="landing-container">
+            <div className="opportunity-heading">
+              <div>
+                <span className="section-kicker">{t("welcome.opportunities.kicker")}</span>
+                <h2 id="opportunity-title">{t("welcome.opportunities.title")}</h2>
+                <p>{t("welcome.opportunities.intro")}</p>
+              </div>
+              <Link
+                className="button button--secondary"
+                to="/signin"
+                aria-label={t("welcome.opportunities.viewAllAccessible")}
+              >
+                {t("welcome.opportunities.viewAll")} <ArrowIcon />
+              </Link>
+            </div>
+
+            {overview.status === "loading" && (
+              <p className="opportunity-status" role="status" aria-live="polite">
+                {t("welcome.opportunities.loading")}
+              </p>
+            )}
+
+            {overview.status === "error" && (
+              <p className="opportunity-status opportunity-status--error" role="status">
+                {t("welcome.opportunities.error")}
+              </p>
+            )}
+
+            {overview.status === "ready" && (
+              <>
+                <dl className="platform-statistics" aria-label={t("welcome.opportunities.statsLabel")}>
+                  {statistics.map((statistic) => (
+                    <div className="platform-statistic" key={statistic.key}>
+                      <dt>{statistic.label}</dt>
+                      <dd>
+                        <strong>{numberFormatter.format(statistic.value)}</strong>
+                        <span>{statistic.description}</span>
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+
+                <div className="latest-jobs-heading">
+                  <div>
+                    <span>{t("welcome.opportunities.latestKicker")}</span>
+                    <h3>{t("welcome.opportunities.latestTitle")}</h3>
+                  </div>
+                  <p>{t("welcome.opportunities.latestDescription")}</p>
+                </div>
+
+                {overview.data.latestJobs.length > 0 ? (
+                  <div className="latest-jobs-grid">
+                    {overview.data.latestJobs.map((job) => (
+                      <article className="latest-job-card" key={job.id}>
+                        <div className="latest-job-card__main">
+                          <h4>{job.title}</h4>
+                          <p>{job.companyName || t("welcome.opportunities.employerFallback")}</p>
+                        </div>
+                        <ul className="latest-job-card__meta" aria-label={t("welcome.opportunities.jobDetails", { title: job.title })}>
+                          {job.location && <li>{job.location}</li>}
+                          {job.jobType && <li>{localizeOption(job.jobType, JOB_TYPE_KEYS, "jobTypes")}</li>}
+                          {job.workMode && <li>{localizeOption(job.workMode, WORK_MODE_KEYS, "workModes")}</li>}
+                        </ul>
+                        {job.createdAt && (
+                          <p className="latest-job-card__date">
+                            {t("welcome.opportunities.posted", { date: dateFormatter.format(new Date(job.createdAt)) })}
+                          </p>
+                        )}
+                      </article>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="opportunity-status">{t("welcome.opportunities.empty")}</p>
+                )}
+              </>
+            )}
           </div>
         </section>
 
         <section className="purpose-section section" id="purpose" data-voice-section="features">
           <div className="landing-container purpose-grid">
-            <div><span className="section-kicker">Why JoIn exists</span><h2>Work becomes more inclusive when we ask a better question.</h2></div>
-            <div className="purpose-copy"><p>Instead of asking what someone cannot do, we help employers understand what a person <strong>can contribute</strong>. That shift turns uncertainty into practical opportunity.</p><p>JoIn makes hospitality roles easier to understand by connecting job tasks with real abilities—giving candidates confidence and employers clarity.</p></div>
+            <div><span className="section-kicker">{t("welcome.why")}</span><h2>{t("welcome.purposeTitle")}</h2></div>
+            <div className="purpose-copy"><p>{t("welcome.purposeOne")}</p><p>{t("welcome.purposeTwo")}</p></div>
           </div>
-          <div className="landing-container principles-grid">{principles.map(([title, text], i) => <article className="principle-card" key={title}><span>0{i + 1}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
+          <div className="landing-container principles-grid">{principles.map((item, i) => <article className="principle-card" key={item.title}><span>0{i + 1}</span><h3>{item.title}</h3><p>{item.text}</p></article>)}</div>
         </section>
 
         <section className="process-section section" id="how-it-works" data-voice-section="accessibility">
-          <div className="landing-container"><div className="section-heading section-heading--center"><span className="section-kicker">How it works</span><h2>A thoughtful path from potential to opportunity.</h2><p>Simple steps, clearer information, and matching built around the work itself.</p></div>
+          <div className="landing-container"><div className="section-heading section-heading--center"><span className="section-kicker">{t("welcome.howKicker")}</span><h2>{t("welcome.howTitle")}</h2><p>{t("welcome.howText")}</p></div>
             <div className="steps-grid">{steps.map((step) => <article className="step-card" key={step.number}><span className="step-number">{step.number}</span><div className="step-line" /><h3>{step.title}</h3><p>{step.text}</p></article>)}</div>
           </div>
         </section>
 
         <section className="paths-section section" id="paths">
-          <div className="landing-container"><div className="section-heading section-heading--center"><span className="section-kicker">Choose your path</span><h2>One purpose. Two ways to take part.</h2></div>
+          <div className="landing-container"><div className="section-heading section-heading--center"><span className="section-kicker">{t("welcome.chooseKicker")}</span><h2>{t("welcome.chooseTitle")}</h2></div>
             <div className="paths-grid">
-              <article className="path-card path-card--candidate"><span className="path-label">For candidates</span><h3>Let your abilities lead the way.</h3><p>Create your profile, understand your strengths, explore suitable roles, and apply with confidence.</p><ul><li>Build an ability-led profile</li><li>Receive compatibility insights</li><li>Explore accessible employers</li></ul><Link className="button button--light" to="/signup?role=candidate">Become a candidate <ArrowIcon /></Link></article>
-              <article className="path-card path-card--employer"><span className="path-label">For employers</span><h3>Hire with more clarity and confidence.</h3><p>Describe the work that matters, reach a wider talent pool, and focus hiring decisions on capability.</p><ul><li>Publish task-based opportunities</li><li>Build an inclusive company profile</li><li>Review applications in one place</li></ul><Link className="button button--primary" to="/employers">For employers <ArrowIcon /></Link></article>
+              <article className="path-card path-card--candidate"><span className="path-label">{t("welcome.candidateLabel")}</span><h3>{t("welcome.candidateTitle")}</h3><p>{t("welcome.candidateText")}</p><ul>{candidateBenefits.map((item) => <li key={item}>{item}</li>)}</ul><Link className="button button--light" to="/signup?role=candidate">{t("welcome.candidateAction")} <ArrowIcon /></Link></article>
+              <article className="path-card path-card--employer"><span className="path-label">{t("welcome.employerLabel")}</span><h3>{t("welcome.employerTitle")}</h3><p>{t("welcome.employerText")}</p><ul>{employerBenefits.map((item) => <li key={item}>{item}</li>)}</ul><Link className="button button--primary" to="/employers">{t("welcome.employerAction")} <ArrowIcon /></Link></article>
             </div>
           </div>
         </section>
 
-        <section className="closing-cta"><div className="landing-container closing-cta__inner"><div><span className="section-kicker section-kicker--light">A more inclusive future of work</span><h2>Ready to turn potential into possibility?</h2><p>Join a community that sees ability first.</p></div><div className="closing-cta__actions"><Link className="button button--light" to="/signup">Create your account <ArrowIcon /></Link><Link className="button button--outline-light" to="/signin">Sign in</Link></div></div></section>
+        <section className="closing-cta"><div className="landing-container closing-cta__inner"><div><span className="section-kicker section-kicker--light">{t("welcome.closingKicker")}</span><h2>{t("welcome.closingTitle")}</h2><p>{t("welcome.closingText")}</p></div><div className="closing-cta__actions"><Link className="button button--light" to="/signup">{t("welcome.createAccount")} <ArrowIcon /></Link><Link className="button button--outline-light" to="/signin">{t("welcome.signIn")}</Link></div></div></section>
       </main>
       <SiteFooter />
     </div>

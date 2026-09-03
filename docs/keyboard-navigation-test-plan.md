@@ -47,4 +47,56 @@ Apply these checks to company profiles, candidate profiles, user editing, archiv
 
 ## Evidence record
 
+### Additional workflow coverage
+
+| Workflow | Keyboard path | Expected result |
+|---|---|---|
+| AI profile assistance | Language → microphone/type area → consent → create suggestions → suggestion checkboxes/edits → confirm | Missing consent or short text focuses the relevant control; no suggestion is saved until explicitly confirmed. |
+| Candidate privacy | Export → withdraw consent → deletion password → DELETE confirmation → delete | Outcomes are announced; invalid deletion confirmation focuses the related field. |
+| Employer applications | Applications table → profile → status select → document view/download → delete | Repeated actions identify their candidate/document; status changes announce the outcome and whether candidate email was delivered. |
+| Verifier dashboard | Filter buttons → document controls → reviewer note → approve/reject | Rejection without a note focuses the note; decisions announce success or failure. |
+| Administrator dashboard | Sidebar → import → filters → table actions | Import, edit, archive, restore, delete, and document actions are keyboard reachable and announce outcomes. |
+
 For each workflow, record the browser, viewport, date, tester, result, screenshot, defect ID, correction, and retest result. A workflow passes only when it can be completed without using a pointer and focus never becomes hidden or trapped.
+
+### Final evidence record
+
+Use this record for the post-remediation test. Do not mark a workflow as passed
+from source review alone.
+
+| Workflow | Browser / assistive technology | Viewport / zoom | Tester and date | Keyboard result | Focus / announcement result | Evidence path | Defect ID or retest result |
+|---|---|---|---|---|---|---|---|
+| Public and authentication |  |  |  | Pending | Pending |  |  |
+| Candidate profile and AI |  |  |  | Pending | Pending |  |  |
+| Candidate jobs, application, privacy |  |  |  | Pending | Pending |  |  |
+| Employer dashboard |  |  |  | Pending | Pending |  |  |
+| Verifier dashboard |  |  |  | Pending | Pending |  |  |
+| Administrator dashboard |  |  |  | Pending | Pending |  |  |
+| Reduced-motion behavior |  |  |  | Pending | Pending |  |  |
+
+### Screen-reader checks
+
+Use NVDA with Microsoft Edge on Windows where available. Record the actual
+version used in the evidence record.
+
+- Route title and main-content announcement after every client-side navigation.
+- Labels, required state, linked errors, and recovery instructions on all forms.
+- AI transcript consent, suggestion count, editable suggestions, and explicit
+  confirmation behavior.
+- Selected-file names, application outcome, privacy-operation outcome, and
+  deletion validation.
+- Dialog title, initial focus, tab containment, Escape close, and focus return.
+- Employer application status, verifier decision, and administrator management
+  outcome announcements.
+
+### Arrow-key boundary checks
+
+The application intentionally offers Right Arrow for next focus and Left Arrow
+for previous focus when this does not override native control behavior. Verify:
+
+- Arrow keys move between ordinary links, buttons, and controls.
+- Text inputs and textareas retain caret movement until the relevant boundary.
+- Selects, date/time controls, radio groups, sliders, media controls, and
+  widgets with their own arrow behavior retain native keyboard handling.
+- Within a modal dialog, Left/Right wrapping does not move focus outside the
+  dialog.

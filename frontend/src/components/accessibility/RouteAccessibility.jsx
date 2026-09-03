@@ -1,26 +1,30 @@
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
-const pageTitles = {
-  "/": "JoIn Hospitality",
-  "/signin": "Sign in | JoIn Hospitality",
-  "/signup": "Create account | JoIn Hospitality",
-  "/forgot-password": "Forgot password | JoIn Hospitality",
-  "/reset-password": "Reset password | JoIn Hospitality",
-  "/employers": "For employers | JoIn Hospitality",
-  "/voice-help": "Voice navigation help | JoIn Hospitality",
-  "/candidate": "Candidate dashboard | JoIn Hospitality",
-  "/candidate/setup": "Candidate profile setup | JoIn Hospitality",
-  "/employer": "Employer dashboard | JoIn Hospitality",
-  "/admin": "Admin dashboard | JoIn Hospitality",
+const pageTitleKeys = {
+  "/": "routes.home",
+  "/signin": "routes.signin",
+  "/signup": "routes.signup",
+  "/forgot-password": "routes.forgotPassword",
+  "/reset-password": "routes.resetPassword",
+  "/employers": "routes.employers",
+  "/voice-help": "routes.voiceHelp",
+  "/privacy": "routes.privacy",
+  "/candidate": "routes.candidate",
+  "/candidate/setup": "routes.candidateSetup",
+  "/employer": "routes.employer",
+  "/admin": "routes.admin",
+  "/verifier": "routes.verifier",
 };
 
 export default function RouteAccessibility() {
   const location = useLocation();
+  const { t, i18n } = useTranslation("common");
   const previousPathRef = useRef(location.pathname);
 
   useEffect(() => {
-    document.title = pageTitles[location.pathname] || "JoIn Hospitality";
+    document.title = t(pageTitleKeys[location.pathname] || "routes.home");
     if (previousPathRef.current === location.pathname) return;
     previousPathRef.current = location.pathname;
     const content = document.querySelector("#main-content main") || document.getElementById("main-content");
@@ -28,7 +32,7 @@ export default function RouteAccessibility() {
     content.setAttribute("tabindex", "-1");
     content.focus({ preventScroll: true });
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  }, [location.pathname]);
+  }, [i18n.resolvedLanguage, location.pathname, t]);
 
   return null;
 }

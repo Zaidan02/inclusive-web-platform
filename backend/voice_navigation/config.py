@@ -27,6 +27,7 @@ class Settings:
     allowed_origin: str = os.getenv("VOICE_ALLOWED_ORIGIN", "http://localhost:5173")
     max_audio_bytes: int = int(os.getenv("VOICE_MAX_AUDIO_BYTES", str(10 * 1024 * 1024)))
     max_transcript_chars: int = int(os.getenv("VOICE_MAX_TRANSCRIPT_CHARS", "500"))
+    profile_ai_token: str = os.getenv("PROFILE_AI_TOKEN", "").strip()
 
     @property
     def openai_configured(self) -> bool:

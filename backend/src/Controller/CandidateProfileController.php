@@ -14,6 +14,42 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class CandidateProfileController extends AbstractController
 {
+    private const PRACTICAL_ABILITY_LEVELS = ['independent', 'with_support', 'not_yet'];
+
+    private function serializeProfile(User $user, ?CandidateProfile $profile): array
+    {
+        return [
+            'username' => $user->getUsername(),
+            'email' => $user->getEmail(),
+            'selectedDisabilities' => $profile ? $profile->getSelectedDisabilities() : [],
+            'educationLevel' => $profile?->getEducationLevel(),
+            'readingAbility' => $profile?->getReadingAbility(),
+            'writingAbility' => $profile?->getWritingAbility(),
+            'numeracyAbility' => $profile?->getNumeracyAbility(),
+            'firstName' => $profile?->getFirstName(),
+            'lastName' => $profile?->getLastName(),
+            'phone' => $profile?->getPhone(),
+            'location' => $profile?->getLocation(),
+            'about' => $profile?->getAbout(),
+            'confirmedTaskSkills' => $profile
+                ? $profile->getTaskSkills()->map(static function ($skill): array {
+                    $task = $skill->getTask();
+                    return [
+                        'taskId' => $task?->getId(),
+                        'taskName' => $task?->getName(),
+                        'jobName' => $task?->getJobDefinition()?->getName(),
+                        'note' => $skill->getNote(),
+                        'source' => $skill->getSource(),
+                        'confirmedAt' => $skill->getConfirmedAt()->format(\DateTimeInterface::ATOM),
+                    ];
+                })->toArray()
+                : [],
+            'updatedAt' => $profile && $profile->getUpdatedAt()
+                ? $profile->getUpdatedAt()->format('Y-m-d H:i:s')
+                : null,
+        ];
+    }
+
     private function getUserFromToken(
         Request $request,
         JWTEncoderInterface $jwtEncoder,
@@ -51,6 +87,13 @@ class CandidateProfileController extends AbstractController
             return $this->json(['message' => 'User not found.'], 404);
         }
 
+        $roles = $user->getRoles();
+        if (in_array('ROLE_EMPLOYER', $roles, true)
+            || in_array('ROLE_ADMIN', $roles, true)
+            || in_array('ROLE_VERIFIER', $roles, true)) {
+            return $this->json(['message' => 'Candidate access is required.'], 403);
+        }
+
         return $user;
     }
 
@@ -68,22 +111,7 @@ class CandidateProfileController extends AbstractController
 
         $profile = $user->getCandidateProfile();
 
-        return $this->json([
-            'profile' => [
-                'username' => $user->getUsername(),
-                'email' => $user->getEmail(),
-                'selectedDisabilities' => $profile ? $profile->getSelectedDisabilities() : [],
-                'educationLevel' => $profile?->getEducationLevel(),
-                'firstName' => $profile?->getFirstName(),
-                'lastName' => $profile?->getLastName(),
-                'phone' => $profile?->getPhone(),
-                'location' => $profile?->getLocation(),
-                'about' => $profile?->getAbout(),
-                'updatedAt' => $profile && $profile->getUpdatedAt()
-                    ? $profile->getUpdatedAt()->format('Y-m-d H:i:s')
-                    : null,
-            ],
-        ]);
+        return $this->json(['profile' => $this->serializeProfile($user, $profile)]);
     }
 
     #[Route('/api/candidate/profile', name: 'candidate_profile_update', methods: ['PATCH'])]
@@ -120,6 +148,14 @@ class CandidateProfileController extends AbstractController
         if (!is_string($educationLevel) || !in_array($educationLevel, $educationLevels, true)) {
             return $this->json(['message' => 'Select a valid education level.'], 400);
         }
+        $practicalAbilities = [];
+        foreach (['readingAbility', 'writingAbility', 'numeracyAbility'] as $field) {
+            $value = $data[$field] ?? null;
+            if (!is_string($value) || !in_array($value, self::PRACTICAL_ABILITY_LEVELS, true)) {
+                return $this->json(['message' => "$field must be independent, with_support, or not_yet."], 400);
+            }
+            $practicalAbilities[$field] = $value;
+        }
         foreach (['firstName', 'lastName', 'location'] as $field) {
             if (!isset($data[$field]) || trim((string) $data[$field]) === '') return $this->json(['message' => "$field is required."], 400);
         }
@@ -136,6 +172,9 @@ class CandidateProfileController extends AbstractController
 
         $profile->replaceDisabilities($selectedDisabilities);
         $profile->setEducationLevel($educationLevel);
+        $profile->setReadingAbility($practicalAbilities['readingAbility']);
+        $profile->setWritingAbility($practicalAbilities['writingAbility']);
+        $profile->setNumeracyAbility($practicalAbilities['numeracyAbility']);
         $profile->setFirstName(trim((string) $data['firstName']));
         $profile->setLastName(trim((string) $data['lastName']));
         $profile->setPhone(trim((string) ($data['phone'] ?? '')) ?: null);
@@ -148,18 +187,7 @@ class CandidateProfileController extends AbstractController
 
         return $this->json([
             'message' => 'Profile saved successfully.',
-            'profile' => [
-                'username' => $user->getUsername(),
-                'email' => $user->getEmail(),
-                'selectedDisabilities' => $profile->getSelectedDisabilities(),
-                'educationLevel' => $profile->getEducationLevel(),
-                'firstName' => $profile->getFirstName(),
-                'lastName' => $profile->getLastName(),
-                'phone' => $profile->getPhone(),
-                'location' => $profile->getLocation(),
-                'about' => $profile->getAbout(),
-                'updatedAt' => $profile->getUpdatedAt()->format('Y-m-d H:i:s'),
-            ],
+            'profile' => $this->serializeProfile($user, $profile),
         ]);
     }
 }

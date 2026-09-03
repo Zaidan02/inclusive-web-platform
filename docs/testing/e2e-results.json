@@ -1,0 +1,239 @@
+{
+  "generatedAt": "2026-08-25T09:58:42.683Z",
+  "webBase": "http://127.0.0.1:5173",
+  "summary": {
+    "passed": 26,
+    "failed": 0,
+    "total": 26
+  },
+  "results": [
+    {
+      "name": "public route / renders semantic page structure",
+      "status": "passed",
+      "durationMs": 1756.2,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/",
+        "title": "JoIn Hospitality"
+      }
+    },
+    {
+      "name": "public route /signin renders semantic page structure",
+      "status": "passed",
+      "durationMs": 1369.8,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/signin",
+        "title": "Sign in | JoIn Hospitality"
+      }
+    },
+    {
+      "name": "public route /signup renders semantic page structure",
+      "status": "passed",
+      "durationMs": 1373.3,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/signup",
+        "title": "Create account | JoIn Hospitality"
+      }
+    },
+    {
+      "name": "public route /forgot-password renders semantic page structure",
+      "status": "passed",
+      "durationMs": 1374.6,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/forgot-password",
+        "title": "Forgot password | JoIn Hospitality"
+      }
+    },
+    {
+      "name": "public route /employers renders semantic page structure",
+      "status": "passed",
+      "durationMs": 1340.4,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/employers",
+        "title": "For employers | JoIn Hospitality"
+      }
+    },
+    {
+      "name": "public route /voice-help renders semantic page structure",
+      "status": "passed",
+      "durationMs": 1279,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/voice-help",
+        "title": "Voice navigation help | JoIn Hospitality"
+      }
+    },
+    {
+      "name": "public route /privacy renders semantic page structure",
+      "status": "passed",
+      "durationMs": 1381.6,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/privacy",
+        "title": "Privacy notice | JoIn Hospitality"
+      }
+    },
+    {
+      "name": "anonymous visitor is redirected from /candidate",
+      "status": "passed",
+      "durationMs": 1046,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/signin"
+      }
+    },
+    {
+      "name": "anonymous visitor is redirected from /employer",
+      "status": "passed",
+      "durationMs": 1038,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/signin"
+      }
+    },
+    {
+      "name": "anonymous visitor is redirected from /admin",
+      "status": "passed",
+      "durationMs": 1002.2,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/signin"
+      }
+    },
+    {
+      "name": "anonymous visitor is redirected from /verifier",
+      "status": "passed",
+      "durationMs": 1018.2,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/signin"
+      }
+    },
+    {
+      "name": "sign-in validation identifies and focuses the first invalid field",
+      "status": "passed",
+      "durationMs": 1400.1,
+      "detail": {
+        "focusedField": "email"
+      }
+    },
+    {
+      "name": "invalid credentials produce an accessible alert",
+      "status": "passed",
+      "durationMs": 2337.1,
+      "detail": {
+        "alertText": "The email or password is incorrect, or the account is not yet verified."
+      }
+    },
+    {
+      "name": "candidate opens the authorized dashboard",
+      "status": "passed",
+      "durationMs": 2620.1,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/candidate",
+        "heading": "Find hospitality work that fits your abilities"
+      }
+    },
+    {
+      "name": "employer opens the authorized dashboard",
+      "status": "passed",
+      "durationMs": 2576,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/employer",
+        "heading": "Post a job"
+      }
+    },
+    {
+      "name": "admin opens the authorized dashboard",
+      "status": "passed",
+      "durationMs": 2350.5,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/admin",
+        "heading": "Users"
+      }
+    },
+    {
+      "name": "verifier opens the authorized dashboard",
+      "status": "passed",
+      "durationMs": 2415.4,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/verifier",
+        "heading": "Candidate verification"
+      }
+    },
+    {
+      "name": "wrong-role dashboard access redirects to the user's own dashboard",
+      "status": "passed",
+      "durationMs": 1163,
+      "detail": {
+        "finalUrl": "http://127.0.0.1:5173/candidate"
+      }
+    },
+    {
+      "name": "employer workspace keeps its desktop rail and sign-out in view",
+      "status": "passed",
+      "durationMs": 3151.5,
+      "detail": {
+        "role": "employer",
+        "position": "sticky",
+        "signOutVisible": true
+      }
+    },
+    {
+      "name": "admin workspace keeps its desktop rail and sign-out in view",
+      "status": "passed",
+      "durationMs": 2817.7,
+      "detail": {
+        "role": "admin",
+        "position": "sticky",
+        "signOutVisible": true
+      }
+    },
+    {
+      "name": "verifier workspace keeps its desktop rail and sign-out in view",
+      "status": "passed",
+      "durationMs": 2518.5,
+      "detail": {
+        "role": "verifier",
+        "position": "sticky",
+        "signOutVisible": true
+      }
+    },
+    {
+      "name": "keyboard entry exposes the skip link",
+      "status": "passed",
+      "durationMs": 991.1,
+      "detail": {
+        "firstTabStop": "Skip to main content"
+      }
+    },
+    {
+      "name": "public grouped navigation opens and closes from the keyboard",
+      "status": "passed",
+      "durationMs": 2363,
+      "detail": {
+        "trigger": "Job seekers",
+        "escapeReturnedFocus": true
+      }
+    },
+    {
+      "name": "saved candidate profile offers and follows the next journey step",
+      "status": "passed",
+      "durationMs": 3560.2,
+      "detail": {
+        "destination": "Jobs",
+        "currentJourneyStep": "Match and explore"
+      }
+    },
+    {
+      "name": "employer can configure personal-education requirements accessibly",
+      "status": "passed",
+      "durationMs": 2527.1,
+      "detail": {
+        "configuredFields": 5
+      }
+    },
+    {
+      "name": "admin can inspect imported catalogue datasets and their tasks",
+      "status": "passed",
+      "durationMs": 5009.4,
+      "detail": {
+        "datasetName": "Bakery / Pastry Worker",
+        "taskRows": 189
+      }
+    }
+  ]
+}

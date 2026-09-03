@@ -1,0 +1,287 @@
+{
+  "generatedAt": "2026-08-03T11:59:53.772Z",
+  "standard": "WCAG 2.1 Level A and AA",
+  "browser": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+  "notes": [
+    "The zoom-200 scenario uses CSS zoom in headless Chromium and requires manual browser-zoom confirmation.",
+    "Automated findings are evidence, not a complete conformance determination.",
+    "Keyboard automation records tab stops; focus visibility and interaction quality require manual review."
+  ],
+  "routes": [
+    {
+      "path": "/candidate",
+      "name": "Candidate applications",
+      "area": "candidate",
+      "role": "candidate",
+      "activateLabel": "My Applications"
+    },
+    {
+      "path": "/candidate",
+      "name": "Candidate profile",
+      "area": "candidate",
+      "role": "candidate",
+      "activateLabel": "My Profile"
+    },
+    {
+      "path": "/candidate",
+      "name": "Candidate privacy",
+      "area": "candidate",
+      "role": "candidate",
+      "activateLabel": "Privacy & data"
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "width-375",
+      "width": 375,
+      "height": 812
+    }
+  ],
+  "results": [
+    {
+      "route": {
+        "path": "/candidate",
+        "name": "Candidate applications",
+        "area": "candidate",
+        "role": "candidate",
+        "activateLabel": "My Applications"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/candidate",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 11
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\candidate-applications-width-375.png",
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "section > div:nth-child(2)"
+              ],
+              "html": "<div style=\"margin-top: 14px; border: 1.5px dashed rgb(226, 232, 240); border-radius: 12px; padding: 24px; text-align: center; color: rgb(148, 163, 184); font-weight: 400; font-size: 13px;\">You have not submitted any applications yet.</div>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 2
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/candidate",
+        "name": "Candidate profile",
+        "area": "candidate",
+        "role": "candidate",
+        "activateLabel": "My Profile"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/candidate",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 406,
+        "horizontalOverflow": true,
+        "overflowElements": [
+          {
+            "selector": "div",
+            "left": -31,
+            "right": 157,
+            "width": 188,
+            "text": "Complete your profile",
+            "html": "<div style=\"display: flex; align-items: center; gap: 6px;\"><div style=\"width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: rgb(37, 99, 235); transition: background 0.4s;\"></div><span style=\"font-size: 11px; font-weight: 500; white-space: nowrap; color: rgb(37, 99, 235); transition: color 0.4s;\">Complete your profile</span><div style=\"width: 44px; height: 1px; background: rgb(226, 232, 240); margin: 0px 8px;\"></div></div>"
+          },
+          {
+            "selector": "div",
+            "left": -31,
+            "right": -24,
+            "width": 7,
+            "text": "",
+            "html": "<div style=\"width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: rgb(37, 99, 235); transition: background 0.4s;\"></div>"
+          },
+          {
+            "selector": "span",
+            "left": -18,
+            "right": 91,
+            "width": 109,
+            "text": "Complete your profile",
+            "html": "<span style=\"font-size: 11px; font-weight: 500; white-space: nowrap; color: rgb(37, 99, 235); transition: color 0.4s;\">Complete your profile</span>"
+          },
+          {
+            "selector": "div",
+            "left": 326,
+            "right": 406,
+            "width": 79,
+            "text": "Apply to jobs",
+            "html": "<div style=\"display: flex; align-items: center; gap: 6px;\"><div style=\"width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: rgb(203, 213, 225); transition: background 0.4s;\"></div><span style=\"font-size: 11px; font-weight: 500; white-space: nowrap; color: rgb(148, 163, 184); transition: color 0.4s;\">Apply to jobs</span></div>"
+          },
+          {
+            "selector": "span",
+            "left": 339,
+            "right": 406,
+            "width": 66,
+            "text": "Apply to jobs",
+            "html": "<span style=\"font-size: 11px; font-weight: 500; white-space: nowrap; color: rgb(148, 163, 184); transition: color 0.4s;\">Apply to jobs</span>"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 42
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\candidate-profile-width-375.png",
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "div > div > div:nth-child(2) > span"
+              ],
+              "html": "<span style=\"font-size: 11px; font-weight: 500; white-space: nowrap; color: rgb(148, 163, 184); transition: color 0.4s;\">Calculate matches</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.43 (foreground color: #94a3b8, background color: #f7f9fd, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "button[data-voice-control=\"clear_disabilities\"]"
+              ],
+              "html": "<button type=\"button\" data-voice-control=\"clear_disabilities\" style=\"background: none; border: 1px solid rgb(226, 232, 240); color: rgb(148, 163, 184); cursor: pointer; font-size: 11px; font-weight: 400; padding: 4px 9px; border-radius: 999px; font-family: Inter, sans-serif;\">Clear all</button>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 3
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    },
+    {
+      "route": {
+        "path": "/candidate",
+        "name": "Candidate privacy",
+        "area": "candidate",
+        "role": "candidate",
+        "activateLabel": "Privacy & data"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/candidate",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate dashboard | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 375,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 1,
+        "interactiveCount": 15
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\candidate-privacy-width-375.png",
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 1
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/candidate",
+      "consoleErrors": [
+        "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+      ],
+      "failedRequests": [
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap :: net::ERR_NETWORK_ACCESS_DENIED",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap :: net::ERR_NETWORK_ACCESS_DENIED"
+      ]
+    }
+  ]
+}

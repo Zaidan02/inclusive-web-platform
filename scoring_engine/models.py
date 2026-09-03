@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from .enums import EducationLevel, EffectiveFeasibility, Feasibility
+from .enums import AbilityLevel, EducationLevel, EffectiveFeasibility, Feasibility, RequirementLevel
 
 
 @dataclass(frozen=True, slots=True)
@@ -10,11 +10,20 @@ class Candidate:
     candidate_id: int | str
     education_level: EducationLevel | str
     disability_slugs: tuple[str, ...] = ()
+    reading_ability: AbilityLevel | str = AbilityLevel.NOT_YET
+    writing_ability: AbilityLevel | str = AbilityLevel.NOT_YET
+    numeracy_ability: AbilityLevel | str = AbilityLevel.NOT_YET
+    position_knowledge: AbilityLevel | str | None = None
 
     def __post_init__(self) -> None:
         normalized = tuple(dict.fromkeys(slug.strip().lower() for slug in self.disability_slugs if slug.strip()))
         object.__setattr__(self, "disability_slugs", normalized)
         object.__setattr__(self, "education_level", EducationLevel.from_value(self.education_level))
+        object.__setattr__(self, "reading_ability", AbilityLevel.from_value(self.reading_ability))
+        object.__setattr__(self, "writing_ability", AbilityLevel.from_value(self.writing_ability))
+        object.__setattr__(self, "numeracy_ability", AbilityLevel.from_value(self.numeracy_ability))
+        if self.position_knowledge is not None:
+            object.__setattr__(self, "position_knowledge", AbilityLevel.from_value(self.position_knowledge))
 
 
 @dataclass(frozen=True, slots=True)
@@ -46,6 +55,11 @@ class Job:
     minimum_education_level: EducationLevel | str
     assistance_available: bool
     tasks: tuple[Task, ...]
+    education_requirement: RequirementLevel | str = RequirementLevel.NOT_REQUIRED
+    reading_requirement: RequirementLevel | str = RequirementLevel.NOT_REQUIRED
+    writing_requirement: RequirementLevel | str = RequirementLevel.NOT_REQUIRED
+    numeracy_requirement: RequirementLevel | str = RequirementLevel.NOT_REQUIRED
+    position_knowledge_requirement: RequirementLevel | str = RequirementLevel.NOT_REQUIRED
 
     def __post_init__(self) -> None:
         if not self.title.strip():
@@ -57,6 +71,14 @@ class Job:
             "minimum_education_level",
             EducationLevel.from_value(self.minimum_education_level),
         )
+        for field_name in (
+            "education_requirement",
+            "reading_requirement",
+            "writing_requirement",
+            "numeracy_requirement",
+            "position_knowledge_requirement",
+        ):
+            object.__setattr__(self, field_name, RequirementLevel.from_value(getattr(self, field_name)))
 
 
 @dataclass(frozen=True, slots=True)
@@ -89,6 +111,18 @@ class EducationResult:
     required_level: EducationLevel
     meets_requirement: bool
     explanation: str
+    requirement: RequirementLevel = RequirementLevel.NOT_REQUIRED
+
+
+@dataclass(frozen=True, slots=True)
+class AbilityResult:
+    ability: str
+    candidate_level: AbilityLevel
+    requirement: RequirementLevel
+    assistance_available: bool
+    meets_requirement: bool
+    factor: float
+    explanation: str
 
 
 @dataclass(frozen=True, slots=True)
@@ -100,7 +134,11 @@ class MatchResult:
     score: float | None
     earned_points: float
     maximum_points: float
+    task_score: float
+    practical_ability_score: float | None
+    education_score: float | None
     education: EducationResult
+    ability_results: tuple[AbilityResult, ...]
     task_results: tuple[TaskResult, ...]
     exclusion_reasons: tuple[str, ...]
     summary: str

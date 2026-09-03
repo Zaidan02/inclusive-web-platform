@@ -77,7 +77,11 @@ Edit `backend/voice_navigation/.env` and set:
 
 ```dotenv
 OPENAI_API_KEY=your_actual_openai_api_key
+PROFILE_AI_TOKEN=the_same_strong_random_value_used_in_backend_.env
 ```
+
+Also set a strong random `PROFILE_AI_TOKEN` in `backend/.env`. Compose supplies that value to
+both Symfony and the protected profile-extraction service. Never commit either local `.env` file.
 
 The frontend file is optional because its committed example contains the normal local defaults.
 The Symfony template uses Docker service names and development-only values. Change its
@@ -211,6 +215,7 @@ docker compose exec php php bin/console doctrine:fixtures:load --no-interaction 
 This command intentionally purges existing rows. The current fixtures create:
 
 - One verified administrator
+- One verified authorized verifier
 - One verified candidate
 - Four verified employer/company accounts
 - Three job definitions
@@ -229,6 +234,7 @@ Primary fixture emails:
 
 ```text
 admin@join.local
+verifier@join.local
 candidate@join.local
 employer@join.local
 cedar.sweets@join.local
@@ -326,10 +332,9 @@ Copy-Item backend\voice_navigation\.env.example backend\voice_navigation\.env
 OPENAI_API_KEY=your_actual_key
 ```
 
-The same key/model configuration powers transcription, classification, Navigator, Action
-Master, Question Master, and speech output. The optional model, prompt, voice, CORS, and request
-limit variables are documented inline in `.env.example`. The Question Master does not need a
-second API key or environment file.
+The same OpenAI key/model configuration powers transcription, classification, Navigator, Action
+Master, Question Master, profile extraction, and speech output. The optional model, prompt, voice,
+CORS, token, and request-limit variables are documented inline in `.env.example`.
 
 Recreate the service after changing `.env`:
 
@@ -501,6 +506,13 @@ the Admin Console. It accepts one or more `.xlsx` files, rejects duplicate job d
 imports transactionally, and does not purge existing data. Python and OpenPyXL for this UI
 workflow are already included in the PHP Docker image.
 
+The Admin Console's **Dataset catalogue** section lists every active or inactive imported job
+description with its source workbook, worksheet count, task count, and assessment count. Opening
+a dataset loads its tasks on demand and shows whether each row is an operational task or a
+Personal Education input, its mandatory status, and the feasible/assistance/avoid assessment
+distribution. Importing new workbooks refreshes this view automatically. This catalogue view is
+administrative metadata only; it does not publish employer vacancies.
+
 The direct command below is for deliberately regenerating the fixture catalogue JSON:
 
 From the repository root:
@@ -640,8 +652,28 @@ docker compose logs scoring-engine --tail 100
 
 ```powershell
 cd C:\Users\fouad\Desktop\inclusive-web-platform\backend
-docker compose exec --user www-data php php bin/console cache:clear --env=prod --no-debug
 docker compose restart php
+```
+
+The PHP container now clears and warms the production Symfony cache whenever it starts. After
+pulling new controllers or routes, recreating or restarting PHP is sufficient.
+
+### Candidate profile suggestions fail
+
+Check that the AI routes exist and both services are healthy:
+
+```powershell
+cd backend
+docker compose exec php php bin/console debug:router --env=prod | Select-String candidate_profile_ai
+Invoke-RestMethod http://127.0.0.1:5002/health
+docker compose logs --tail 100 php voice-navigation
+```
+
+Confirm that `PROFILE_AI_TOKEN` is non-empty in `backend/.env` and that the voice service reports
+`"openaiConfigured": true`. Recreate the affected services after changing environment values:
+
+```powershell
+docker compose up -d --force-recreate php voice-navigation
 ```
 
 ### Composer classes are missing

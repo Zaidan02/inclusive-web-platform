@@ -14,13 +14,13 @@ React frontend             http://localhost:5173
         v
 Symfony/PHP backend        http://localhost:8081
         |
-        +-- PostgreSQL      Docker port 5432
+        +-- PostgreSQL      internal Docker port 5432
         |
         +-- Scoring engine  http://localhost:5001
 
 React frontend
         |
-        +-- Voice assistant http://localhost:5002
+        +-- Voice/profile AI service http://localhost:5002
 ```
 
 Docker Compose starts:
@@ -32,8 +32,9 @@ Docker Compose starts:
 
 The React frontend is the only runtime started separately on the host machine.
 
-The scoring engine provides deterministic compatibility matching. The voice service provides
-transcription, classification, Navigator, Action Master, Question Master, and speech output.
+The scoring engine provides deterministic compatibility matching. The voice/profile service
+provides transcription, classification, Navigator, Action Master, Question Master, speech output,
+and consent-gated candidate-profile suggestions.
 
 ## 2. Prerequisites
 
@@ -102,6 +103,8 @@ DEFAULT_URI=http://localhost:8081
 CORS_ALLOW_ORIGIN="^http://(localhost|127\.0\.0\.1):5173$"
 
 SCORING_ENGINE_URL=http://scoring-engine:5001
+PROFILE_AI_URL=http://voice-navigation:5002
+PROFILE_AI_TOKEN=replace-with-a-long-random-value
 VERIFICATION_BASE_URL=http://localhost:8081
 RESET_PASSWORD_BASE_URL=http://localhost:5173
 ```
@@ -110,7 +113,12 @@ Important hostnames:
 
 - Symfony connects to PostgreSQL using `database`, not `localhost`, because both run in Docker Compose.
 - Symfony connects to the Compose scoring service using `scoring-engine`.
-- TablePlus connects from Windows using `127.0.0.1` and the published PostgreSQL host port.
+- Symfony connects to the profile assistant using `voice-navigation`; the browser does not call
+  the protected extraction endpoint directly.
+- The base `compose.yaml` keeps PostgreSQL internal. Normal `docker compose` commands from
+  `backend` also merge `compose.override.yaml`, which publishes a dynamically selected local port.
+  Run `docker compose port database 5432` before connecting with a desktop database client.
+  Commands that explicitly use only `-f compose.yaml` do not merge the override.
 
 ### Voice assistant environment
 
@@ -124,6 +132,7 @@ Set at minimum:
 
 ```dotenv
 OPENAI_API_KEY=your_actual_openai_api_key
+PROFILE_AI_TOKEN=the_same-strong-random-value-used-in-backend-.env
 ```
 
 The remaining values already have development defaults:
@@ -135,6 +144,7 @@ The remaining values already have development defaults:
 - `VOICE_HOST` and `VOICE_PORT` configure the container listener.
 - `VOICE_ALLOWED_ORIGIN` must match the React origin.
 - `VOICE_MAX_AUDIO_BYTES` and `VOICE_MAX_TRANSCRIPT_CHARS` bound requests.
+- `PROFILE_AI_TOKEN` authenticates Symfony calls to the internal profile-extraction endpoint.
 
 Never commit `backend/voice_navigation/.env`. Recreate the service after changing it:
 
@@ -231,7 +241,8 @@ Expected application tables include:
 
 ### Current behavior
 
-`backend/compose.override.yaml` currently contains:
+Normal `docker compose` commands issued from `backend` automatically merge
+`backend/compose.override.yaml`, which currently contains:
 
 ```yaml
 services:
@@ -241,6 +252,10 @@ services:
 ```
 
 Only the container port is specified. Docker therefore chooses a random available Windows host port whenever the container is recreated.
+
+If you deliberately run `docker compose -f compose.yaml ...`, the override is not included and
+PostgreSQL remains internal to Docker. Use plain `docker compose ...` when a desktop database
+client needs the dynamically published port.
 
 Find the current port with:
 
@@ -605,7 +620,8 @@ Docker Desktop is not running or has not finished starting.
 
 ### TablePlus connection refused
 
-The database container is stopped, or Docker assigned a different dynamic port. Run:
+The database container is stopped, Docker assigned a different dynamic port, or Compose was
+started with only `-f compose.yaml` and therefore did not merge the port override. Run:
 
 ```powershell
 docker compose ps

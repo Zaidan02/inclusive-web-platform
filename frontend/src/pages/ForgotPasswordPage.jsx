@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import logoImage from "../assets/john-logo.png";
 import { requestPasswordReset } from "../services/authApi";
+import { isValidEmail } from "../utils/authValidation";
+import AuthUtilityBar from "../components/layout/AuthUtilityBar";
 import "../styles/authPages.css";
 
 function EmailIcon() {
@@ -14,30 +17,37 @@ function EmailIcon() {
 }
 
 function ForgotPasswordPage() {
+  const { t } = useTranslation("auth");
   const [email, setEmail] = useState("");
   const [sentEmail, setSentEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [fieldError, setFieldError] = useState("");
   const [loading, setLoading] = useState(false);
+  const successRef = useRef(null);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setMessage("");
     setError("");
+    setFieldError("");
 
-    if (!email) {
-      setError("Please enter your email address.");
+    if (!email.trim() || !isValidEmail(email)) {
+      setFieldError(!email.trim()
+        ? t("shared.validation.emailRequired")
+        : t("shared.validation.emailInvalid"));
       window.requestAnimationFrame(() => document.getElementById("email")?.focus());
       return;
     }
 
     try {
       setLoading(true);
-      const data = await requestPasswordReset(email);
+      await requestPasswordReset(email);
       setSentEmail(email);
-      setMessage(data.message || "We sent a reset link to your email.");
-    } catch (err) {
-      setError(err.message || "Failed to request password reset.");
+      setMessage(t("forgot.successFallback"));
+      window.requestAnimationFrame(() => successRef.current?.focus());
+    } catch {
+      setError(t("forgot.errorFallback"));
     } finally {
       setLoading(false);
     }
@@ -49,21 +59,22 @@ function ForgotPasswordPage() {
 
         {/* LEFT */}
         <div className="auth-left">
+          <AuthUtilityBar />
 
           <div className="signin-header">
             <span className="auth-badge">JoIn Hospitality</span>
             <h1 className="signin-title">
-              Forgot your <span>password?</span>
+              {t("forgot.titleStart")} <span>{t("forgot.titleEmphasis")}</span>
             </h1>
             <p className="auth-subtitle">
-              No worries — enter your email and we'll send you a secure link to reset it.
+              {t("forgot.subtitle")}
             </p>
           </div>
 
           {!message ? (
-            <form onSubmit={handleSubmit} className="auth-form" noValidate>
+            <form onSubmit={handleSubmit} className="auth-form" noValidate aria-busy={loading}>
               <div className="auth-field">
-                <label htmlFor="email">Email</label>
+                <label htmlFor="email">{t("shared.email")}</label>
                 <div className="input-icon-wrapper">
                   <EmailIcon />
                   <input
@@ -71,12 +82,18 @@ function ForgotPasswordPage() {
                     type="email"
                     name="email"
                     autoComplete="email"
-                    placeholder="name@example.com"
+                    placeholder={t("shared.emailPlaceholder")}
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="auth-input auth-input--icon"
+                    dir="ltr"
+                    onChange={(e) => { setEmail(e.target.value); setFieldError(""); setError(""); }}
+                    required
+                    aria-invalid={Boolean(fieldError)}
+                    aria-describedby={`forgot-email-help${fieldError ? " forgot-email-error" : ""}`}
+                    className={fieldError ? "auth-input auth-input--icon input-error" : "auth-input auth-input--icon"}
                   />
                 </div>
+                <p id="forgot-email-help" className="field-help">{t("shared.emailFormatHelp")}</p>
+                {fieldError && <p id="forgot-email-error" className="field-error">{fieldError}</p>}
               </div>
 
               {error && <p className="auth-error" role="alert">{error}</p>}
@@ -85,45 +102,47 @@ function ForgotPasswordPage() {
                 {loading ? (
                   <span className="btn-spinner-wrap">
                     <span className="btn-spinner"></span>
-                    <span>Sending</span>
+                    <span>{t("forgot.sending")}</span>
                   </span>
                 ) : (
                   <>
-                    <span>Send Reset Link</span>
+                    <span>{t("forgot.submit")}</span>
                     <span className="btn-arrow">→</span>
                   </>
                 )}
               </button>
             </form>
           ) : (
-            <div className="reset-success-card" role="status">
+            <div ref={successRef} className="reset-success-card" role="status" tabIndex={-1}>
               <div className="reset-success-icon">
                 <svg viewBox="0 0 24 24" fill="none" width="26" height="26">
                   <rect x="3" y="5" width="18" height="14" rx="3" stroke="#1a4fa0" strokeWidth="1.8" />
                   <path d="M3 8l9 6 9-6" stroke="#1a4fa0" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
-              <h3>Check your inbox</h3>
+              <h2>{t("forgot.checkInbox")}</h2>
               <p>
-                We sent a reset link to <strong>{sentEmail}</strong>. It expires in 1 hour.
+                {t("forgot.sentTo", { email: sentEmail })}
               </p>
               <p className="reset-success-note">
-                Didn't receive it? Check your spam folder or{" "}
+                {t("forgot.notReceived")}{" "}
                 <button
                   type="button"
                   onClick={() => {
                     setMessage("");
                     setError("");
+                    setFieldError("");
+                    window.requestAnimationFrame(() => document.getElementById("email")?.focus());
                   }}
                 >
-                  try again
+                  {t("forgot.tryAgain")}
                 </button>
               </p>
             </div>
           )}
 
           <Link to="/signin" className="ghost-btn">
-            Remembered your password? <span>Sign in</span>
+            {t("forgot.remembered")} <span>{t("shared.signIn")}</span>
           </Link>
 
         </div>
@@ -134,7 +153,7 @@ function ForgotPasswordPage() {
             <div className="logo-orb logo-orb-1"></div>
             <div className="logo-orb logo-orb-2"></div>
             <div className="logo-glow"></div>
-            <img src={logoImage} alt="JoIn Hospitality logo" className="logo-image" />
+            <img src={logoImage} alt={t("shared.logoAlt")} className="logo-image" />
           </div>
         </div>
 

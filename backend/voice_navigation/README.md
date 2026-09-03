@@ -1,6 +1,11 @@
 # Voice Navigation Service
 
-This isolated service implements the bounded-utterance voice-assistant pipeline:
+This service implements two constrained AI workflows:
+
+1. bounded voice navigation and registered website actions;
+2. multilingual candidate-profile transcription and structured, reviewable suggestions.
+
+The voice-assistant pipeline is:
 
 ```text
 audio upload
@@ -8,7 +13,7 @@ audio upload
 -> three-way request classification
 -> deterministic orchestration
    -> navigation specialist
-   -> website-question placeholder
+   -> grounded website-question specialist
    -> action specialist
 -> deterministic navigation registry validation
 -> deterministic action registry validation
@@ -17,15 +22,16 @@ audio upload
 
 The classifier decides only whether a transcript is navigation, a website question, or a
 website action. It does not decide whether the request is logical, supported, or permitted.
-Navigation requests reach the navigation specialist. Authentication-form actions reach the
-Action Master. Website questions remain recognized but intentionally unimplemented.
+Navigation requests reach the navigation specialist. Registered form and dashboard actions
+reach the Action Master. Website questions are answered only from bounded content supplied by
+the currently rendered page.
 
 The navigation model interprets. The registry authorizes. Browser code executes only a
 returned fixed action type. Existing React role guards and Symfony API authorization remain
 the project security authority.
 
-The code is separated into `api`, `audio`, `classification`, `core`, `orchestration`, and
-`specialists/navigation` and `specialists/actions` packages.
+The code is separated into `api`, `audio`, `classification`, `core`, `orchestration`, `profile`,
+and specialist packages.
 
 The Action Master proof of concept supports login and signup fields, account-type selection,
 and confirmation-gated form submission. It emits semantic control identifiers only; mounted
@@ -51,9 +57,14 @@ Edit the Git-ignored `.env` file in this directory:
 
 ```env
 OPENAI_API_KEY=your_api_key
+PROFILE_AI_TOKEN=the_same_strong_random_value_used_by_the_symfony_backend
 ```
 
 Do not place the API key in frontend code or commit `.env`.
+
+`PROFILE_AI_TOKEN` protects `/api/profile/extract`, which is an internal Symfony-to-Python
+endpoint. The public browser never receives this token. When using Docker Compose, the value is
+supplied from `backend/.env`; use the matching value here when running this service directly.
 
 ## Start with Docker
 
@@ -69,6 +80,18 @@ Health check:
 ```powershell
 Invoke-RestMethod http://localhost:5002/health
 ```
+
+## Candidate profile endpoints
+
+- `POST /api/profile/transcribe` accepts multipart audio and `language=en|fr|ar`. It returns an
+  editable transcript and does not perform profile extraction.
+- `POST /api/profile/extract` accepts a bounded narrative, existing profile, allowed disability
+  catalogue, and task vocabulary. It requires `X-Profile-AI-Token` and returns Pydantic-validated
+  suggestions.
+
+Extraction never persists data. Symfony revalidates the response, and the candidate must select
+and confirm each item through the authenticated backend endpoint before it is saved. Disability
+suggestions require an explicit candidate statement; task skills must reference supplied task IDs.
 
 ## Test text interpretation
 
@@ -119,4 +142,5 @@ From this directory:
 py -3.12 -m unittest discover -s tests -v
 ```
 
-These tests do not call OpenAI and do not require an API key.
+These tests do not call OpenAI and do not require an API key. They include bounded-context tests
+for the profile extractor.

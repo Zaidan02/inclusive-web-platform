@@ -33,6 +33,19 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
+    public function countActiveCandidates(): int
+    {
+        return (int) $this->getEntityManager()->getConnection()->fetchOne(
+            <<<'SQL'
+                SELECT COUNT(*)
+                FROM "user"
+                WHERE is_archived = FALSE
+                  AND roles::jsonb @> CAST(:candidate_role AS jsonb)
+                SQL,
+            ['candidate_role' => json_encode(['ROLE_CANDIDATE'], JSON_THROW_ON_ERROR)]
+        );
+    }
+
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */

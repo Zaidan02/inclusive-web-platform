@@ -24,11 +24,12 @@ final class AppFixtures extends Fixture
         $employerUsers = [];
         $accounts = [
             ['username' => 'admin', 'email' => 'admin@join.local', 'roles' => ['ROLE_ADMIN']],
+            ['username' => 'verifier', 'email' => 'verifier@join.local', 'roles' => ['ROLE_VERIFIER']],
             ['username' => 'employer', 'email' => 'employer@join.local', 'roles' => ['ROLE_EMPLOYER'], 'company' => ['name' => 'JoIn Hospitality Demo', 'industry' => 'Food and Beverage', 'location' => 'Beirut, Lebanon', 'website' => 'https://example.com', 'logo' => '/join-hospitality-logo.png.jpeg']],
             ['username' => 'cedar_sweets', 'email' => 'cedar.sweets@join.local', 'roles' => ['ROLE_EMPLOYER'], 'company' => ['name' => 'Cedar Sweets', 'industry' => 'Confectionery', 'location' => 'Jounieh, Lebanon', 'website' => 'https://example.com/cedar-sweets', 'logo' => null]],
             ['username' => 'north_scoop', 'email' => 'north.scoop@join.local', 'roles' => ['ROLE_EMPLOYER'], 'company' => ['name' => 'North Scoop', 'industry' => 'Ice Cream Production', 'location' => 'Tripoli, Lebanon', 'website' => 'https://example.com/north-scoop', 'logo' => null]],
             ['username' => 'artisan_bakery', 'email' => 'artisan.bakery@join.local', 'roles' => ['ROLE_EMPLOYER'], 'company' => ['name' => 'Beirut Artisan Bakery', 'industry' => 'Bakery and Pastry', 'location' => 'Beirut, Lebanon', 'website' => 'https://example.com/artisan-bakery', 'logo' => null]],
-            ['username' => 'candidate', 'email' => 'candidate@join.local', 'roles' => ['ROLE_USER']],
+            ['username' => 'candidate', 'email' => 'candidate@join.local', 'roles' => ['ROLE_CANDIDATE']],
         ];
 
         foreach ($accounts as $account) {
@@ -87,6 +88,9 @@ final class AppFixtures extends Fixture
             ->setUser($candidateUser)
             ->replaceDisabilities([$disabilities['ankle']])
             ->setEducationLevel('high_school')
+            ->setReadingAbility('independent')
+            ->setWritingAbility('independent')
+            ->setNumeracyAbility('with_support')
             ->setFirstName('Alex')
             ->setLastName('Candidate')
             ->setPhone('+961 70 123 456')
@@ -100,19 +104,19 @@ final class AppFixtures extends Fixture
             throw new \RuntimeException('The job fixtures require at least one employer account.');
         }
 
-        $educationByJob = [
-            'chocolate-confectionery-worker' => 'middle_school',
-            'ice-cream-maker' => 'high_school',
-            'bakery-pastry-worker' => 'vocational',
-        ];
         $jobIndex = 0;
+        $practicalRequirementsByJob = [
+            'chocolate-confectionery-worker' => ['required', 'preferred', 'required', 'required'],
+            'ice-cream-maker' => ['preferred', 'not_required', 'required', 'preferred'],
+            'bakery-pastry-worker' => ['preferred', 'not_required', 'preferred', 'required'],
+        ];
 
         foreach ($catalogue['jobs'] as $jobRecord) {
             $job = (new JobDefinition())
                 ->setSlug($jobRecord['slug'])
                 ->setName($jobRecord['name'])
-                ->setDescription("Catalogue definition for {$jobRecord['name']}.")
-                ->setMinimumEducationLevel($educationByJob[$jobRecord['slug']] ?? 'none')
+                ->setDescription(sprintf('Catalogue definition imported from %s.', $jobRecord['sourceWorkbook']))
+                ->setMinimumEducationLevel('none')
                 ->setActive(true);
             $manager->persist($job);
 
@@ -149,6 +153,8 @@ final class AppFixtures extends Fixture
                     $companyProfile = $employer->getEmployerProfile();
                     $selectedTasks = array_slice(array_values($tasks), 0, min($importantTaskCount, count($tasks)));
                     $actualImportantTaskCount = count($selectedTasks);
+                    [$readingRequirement, $writingRequirement, $numeracyRequirement, $positionKnowledgeRequirement]
+                        = $practicalRequirementsByJob[$jobRecord['slug']] ?? ['not_required', 'not_required', 'not_required', 'not_required'];
                     $post = (new JobPost())
                         ->setEmployer($employer)
                         ->setJobDefinition($job)
@@ -157,9 +163,15 @@ final class AppFixtures extends Fixture
                         ->setWorkMode('On-site')
                         ->setDescription('A practical ' . $jobRecord['name'] . ' opportunity at ' . $companyProfile?->getCompanyName() . '. This seeded offer marks ' . $actualImportantTaskCount . ' catalogue tasks as important and demonstrates scoring with assistance ' . ($assistanceAvailable ? 'available.' : 'not available.'))
                         ->setApplicationDeadline(new \DateTimeImmutable('+6 months'))
-                        ->setCvRequired(true)
+                        ->setCvRequired(false)
                         ->setCoverLetterRequired(false)
                         ->setAssistanceAvailable($assistanceAvailable)
+                        ->setEducationRequirement('not_required')
+                        ->setMinimumEducationLevel(null)
+                        ->setReadingRequirement($readingRequirement)
+                        ->setWritingRequirement($writingRequirement)
+                        ->setNumeracyRequirement($numeracyRequirement)
+                        ->setPositionKnowledgeRequirement($positionKnowledgeRequirement)
                         ->setStatus('published');
                     foreach ($selectedTasks as $position => $task) {
                         $post->addHighlightedTask((new JobPostHighlightedTask())->setTask($task)->setDisplayPosition($position + 1));

@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Trans, useTranslation } from "react-i18next";
+import { Link, useSearchParams } from "react-router-dom";
 import { registerUser } from "../services/authApi";
+import { PRIVACY_VERSION } from "../privacy";
+import { getPasswordChecks, isValidEmail } from "../utils/authValidation";
+import AuthUtilityBar from "../components/layout/AuthUtilityBar";
 import "../styles/authPages.css";
 
 function EyeIcon({ hidden }) {
@@ -49,8 +53,8 @@ function LockIcon() {
 }
 
 function SignUpPage() {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { t } = useTranslation("auth");
   const requestedRole = searchParams.get("role");
 
   const [formData, setFormData] = useState({
@@ -61,11 +65,15 @@ function SignUpPage() {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [disabilityCard, setDisabilityCard] = useState(null);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [disabilityVerificationConsent, setDisabilityVerificationConsent] = useState(false);
   const [touched, setTouched] = useState({});
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState("");
   const [success, setSuccess] = useState("");
   const formRef = useRef(null);
+  const successRef = useRef(null);
 
   useEffect(() => {
     function handleVoiceAction(event) {
@@ -77,9 +85,12 @@ function SignUpPage() {
         setFormData((current) => ({ ...current, [action.target]: value }));
         setServerError("");
         event.detail.handled = true;
+        const fieldLabel = action.target === "username"
+          ? t("signup.username")
+          : t(`shared.${action.target}`);
         event.detail.feedback = action.sensitive
-          ? `I updated the ${action.label} field without reading it aloud. Please check it.`
-          : `I set ${action.label} to ${value}. Please check it.`;
+          ? t("signup.voice.sensitiveUpdated", { label: fieldLabel })
+          : t("signup.voice.fieldUpdated", { label: fieldLabel, value });
         requestAnimationFrame(() => {
           const field = document.getElementById(action.target);
           field?.focus();
@@ -92,7 +103,9 @@ function SignUpPage() {
       } else if (action.type === "select_option" && action.target === "account_type") {
         setFormData((current) => ({ ...current, accountType: action.value }));
         event.detail.handled = true;
-        event.detail.feedback = `I selected ${action.value} as the account type. Please check it.`;
+        event.detail.feedback = t("signup.voice.accountType", {
+          accountType: t(`signup.${action.value}`),
+        });
         document.querySelector(".account-type-options")?.classList.add("voice-action-highlight");
         window.setTimeout(
           () => document.querySelector(".account-type-options")?.classList.remove("voice-action-highlight"),
@@ -100,13 +113,13 @@ function SignUpPage() {
         );
       } else if (action.type === "press" && action.target === "create_account") {
         event.detail.handled = true;
-        event.detail.feedback = "Creating the account with the values currently in the form.";
+        event.detail.feedback = t("signup.voice.submitting");
         formRef.current?.requestSubmit();
       }
     }
     window.addEventListener("join:voice-action", handleVoiceAction);
     return () => window.removeEventListener("join:voice-action", handleVoiceAction);
-  }, []);
+  }, [t]);
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -119,55 +132,79 @@ function SignUpPage() {
 
   function handleAccountTypeChange(accountType) {
     setFormData({ ...formData, accountType });
+    if (accountType === "employer") {
+      setDisabilityCard(null);
+      setTouched((current) => ({ ...current, disabilityCard: false }));
+    }
+    setServerError("");
   }
 
-  const passwordChecks = {
-    length: formData.password.length >= 8,
-    lowercase: /[a-z]/.test(formData.password),
-    uppercase: /[A-Z]/.test(formData.password),
-    symbol: /[\W_]/.test(formData.password),
-  };
+  function handleCardChange(e) {
+    setDisabilityCard(e.target.files?.[0] || null);
+    setTouched((current) => ({ ...current, disabilityCard: true }));
+    setServerError("");
+  }
+
+  const passwordChecks = getPasswordChecks(formData.password);
 
   const passwordScore = Object.values(passwordChecks).filter(Boolean).length;
 
   const passwordStrength =
     passwordScore === 0
-      ? { label: "", color: "", width: "0%" }
+      ? { labelKey: "", color: "", width: "0%" }
       : passwordScore === 1
-      ? { label: "Weak", color: "#ef4444", width: "25%" }
+      ? { labelKey: "weak", color: "#ef4444", width: "25%" }
       : passwordScore === 2
-      ? { label: "Fair", color: "#f59e0b", width: "50%" }
+      ? { labelKey: "fair", color: "#f59e0b", width: "50%" }
       : passwordScore === 3
-      ? { label: "Good", color: "#3b82f6", width: "75%" }
-      : { label: "Strong", color: "#10b981", width: "100%" };
+      ? { labelKey: "good", color: "#3b82f6", width: "75%" }
+      : { labelKey: "strong", color: "#10b981", width: "100%" };
 
   const errors = {
     username:
       touched.username && !formData.username.trim()
-        ? "Please enter a username."
+        ? t("signup.errors.usernameRequired")
         : "",
     email:
       touched.email && !formData.email.trim()
-        ? "Please enter your email address."
-        : touched.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
-        ? "Please enter a valid email address, like name@example.com."
+        ? t("signup.errors.emailRequired")
+        : touched.email && !isValidEmail(formData.email)
+        ? t("signup.errors.emailInvalid")
         : "",
     password:
       touched.password && !formData.password
-        ? "Please create a password."
+        ? t("signup.errors.passwordRequired")
         : touched.password && passwordScore < 4
-        ? "Your password must meet all requirements below."
+        ? t("signup.errors.passwordRequirements")
+        : "",
+    disabilityCard:
+      formData.accountType === "candidate" && touched.disabilityCard && !disabilityCard
+        ? t("signup.errors.cardRequired")
+        : formData.accountType === "candidate" && disabilityCard && disabilityCard.size > 5 * 1024 * 1024
+        ? t("signup.errors.cardSize")
+        : formData.accountType === "candidate" && disabilityCard && !["application/pdf", "image/jpeg", "image/png"].includes(disabilityCard.type)
+        ? t("signup.errors.cardType")
         : "",
   };
 
   function validateForm() {
-    setTouched({ username: true, email: true, password: true });
+    setTouched({ username: true, email: true, password: true, disabilityCard: true, privacy: true, verificationConsent: true });
     const firstInvalidField = !formData.username.trim()
       ? "username"
-      : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+      : !isValidEmail(formData.email)
       ? "email"
       : passwordScore < 4
       ? "password"
+      : formData.accountType === "candidate" && (
+          !disabilityCard
+          || disabilityCard.size > 5 * 1024 * 1024
+          || !["application/pdf", "image/jpeg", "image/png"].includes(disabilityCard.type)
+        )
+      ? "disabilityCard"
+      : !privacyAccepted
+      ? "privacyAccepted"
+      : formData.accountType === "candidate" && !disabilityVerificationConsent
+      ? "disabilityVerificationConsent"
       : null;
     if (firstInvalidField) {
       window.requestAnimationFrame(() => document.getElementById(firstInvalidField)?.focus());
@@ -184,11 +221,23 @@ function SignUpPage() {
 
     try {
       setLoading(true);
-      await registerUser(formData);
-      setSuccess("Account created successfully. Please check your email to verify your account before signing in.");
-      setTimeout(() => navigate("/signin"), 2000);
-    } catch (err) {
-      setServerError(err.message || "We could not create your account. Please try again.");
+      const registration = new FormData();
+      Object.entries(formData).forEach(([key, value]) => registration.append(key, value));
+      registration.append("privacyVersion", PRIVACY_VERSION);
+      registration.append("privacyAccepted", String(privacyAccepted));
+      registration.append("disabilityVerificationConsent", String(disabilityVerificationConsent));
+      if (formData.accountType === "candidate" && disabilityCard) {
+        registration.append("disabilityCard", disabilityCard);
+      }
+      await registerUser(registration);
+      setSuccess(
+        formData.accountType === "candidate"
+          ? t("signup.candidateSuccess")
+          : t("signup.employerSuccess")
+      );
+      window.requestAnimationFrame(() => successRef.current?.focus());
+    } catch {
+      setServerError(t("signup.errors.server"));
     } finally {
       setLoading(false);
     }
@@ -200,49 +249,55 @@ function SignUpPage() {
 
         {/* Card header shimmer stripe */}
         <div className="signup-card-stripe"></div>
+        <AuthUtilityBar />
 
         <div className="signup-header">
-          <span className="auth-badge signup-badge">JoIn Hospitality</span>
+          <span className="auth-badge signup-badge">{t("signup.badge")}</span>
           <h1 className="signup-title">
-            Create your <span>account</span>
+            {t("signup.titleStart")} <span>{t("signup.titleEmphasis")}</span>
           </h1>
           <p className="signup-subtitle">
-            Start your journey in a more inclusive hospitality experience.
+            {t("signup.subtitle")}
           </p>
         </div>
 
         {/* Account type selector */}
-        <div className="account-type-options">
+        <fieldset className="account-type-fieldset">
+          <legend>{t("signup.accountTypeLegend")}</legend>
+          <div className="account-type-options">
           <button
             type="button"
+            aria-label={t("signup.candidateAria")}
             aria-pressed={formData.accountType === "candidate"}
             className={formData.accountType === "candidate" ? "account-type-card selected" : "account-type-card"}
             onClick={() => handleAccountTypeChange("candidate")}
           >
             <span className="account-type-icon">👤</span>
-            <strong>Candidate</strong>
-            <small>Looking for opportunities</small>
+            <strong>{t("signup.candidate")}</strong>
+            <small>{t("signup.candidateDescription")}</small>
             {formData.accountType === "candidate" && <span className="account-type-check">✓</span>}
           </button>
 
           <button
             type="button"
+            aria-label={t("signup.employerAria")}
             aria-pressed={formData.accountType === "employer"}
             className={formData.accountType === "employer" ? "account-type-card selected" : "account-type-card"}
             onClick={() => handleAccountTypeChange("employer")}
           >
             <span className="account-type-icon">🏢</span>
-            <strong>Employer</strong>
-            <small>Hiring for my business</small>
+            <strong>{t("signup.employer")}</strong>
+            <small>{t("signup.employerDescription")}</small>
             {formData.accountType === "employer" && <span className="account-type-check">✓</span>}
           </button>
-        </div>
+          </div>
+        </fieldset>
 
-        <form ref={formRef} onSubmit={handleSubmit} className="auth-form signup-form" noValidate>
+        <form ref={formRef} onSubmit={handleSubmit} className="auth-form signup-form" noValidate aria-busy={loading}>
 
           {/* Username */}
           <div className="auth-field">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">{t("signup.username")}</label>
             <div className="input-icon-wrapper">
               <UserIcon />
               <input
@@ -250,19 +305,23 @@ function SignUpPage() {
                 type="text"
                 name="username"
                 autoComplete="username"
-                placeholder="Choose a username"
+                placeholder={t("signup.usernamePlaceholder")}
                 value={formData.username}
+                dir="auto"
                 onChange={handleChange}
                 onBlur={handleBlur}
+                required
+                aria-invalid={Boolean(errors.username)}
+                aria-describedby={errors.username ? "username-error" : undefined}
                 className={errors.username ? "auth-input auth-input--icon input-error" : "auth-input auth-input--icon"}
               />
             </div>
-            {errors.username && <p className="field-error">{errors.username}</p>}
+            {errors.username && <p id="username-error" className="field-error">{errors.username}</p>}
           </div>
 
           {/* Email */}
           <div className="auth-field">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">{t("shared.email")}</label>
             <div className="input-icon-wrapper">
               <EmailIcon />
               <input
@@ -270,19 +329,24 @@ function SignUpPage() {
                 type="email"
                 name="email"
                 autoComplete="email"
-                placeholder="name@example.com"
+                placeholder={t("shared.emailPlaceholder")}
                 value={formData.email}
+                dir="ltr"
                 onChange={handleChange}
                 onBlur={handleBlur}
+                required
+                aria-invalid={Boolean(errors.email)}
+                aria-describedby={`signup-email-help${errors.email ? " signup-email-error" : ""}`}
                 className={errors.email ? "auth-input auth-input--icon input-error" : "auth-input auth-input--icon"}
               />
             </div>
-            {errors.email && <p className="field-error">{errors.email}</p>}
+            <p id="signup-email-help" className="field-help">{t("shared.emailFormatHelp")}</p>
+            {errors.email && <p id="signup-email-error" className="field-error">{errors.email}</p>}
           </div>
 
           {/* Password */}
           <div className="auth-field">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">{t("shared.password")}</label>
             <div className="input-icon-wrapper">
               <LockIcon />
               <input
@@ -290,27 +354,32 @@ function SignUpPage() {
                 type={showPassword ? "text" : "password"}
                 name="password"
                 autoComplete="new-password"
-                placeholder="Create a secure password"
+                placeholder={t("signup.passwordPlaceholder")}
                 value={formData.password}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                required
+                aria-invalid={Boolean(errors.password)}
+                aria-describedby={`password-requirements${errors.password ? " password-error" : ""}`}
                 className={errors.password ? "auth-input auth-input--icon password-input input-error" : "auth-input auth-input--icon password-input"}
               />
               <button
                 type="button"
                 className="password-toggle"
                 onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-label={showPassword ? t("shared.hidePassword") : t("shared.showPassword")}
+                aria-controls="password"
+                aria-pressed={showPassword}
               >
                 <EyeIcon hidden={showPassword} />
               </button>
             </div>
-            {errors.password && <p className="field-error">{errors.password}</p>}
+            {errors.password && <p id="password-error" className="field-error">{errors.password}</p>}
 
             {/* Password strength bar */}
             {formData.password.length > 0 && (
-              <div className="strength-row">
-                <div className="strength-track">
+              <div className="strength-row" role="status" aria-live="polite" aria-atomic="true">
+                <div className="strength-track" aria-hidden="true">
                   <div
                     className="strength-fill"
                     style={{
@@ -319,42 +388,117 @@ function SignUpPage() {
                     }}
                   />
                 </div>
-                <span className="strength-label" style={{ color: passwordStrength.color }}>
-                  {passwordStrength.label}
+                <span className="strength-label">
+                  {t("signup.strength", {
+                    strength: passwordStrength.labelKey
+                      ? t(`signup.strengthLevels.${passwordStrength.labelKey}`)
+                      : "",
+                  })}
                 </span>
               </div>
             )}
 
             {/* Password rules compact */}
-            <div className="password-hints-compact">
+            <div id="password-requirements" className="password-hints-compact" aria-label={t("signup.passwordRequirements")}>
               {[
-                { key: "length", label: "8+ chars" },
-                { key: "lowercase", label: "a–z" },
-                { key: "uppercase", label: "A–Z" },
-                { key: "symbol", label: "#@!" },
-              ].map(({ key, label }) => (
+                { key: "length", visualLabel: "8+" },
+                { key: "lowercase", visualLabel: "a–z" },
+                { key: "uppercase", visualLabel: "A–Z" },
+                { key: "symbol", visualLabel: "#@!" },
+              ].map(({ key, visualLabel }) => (
                 <span
                   key={key}
                   className={passwordChecks[key] ? "hint-pill hint-pill--valid" : "hint-pill"}
+                  aria-label={t(passwordChecks[key] ? "signup.requirementMet" : "signup.requirementNotMet", {
+                    requirement: t(`signup.requirements.${key}`),
+                  })}
                 >
-                  {passwordChecks[key] ? "✓" : "○"} {label}
+                  {passwordChecks[key] ? "✓" : "○"} {visualLabel}
                 </span>
               ))}
             </div>
           </div>
 
-          {serverError && <p className="auth-error" role="alert">{serverError}</p>}
-          {success && <p className="auth-success" role="status">{success}</p>}
+          {formData.accountType === "candidate" && (
+            <div className="auth-field candidate-card-field">
+              <label htmlFor="disabilityCard">
+                {t("signup.disabilityCard")} <span aria-hidden="true">*</span>
+              </label>
+              <p id="disability-card-help" className="field-help">
+                {t("signup.disabilityCardHelp")}
+              </p>
+              <input
+                id="disabilityCard"
+                name="disabilityCard"
+                type="file"
+                accept="application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png"
+                required
+                onChange={handleCardChange}
+                onBlur={() => setTouched((current) => ({ ...current, disabilityCard: true }))}
+                aria-describedby={`disability-card-help${errors.disabilityCard ? " disability-card-error" : ""}`}
+                aria-invalid={Boolean(errors.disabilityCard)}
+                className={errors.disabilityCard ? "auth-file-input input-error" : "auth-file-input"}
+              />
+              {disabilityCard && !errors.disabilityCard && (
+                <p className="selected-file" role="status">{t("signup.selectedFile", { name: disabilityCard.name })}</p>
+              )}
+              {errors.disabilityCard && <p id="disability-card-error" className="field-error">{errors.disabilityCard}</p>}
+            </div>
+          )}
 
-          <button type="submit" className="primary-btn primary-btn--full" disabled={loading}>
+          <div className="auth-field privacy-consent-group">
+            <label className="privacy-consent-option" htmlFor="privacyAccepted">
+              <input
+                id="privacyAccepted"
+                type="checkbox"
+                checked={privacyAccepted}
+                onChange={(event) => { setPrivacyAccepted(event.target.checked); setServerError(""); }}
+                onBlur={() => setTouched((current) => ({ ...current, privacy: true }))}
+                required
+                aria-invalid={touched.privacy && !privacyAccepted}
+                aria-describedby={touched.privacy && !privacyAccepted ? "privacy-accepted-error" : undefined}
+              />
+              <span><Trans
+                t={t}
+                i18nKey="signup.privacyConsent"
+                values={{ version: PRIVACY_VERSION }}
+                components={{ privacyLink: <Link to="/privacy" target="_blank" rel="noreferrer" /> }}
+              /></span>
+            </label>
+            {touched.privacy && !privacyAccepted && <p id="privacy-accepted-error" className="field-error">{t("signup.privacyRequired")}</p>}
+
+            {formData.accountType === "candidate" && (
+              <>
+                <label className="privacy-consent-option" htmlFor="disabilityVerificationConsent">
+                  <input
+                    id="disabilityVerificationConsent"
+                    type="checkbox"
+                    checked={disabilityVerificationConsent}
+                    onChange={(event) => { setDisabilityVerificationConsent(event.target.checked); setServerError(""); }}
+                    onBlur={() => setTouched((current) => ({ ...current, verificationConsent: true }))}
+                    required
+                    aria-invalid={touched.verificationConsent && !disabilityVerificationConsent}
+                    aria-describedby={touched.verificationConsent && !disabilityVerificationConsent ? "verification-consent-error" : undefined}
+                  />
+                  <span>{t("signup.verificationConsent")}</span>
+                </label>
+                {touched.verificationConsent && !disabilityVerificationConsent && <p id="verification-consent-error" className="field-error">{t("signup.verificationRequired")}</p>}
+              </>
+            )}
+          </div>
+
+          {serverError && <p className="auth-error" role="alert">{serverError}</p>}
+          {success && <p ref={successRef} className="auth-success" role="status" tabIndex={-1}>{success} {t("shared.signInReady")}</p>}
+
+          <button type="submit" className="primary-btn primary-btn--full" disabled={loading || Boolean(success)}>
             {loading ? (
               <span className="btn-spinner-wrap">
                 <span className="btn-spinner"></span>
-                <span>Creating account</span>
+                <span>{t("signup.creating")}</span>
               </span>
             ) : (
               <>
-                <span>Create Account</span>
+                <span>{t("signup.submit")}</span>
                 <span className="btn-arrow">→</span>
               </>
             )}
@@ -362,7 +506,7 @@ function SignUpPage() {
         </form>
 
         <Link to="/signin" className="ghost-btn">
-          Already have an account? <span>Sign in</span>
+          {t("signup.existingPrompt")} <span>{t("shared.signIn")}</span>
         </Link>
 
       </div>

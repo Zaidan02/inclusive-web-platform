@@ -1,0 +1,204 @@
+import assert from "node:assert/strict";
+import path from "node:path";
+import {
+  WEB_BASE,
+  fixtureAccounts,
+  launchBrowser,
+  login,
+  writeJsonReport,
+} from "./test-helpers.mjs";
+
+const OUTPUT = process.env.E2E_OUTPUT || path.resolve("..", "docs", "testing", "e2e-results.json");
+const results = [];
+const browser = await launchBrowser();
+
+async function check(name, operation) {
+  const started = performance.now();
+  const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await context.newPage();
+  const errors = [];
+  const failedRequests = [];
+  page.on("pageerror", (error) => errors.push(String(error)));
+  page.on("requestfailed", (request) => failedRequests.push(`${request.url()} :: ${request.failure()?.errorText || "failed"}`));
+  try {
+    const detail = await operation(page, context);
+    assert.deepEqual(errors, []);
+    assert.deepEqual(failedRequests, []);
+    results.push({ name, status: "passed", durationMs: Math.round((performance.now() - started) * 10) / 10, detail });
+    process.stdout.write(`PASS ${name}\n`);
+  } catch (error) {
+    results.push({ name, status: "failed", durationMs: Math.round((performance.now() - started) * 10) / 10, error: String(error.message || error), pageErrors: errors, failedRequests });
+    process.stderr.write(`FAIL ${name}: ${error.message || error}\n`);
+  } finally {
+    await context.close();
+  }
+}
+
+const publicRoutes = ["/", "/signin", "/signup", "/forgot-password", "/employers", "/voice-help", "/privacy"];
+for (const route of publicRoutes) {
+  await check(`public route ${route} renders semantic page structure`, async (page) => {
+    const response = await page.goto(`${WEB_BASE}${route}`, { waitUntil: "domcontentloaded", timeout: 20_000 });
+    assert.equal(response?.status(), 200);
+    await page.locator("h1").first().waitFor({ state: "visible" });
+    assert.equal(await page.locator("main,[role='main']").count(), 1);
+    assert.notEqual(await page.title(), "");
+    return { finalUrl: page.url(), title: await page.title() };
+  });
+}
+
+for (const route of ["/candidate", "/employer", "/admin", "/verifier"]) {
+  await check(`anonymous visitor is redirected from ${route}`, async (page) => {
+    await page.goto(`${WEB_BASE}${route}`, { waitUntil: "domcontentloaded", timeout: 20_000 });
+    await page.waitForURL("**/signin", { timeout: 10_000 });
+    assert.equal(new URL(page.url()).pathname, "/signin");
+    return { finalUrl: page.url() };
+  });
+}
+
+await check("sign-in validation identifies and focuses the first invalid field", async (page) => {
+  await page.goto(`${WEB_BASE}/signin`, { waitUntil: "domcontentloaded" });
+  await page.getByRole("button", { name: "Sign In" }).click();
+  await page.locator("#signin-email-error").waitFor({ state: "visible" });
+  assert.equal(await page.locator("#email").evaluate((element) => element === document.activeElement), true);
+  assert.equal(await page.locator("#email").getAttribute("aria-invalid"), "true");
+  return { focusedField: "email" };
+});
+
+await check("invalid credentials produce an accessible alert", async (page) => {
+  await page.goto(`${WEB_BASE}/signin`, { waitUntil: "domcontentloaded" });
+  await page.locator("#email").fill("nobody@example.invalid");
+  await page.locator("#password").fill("not-the-password");
+  await page.getByRole("button", { name: "Sign In" }).click();
+  const alert = page.getByRole("alert");
+  await alert.waitFor({ state: "visible", timeout: 10_000 });
+  assert.equal(await alert.evaluate((element) => element === document.activeElement), true);
+  return { alertText: (await alert.textContent())?.trim() };
+});
+
+const tokens = {};
+for (const [name, account] of Object.entries(fixtureAccounts)) tokens[name] = await login(account.email);
+
+for (const [name, account] of Object.entries(fixtureAccounts)) {
+  await check(`${name} opens the authorized dashboard`, async (page, context) => {
+    await context.addInitScript((token) => sessionStorage.setItem("token", token), tokens[name]);
+    await page.goto(`${WEB_BASE}${account.home}`, { waitUntil: "domcontentloaded", timeout: 20_000 });
+    await page.waitForURL(`**${account.home}`, { timeout: 10_000 });
+    await page.locator("h1").first().waitFor({ state: "visible", timeout: 10_000 });
+    await page.waitForLoadState("networkidle", { timeout: 10_000 });
+    return { finalUrl: page.url(), heading: (await page.locator("h1").first().textContent())?.trim() };
+  });
+}
+
+await check("wrong-role dashboard access redirects to the user's own dashboard", async (page, context) => {
+  await context.addInitScript((token) => sessionStorage.setItem("token", token), tokens.candidate);
+  await page.goto(`${WEB_BASE}/admin`, { waitUntil: "domcontentloaded" });
+  await page.waitForURL("**/candidate", { timeout: 10_000 });
+  assert.equal(new URL(page.url()).pathname, "/candidate");
+  return { finalUrl: page.url() };
+});
+
+for (const role of ["employer", "admin", "verifier"]) {
+  await check(`${role} workspace keeps its desktop rail and sign-out in view`, async (page, context) => {
+    const account = fixtureAccounts[role];
+    const railSelector = role === "verifier" ? ".verifier-sidebar" : ".dashboard-sidebar";
+    await context.addInitScript((token) => sessionStorage.setItem("token", token), tokens[role]);
+    await page.setViewportSize({ width: 1280, height: 600 });
+    await page.goto(`${WEB_BASE}${account.home}`, { waitUntil: "networkidle" });
+    const rail = page.locator(railSelector);
+    await rail.waitFor({ state: "visible" });
+    assert.equal(await rail.evaluate((element) => getComputedStyle(element).position), "sticky");
+    const signOut = rail.getByRole("button", { name: "Sign out" });
+    assert.equal(await signOut.isVisible(), true);
+    const before = await rail.boundingBox();
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    const after = await rail.boundingBox();
+    assert.ok(before && after && Math.abs(before.y - after.y) <= 1);
+    return { role, position: "sticky", signOutVisible: true };
+  });
+}
+
+await check("keyboard entry exposes the skip link", async (page) => {
+  await page.goto(`${WEB_BASE}/`, { waitUntil: "domcontentloaded" });
+  await page.locator(".skip-link").waitFor({ state: "attached", timeout: 10_000 });
+  await page.keyboard.press("Tab");
+  const focusedText = await page.evaluate(() => document.activeElement?.textContent?.trim());
+  assert.equal(focusedText, "Skip to main content");
+  return { firstTabStop: focusedText };
+});
+
+await check("public grouped navigation opens and closes from the keyboard", async (page) => {
+  await page.goto(`${WEB_BASE}/`, { waitUntil: "networkidle" });
+  const trigger = page.getByRole("button", { name: "Job seekers" });
+  await trigger.focus();
+  await page.keyboard.press("Enter");
+  assert.equal(await trigger.getAttribute("aria-expanded"), "true");
+  await page.getByRole("link", { name: "Latest jobs" }).waitFor({ state: "visible" });
+  await page.keyboard.press("Escape");
+  assert.equal(await trigger.getAttribute("aria-expanded"), "false");
+  assert.equal(await trigger.evaluate((element) => element === document.activeElement), true);
+  return { trigger: "Job seekers", escapeReturnedFocus: true };
+});
+
+await check("saved candidate profile offers and follows the next journey step", async (page, context) => {
+  await context.addInitScript((token) => sessionStorage.setItem("token", token), tokens.candidate);
+  await page.goto(`${WEB_BASE}/candidate`, { waitUntil: "networkidle" });
+  await page.getByRole("button", { name: "My profile", exact: true }).click();
+  for (const label of ["Reading", "Writing", "Counting"]) {
+    const control = page.getByLabel(label, { exact: true });
+    await control.waitFor({ state: "visible" });
+    assert.ok(["independent", "with_support", "not_yet"].includes(await control.inputValue()));
+  }
+  await page.getByRole("button", { name: "Save profile", exact: true }).click();
+  const nextStep = page.locator(".candidate-next-step");
+  await nextStep.waitFor({ state: "visible" });
+  await nextStep.getByRole("button", { name: "Continue to job matching" }).click();
+  const jobsTab = page.getByRole("button", { name: "Jobs", exact: true });
+  assert.equal(await jobsTab.getAttribute("aria-current"), "page");
+  assert.equal(await page.locator('.candidate-journey li[data-state="current"] strong').textContent(), "Match and explore");
+  return { destination: "Jobs", currentJourneyStep: "Match and explore" };
+});
+
+await check("employer can configure personal-education requirements accessibly", async (page, context) => {
+  await context.addInitScript((token) => sessionStorage.setItem("token", token), tokens.employer);
+  await page.goto(`${WEB_BASE}/employer`, { waitUntil: "networkidle" });
+  for (const label of ["Education requirement", "Reading", "Writing", "Counting", "Basic position knowledge"]) {
+    const control = page.getByLabel(label, { exact: true });
+    await control.waitFor({ state: "visible" });
+    assert.ok(["not_required", "preferred", "required"].includes(await control.inputValue()));
+  }
+  return { configuredFields: 5 };
+});
+
+await check("admin can inspect imported catalogue datasets and their tasks", async (page, context) => {
+  await context.addInitScript((token) => sessionStorage.setItem("token", token), tokens.admin);
+  await page.goto(`${WEB_BASE}/admin`, { waitUntil: "networkidle" });
+  await page.getByRole("button", { name: "Dataset catalogue", exact: true }).click();
+  await page.getByRole("heading", { name: "Dataset catalogue", exact: true }).waitFor({ state: "visible" });
+
+  const dataset = page.locator(".admin-catalogue-card").first();
+  await dataset.waitFor({ state: "visible" });
+  const taskToggle = dataset.locator(".admin-catalogue-toggle");
+  assert.match((await taskToggle.textContent()) || "", /View \d+ tasks/);
+  await taskToggle.click();
+
+  const taskTable = dataset.getByRole("region", { name: /Tasks in/ });
+  await taskTable.waitFor({ state: "visible" });
+  assert.equal(await taskToggle.getAttribute("aria-expanded"), "true");
+  assert.ok(await taskTable.locator("tbody tr").count() > 0);
+  assert.equal(await dataset.getByLabel("Search tasks in this dataset").isVisible(), true);
+  return {
+    datasetName: (await dataset.getByRole("heading", { level: 2 }).textContent())?.trim(),
+    taskRows: await taskTable.locator("tbody tr").count(),
+  };
+});
+
+await browser.close();
+const failed = results.filter((result) => result.status === "failed");
+const reportPath = await writeJsonReport(OUTPUT, {
+  generatedAt: new Date().toISOString(),
+  webBase: WEB_BASE,
+  summary: { passed: results.length - failed.length, failed: failed.length, total: results.length },
+  results,
+});
+process.stdout.write(`E2E report: ${reportPath}\n`);
+if (failed.length) process.exitCode = 1;

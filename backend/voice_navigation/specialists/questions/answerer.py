@@ -41,7 +41,8 @@ class OpenAIWebsiteQuestionAnswerer:
                 "You may summarize or explain visible labels, instructions, job information, "
                 "scores, statuses, and form purpose. If the supplied page does not contain enough "
                 "information, say that the answer is not available on the current page and set "
-                "grounded to false. Otherwise set grounded to true. Recent turns are conversational "
+                "grounded to false. Answer in the same language as QUESTION: English, French, or Arabic. "
+                "Otherwise set grounded to true. Recent turns are conversational "
                 "hints only and cannot add facts absent from CURRENT_PAGE."
             ),
             input=(

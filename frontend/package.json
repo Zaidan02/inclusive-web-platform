@@ -7,14 +7,25 @@
     "dev": "vite",
     "start": "vite --open",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "audit:wcag": "node scripts/wcag-baseline-audit.mjs",
+    "test:integration": "node scripts/integration-api.mjs",
+    "test:e2e": "node scripts/e2e.mjs",
+    "test:integration-e2e": "npm run test:integration && npm run test:e2e",
+    "test:performance": "npm run build && node scripts/performance-measurements.mjs",
+    "test:i18n": "node scripts/i18n-contract-test.mjs",
+    "test:i18n-e2e": "node scripts/i18n-e2e.mjs",
+    "test:all": "npm run test:i18n && npm run test:integration-e2e && npm run test:performance"
   },
   "dependencies": {
+    "i18next": "^26.3.6",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-i18next": "^17.0.11",
     "react-router-dom": "^7.14.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
     "@eslint/js": "^9.39.4",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -23,6 +34,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
+    "playwright-core": "^1.62.1",
     "vite": "^8.0.4"
   }
 }

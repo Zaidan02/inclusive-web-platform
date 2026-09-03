@@ -1,0 +1,20 @@
+.candidate-privacy { max-width: 1050px; margin: 0 auto; padding: 26px; background: #fff; border: 1px solid #e2e8f0; border-radius: 18px; color: #1e293b; }
+.candidate-privacy h2, .candidate-privacy h3 { color: #0f172a; }
+.candidate-privacy__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin: 22px 0; }
+.candidate-privacy article { padding: 18px; border: 1px solid #dbe4f0; border-radius: 12px; background: #f8fafc; }
+.candidate-privacy button { min-height: 44px; padding: 10px 14px; border: 0; border-radius: 9px; color: #fff; background: #075bc7; font-weight: 650; cursor: pointer; }
+.candidate-privacy button:disabled { opacity: .65; cursor: wait; }
+.candidate-privacy__error { padding: 12px; border-radius: 8px; color: #991b1b; background: #fee2e2; }
+.candidate-privacy__success { padding: 12px; border-radius: 8px; color: #166534; background: #dcfce7; }
+.candidate-privacy__delete { margin-top: 24px; padding: 20px; border: 2px solid #fecaca; border-radius: 12px; background: #fff7f7; }
+.candidate-privacy__delete label { display: grid; gap: 6px; max-width: 430px; margin: 12px 0; font-weight: 600; }
+.candidate-privacy__delete input { min-height: 44px; padding: 8px 10px; border: 1px solid #64748b; border-radius: 8px; }
+.candidate-privacy__delete button { background: #b91c1c; }
+.candidate-privacy :is(p, li, span, a) { overflow-wrap: anywhere; }
+.candidate-privacy__delete input[aria-invalid="true"] { border-color: #b91c1c; box-shadow: 0 0 0 1px #b91c1c; }
+@media (max-width: 620px) {
+  .candidate-privacy { padding: 18px; border-radius: 14px; }
+  .candidate-privacy__grid { grid-template-columns: minmax(0, 1fr); }
+  .candidate-privacy button { width: 100%; }
+  .candidate-privacy__delete { padding: 16px; }
+}

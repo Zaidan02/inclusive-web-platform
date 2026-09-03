@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import logoImage from "../assets/john-logo.png";
 import { loginUser } from "../services/authApi";
 import { getRoleFromToken } from "../services/authService";
 import { saveToken } from "../services/tokenService";
+import { isValidEmail } from "../utils/authValidation";
+import AuthUtilityBar from "../components/layout/AuthUtilityBar";
 import "../styles/authPages.css";
 
 function EyeIcon({ hidden }) {
@@ -44,6 +47,7 @@ function LockIcon() {
 
 function SignInPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation("auth");
 
   const [formData, setFormData] = useState({
     email: "",
@@ -53,7 +57,9 @@ function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({ email: "", password: "" });
   const formRef = useRef(null);
+  const errorRef = useRef(null);
 
   useEffect(() => {
     function handleVoiceAction(event) {
@@ -63,11 +69,13 @@ function SignInPage() {
         if (!["email", "password"].includes(action.target)) return;
         const value = action.type === "clear_field" ? "" : action.value;
         setFormData((current) => ({ ...current, [action.target]: value }));
+        setFieldErrors((current) => ({ ...current, [action.target]: "" }));
         setError("");
         event.detail.handled = true;
+        const fieldLabel = t(`shared.${action.target}`);
         event.detail.feedback = action.sensitive
-          ? `I updated the ${action.label} field without reading it aloud. Please check it.`
-          : `I set ${action.label} to ${value}. Please check it.`;
+          ? t("signIn.voice.sensitiveUpdated", { label: fieldLabel })
+          : t("signIn.voice.fieldUpdated", { label: fieldLabel, value });
         requestAnimationFrame(() => {
           const field = document.getElementById(action.target);
           field?.focus();
@@ -79,26 +87,37 @@ function SignInPage() {
         });
       } else if (action.type === "press" && action.target === "sign_in") {
         event.detail.handled = true;
-        event.detail.feedback = "Signing in with the values currently in the form.";
+        event.detail.feedback = t("signIn.voice.submitting");
         formRef.current?.requestSubmit();
       }
     }
     window.addEventListener("join:voice-action", handleVoiceAction);
     return () => window.removeEventListener("join:voice-action", handleVoiceAction);
-  }, []);
+  }, [t]);
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFieldErrors((current) => ({ ...current, [e.target.name]: "" }));
+    setError("");
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
 
-    if (!formData.email || !formData.password) {
-      setError("Please enter your email and password.");
+    const nextFieldErrors = {
+      email: !formData.email.trim()
+        ? t("shared.validation.emailRequired")
+        : !isValidEmail(formData.email)
+        ? t("shared.validation.emailInvalid")
+        : "",
+      password: !formData.password ? t("shared.validation.passwordRequired") : "",
+    };
+    setFieldErrors(nextFieldErrors);
+    const firstInvalidField = Object.keys(nextFieldErrors).find((field) => nextFieldErrors[field]);
+    if (firstInvalidField) {
       window.requestAnimationFrame(() => {
-        document.getElementById(!formData.email ? "email" : "password")?.focus();
+        document.getElementById(firstInvalidField)?.focus();
       });
       return;
     }
@@ -108,16 +127,20 @@ function SignInPage() {
       const data = await loginUser(formData);
       const token = data.token;
 
-      if (!token) throw new Error("No token returned from backend.");
+      if (!token) throw new Error("AUTH_NO_TOKEN");
 
       saveToken(token);
       const role = getRoleFromToken(token);
 
       if (role === "ROLE_ADMIN") navigate("/admin");
+      else if (role === "ROLE_VERIFIER") navigate("/verifier");
       else if (role === "ROLE_EMPLOYER") navigate("/employer");
       else navigate("/candidate");
     } catch (err) {
-      setError(err.message || "Invalid credentials or email not verified.");
+      setError(err.message === "AUTH_NO_TOKEN"
+        ? t("signIn.errors.noToken")
+        : t("signIn.errors.invalidCredentials"));
+      window.requestAnimationFrame(() => errorRef.current?.focus());
     } finally {
       setLoading(false);
     }
@@ -129,22 +152,23 @@ function SignInPage() {
 
         {/* LEFT */}
         <div className="auth-left">
+          <AuthUtilityBar />
 
           <div className="signin-header">
-            <span className="auth-badge">JoIn Hospitality</span>
+            <span className="auth-badge">{t("signIn.badge")}</span>
             <h1 className="signin-title">
-              Welcome <span>back.</span>
+              {t("signIn.titleStart")} <span>{t("signIn.titleEmphasis")}</span>
             </h1>
             <p className="auth-subtitle">
-              Access your account and continue your journey with JoIn Hospitality.
+              {t("signIn.subtitle")}
             </p>
           </div>
 
-          <form ref={formRef} onSubmit={handleSubmit} className="auth-form signin-form" noValidate>
+          <form ref={formRef} onSubmit={handleSubmit} className="auth-form signin-form" noValidate aria-busy={loading}>
 
             {/* Email */}
             <div className="auth-field">
-              <label htmlFor="email">Email</label>
+              <label htmlFor="email">{t("shared.email")}</label>
               <div className="input-icon-wrapper">
                 <EmailIcon />
                 <input
@@ -152,20 +176,26 @@ function SignInPage() {
                   type="email"
                   name="email"
                   autoComplete="email"
-                  placeholder="name@example.com"
+                  placeholder={t("shared.emailPlaceholder")}
                   value={formData.email}
                   onChange={handleChange}
-                  className="auth-input auth-input--icon"
+                  dir="ltr"
+                  required
+                  aria-invalid={Boolean(fieldErrors.email)}
+                  aria-describedby={`signin-email-help${fieldErrors.email ? " signin-email-error" : ""}`}
+                  className={fieldErrors.email ? "auth-input auth-input--icon input-error" : "auth-input auth-input--icon"}
                 />
               </div>
+              <p id="signin-email-help" className="field-help">{t("shared.emailFormatHelp")}</p>
+              {fieldErrors.email && <p id="signin-email-error" className="field-error">{fieldErrors.email}</p>}
             </div>
 
             {/* Password */}
             <div className="auth-field">
               <div className="signin-password-label-row">
-                <label htmlFor="password">Password</label>
+                <label htmlFor="password">{t("shared.password")}</label>
                 <Link to="/forgot-password" className="forgot-link">
-                  Forgot password?
+                  {t("signIn.forgotPassword")}
                 </Link>
               </div>
               <div className="input-icon-wrapper">
@@ -175,33 +205,39 @@ function SignInPage() {
                   type={showPassword ? "text" : "password"}
                   name="password"
                   autoComplete="current-password"
-                  placeholder="Enter your password"
+                  placeholder={t("signIn.passwordPlaceholder")}
                   value={formData.password}
                   onChange={handleChange}
-                  className="auth-input auth-input--icon password-input"
+                  required
+                  aria-invalid={Boolean(fieldErrors.password)}
+                  aria-describedby={fieldErrors.password ? "signin-password-error" : undefined}
+                  className={fieldErrors.password ? "auth-input auth-input--icon password-input input-error" : "auth-input auth-input--icon password-input"}
                 />
                 <button
                   type="button"
                   className="password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-label={showPassword ? t("shared.hidePassword") : t("shared.showPassword")}
+                  aria-controls="password"
+                  aria-pressed={showPassword}
                 >
                   <EyeIcon hidden={showPassword} />
                 </button>
               </div>
+              {fieldErrors.password && <p id="signin-password-error" className="field-error">{fieldErrors.password}</p>}
             </div>
 
-            {error && <p className="auth-error" role="alert">{error}</p>}
+            {error && <p ref={errorRef} className="auth-error" role="alert" tabIndex={-1}>{error}</p>}
 
             <button type="submit" className="primary-btn primary-btn--full" disabled={loading}>
               {loading ? (
                 <span className="btn-spinner-wrap">
                   <span className="btn-spinner"></span>
-                  <span>Signing in</span>
+                  <span>{t("signIn.submitting")}</span>
                 </span>
               ) : (
                 <>
-                  <span>Sign In</span>
+                  <span>{t("signIn.submit")}</span>
                   <span className="btn-arrow">→</span>
                 </>
               )}
@@ -209,7 +245,7 @@ function SignInPage() {
           </form>
 
           <Link to="/signup" className="ghost-btn">
-            Don't have an account? <span>Create one</span>
+            {t("signIn.createPrompt")} <span>{t("signIn.createLink")}</span>
           </Link>
 
         </div>
@@ -220,7 +256,7 @@ function SignInPage() {
             <div className="logo-orb logo-orb-1"></div>
             <div className="logo-orb logo-orb-2"></div>
             <div className="logo-glow"></div>
-            <img src={logoImage} alt="JoIn Hospitality logo" className="logo-image" />
+            <img src={logoImage} alt={t("shared.logoAlt")} className="logo-image" />
           </div>
         </div>
 

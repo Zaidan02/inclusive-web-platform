@@ -34,6 +34,7 @@ class OpenAINavigationInterpreter:
                 "only to resolve the latest pending clarification. Replies such as yes, no, first, second, "
                 "the login one, neither, or cancel refer only to that pending question. A bare yes without "
                 "a pending question is UNKNOWN. Return the language of the transcript as a short BCP 47 tag. "
+                "When you return a clarification question, write it in the transcript language. "
                 "Map 'stop talking', 'be quiet', 'silence', or plain 'stop' to STOP_SPEAKING. "
                 "Map 'pause listening', 'hold on', 'wait', or 'give me a moment' to PAUSE_LISTENING. "
                 "Map 'cancel that', 'never mind', or 'forget that' to CANCEL. "

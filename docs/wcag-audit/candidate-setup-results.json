@@ -1,0 +1,882 @@
+{
+  "generatedAt": "2026-08-03T12:01:43.909Z",
+  "standard": "WCAG 2.1 Level A and AA",
+  "browser": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+  "notes": [
+    "The zoom-200 scenario uses CSS zoom in headless Chromium and requires manual browser-zoom confirmation.",
+    "Automated findings are evidence, not a complete conformance determination.",
+    "Keyboard automation records tab stops; focus visibility and interaction quality require manual review."
+  ],
+  "routes": [
+    {
+      "path": "/candidate/setup",
+      "name": "Candidate setup",
+      "area": "candidate",
+      "role": "candidate"
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "width-320",
+      "width": 320,
+      "height": 800
+    },
+    {
+      "name": "width-375",
+      "width": 375,
+      "height": 812
+    },
+    {
+      "name": "width-1440",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "name": "zoom-200",
+      "width": 640,
+      "height": 900,
+      "zoom": 2
+    },
+    {
+      "name": "text-spacing-375",
+      "width": 375,
+      "height": 812,
+      "textSpacing": true
+    }
+  ],
+  "results": [
+    {
+      "route": {
+        "path": "/candidate/setup",
+        "name": "Candidate setup",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "width-320",
+        "width": 320,
+        "height": 800
+      },
+      "url": "http://127.0.0.1:5173/candidate/setup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate profile setup | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 320,
+        "scrollWidth": 458,
+        "horizontalOverflow": true,
+        "overflowElements": [
+          {
+            "selector": "div.profile-setup__intro",
+            "left": 14,
+            "right": 458,
+            "width": 444,
+            "text": "Step 1 of 1Let’s build your ability-led profile.Select the options that apply to you. This helps JoIn make opportunities",
+            "html": "<div class=\"profile-setup__intro\"><span class=\"profile-setup__step\">Step 1 of 1</span><h1>Let’s build your ability-led profile.</h1><p>Select the options that apply to you. This helps JoIn make opportunities and tasks easier to evaluate for your needs.</p><div class=\"profile-setup__privacy\"><strong>Your profile, your choice</strong><span>You can review and update these selections later from My Profile.</span></div></div>"
+          },
+          {
+            "selector": "h1",
+            "left": 14,
+            "right": 458,
+            "width": 444,
+            "text": "Let’s build your ability-led profile.",
+            "html": "<h1>Let’s build your ability-led profile.</h1>"
+          },
+          {
+            "selector": "p",
+            "left": 14,
+            "right": 458,
+            "width": 444,
+            "text": "Select the options that apply to you. This helps JoIn make opportunities and tasks easier to evaluate for your needs.",
+            "html": "<p>Select the options that apply to you. This helps JoIn make opportunities and tasks easier to evaluate for your needs.</p>"
+          },
+          {
+            "selector": "div.profile-setup__privacy",
+            "left": 14,
+            "right": 458,
+            "width": 444,
+            "text": "Your profile, your choiceYou can review and update these selections later from My Profile.",
+            "html": "<div class=\"profile-setup__privacy\"><strong>Your profile, your choice</strong><span>You can review and update these selections later from My Profile.</span></div>"
+          },
+          {
+            "selector": "strong",
+            "left": 35,
+            "right": 440,
+            "width": 405,
+            "text": "Your profile, your choice",
+            "html": "<strong>Your profile, your choice</strong>"
+          },
+          {
+            "selector": "span",
+            "left": 35,
+            "right": 440,
+            "width": 405,
+            "text": "You can review and update these selections later from My Profile.",
+            "html": "<span>You can review and update these selections later from My Profile.</span>"
+          },
+          {
+            "selector": "div.profile-setup__card",
+            "left": 14,
+            "right": 458,
+            "width": 444,
+            "text": "Optional AI assistanceDescribe yourself in your own wordsSpeak or type in English, French, or Arabic. You edit the trans",
+            "html": "<div class=\"profile-setup__card\"><section class=\"ai-profile-builder\" aria-labelledby=\"ai-profile-title\"><div class=\"ai-profile-builder__heading\"><div><span class=\"ai-profile-builder__eyebrow\">Optional AI assistance</span><h2 id=\"ai-profile-title\">Describe yourself in your own words</h2><p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p></div><span class=\"ai-profile-builder__badge\">Human reviewed</span></div><div class=\"ai-p"
+          },
+          {
+            "selector": "section.ai-profile-builder",
+            "left": 35,
+            "right": 437,
+            "width": 402,
+            "text": "Optional AI assistanceDescribe yourself in your own wordsSpeak or type in English, French, or Arabic. You edit the trans",
+            "html": "<section class=\"ai-profile-builder\" aria-labelledby=\"ai-profile-title\"><div class=\"ai-profile-builder__heading\"><div><span class=\"ai-profile-builder__eyebrow\">Optional AI assistance</span><h2 id=\"ai-profile-title\">Describe yourself in your own words</h2><p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p></div><span class=\"ai-profile-builder__badge\">Human reviewed</span></div><div class=\"ai-profile-builder__controls\"><label>"
+          },
+          {
+            "selector": "div.ai-profile-builder__heading",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Optional AI assistanceDescribe yourself in your own wordsSpeak or type in English, French, or Arabic. You edit the trans",
+            "html": "<div class=\"ai-profile-builder__heading\"><div><span class=\"ai-profile-builder__eyebrow\">Optional AI assistance</span><h2 id=\"ai-profile-title\">Describe yourself in your own words</h2><p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p></div><span class=\"ai-profile-builder__badge\">Human reviewed</span></div>"
+          },
+          {
+            "selector": "div",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Optional AI assistanceDescribe yourself in your own wordsSpeak or type in English, French, or Arabic. You edit the trans",
+            "html": "<div><span class=\"ai-profile-builder__eyebrow\">Optional AI assistance</span><h2 id=\"ai-profile-title\">Describe yourself in your own words</h2><p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p></div>"
+          },
+          {
+            "selector": "h2#ai-profile-title",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Describe yourself in your own words",
+            "html": "<h2 id=\"ai-profile-title\">Describe yourself in your own words</h2>"
+          },
+          {
+            "selector": "p",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.",
+            "html": "<p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p>"
+          },
+          {
+            "selector": "div.ai-profile-builder__controls",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Spoken and written languageEnglishFrançaisالعربيةUse microphoneAudio is transcribed, then discarded by this application.",
+            "html": "<div class=\"ai-profile-builder__controls\"><label><span>Spoken and written language</span><select><option value=\"en\">English</option><option value=\"fr\">Français</option><option value=\"ar\">العربية</option></select></label><div class=\"ai-profile-builder__recording\" aria-label=\"Audio recording controls\"><button type=\"button\">Use microphone</button><span>Audio is transcribed, then discarded by this application.</span></div></div>"
+          },
+          {
+            "selector": "label",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Spoken and written languageEnglishFrançaisالعربية",
+            "html": "<label><span>Spoken and written language</span><select><option value=\"en\">English</option><option value=\"fr\">Français</option><option value=\"ar\">العربية</option></select></label>"
+          },
+          {
+            "selector": "span",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Spoken and written language",
+            "html": "<span>Spoken and written language</span>"
+          },
+          {
+            "selector": "select",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "EnglishFrançaisالعربية",
+            "html": "<select><option value=\"en\">English</option><option value=\"fr\">Français</option><option value=\"ar\">العربية</option></select>"
+          },
+          {
+            "selector": "div.ai-profile-builder__recording",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Audio recording controls",
+            "html": "<div class=\"ai-profile-builder__recording\" aria-label=\"Audio recording controls\"><button type=\"button\">Use microphone</button><span>Audio is transcribed, then discarded by this application.</span></div>"
+          },
+          {
+            "selector": "span",
+            "left": 54,
+            "right": 344,
+            "width": 290,
+            "text": "Audio is transcribed, then discarded by this application.",
+            "html": "<span>Audio is transcribed, then discarded by this application.</span>"
+          },
+          {
+            "selector": "label.ai-profile-builder__narrative",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Your editable description or transcript0 / 4000 characters",
+            "html": "<label class=\"ai-profile-builder__narrative\"><span>Your editable description or transcript</span><textarea rows=\"7\" maxlength=\"4000\" dir=\"ltr\" placeholder=\"For example: where you live, your education, the tasks you can do, your experience, and your work goals.\"></textarea><small>0 / 4000 characters</small></label>"
+          },
+          {
+            "selector": "span",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Your editable description or transcript",
+            "html": "<span>Your editable description or transcript</span>"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 35
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\candidate-setup-width-320.png",
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/candidate/setup",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate/setup",
+        "name": "Candidate setup",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "width-375",
+        "width": 375,
+        "height": 812
+      },
+      "url": "http://127.0.0.1:5173/candidate/setup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate profile setup | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 458,
+        "horizontalOverflow": true,
+        "overflowElements": [
+          {
+            "selector": "div.profile-setup__intro",
+            "left": 14,
+            "right": 458,
+            "width": 444,
+            "text": "Step 1 of 1Let’s build your ability-led profile.Select the options that apply to you. This helps JoIn make opportunities",
+            "html": "<div class=\"profile-setup__intro\"><span class=\"profile-setup__step\">Step 1 of 1</span><h1>Let’s build your ability-led profile.</h1><p>Select the options that apply to you. This helps JoIn make opportunities and tasks easier to evaluate for your needs.</p><div class=\"profile-setup__privacy\"><strong>Your profile, your choice</strong><span>You can review and update these selections later from My Profile.</span></div></div>"
+          },
+          {
+            "selector": "h1",
+            "left": 14,
+            "right": 458,
+            "width": 444,
+            "text": "Let’s build your ability-led profile.",
+            "html": "<h1>Let’s build your ability-led profile.</h1>"
+          },
+          {
+            "selector": "p",
+            "left": 14,
+            "right": 458,
+            "width": 444,
+            "text": "Select the options that apply to you. This helps JoIn make opportunities and tasks easier to evaluate for your needs.",
+            "html": "<p>Select the options that apply to you. This helps JoIn make opportunities and tasks easier to evaluate for your needs.</p>"
+          },
+          {
+            "selector": "div.profile-setup__privacy",
+            "left": 14,
+            "right": 458,
+            "width": 444,
+            "text": "Your profile, your choiceYou can review and update these selections later from My Profile.",
+            "html": "<div class=\"profile-setup__privacy\"><strong>Your profile, your choice</strong><span>You can review and update these selections later from My Profile.</span></div>"
+          },
+          {
+            "selector": "strong",
+            "left": 35,
+            "right": 440,
+            "width": 405,
+            "text": "Your profile, your choice",
+            "html": "<strong>Your profile, your choice</strong>"
+          },
+          {
+            "selector": "span",
+            "left": 35,
+            "right": 440,
+            "width": 405,
+            "text": "You can review and update these selections later from My Profile.",
+            "html": "<span>You can review and update these selections later from My Profile.</span>"
+          },
+          {
+            "selector": "div.profile-setup__card",
+            "left": 14,
+            "right": 458,
+            "width": 444,
+            "text": "Optional AI assistanceDescribe yourself in your own wordsSpeak or type in English, French, or Arabic. You edit the trans",
+            "html": "<div class=\"profile-setup__card\"><section class=\"ai-profile-builder\" aria-labelledby=\"ai-profile-title\"><div class=\"ai-profile-builder__heading\"><div><span class=\"ai-profile-builder__eyebrow\">Optional AI assistance</span><h2 id=\"ai-profile-title\">Describe yourself in your own words</h2><p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p></div><span class=\"ai-profile-builder__badge\">Human reviewed</span></div><div class=\"ai-p"
+          },
+          {
+            "selector": "section.ai-profile-builder",
+            "left": 35,
+            "right": 437,
+            "width": 402,
+            "text": "Optional AI assistanceDescribe yourself in your own wordsSpeak or type in English, French, or Arabic. You edit the trans",
+            "html": "<section class=\"ai-profile-builder\" aria-labelledby=\"ai-profile-title\"><div class=\"ai-profile-builder__heading\"><div><span class=\"ai-profile-builder__eyebrow\">Optional AI assistance</span><h2 id=\"ai-profile-title\">Describe yourself in your own words</h2><p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p></div><span class=\"ai-profile-builder__badge\">Human reviewed</span></div><div class=\"ai-profile-builder__controls\"><label>"
+          },
+          {
+            "selector": "div.ai-profile-builder__heading",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Optional AI assistanceDescribe yourself in your own wordsSpeak or type in English, French, or Arabic. You edit the trans",
+            "html": "<div class=\"ai-profile-builder__heading\"><div><span class=\"ai-profile-builder__eyebrow\">Optional AI assistance</span><h2 id=\"ai-profile-title\">Describe yourself in your own words</h2><p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p></div><span class=\"ai-profile-builder__badge\">Human reviewed</span></div>"
+          },
+          {
+            "selector": "div",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Optional AI assistanceDescribe yourself in your own wordsSpeak or type in English, French, or Arabic. You edit the trans",
+            "html": "<div><span class=\"ai-profile-builder__eyebrow\">Optional AI assistance</span><h2 id=\"ai-profile-title\">Describe yourself in your own words</h2><p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p></div>"
+          },
+          {
+            "selector": "h2#ai-profile-title",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Describe yourself in your own words",
+            "html": "<h2 id=\"ai-profile-title\">Describe yourself in your own words</h2>"
+          },
+          {
+            "selector": "p",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.",
+            "html": "<p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p>"
+          },
+          {
+            "selector": "div.ai-profile-builder__controls",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Spoken and written languageEnglishFrançaisالعربيةUse microphoneAudio is transcribed, then discarded by this application.",
+            "html": "<div class=\"ai-profile-builder__controls\"><label><span>Spoken and written language</span><select><option value=\"en\">English</option><option value=\"fr\">Français</option><option value=\"ar\">العربية</option></select></label><div class=\"ai-profile-builder__recording\" aria-label=\"Audio recording controls\"><button type=\"button\">Use microphone</button><span>Audio is transcribed, then discarded by this application.</span></div></div>"
+          },
+          {
+            "selector": "label",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Spoken and written languageEnglishFrançaisالعربية",
+            "html": "<label><span>Spoken and written language</span><select><option value=\"en\">English</option><option value=\"fr\">Français</option><option value=\"ar\">العربية</option></select></label>"
+          },
+          {
+            "selector": "span",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Spoken and written language",
+            "html": "<span>Spoken and written language</span>"
+          },
+          {
+            "selector": "select",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "EnglishFrançaisالعربية",
+            "html": "<select><option value=\"en\">English</option><option value=\"fr\">Français</option><option value=\"ar\">العربية</option></select>"
+          },
+          {
+            "selector": "div.ai-profile-builder__recording",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Audio recording controls",
+            "html": "<div class=\"ai-profile-builder__recording\" aria-label=\"Audio recording controls\"><button type=\"button\">Use microphone</button><span>Audio is transcribed, then discarded by this application.</span></div>"
+          },
+          {
+            "selector": "label.ai-profile-builder__narrative",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Your editable description or transcript0 / 4000 characters",
+            "html": "<label class=\"ai-profile-builder__narrative\"><span>Your editable description or transcript</span><textarea rows=\"7\" maxlength=\"4000\" dir=\"ltr\" placeholder=\"For example: where you live, your education, the tasks you can do, your experience, and your work goals.\"></textarea><small>0 / 4000 characters</small></label>"
+          },
+          {
+            "selector": "span",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Your editable description or transcript",
+            "html": "<span>Your editable description or transcript</span>"
+          },
+          {
+            "selector": "textarea",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "",
+            "html": "<textarea rows=\"7\" maxlength=\"4000\" dir=\"ltr\" placeholder=\"For example: where you live, your education, the tasks you can do, your experience, and your work goals.\"></textarea>"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 35
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\candidate-setup-width-375.png",
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/candidate/setup",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate/setup",
+        "name": "Candidate setup",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "width-1440",
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:5173/candidate/setup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate profile setup | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 1440,
+        "scrollWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 35
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\candidate-setup-width-1440.png",
+      "axe": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+          "tags": [
+            "wcag2aa",
+            "wcag143"
+          ],
+          "nodes": [
+            {
+              "target": [
+                ".voice-navigation__disclosure"
+              ],
+              "html": "<span class=\"voice-navigation__disclosure\">AI-generated voice</span>",
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.56 (foreground color: #94a3b8, background color: #ffffff, font size: 6.0pt (8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "nodeCount": 1
+        }
+      ],
+      "finalUrl": "http://127.0.0.1:5173/candidate/setup",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate/setup",
+        "name": "Candidate setup",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "zoom-200",
+        "width": 640,
+        "height": 900,
+        "zoom": 2
+      },
+      "url": "http://127.0.0.1:5173/candidate/setup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate profile setup | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 640,
+        "scrollWidth": 994,
+        "horizontalOverflow": true,
+        "overflowElements": [
+          {
+            "selector": "div.profile-setup__intro",
+            "left": 48,
+            "right": 994,
+            "width": 946,
+            "text": "Step 1 of 1Let’s build your ability-led profile.Select the options that apply to you. This helps JoIn make opportunities",
+            "html": "<div class=\"profile-setup__intro\"><span class=\"profile-setup__step\">Step 1 of 1</span><h1>Let’s build your ability-led profile.</h1><p>Select the options that apply to you. This helps JoIn make opportunities and tasks easier to evaluate for your needs.</p><div class=\"profile-setup__privacy\"><strong>Your profile, your choice</strong><span>You can review and update these selections later from My Profile.</span></div></div>"
+          },
+          {
+            "selector": "h1",
+            "left": 48,
+            "right": 994,
+            "width": 946,
+            "text": "Let’s build your ability-led profile.",
+            "html": "<h1>Let’s build your ability-led profile.</h1>"
+          },
+          {
+            "selector": "p",
+            "left": 51,
+            "right": 991,
+            "width": 940,
+            "text": "Select the options that apply to you. This helps JoIn make opportunities and tasks easier to evaluate for your needs.",
+            "html": "<p>Select the options that apply to you. This helps JoIn make opportunities and tasks easier to evaluate for your needs.</p>"
+          },
+          {
+            "selector": "div.profile-setup__privacy",
+            "left": 48,
+            "right": 994,
+            "width": 946,
+            "text": "Your profile, your choiceYou can review and update these selections later from My Profile.",
+            "html": "<div class=\"profile-setup__privacy\"><strong>Your profile, your choice</strong><span>You can review and update these selections later from My Profile.</span></div>"
+          },
+          {
+            "selector": "strong",
+            "left": 90,
+            "right": 958,
+            "width": 868,
+            "text": "Your profile, your choice",
+            "html": "<strong>Your profile, your choice</strong>"
+          },
+          {
+            "selector": "span",
+            "left": 90,
+            "right": 958,
+            "width": 868,
+            "text": "You can review and update these selections later from My Profile.",
+            "html": "<span>You can review and update these selections later from My Profile.</span>"
+          },
+          {
+            "selector": "div.profile-setup__card",
+            "left": 48,
+            "right": 994,
+            "width": 946,
+            "text": "Optional AI assistanceDescribe yourself in your own wordsSpeak or type in English, French, or Arabic. You edit the trans",
+            "html": "<div class=\"profile-setup__card\"><section class=\"ai-profile-builder\" aria-labelledby=\"ai-profile-title\"><div class=\"ai-profile-builder__heading\"><div><span class=\"ai-profile-builder__eyebrow\">Optional AI assistance</span><h2 id=\"ai-profile-title\">Describe yourself in your own words</h2><p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p></div><span class=\"ai-profile-builder__badge\">Human reviewed</span></div><div class=\"ai-p"
+          },
+          {
+            "selector": "section.ai-profile-builder",
+            "left": 118,
+            "right": 924,
+            "width": 806,
+            "text": "Optional AI assistanceDescribe yourself in your own wordsSpeak or type in English, French, or Arabic. You edit the trans",
+            "html": "<section class=\"ai-profile-builder\" aria-labelledby=\"ai-profile-title\"><div class=\"ai-profile-builder__heading\"><div><span class=\"ai-profile-builder__eyebrow\">Optional AI assistance</span><h2 id=\"ai-profile-title\">Describe yourself in your own words</h2><p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p></div><span class=\"ai-profile-builder__badge\">Human reviewed</span></div><div class=\"ai-profile-builder__controls\"><label>"
+          },
+          {
+            "selector": "div.ai-profile-builder__heading",
+            "left": 156,
+            "right": 886,
+            "width": 730,
+            "text": "Optional AI assistanceDescribe yourself in your own wordsSpeak or type in English, French, or Arabic. You edit the trans",
+            "html": "<div class=\"ai-profile-builder__heading\"><div><span class=\"ai-profile-builder__eyebrow\">Optional AI assistance</span><h2 id=\"ai-profile-title\">Describe yourself in your own words</h2><p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p></div><span class=\"ai-profile-builder__badge\">Human reviewed</span></div>"
+          },
+          {
+            "selector": "div",
+            "left": 156,
+            "right": 886,
+            "width": 730,
+            "text": "Optional AI assistanceDescribe yourself in your own wordsSpeak or type in English, French, or Arabic. You edit the trans",
+            "html": "<div><span class=\"ai-profile-builder__eyebrow\">Optional AI assistance</span><h2 id=\"ai-profile-title\">Describe yourself in your own words</h2><p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p></div>"
+          },
+          {
+            "selector": "h2#ai-profile-title",
+            "left": 156,
+            "right": 886,
+            "width": 730,
+            "text": "Describe yourself in your own words",
+            "html": "<h2 id=\"ai-profile-title\">Describe yourself in your own words</h2>"
+          },
+          {
+            "selector": "p",
+            "left": 156,
+            "right": 886,
+            "width": 730,
+            "text": "Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.",
+            "html": "<p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p>"
+          },
+          {
+            "selector": "div.ai-profile-builder__controls",
+            "left": 156,
+            "right": 886,
+            "width": 730,
+            "text": "Spoken and written languageEnglishFrançaisالعربيةUse microphoneAudio is transcribed, then discarded by this application.",
+            "html": "<div class=\"ai-profile-builder__controls\"><label><span>Spoken and written language</span><select><option value=\"en\">English</option><option value=\"fr\">Français</option><option value=\"ar\">العربية</option></select></label><div class=\"ai-profile-builder__recording\" aria-label=\"Audio recording controls\"><button type=\"button\">Use microphone</button><span>Audio is transcribed, then discarded by this application.</span></div></div>"
+          },
+          {
+            "selector": "label",
+            "left": 156,
+            "right": 886,
+            "width": 730,
+            "text": "Spoken and written languageEnglishFrançaisالعربية",
+            "html": "<label><span>Spoken and written language</span><select><option value=\"en\">English</option><option value=\"fr\">Français</option><option value=\"ar\">العربية</option></select></label>"
+          },
+          {
+            "selector": "span",
+            "left": 156,
+            "right": 886,
+            "width": 730,
+            "text": "Spoken and written language",
+            "html": "<span>Spoken and written language</span>"
+          },
+          {
+            "selector": "select",
+            "left": 156,
+            "right": 886,
+            "width": 730,
+            "text": "EnglishFrançaisالعربية",
+            "html": "<select><option value=\"en\">English</option><option value=\"fr\">Français</option><option value=\"ar\">العربية</option></select>"
+          },
+          {
+            "selector": "div.ai-profile-builder__recording",
+            "left": 156,
+            "right": 886,
+            "width": 730,
+            "text": "Audio recording controls",
+            "html": "<div class=\"ai-profile-builder__recording\" aria-label=\"Audio recording controls\"><button type=\"button\">Use microphone</button><span>Audio is transcribed, then discarded by this application.</span></div>"
+          },
+          {
+            "selector": "span",
+            "left": 156,
+            "right": 736,
+            "width": 580,
+            "text": "Audio is transcribed, then discarded by this application.",
+            "html": "<span>Audio is transcribed, then discarded by this application.</span>"
+          },
+          {
+            "selector": "label.ai-profile-builder__narrative",
+            "left": 156,
+            "right": 886,
+            "width": 730,
+            "text": "Your editable description or transcript0 / 4000 characters",
+            "html": "<label class=\"ai-profile-builder__narrative\"><span>Your editable description or transcript</span><textarea rows=\"7\" maxlength=\"4000\" dir=\"ltr\" placeholder=\"For example: where you live, your education, the tasks you can do, your experience, and your work goals.\"></textarea><small>0 / 4000 characters</small></label>"
+          },
+          {
+            "selector": "span",
+            "left": 156,
+            "right": 886,
+            "width": 730,
+            "text": "Your editable description or transcript",
+            "html": "<span>Your editable description or transcript</span>"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 35
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\candidate-setup-zoom-200.png",
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/candidate/setup",
+      "consoleErrors": [],
+      "failedRequests": []
+    },
+    {
+      "route": {
+        "path": "/candidate/setup",
+        "name": "Candidate setup",
+        "area": "candidate",
+        "role": "candidate"
+      },
+      "scenario": {
+        "name": "text-spacing-375",
+        "width": 375,
+        "height": 812,
+        "textSpacing": true
+      },
+      "url": "http://127.0.0.1:5173/candidate/setup",
+      "scanError": null,
+      "httpStatus": 200,
+      "layout": {
+        "title": "Candidate profile setup | JoIn Hospitality",
+        "lang": "en",
+        "viewportWidth": 375,
+        "scrollWidth": 458,
+        "horizontalOverflow": true,
+        "overflowElements": [
+          {
+            "selector": "div.profile-setup__intro",
+            "left": 14,
+            "right": 458,
+            "width": 444,
+            "text": "Step 1 of 1Let’s build your ability-led profile.Select the options that apply to you. This helps JoIn make opportunities",
+            "html": "<div class=\"profile-setup__intro\"><span class=\"profile-setup__step\">Step 1 of 1</span><h1>Let’s build your ability-led profile.</h1><p>Select the options that apply to you. This helps JoIn make opportunities and tasks easier to evaluate for your needs.</p><div class=\"profile-setup__privacy\"><strong>Your profile, your choice</strong><span>You can review and update these selections later from My Profile.</span></div></div>"
+          },
+          {
+            "selector": "h1",
+            "left": 14,
+            "right": 458,
+            "width": 444,
+            "text": "Let’s build your ability-led profile.",
+            "html": "<h1>Let’s build your ability-led profile.</h1>"
+          },
+          {
+            "selector": "p",
+            "left": 14,
+            "right": 458,
+            "width": 444,
+            "text": "Select the options that apply to you. This helps JoIn make opportunities and tasks easier to evaluate for your needs.",
+            "html": "<p>Select the options that apply to you. This helps JoIn make opportunities and tasks easier to evaluate for your needs.</p>"
+          },
+          {
+            "selector": "div.profile-setup__privacy",
+            "left": 14,
+            "right": 458,
+            "width": 444,
+            "text": "Your profile, your choiceYou can review and update these selections later from My Profile.",
+            "html": "<div class=\"profile-setup__privacy\"><strong>Your profile, your choice</strong><span>You can review and update these selections later from My Profile.</span></div>"
+          },
+          {
+            "selector": "strong",
+            "left": 35,
+            "right": 440,
+            "width": 405,
+            "text": "Your profile, your choice",
+            "html": "<strong>Your profile, your choice</strong>"
+          },
+          {
+            "selector": "span",
+            "left": 35,
+            "right": 440,
+            "width": 405,
+            "text": "You can review and update these selections later from My Profile.",
+            "html": "<span>You can review and update these selections later from My Profile.</span>"
+          },
+          {
+            "selector": "div.profile-setup__card",
+            "left": 14,
+            "right": 458,
+            "width": 444,
+            "text": "Optional AI assistanceDescribe yourself in your own wordsSpeak or type in English, French, or Arabic. You edit the trans",
+            "html": "<div class=\"profile-setup__card\"><section class=\"ai-profile-builder\" aria-labelledby=\"ai-profile-title\"><div class=\"ai-profile-builder__heading\"><div><span class=\"ai-profile-builder__eyebrow\">Optional AI assistance</span><h2 id=\"ai-profile-title\">Describe yourself in your own words</h2><p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p></div><span class=\"ai-profile-builder__badge\">Human reviewed</span></div><div class=\"ai-p"
+          },
+          {
+            "selector": "section.ai-profile-builder",
+            "left": 35,
+            "right": 437,
+            "width": 402,
+            "text": "Optional AI assistanceDescribe yourself in your own wordsSpeak or type in English, French, or Arabic. You edit the trans",
+            "html": "<section class=\"ai-profile-builder\" aria-labelledby=\"ai-profile-title\"><div class=\"ai-profile-builder__heading\"><div><span class=\"ai-profile-builder__eyebrow\">Optional AI assistance</span><h2 id=\"ai-profile-title\">Describe yourself in your own words</h2><p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p></div><span class=\"ai-profile-builder__badge\">Human reviewed</span></div><div class=\"ai-profile-builder__controls\"><label>"
+          },
+          {
+            "selector": "div.ai-profile-builder__heading",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Optional AI assistanceDescribe yourself in your own wordsSpeak or type in English, French, or Arabic. You edit the trans",
+            "html": "<div class=\"ai-profile-builder__heading\"><div><span class=\"ai-profile-builder__eyebrow\">Optional AI assistance</span><h2 id=\"ai-profile-title\">Describe yourself in your own words</h2><p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p></div><span class=\"ai-profile-builder__badge\">Human reviewed</span></div>"
+          },
+          {
+            "selector": "div",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Optional AI assistanceDescribe yourself in your own wordsSpeak or type in English, French, or Arabic. You edit the trans",
+            "html": "<div><span class=\"ai-profile-builder__eyebrow\">Optional AI assistance</span><h2 id=\"ai-profile-title\">Describe yourself in your own words</h2><p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p></div>"
+          },
+          {
+            "selector": "h2#ai-profile-title",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Describe yourself in your own words",
+            "html": "<h2 id=\"ai-profile-title\">Describe yourself in your own words</h2>"
+          },
+          {
+            "selector": "p",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.",
+            "html": "<p>Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.</p>"
+          },
+          {
+            "selector": "div.ai-profile-builder__controls",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Spoken and written languageEnglishFrançaisالعربيةUse microphoneAudio is transcribed, then discarded by this application.",
+            "html": "<div class=\"ai-profile-builder__controls\"><label><span>Spoken and written language</span><select><option value=\"en\">English</option><option value=\"fr\">Français</option><option value=\"ar\">العربية</option></select></label><div class=\"ai-profile-builder__recording\" aria-label=\"Audio recording controls\"><button type=\"button\">Use microphone</button><span>Audio is transcribed, then discarded by this application.</span></div></div>"
+          },
+          {
+            "selector": "label",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Spoken and written languageEnglishFrançaisالعربية",
+            "html": "<label><span>Spoken and written language</span><select><option value=\"en\">English</option><option value=\"fr\">Français</option><option value=\"ar\">العربية</option></select></label>"
+          },
+          {
+            "selector": "span",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Spoken and written language",
+            "html": "<span>Spoken and written language</span>"
+          },
+          {
+            "selector": "select",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "EnglishFrançaisالعربية",
+            "html": "<select><option value=\"en\">English</option><option value=\"fr\">Français</option><option value=\"ar\">العربية</option></select>"
+          },
+          {
+            "selector": "div.ai-profile-builder__recording",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Audio recording controls",
+            "html": "<div class=\"ai-profile-builder__recording\" aria-label=\"Audio recording controls\"><button type=\"button\">Use microphone</button><span>Audio is transcribed, then discarded by this application.</span></div>"
+          },
+          {
+            "selector": "span",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Audio is transcribed, then discarded by this application.",
+            "html": "<span>Audio is transcribed, then discarded by this application.</span>"
+          },
+          {
+            "selector": "label.ai-profile-builder__narrative",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Your editable description or transcript0 / 4000 characters",
+            "html": "<label class=\"ai-profile-builder__narrative\"><span>Your editable description or transcript</span><textarea rows=\"7\" maxlength=\"4000\" dir=\"ltr\" placeholder=\"For example: where you live, your education, the tasks you can do, your experience, and your work goals.\"></textarea><small>0 / 4000 characters</small></label>"
+          },
+          {
+            "selector": "span",
+            "left": 54,
+            "right": 418,
+            "width": 364,
+            "text": "Your editable description or transcript",
+            "html": "<span>Your editable description or transcript</span>"
+          }
+        ],
+        "h1Count": 1,
+        "mainCount": 1,
+        "navCount": 0,
+        "interactiveCount": 35
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\wcag-audit\\screenshots\\candidate-setup-text-spacing-375.png",
+      "axe": [],
+      "finalUrl": "http://127.0.0.1:5173/candidate/setup",
+      "consoleErrors": [],
+      "failedRequests": []
+    }
+  ]
+}

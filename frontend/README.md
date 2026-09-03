@@ -1,16 +1,58 @@
-# React + Vite
+# JoIn React frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The frontend provides the public website and role-specific Candidate, Employer, and Administrator interfaces. It is built with React 19, Vite, and React Router.
 
-Currently, two official plugins are available:
+## Local development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+From the `frontend` directory:
 
-## React Compiler
+```powershell
+npm.cmd install
+npm.cmd run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Open http://127.0.0.1:5173.
 
-## Expanding the ESLint configuration
+Use `npm.cmd` when PowerShell blocks the `npm.ps1` script.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Environment
+
+Copy the committed template when overrides are needed:
+
+```powershell
+Copy-Item .env.example .env.local
+```
+
+Supported variables:
+
+```dotenv
+VITE_BACKEND_URL=http://127.0.0.1:8081
+VITE_API_URL=http://127.0.0.1:8081/api
+VITE_VOICE_NAVIGATION_URL=http://127.0.0.1:5002
+```
+
+Restart Vite after changing environment variables.
+
+## Validation
+
+```powershell
+npm.cmd run build
+.\node_modules\.bin\eslint.cmd src
+```
+
+## Accessibility behavior
+
+- Standard keyboard interaction remains available throughout the application.
+- Global Left/Right Arrow navigation supplements Tab/Shift+Tab without removing native control behavior.
+- Focus is visibly indicated and managed for dialogs and dynamic results.
+- Voice navigation can switch views, answer grounded page questions, and execute registered actions.
+- Candidate profile assistance supports typed or recorded English, French, and Arabic input, an editable transcript, explicit consent, and per-suggestion confirmation.
+
+The AI profile builder is optional. The manual candidate form remains available, and unconfirmed suggestions never change the profile.
+
+## Related documentation
+
+- [AI profile workflow](../docs/AI_PROFILE_WORKFLOW.md)
+- [Keyboard navigation test plan](../docs/keyboard-navigation-test-plan.md)
+- [Voice navigation specification](../docs/voice-navigation-technical-specification.md)
+- [Project run commands](../docs/run-project-commands.md)
