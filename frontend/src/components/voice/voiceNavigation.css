@@ -121,6 +121,11 @@
   font: inherit;
 }
 
+.voice-navigation__language label {
+  font: inherit;
+  font-weight: 700;
+}
+
 .voice-navigation__actions {
   display: flex;
   justify-content: flex-end;

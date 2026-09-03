@@ -75,6 +75,7 @@ export default function VoiceNavigationControl() {
   const locationRef = useRef(location.pathname);
   const pendingActionRef = useRef(null);
   const interfaceLanguageRef = useRef(interfaceLanguage);
+  const spokenLanguageCustomizedRef = useRef(false);
 
   useEffect(() => {
     locationRef.current = location.pathname;
@@ -122,6 +123,21 @@ export default function VoiceNavigationControl() {
     setMessage(status || t("status.off"));
     releaseResources();
   }, [releaseResources, t]);
+
+  const changeSpokenLanguage = useCallback((event) => {
+    const nextLanguage = normalizeLocale(event.target.value);
+    if (!nextLanguage || nextLanguage === spokenLanguage) return;
+    spokenLanguageCustomizedRef.current = true;
+    setSpokenLanguage(nextLanguage);
+    setTranscript("");
+    historyRef.current = [];
+    pendingActionRef.current = null;
+    const nextMessage = t("status.languageChanged", {
+      language: SUPPORTED_LOCALES[nextLanguage].nativeName,
+    });
+    if (enabledRef.current) deactivate(nextMessage);
+    else setMessage(nextMessage);
+  }, [deactivate, spokenLanguage, t]);
 
   const fallbackSpeak = useCallback((text, language) => new Promise((resolve) => {
     if (!window.speechSynthesis) {
@@ -444,7 +460,7 @@ export default function VoiceNavigationControl() {
       return;
     }
     interfaceLanguageRef.current = interfaceLanguage;
-    setSpokenLanguage(interfaceLanguage);
+    if (!spokenLanguageCustomizedRef.current) setSpokenLanguage(interfaceLanguage);
     setTranscript("");
     if (enabledRef.current) deactivate(t("status.off"));
     else setMessage(t("status.off"));
@@ -489,7 +505,19 @@ export default function VoiceNavigationControl() {
         <button type="button" onClick={() => navigate("/voice-help")}>{t("commands")}</button>
       </div>
       <div className="voice-navigation__language">
-        <span>{t("commandLanguage", { language: SUPPORTED_LOCALES[spokenLanguage].nativeName })}</span>
+        <label htmlFor="voice-command-language">{t("commandLanguageLabel")}</label>
+        <select
+          id="voice-command-language"
+          value={spokenLanguage}
+          onChange={changeSpokenLanguage}
+          disabled={phase === "processing"}
+        >
+          {Object.values(SUPPORTED_LOCALES).map((locale) => (
+            <option key={locale.code} value={locale.code} lang={locale.code} dir={locale.direction}>
+              {locale.nativeName}
+            </option>
+          ))}
+        </select>
       </div>
       {transcript && enabled && <span className="voice-navigation__transcript" title={transcript} dir="auto">“{transcript}”</span>}
       {lastRecording && (

@@ -10,6 +10,7 @@
   "resume": "Reprendre",
   "commands": "Commandes",
   "commandLanguage": "Langue des commandes : {{language}}",
+  "commandLanguageLabel": "Langue des commandes vocales",
   "lastCaptured": "Dernier enregistrement · {{kilobytes}} Ko · {{seconds}} s",
   "audioUnsupported": "Votre navigateur ne prend pas en charge la lecture audio.",
   "download": "Télécharger l’enregistrement",
@@ -26,7 +27,8 @@
     "unsupported": "Ce navigateur ne permet pas l’enregistrement par microphone",
     "permission": "En attente de l’autorisation du microphone",
     "permissionDenied": "L’autorisation du microphone a été refusée",
-    "failed": "Échec de la navigation vocale"
+    "failed": "Échec de la navigation vocale",
+    "languageChanged": "La langue des commandes vocales est maintenant {{language}}. La navigation vocale est désactivée."
   },
   "feedback": {
     "noPending": "Aucune action n’est en attente de confirmation.",
@@ -40,4 +42,3 @@
     "processingFailed": "Le traitement de la commande vocale a échoué."
   }
 }
-

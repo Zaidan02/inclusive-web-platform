@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="400" viewBox="0 0 1800 400" role="img" aria-labelledby="title description">
+  <title id="title">Employer job-posting workflow</title>
+  <desc id="description">Six steps from selecting a controlled hospitality position through backend validation, publication, and explainable matching.</desc>
+
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#0b2553" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0b2553"/>
+    </marker>
+    <style>
+      .card { fill: #ffffff; stroke: #cad7e8; stroke-width: 2; filter: url(#shadow); }
+      .step { font-family: Arial, Aptos, sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 1px; }
+      .heading { fill: #0b2553; font-family: Arial, Aptos, sans-serif; font-size: 22px; font-weight: 700; }
+      .body { fill: #33445f; font-family: Arial, Aptos, sans-serif; font-size: 17px; font-weight: 400; }
+      .flow { fill: none; stroke: #0b2553; stroke-width: 3; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <!-- Step 1 -->
+  <g>
+    <rect class="card" x="20" y="35" width="260" height="310" rx="22"/>
+    <rect x="20" y="35" width="260" height="12" rx="6" fill="#1768d5"/>
+    <text class="step" x="48" y="82" fill="#1768d5">STEP 1</text>
+    <text class="heading" x="48" y="120">Select a position</text>
+    <text class="body" x="48" y="164">
+      <tspan x="48" dy="0">Choose a controlled</tspan>
+      <tspan x="48" dy="26">hospitality role from</tspan>
+      <tspan x="48" dy="26">the catalogue.</tspan>
+    </text>
+  </g>
+
+  <path class="flow" d="M 284 190 H 310"/>
+
+  <!-- Step 2 -->
+  <g>
+    <rect class="card" x="315" y="35" width="260" height="310" rx="22"/>
+    <rect x="315" y="35" width="260" height="12" rx="6" fill="#1768d5"/>
+    <text class="step" x="343" y="82" fill="#1768d5">STEP 2</text>
+    <text class="heading" x="343" y="120">Load catalogue tasks</text>
+    <text class="body" x="343" y="164">
+      <tspan x="343" dy="0">The platform loads the</tspan>
+      <tspan x="343" dy="26">role's approved tasks</tspan>
+      <tspan x="343" dy="26">automatically.</tspan>
+    </text>
+  </g>
+
+  <path class="flow" d="M 579 190 H 605"/>
+
+  <!-- Step 3 -->
+  <g>
+    <rect class="card" x="610" y="35" width="260" height="310" rx="22"/>
+    <rect x="610" y="35" width="260" height="12" rx="6" fill="#b14d2a"/>
+    <text class="step" x="638" y="82" fill="#b14d2a">STEP 3</text>
+    <text class="heading" x="638" y="120">Enter vacancy details</text>
+    <text class="body" x="638" y="164">
+      <tspan x="638" dy="0">Add location, job type,</tspan>
+      <tspan x="638" dy="26">work mode, deadline,</tspan>
+      <tspan x="638" dy="26">and description.</tspan>
+    </text>
+  </g>
+
+  <path class="flow" d="M 874 190 H 900"/>
+
+  <!-- Step 4 -->
+  <g>
+    <rect class="card" x="905" y="35" width="260" height="310" rx="22"/>
+    <rect x="905" y="35" width="260" height="12" rx="6" fill="#b14d2a"/>
+    <text class="step" x="933" y="82" fill="#b14d2a">STEP 4</text>
+    <text class="heading" x="933" y="120">Define requirements</text>
+    <text class="body" x="933" y="164">
+      <tspan x="933" dy="0">Set education, reading,</tspan>
+      <tspan x="933" dy="26">writing, counting, and</tspan>
+      <tspan x="933" dy="26">position knowledge.</tspan>
+    </text>
+  </g>
+
+  <path class="flow" d="M 1169 190 H 1195"/>
+
+  <!-- Step 5 -->
+  <g>
+    <rect class="card" x="1200" y="35" width="260" height="310" rx="22"/>
+    <rect x="1200" y="35" width="260" height="12" rx="6" fill="#5f4053"/>
+    <text class="step" x="1228" y="82" fill="#5f4053">STEP 5</text>
+    <text class="heading" x="1228" y="120">Set priorities and support</text>
+    <text class="body" x="1228" y="164">
+      <tspan x="1228" dy="0">Highlight important tasks</tspan>
+      <tspan x="1228" dy="26">and record available</tspan>
+      <tspan x="1228" dy="26">workplace assistance.</tspan>
+    </text>
+  </g>
+
+  <path class="flow" d="M 1464 190 H 1490"/>
+
+  <!-- Step 6 -->
+  <g>
+    <rect class="card" x="1495" y="35" width="260" height="310" rx="22"/>
+    <rect x="1495" y="35" width="260" height="12" rx="6" fill="#16805a"/>
+    <text class="step" x="1523" y="82" fill="#16805a">STEP 6</text>
+    <text class="heading" x="1523" y="120">Validate and publish</text>
+    <text class="body" x="1523" y="164">
+      <tspan x="1523" dy="0">The backend validates and</tspan>
+      <tspan x="1523" dy="26">publishes the vacancy for</tspan>
+      <tspan x="1523" dy="26">explainable matching.</tspan>
+    </text>
+  </g>
+</svg>

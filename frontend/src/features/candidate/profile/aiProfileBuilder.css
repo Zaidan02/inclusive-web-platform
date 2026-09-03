@@ -6,13 +6,14 @@
 .ai-profile-builder__badge{white-space:nowrap;padding:6px 10px;border-radius:999px;background:#dcfce7;color:#166534;font-size:11px;font-weight:800}
 .ai-profile-builder__controls{display:grid;grid-template-columns:minmax(180px,260px) 1fr;gap:16px;margin-top:20px;align-items:end}
 .ai-profile-builder__controls label,.ai-profile-builder__narrative,.ai-profile-builder__edit{display:grid;gap:6px;color:#334155;font-size:13px;font-weight:700}
-.ai-profile-builder__language{display:flex;min-height:42px;align-items:center;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:#334155;font-size:13px;font-weight:700}
+.ai-profile-builder__language{display:grid;min-height:42px;gap:6px;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:#334155;font-size:13px;font-weight:700}
 .ai-profile-builder select,.ai-profile-builder input:not([type=checkbox]),.ai-profile-builder textarea{width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:#0f172a;font:inherit}
 .ai-profile-builder select:focus,.ai-profile-builder input:focus,.ai-profile-builder textarea:focus,.ai-profile-builder button:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
 .ai-profile-builder__recording{display:flex;align-items:center;gap:12px}
 .ai-profile-builder button{min-height:42px;padding:0 16px;border:0;border-radius:10px;background:#1d4ed8;color:#fff;font-weight:750;cursor:pointer}
 .ai-profile-builder button:disabled{opacity:.6;cursor:not-allowed}
 .ai-profile-builder__recording span,.ai-profile-builder__narrative small{color:#64748b;font-size:11px;font-weight:500}
+.ai-profile-builder__language small{color:#64748b;font-size:11px;font-weight:500}
 .ai-profile-builder__recording .ai-profile-builder__stop{background:#b91c1c}
 .ai-profile-builder__narrative{margin-top:16px}
 .ai-profile-builder__narrative small{text-align:end}

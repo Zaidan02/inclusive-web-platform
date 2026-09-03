@@ -4,6 +4,8 @@
   "intro": "Speak or type in English, French, or Arabic. You edit the transcript and approve every suggestion before it is saved.",
   "humanReviewed": "Human reviewed",
   "activeLanguage": "Spoken and written language: {{language}}",
+  "inputLanguageLabel": "AI profile input language",
+  "inputLanguageHelp": "This may be different from the interface language.",
   "recordingControls": "Audio recording controls",
   "stopRecording": "Stop recording",
   "useMicrophone": "Use microphone",
@@ -57,7 +59,8 @@
     "recordingStopped": "Recording stopped. Creating an editable transcript.",
     "analysing": "Analysing your description. Nothing is saved at this stage.",
     "suggestionsReady": "Suggestions are ready for review.",
-    "saved": "Confirmed suggestions were saved."
+    "saved": "Confirmed suggestions were saved.",
+    "languageChanged": "AI profile input language changed to {{language}}."
   },
   "errors": {
     "unsupported": "Audio recording is not supported by this browser. You can type your description instead.",

@@ -10,6 +10,7 @@
   "resume": "متابعة",
   "commands": "الأوامر",
   "commandLanguage": "لغة الأوامر: {{language}}",
+  "commandLanguageLabel": "لغة الأوامر الصوتية",
   "lastCaptured": "آخر تسجيل · {{kilobytes}} كيلوبايت · {{seconds}} ث",
   "audioUnsupported": "متصفحك لا يدعم تشغيل الصوت.",
   "download": "تنزيل التسجيل",
@@ -26,7 +27,8 @@
     "unsupported": "هذا المتصفح لا يدعم التسجيل عبر الميكروفون",
     "permission": "بانتظار إذن استخدام الميكروفون",
     "permissionDenied": "تم رفض إذن استخدام الميكروفون",
-    "failed": "تعذر تشغيل التنقل الصوتي"
+    "failed": "تعذر تشغيل التنقل الصوتي",
+    "languageChanged": "تم تغيير لغة الأوامر الصوتية إلى {{language}}. التنقل الصوتي متوقف."
   },
   "feedback": {
     "noPending": "لا توجد عملية بانتظار التأكيد.",
@@ -40,4 +42,3 @@
     "processingFailed": "تعذرت معالجة الأمر الصوتي."
   }
 }
-

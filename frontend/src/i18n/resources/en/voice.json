@@ -10,6 +10,7 @@
   "resume": "Resume",
   "commands": "Commands",
   "commandLanguage": "Command language: {{language}}",
+  "commandLanguageLabel": "Voice command language",
   "lastCaptured": "Last captured input · {{kilobytes}} KB · {{seconds}}s",
   "audioUnsupported": "Your browser does not support audio playback.",
   "download": "Download recording",
@@ -26,7 +27,8 @@
     "unsupported": "This browser does not support microphone recording",
     "permission": "Waiting for microphone permission",
     "permissionDenied": "Microphone permission was denied",
-    "failed": "Voice navigation failed"
+    "failed": "Voice navigation failed",
+    "languageChanged": "Voice command language changed to {{language}}. Voice navigation is off."
   },
   "feedback": {
     "noPending": "There is no pending action to confirm.",
@@ -40,4 +42,3 @@
     "processingFailed": "Voice processing failed."
   }
 }
-

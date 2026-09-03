@@ -11,7 +11,8 @@ import "./aiProfileBuilder.css";
 
 export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirmed }) {
   const { t, i18n } = useTranslation("profile");
-  const language = normalizeLocale(i18n.resolvedLanguage) || "en";
+  const interfaceLanguage = normalizeLocale(i18n.resolvedLanguage) || "en";
+  const [language, setLanguage] = useState(interfaceLanguage);
   const [narrative, setNarrative] = useState("");
   const [consent, setConsent] = useState(false);
   const [suggestions, setSuggestions] = useState(null);
@@ -20,6 +21,7 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
+  const [suggestionLanguage, setSuggestionLanguage] = useState(null);
   const recorderRef = useRef(null);
   const streamRef = useRef(null);
   const chunksRef = useRef([]);
@@ -27,6 +29,8 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
   const consentRef = useRef(null);
   const errorRef = useRef(null);
   const resultsHeadingRef = useRef(null);
+  const interfaceLanguageRef = useRef(interfaceLanguage);
+  const languageCustomizedRef = useRef(false);
 
   function confidenceLabel(value) {
     if (value >= 0.8) return t("confidence.high");
@@ -44,6 +48,23 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
     if (recorderRef.current?.state === "recording") recorderRef.current.stop();
     streamRef.current?.getTracks().forEach((track) => track.stop());
   }, []);
+
+  useEffect(() => {
+    if (interfaceLanguageRef.current === interfaceLanguage) return;
+    interfaceLanguageRef.current = interfaceLanguage;
+    if (!languageCustomizedRef.current) setLanguage(interfaceLanguage);
+  }, [interfaceLanguage]);
+
+  function changeInputLanguage(event) {
+    const nextLanguage = normalizeLocale(event.target.value);
+    if (!nextLanguage || nextLanguage === language) return;
+    languageCustomizedRef.current = true;
+    setLanguage(nextLanguage);
+    setError("");
+    setStatus(t("status.languageChanged", {
+      language: SUPPORTED_LOCALES[nextLanguage].nativeName,
+    }));
+  }
 
   function stopStream() {
     streamRef.current?.getTracks().forEach((track) => track.stop());
@@ -127,6 +148,7 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
       });
       const next = data.suggestions || {};
       setSuggestions(next);
+      setSuggestionLanguage(language);
       setAccepted({});
       setFieldValues(Object.fromEntries(
         (next.profileFields || []).map((item, index) => [`field-${index}`, item.value]),
@@ -173,10 +195,11 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
         educationLevel,
         disabilities,
         taskSkills,
-        language,
+        language: suggestionLanguage || language,
       });
       setStatus(t("status.saved"));
       setSuggestions(null);
+      setSuggestionLanguage(null);
       setAccepted({});
       onProfileConfirmed?.(data.profile);
     } catch {
@@ -203,9 +226,22 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
       </div>
 
       <div className="ai-profile-builder__controls">
-        <div className="ai-profile-builder__language" aria-live="polite">
-          <span>{t("activeLanguage", { language: SUPPORTED_LOCALES[language].nativeName })}</span>
-        </div>
+        <label className="ai-profile-builder__language" htmlFor="ai-profile-input-language">
+          <span>{t("inputLanguageLabel")}</span>
+          <select
+            id="ai-profile-input-language"
+            value={language}
+            onChange={changeInputLanguage}
+            disabled={Boolean(busy)}
+          >
+            {Object.values(SUPPORTED_LOCALES).map((locale) => (
+              <option key={locale.code} value={locale.code} lang={locale.code} dir={locale.direction}>
+                {locale.nativeName}
+              </option>
+            ))}
+          </select>
+          <small>{t("inputLanguageHelp")}</small>
+        </label>
         <div className="ai-profile-builder__recording" aria-label={t("recordingControls")}>
           {busy === "recording" ? (
             <button type="button" className="ai-profile-builder__stop" onClick={stopRecording}>

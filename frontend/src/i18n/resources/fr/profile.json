@@ -4,6 +4,8 @@
   "intro": "Parlez ou écrivez en anglais, en français ou en arabe. Vous pouvez modifier la transcription et approuver chaque suggestion avant son enregistrement.",
   "humanReviewed": "Validation humaine",
   "activeLanguage": "Langue parlée et écrite : {{language}}",
+  "inputLanguageLabel": "Langue de saisie du profil IA",
+  "inputLanguageHelp": "Elle peut être différente de la langue de l’interface.",
   "recordingControls": "Commandes d’enregistrement audio",
   "stopRecording": "Arrêter l’enregistrement",
   "useMicrophone": "Utiliser le microphone",
@@ -57,7 +59,8 @@
     "recordingStopped": "Enregistrement arrêté. Création d’une transcription modifiable.",
     "analysing": "Analyse de votre description. Rien n’est enregistré à cette étape.",
     "suggestionsReady": "Les suggestions sont prêtes à être vérifiées.",
-    "saved": "Les suggestions confirmées ont été enregistrées."
+    "saved": "Les suggestions confirmées ont été enregistrées.",
+    "languageChanged": "La langue de saisie du profil IA est maintenant {{language}}."
   },
   "errors": {
     "unsupported": "Ce navigateur ne permet pas l’enregistrement audio. Vous pouvez saisir votre description.",
