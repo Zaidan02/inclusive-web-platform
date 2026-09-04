@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-10T10:47:00.887Z",
+  "generatedAt": "2026-09-04T15:48:29.152Z",
   "environment": {
     "webBase": "http://127.0.0.1:4173",
     "apiBase": "http://127.0.0.1:8081/api",
@@ -22,54 +22,54 @@
     {
       "name": "public jobs",
       "samplesMs": [
-        197.2,
-        205.1,
-        117.5,
-        101,
-        109.5
+        218.5,
+        266.9,
+        283.8,
+        358.5,
+        278
       ],
-      "medianMs": 117.5,
-      "p95Ms": 205.1,
-      "maxMs": 205.1
+      "medianMs": 278,
+      "p95Ms": 358.5,
+      "maxMs": 358.5
     },
     {
       "name": "job definitions",
       "samplesMs": [
-        43.9,
-        33,
-        54.2,
-        163.2,
-        64.8
+        144,
+        142.5,
+        143,
+        130.7,
+        105.2
       ],
-      "medianMs": 54.2,
-      "p95Ms": 163.2,
-      "maxMs": 163.2
+      "medianMs": 142.5,
+      "p95Ms": 144,
+      "maxMs": 144
     },
     {
       "name": "candidate session",
       "samplesMs": [
-        71.6,
-        49.2,
-        86.7,
-        66.6,
-        61.8
+        172.8,
+        217.8,
+        159,
+        99.7,
+        109.4
       ],
-      "medianMs": 66.6,
-      "p95Ms": 86.7,
-      "maxMs": 86.7
+      "medianMs": 159,
+      "p95Ms": 217.8,
+      "maxMs": 217.8
     },
     {
       "name": "candidate profile",
       "samplesMs": [
-        244.8,
-        159.5,
-        152.8,
-        138.8,
-        144.5
+        76.4,
+        103.7,
+        132.3,
+        113,
+        92.9
       ],
-      "medianMs": 152.8,
-      "p95Ms": 244.8,
-      "maxMs": 244.8
+      "medianMs": 103.7,
+      "p95Ms": 132.3,
+      "maxMs": 132.3
     }
   ],
   "pages": [
@@ -77,571 +77,759 @@
       "route": "/",
       "samples": [
         {
-          "ttfbMs": 7.9,
-          "domContentLoadedMs": 102.5,
-          "loadMs": 102.6,
-          "firstContentfulPaintMs": 448,
-          "transferredBytes": 356569,
-          "resourceCount": 5,
+          "ttfbMs": 5.5,
+          "domContentLoadedMs": 55.4,
+          "loadMs": 55.7,
+          "firstContentfulPaintMs": 168,
+          "transferredBytes": 336701,
+          "resourceCount": 11,
           "slowestResources": [
             {
-              "name": "http://127.0.0.1:4173/assets/index-qppnrnrv.js",
+              "name": "http://127.0.0.1:4173/assets/index-BJY8GYw0.js",
               "initiatorType": "script",
-              "durationMs": 26.8,
-              "transferSize": 130728
+              "durationMs": 20.3,
+              "transferSize": 150816
             },
             {
-              "name": "http://127.0.0.1:4173/assets/index-DNMyFDWt.css",
+              "name": "http://127.0.0.1:4173/assets/WelcomePage-BiDGCR2j.css",
               "initiatorType": "link",
-              "durationMs": 15.6,
-              "transferSize": 13879
+              "durationMs": 11.9,
+              "transferSize": 5420
             },
             {
-              "name": "http://127.0.0.1:4173/favicon.svg",
-              "initiatorType": "other",
-              "durationMs": 5.6,
-              "transferSize": 1790
+              "name": "http://127.0.0.1:4173/assets/index-BXBhkc78.css",
+              "initiatorType": "link",
+              "durationMs": 9.3,
+              "transferSize": 6350
             },
             {
-              "name": "http://127.0.0.1:4173/assets/john-logo-CgRb4ryM.png",
-              "initiatorType": "img",
-              "durationMs": 5.1,
-              "transferSize": 164953
+              "name": "http://127.0.0.1:4173/assets/WelcomePage-DVZHuP2f.js",
+              "initiatorType": "script",
+              "durationMs": 7.6,
+              "transferSize": 3861
             },
             {
-              "name": "http://127.0.0.1:4173/assets/hero-5sT3BiRD.png",
-              "initiatorType": "img",
-              "durationMs": 4.8,
-              "transferSize": 45219
+              "name": "http://127.0.0.1:4173/assets/jobDefinitions-y3q2Kp0y.js",
+              "initiatorType": "script",
+              "durationMs": 7.3,
+              "transferSize": 490
             }
           ]
         },
         {
-          "ttfbMs": 2.8,
-          "domContentLoadedMs": 52.5,
-          "loadMs": 52.7,
-          "firstContentfulPaintMs": 156,
-          "transferredBytes": 356569,
-          "resourceCount": 5,
+          "ttfbMs": 3,
+          "domContentLoadedMs": 56.3,
+          "loadMs": 56.5,
+          "firstContentfulPaintMs": 104,
+          "transferredBytes": 171748,
+          "resourceCount": 10,
           "slowestResources": [
             {
-              "name": "http://127.0.0.1:4173/assets/index-qppnrnrv.js",
+              "name": "http://127.0.0.1:4173/assets/index-BJY8GYw0.js",
+              "initiatorType": "script",
+              "durationMs": 25.7,
+              "transferSize": 150816
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/WelcomePage-BiDGCR2j.css",
+              "initiatorType": "link",
+              "durationMs": 11,
+              "transferSize": 5420
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/index-BXBhkc78.css",
+              "initiatorType": "link",
+              "durationMs": 10.2,
+              "transferSize": 6350
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/LanguageSwitcher-D4dLiww3.js",
+              "initiatorType": "script",
+              "durationMs": 8,
+              "transferSize": 1271
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/ArrowIcon-CAum_7ya.js",
+              "initiatorType": "script",
+              "durationMs": 7.9,
+              "transferSize": 594
+            }
+          ]
+        },
+        {
+          "ttfbMs": 2,
+          "domContentLoadedMs": 47.2,
+          "loadMs": 47.4,
+          "firstContentfulPaintMs": 88,
+          "transferredBytes": 336701,
+          "resourceCount": 11,
+          "slowestResources": [
+            {
+              "name": "http://127.0.0.1:4173/assets/index-BJY8GYw0.js",
               "initiatorType": "script",
               "durationMs": 19.4,
-              "transferSize": 130728
+              "transferSize": 150816
             },
             {
-              "name": "http://127.0.0.1:4173/assets/index-DNMyFDWt.css",
+              "name": "http://127.0.0.1:4173/assets/WelcomePage-BiDGCR2j.css",
               "initiatorType": "link",
-              "durationMs": 8.6,
-              "transferSize": 13879
-            },
-            {
-              "name": "http://127.0.0.1:4173/favicon.svg",
-              "initiatorType": "other",
               "durationMs": 8.2,
-              "transferSize": 1790
+              "transferSize": 5420
             },
             {
-              "name": "http://127.0.0.1:4173/assets/john-logo-CgRb4ryM.png",
-              "initiatorType": "img",
-              "durationMs": 4.1,
-              "transferSize": 164953
-            },
-            {
-              "name": "http://127.0.0.1:4173/assets/hero-5sT3BiRD.png",
-              "initiatorType": "img",
-              "durationMs": 3.9,
-              "transferSize": 45219
-            }
-          ]
-        },
-        {
-          "ttfbMs": 2.9,
-          "domContentLoadedMs": 49.5,
-          "loadMs": 49.7,
-          "firstContentfulPaintMs": 156,
-          "transferredBytes": 356569,
-          "resourceCount": 5,
-          "slowestResources": [
-            {
-              "name": "http://127.0.0.1:4173/assets/index-qppnrnrv.js",
+              "name": "http://127.0.0.1:4173/assets/ArrowIcon-CAum_7ya.js",
               "initiatorType": "script",
-              "durationMs": 19,
-              "transferSize": 130728
+              "durationMs": 6.8,
+              "transferSize": 594
             },
             {
-              "name": "http://127.0.0.1:4173/assets/index-DNMyFDWt.css",
+              "name": "http://127.0.0.1:4173/assets/index-BXBhkc78.css",
               "initiatorType": "link",
-              "durationMs": 8.5,
-              "transferSize": 13879
+              "durationMs": 6.7,
+              "transferSize": 6350
             },
             {
-              "name": "http://127.0.0.1:4173/assets/john-logo-CgRb4ryM.png",
-              "initiatorType": "img",
-              "durationMs": 4,
-              "transferSize": 164953
-            },
-            {
-              "name": "http://127.0.0.1:4173/assets/hero-5sT3BiRD.png",
-              "initiatorType": "img",
-              "durationMs": 3.7,
-              "transferSize": 45219
-            },
-            {
-              "name": "http://127.0.0.1:4173/favicon.svg",
-              "initiatorType": "other",
-              "durationMs": 3.3,
-              "transferSize": 1790
+              "name": "http://127.0.0.1:4173/assets/jobDefinitions-y3q2Kp0y.js",
+              "initiatorType": "script",
+              "durationMs": 6,
+              "transferSize": 490
             }
           ]
         },
         {
           "ttfbMs": 1.8,
-          "domContentLoadedMs": 46,
-          "loadMs": 46.1,
-          "firstContentfulPaintMs": 128,
-          "transferredBytes": 356569,
-          "resourceCount": 5,
+          "domContentLoadedMs": 47.2,
+          "loadMs": 47.3,
+          "firstContentfulPaintMs": 84,
+          "transferredBytes": 171748,
+          "resourceCount": 10,
           "slowestResources": [
             {
-              "name": "http://127.0.0.1:4173/assets/index-qppnrnrv.js",
+              "name": "http://127.0.0.1:4173/assets/index-BJY8GYw0.js",
               "initiatorType": "script",
-              "durationMs": 17.7,
-              "transferSize": 130728
+              "durationMs": 17.5,
+              "transferSize": 150816
             },
             {
-              "name": "http://127.0.0.1:4173/assets/index-DNMyFDWt.css",
+              "name": "http://127.0.0.1:4173/assets/index-BXBhkc78.css",
               "initiatorType": "link",
-              "durationMs": 8.6,
-              "transferSize": 13879
+              "durationMs": 7.4,
+              "transferSize": 6350
             },
             {
-              "name": "http://127.0.0.1:4173/assets/hero-5sT3BiRD.png",
-              "initiatorType": "img",
-              "durationMs": 3.9,
-              "transferSize": 45219
+              "name": "http://127.0.0.1:4173/assets/WelcomePage-BiDGCR2j.css",
+              "initiatorType": "link",
+              "durationMs": 6.1,
+              "transferSize": 5420
             },
             {
-              "name": "http://127.0.0.1:4173/assets/john-logo-CgRb4ryM.png",
-              "initiatorType": "img",
-              "durationMs": 3.7,
-              "transferSize": 164953
+              "name": "http://127.0.0.1:4173/assets/WelcomePage-DVZHuP2f.js",
+              "initiatorType": "script",
+              "durationMs": 5.9,
+              "transferSize": 3861
             },
             {
-              "name": "http://127.0.0.1:4173/favicon.svg",
-              "initiatorType": "other",
-              "durationMs": 3.1,
-              "transferSize": 1790
+              "name": "http://127.0.0.1:4173/assets/jobDefinitions-y3q2Kp0y.js",
+              "initiatorType": "script",
+              "durationMs": 5.8,
+              "transferSize": 490
             }
           ]
         },
         {
-          "ttfbMs": 2.3,
-          "domContentLoadedMs": 43.2,
-          "loadMs": 43.2,
-          "firstContentfulPaintMs": 136,
-          "transferredBytes": 356569,
-          "resourceCount": 5,
+          "ttfbMs": 3,
+          "domContentLoadedMs": 49.5,
+          "loadMs": 49.6,
+          "firstContentfulPaintMs": 88,
+          "transferredBytes": 171748,
+          "resourceCount": 10,
           "slowestResources": [
             {
-              "name": "http://127.0.0.1:4173/assets/index-qppnrnrv.js",
+              "name": "http://127.0.0.1:4173/assets/index-BJY8GYw0.js",
               "initiatorType": "script",
-              "durationMs": 15.7,
-              "transferSize": 130728
+              "durationMs": 17.5,
+              "transferSize": 150816
             },
             {
-              "name": "http://127.0.0.1:4173/assets/index-DNMyFDWt.css",
+              "name": "http://127.0.0.1:4173/assets/index-BXBhkc78.css",
               "initiatorType": "link",
-              "durationMs": 7.7,
-              "transferSize": 13879
+              "durationMs": 7.3,
+              "transferSize": 6350
             },
             {
-              "name": "http://127.0.0.1:4173/favicon.svg",
-              "initiatorType": "other",
-              "durationMs": 3.9,
-              "transferSize": 1790
+              "name": "http://127.0.0.1:4173/assets/WelcomePage-BiDGCR2j.css",
+              "initiatorType": "link",
+              "durationMs": 6.6,
+              "transferSize": 5420
             },
             {
-              "name": "http://127.0.0.1:4173/assets/john-logo-CgRb4ryM.png",
-              "initiatorType": "img",
-              "durationMs": 3.6,
-              "transferSize": 164953
+              "name": "http://127.0.0.1:4173/assets/ArrowIcon-CAum_7ya.js",
+              "initiatorType": "script",
+              "durationMs": 5.7,
+              "transferSize": 594
             },
             {
-              "name": "http://127.0.0.1:4173/assets/hero-5sT3BiRD.png",
-              "initiatorType": "img",
-              "durationMs": 3.2,
-              "transferSize": 45219
+              "name": "http://127.0.0.1:4173/assets/jobDefinitions-y3q2Kp0y.js",
+              "initiatorType": "script",
+              "durationMs": 5.6,
+              "transferSize": 490
             }
           ]
         }
       ],
       "p95": {
-        "ttfbMs": 7.9,
-        "domContentLoadedMs": 102.5,
-        "loadMs": 102.6,
-        "firstContentfulPaintMs": 448,
-        "transferredBytes": 356569
+        "ttfbMs": 5.5,
+        "domContentLoadedMs": 56.3,
+        "loadMs": 56.5,
+        "firstContentfulPaintMs": 168,
+        "transferredBytes": 336701
       }
     },
     {
       "route": "/signin",
       "samples": [
         {
-          "ttfbMs": 1.9,
-          "domContentLoadedMs": 43.8,
-          "loadMs": 43.9,
-          "firstContentfulPaintMs": 184,
-          "transferredBytes": 311350,
-          "resourceCount": 4,
+          "ttfbMs": 2.4,
+          "domContentLoadedMs": 59.5,
+          "loadMs": 59.7,
+          "firstContentfulPaintMs": 100,
+          "transferredBytes": 336587,
+          "resourceCount": 10,
           "slowestResources": [
             {
-              "name": "http://127.0.0.1:4173/assets/index-qppnrnrv.js",
+              "name": "http://127.0.0.1:4173/assets/index-BJY8GYw0.js",
               "initiatorType": "script",
-              "durationMs": 16.5,
-              "transferSize": 130728
+              "durationMs": 29.9,
+              "transferSize": 150816
             },
             {
-              "name": "http://127.0.0.1:4173/assets/index-DNMyFDWt.css",
+              "name": "http://127.0.0.1:4173/assets/index-BXBhkc78.css",
               "initiatorType": "link",
-              "durationMs": 6.9,
-              "transferSize": 13879
+              "durationMs": 15.4,
+              "transferSize": 6350
             },
             {
-              "name": "http://127.0.0.1:4173/assets/john-logo-CgRb4ryM.png",
-              "initiatorType": "img",
-              "durationMs": 3.4,
-              "transferSize": 164953
+              "name": "http://127.0.0.1:4173/assets/authPages-C0c09b5t.css",
+              "initiatorType": "link",
+              "durationMs": 7.2,
+              "transferSize": 5881
             },
             {
-              "name": "http://127.0.0.1:4173/favicon.svg",
-              "initiatorType": "other",
-              "durationMs": 3.3,
-              "transferSize": 1790
-            }
-          ]
-        },
-        {
-          "ttfbMs": 2.3,
-          "domContentLoadedMs": 43.1,
-          "loadMs": 43.2,
-          "firstContentfulPaintMs": 112,
-          "transferredBytes": 311350,
-          "resourceCount": 4,
-          "slowestResources": [
-            {
-              "name": "http://127.0.0.1:4173/assets/index-qppnrnrv.js",
+              "name": "http://127.0.0.1:4173/assets/authService-n-XdQjMK.js",
               "initiatorType": "script",
-              "durationMs": 16.3,
-              "transferSize": 130728
+              "durationMs": 5.8,
+              "transferSize": 1541
             },
             {
-              "name": "http://127.0.0.1:4173/assets/index-DNMyFDWt.css",
-              "initiatorType": "link",
-              "durationMs": 6.5,
-              "transferSize": 13879
-            },
-            {
-              "name": "http://127.0.0.1:4173/favicon.svg",
-              "initiatorType": "other",
-              "durationMs": 4.2,
-              "transferSize": 1790
-            },
-            {
-              "name": "http://127.0.0.1:4173/assets/john-logo-CgRb4ryM.png",
-              "initiatorType": "img",
-              "durationMs": 3.7,
-              "transferSize": 164953
-            }
-          ]
-        },
-        {
-          "ttfbMs": 2.1,
-          "domContentLoadedMs": 47,
-          "loadMs": 47.2,
-          "firstContentfulPaintMs": 116,
-          "transferredBytes": 311350,
-          "resourceCount": 4,
-          "slowestResources": [
-            {
-              "name": "http://127.0.0.1:4173/assets/index-qppnrnrv.js",
+              "name": "http://127.0.0.1:4173/assets/john-logo-C_nv42Qh.js",
               "initiatorType": "script",
-              "durationMs": 18.5,
-              "transferSize": 130728
-            },
-            {
-              "name": "http://127.0.0.1:4173/assets/index-DNMyFDWt.css",
-              "initiatorType": "link",
-              "durationMs": 7.3,
-              "transferSize": 13879
-            },
-            {
-              "name": "http://127.0.0.1:4173/assets/john-logo-CgRb4ryM.png",
-              "initiatorType": "img",
-              "durationMs": 4,
-              "transferSize": 164953
-            },
-            {
-              "name": "http://127.0.0.1:4173/favicon.svg",
-              "initiatorType": "other",
-              "durationMs": 4,
-              "transferSize": 1790
-            }
-          ]
-        },
-        {
-          "ttfbMs": 3.9,
-          "domContentLoadedMs": 95,
-          "loadMs": 95.1,
-          "firstContentfulPaintMs": 168,
-          "transferredBytes": 311350,
-          "resourceCount": 4,
-          "slowestResources": [
-            {
-              "name": "http://127.0.0.1:4173/assets/index-qppnrnrv.js",
-              "initiatorType": "script",
-              "durationMs": 37.3,
-              "transferSize": 130728
-            },
-            {
-              "name": "http://127.0.0.1:4173/assets/index-DNMyFDWt.css",
-              "initiatorType": "link",
-              "durationMs": 16.4,
-              "transferSize": 13879
-            },
-            {
-              "name": "http://127.0.0.1:4173/favicon.svg",
-              "initiatorType": "other",
-              "durationMs": 7.8,
-              "transferSize": 1790
-            },
-            {
-              "name": "http://127.0.0.1:4173/assets/john-logo-CgRb4ryM.png",
-              "initiatorType": "img",
-              "durationMs": 3.2,
-              "transferSize": 164953
+              "durationMs": 5.7,
+              "transferSize": 354
             }
           ]
         },
         {
           "ttfbMs": 1.7,
-          "domContentLoadedMs": 95.1,
-          "loadMs": 95.3,
-          "firstContentfulPaintMs": 164,
-          "transferredBytes": 311350,
-          "resourceCount": 4,
+          "domContentLoadedMs": 53.9,
+          "loadMs": 54,
+          "firstContentfulPaintMs": 92,
+          "transferredBytes": 336587,
+          "resourceCount": 10,
           "slowestResources": [
             {
-              "name": "http://127.0.0.1:4173/assets/index-qppnrnrv.js",
+              "name": "http://127.0.0.1:4173/assets/index-BJY8GYw0.js",
               "initiatorType": "script",
-              "durationMs": 25.3,
-              "transferSize": 130728
+              "durationMs": 24.5,
+              "transferSize": 150816
             },
             {
-              "name": "http://127.0.0.1:4173/assets/index-DNMyFDWt.css",
+              "name": "http://127.0.0.1:4173/assets/index-BXBhkc78.css",
               "initiatorType": "link",
-              "durationMs": 9.4,
-              "transferSize": 13879
+              "durationMs": 11.1,
+              "transferSize": 6350
             },
             {
-              "name": "http://127.0.0.1:4173/assets/john-logo-CgRb4ryM.png",
-              "initiatorType": "img",
-              "durationMs": 4.4,
-              "transferSize": 164953
+              "name": "http://127.0.0.1:4173/assets/authPages-C0c09b5t.css",
+              "initiatorType": "link",
+              "durationMs": 5.7,
+              "transferSize": 5881
             },
             {
-              "name": "http://127.0.0.1:4173/favicon.svg",
-              "initiatorType": "other",
-              "durationMs": 3.7,
-              "transferSize": 1790
+              "name": "http://127.0.0.1:4173/assets/john-logo-C_nv42Qh.js",
+              "initiatorType": "script",
+              "durationMs": 5.5,
+              "transferSize": 354
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/LanguageSwitcher-D4dLiww3.js",
+              "initiatorType": "script",
+              "durationMs": 5.5,
+              "transferSize": 1271
+            }
+          ]
+        },
+        {
+          "ttfbMs": 3.4,
+          "domContentLoadedMs": 54.8,
+          "loadMs": 54.9,
+          "firstContentfulPaintMs": 96,
+          "transferredBytes": 336587,
+          "resourceCount": 10,
+          "slowestResources": [
+            {
+              "name": "http://127.0.0.1:4173/assets/index-BJY8GYw0.js",
+              "initiatorType": "script",
+              "durationMs": 23.8,
+              "transferSize": 150816
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/index-BXBhkc78.css",
+              "initiatorType": "link",
+              "durationMs": 8.5,
+              "transferSize": 6350
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/authPages-C0c09b5t.css",
+              "initiatorType": "link",
+              "durationMs": 6.9,
+              "transferSize": 5881
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/authService-n-XdQjMK.js",
+              "initiatorType": "script",
+              "durationMs": 5.7,
+              "transferSize": 1541
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/john-logo-C_nv42Qh.js",
+              "initiatorType": "script",
+              "durationMs": 5.6,
+              "transferSize": 354
+            }
+          ]
+        },
+        {
+          "ttfbMs": 3,
+          "domContentLoadedMs": 59.3,
+          "loadMs": 59.5,
+          "firstContentfulPaintMs": 96,
+          "transferredBytes": 336587,
+          "resourceCount": 10,
+          "slowestResources": [
+            {
+              "name": "http://127.0.0.1:4173/assets/index-BJY8GYw0.js",
+              "initiatorType": "script",
+              "durationMs": 22.4,
+              "transferSize": 150816
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/index-BXBhkc78.css",
+              "initiatorType": "link",
+              "durationMs": 7.8,
+              "transferSize": 6350
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/authPages-C0c09b5t.css",
+              "initiatorType": "link",
+              "durationMs": 7.2,
+              "transferSize": 5881
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/authService-n-XdQjMK.js",
+              "initiatorType": "script",
+              "durationMs": 6.2,
+              "transferSize": 1541
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/LanguageSwitcher-D4dLiww3.js",
+              "initiatorType": "script",
+              "durationMs": 6.2,
+              "transferSize": 1271
+            }
+          ]
+        },
+        {
+          "ttfbMs": 2.4,
+          "domContentLoadedMs": 67.8,
+          "loadMs": 67.9,
+          "firstContentfulPaintMs": 104,
+          "transferredBytes": 336587,
+          "resourceCount": 10,
+          "slowestResources": [
+            {
+              "name": "http://127.0.0.1:4173/assets/index-BJY8GYw0.js",
+              "initiatorType": "script",
+              "durationMs": 29.4,
+              "transferSize": 150816
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/index-BXBhkc78.css",
+              "initiatorType": "link",
+              "durationMs": 10.9,
+              "transferSize": 6350
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/authPages-C0c09b5t.css",
+              "initiatorType": "link",
+              "durationMs": 5.6,
+              "transferSize": 5881
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/authService-n-XdQjMK.js",
+              "initiatorType": "script",
+              "durationMs": 5.1,
+              "transferSize": 1541
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/LanguageSwitcher-D4dLiww3.js",
+              "initiatorType": "script",
+              "durationMs": 4.8,
+              "transferSize": 1271
             }
           ]
         }
       ],
       "p95": {
-        "ttfbMs": 3.9,
-        "domContentLoadedMs": 95.1,
-        "loadMs": 95.3,
-        "firstContentfulPaintMs": 184,
-        "transferredBytes": 311350
+        "ttfbMs": 3.4,
+        "domContentLoadedMs": 67.8,
+        "loadMs": 67.9,
+        "firstContentfulPaintMs": 104,
+        "transferredBytes": 336587
       }
     },
     {
       "route": "/candidate",
       "samples": [
         {
-          "ttfbMs": 1.3,
-          "domContentLoadedMs": 68.3,
-          "loadMs": 68.4,
-          "firstContentfulPaintMs": 144,
-          "transferredBytes": 146397,
+          "ttfbMs": 1.8,
+          "domContentLoadedMs": 44.7,
+          "loadMs": 45,
+          "firstContentfulPaintMs": 84,
+          "transferredBytes": 158956,
           "resourceCount": 3,
           "slowestResources": [
             {
-              "name": "http://127.0.0.1:4173/assets/index-qppnrnrv.js",
+              "name": "http://127.0.0.1:4173/assets/index-BJY8GYw0.js",
               "initiatorType": "script",
-              "durationMs": 20.7,
-              "transferSize": 130728
+              "durationMs": 17.7,
+              "transferSize": 150816
             },
             {
-              "name": "http://127.0.0.1:4173/assets/index-DNMyFDWt.css",
+              "name": "http://127.0.0.1:4173/assets/index-BXBhkc78.css",
               "initiatorType": "link",
-              "durationMs": 12.2,
-              "transferSize": 13879
-            },
-            {
-              "name": "http://127.0.0.1:4173/favicon.svg",
-              "initiatorType": "other",
-              "durationMs": 4.9,
-              "transferSize": 1790
-            }
-          ]
-        },
-        {
-          "ttfbMs": 3.8,
-          "domContentLoadedMs": 103,
-          "loadMs": 103,
-          "firstContentfulPaintMs": 156,
-          "transferredBytes": 146397,
-          "resourceCount": 3,
-          "slowestResources": [
-            {
-              "name": "http://127.0.0.1:4173/assets/index-qppnrnrv.js",
-              "initiatorType": "script",
-              "durationMs": 45.6,
-              "transferSize": 130728
-            },
-            {
-              "name": "http://127.0.0.1:4173/assets/index-DNMyFDWt.css",
-              "initiatorType": "link",
-              "durationMs": 22.4,
-              "transferSize": 13879
-            },
-            {
-              "name": "http://127.0.0.1:4173/favicon.svg",
-              "initiatorType": "other",
-              "durationMs": 5.4,
-              "transferSize": 1790
-            }
-          ]
-        },
-        {
-          "ttfbMs": 4,
-          "domContentLoadedMs": 87.4,
-          "loadMs": 88.1,
-          "firstContentfulPaintMs": 552,
-          "transferredBytes": 311650,
-          "resourceCount": 6,
-          "slowestResources": [
-            {
-              "name": "http://127.0.0.1:8081/api/session",
-              "initiatorType": "fetch",
-              "durationMs": 59.7,
-              "transferSize": 0
-            },
-            {
-              "name": "http://127.0.0.1:4173/assets/index-qppnrnrv.js",
-              "initiatorType": "script",
-              "durationMs": 29.7,
-              "transferSize": 130728
-            },
-            {
-              "name": "http://127.0.0.1:4173/assets/index-DNMyFDWt.css",
-              "initiatorType": "link",
-              "durationMs": 9.9,
-              "transferSize": 13879
-            },
-            {
-              "name": "http://127.0.0.1:4173/favicon.svg",
-              "initiatorType": "other",
-              "durationMs": 2.6,
-              "transferSize": 1790
-            },
-            {
-              "name": "http://127.0.0.1:4173/assets/john-logo-CgRb4ryM.png",
-              "initiatorType": "img",
-              "durationMs": 2.6,
-              "transferSize": 164953
-            }
-          ]
-        },
-        {
-          "ttfbMs": 1.9,
-          "domContentLoadedMs": 67.5,
-          "loadMs": 67.6,
-          "firstContentfulPaintMs": 112,
-          "transferredBytes": 146397,
-          "resourceCount": 3,
-          "slowestResources": [
-            {
-              "name": "http://127.0.0.1:4173/assets/index-qppnrnrv.js",
-              "initiatorType": "script",
-              "durationMs": 14.9,
-              "transferSize": 130728
-            },
-            {
-              "name": "http://127.0.0.1:4173/favicon.svg",
-              "initiatorType": "other",
               "durationMs": 6.8,
-              "transferSize": 1790
-            },
-            {
-              "name": "http://127.0.0.1:4173/assets/index-DNMyFDWt.css",
-              "initiatorType": "link",
-              "durationMs": 6.5,
-              "transferSize": 13879
-            }
-          ]
-        },
-        {
-          "ttfbMs": 1.9,
-          "domContentLoadedMs": 79.1,
-          "loadMs": 79.2,
-          "firstContentfulPaintMs": 120,
-          "transferredBytes": 146397,
-          "resourceCount": 3,
-          "slowestResources": [
-            {
-              "name": "http://127.0.0.1:4173/assets/index-qppnrnrv.js",
-              "initiatorType": "script",
-              "durationMs": 15.1,
-              "transferSize": 130728
-            },
-            {
-              "name": "http://127.0.0.1:4173/assets/index-DNMyFDWt.css",
-              "initiatorType": "link",
-              "durationMs": 7.1,
-              "transferSize": 13879
+              "transferSize": 6350
             },
             {
               "name": "http://127.0.0.1:4173/favicon.svg",
               "initiatorType": "other",
-              "durationMs": 3.2,
+              "durationMs": 2.9,
+              "transferSize": 1790
+            }
+          ]
+        },
+        {
+          "ttfbMs": 2.9,
+          "domContentLoadedMs": 46.6,
+          "loadMs": 46.9,
+          "firstContentfulPaintMs": 80,
+          "transferredBytes": 158956,
+          "resourceCount": 3,
+          "slowestResources": [
+            {
+              "name": "http://127.0.0.1:4173/assets/index-BJY8GYw0.js",
+              "initiatorType": "script",
+              "durationMs": 18.1,
+              "transferSize": 150816
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/index-BXBhkc78.css",
+              "initiatorType": "link",
+              "durationMs": 6.3,
+              "transferSize": 6350
+            },
+            {
+              "name": "http://127.0.0.1:4173/favicon.svg",
+              "initiatorType": "other",
+              "durationMs": 3,
+              "transferSize": 1790
+            }
+          ]
+        },
+        {
+          "ttfbMs": 1.5,
+          "domContentLoadedMs": 43.2,
+          "loadMs": 43.5,
+          "firstContentfulPaintMs": 84,
+          "transferredBytes": 158956,
+          "resourceCount": 3,
+          "slowestResources": [
+            {
+              "name": "http://127.0.0.1:4173/assets/index-BJY8GYw0.js",
+              "initiatorType": "script",
+              "durationMs": 16.7,
+              "transferSize": 150816
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/index-BXBhkc78.css",
+              "initiatorType": "link",
+              "durationMs": 6.8,
+              "transferSize": 6350
+            },
+            {
+              "name": "http://127.0.0.1:4173/favicon.svg",
+              "initiatorType": "other",
+              "durationMs": 3.9,
+              "transferSize": 1790
+            }
+          ]
+        },
+        {
+          "ttfbMs": 1.8,
+          "domContentLoadedMs": 48.1,
+          "loadMs": 48.3,
+          "firstContentfulPaintMs": 80,
+          "transferredBytes": 158956,
+          "resourceCount": 3,
+          "slowestResources": [
+            {
+              "name": "http://127.0.0.1:4173/assets/index-BJY8GYw0.js",
+              "initiatorType": "script",
+              "durationMs": 19.9,
+              "transferSize": 150816
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/index-BXBhkc78.css",
+              "initiatorType": "link",
+              "durationMs": 8.3,
+              "transferSize": 6350
+            },
+            {
+              "name": "http://127.0.0.1:4173/favicon.svg",
+              "initiatorType": "other",
+              "durationMs": 3.5,
+              "transferSize": 1790
+            }
+          ]
+        },
+        {
+          "ttfbMs": 1.6,
+          "domContentLoadedMs": 43.1,
+          "loadMs": 43.3,
+          "firstContentfulPaintMs": 80,
+          "transferredBytes": 158956,
+          "resourceCount": 3,
+          "slowestResources": [
+            {
+              "name": "http://127.0.0.1:4173/assets/index-BJY8GYw0.js",
+              "initiatorType": "script",
+              "durationMs": 16.6,
+              "transferSize": 150816
+            },
+            {
+              "name": "http://127.0.0.1:4173/assets/index-BXBhkc78.css",
+              "initiatorType": "link",
+              "durationMs": 5.9,
+              "transferSize": 6350
+            },
+            {
+              "name": "http://127.0.0.1:4173/favicon.svg",
+              "initiatorType": "other",
+              "durationMs": 3.6,
               "transferSize": 1790
             }
           ]
         }
       ],
       "p95": {
-        "ttfbMs": 4,
-        "domContentLoadedMs": 103,
-        "loadMs": 103,
-        "firstContentfulPaintMs": 552,
-        "transferredBytes": 311650
+        "ttfbMs": 2.9,
+        "domContentLoadedMs": 48.1,
+        "loadMs": 48.3,
+        "firstContentfulPaintMs": 84,
+        "transferredBytes": 158956
       }
     }
   ],
   "bundles": [
     {
-      "file": "index-DNMyFDWt.css",
-      "rawBytes": 64540,
-      "gzipBytes": 13579
+      "file": "AccessibleNotice-CbkMVij9.js",
+      "rawBytes": 388,
+      "gzipBytes": 288
     },
     {
-      "file": "index-qppnrnrv.js",
-      "rawBytes": 482146,
-      "gzipBytes": 130428
+      "file": "AdminDashboard-DjuUqhyp.js",
+      "rawBytes": 53323,
+      "gzipBytes": 10915
+    },
+    {
+      "file": "ArrowIcon-CAum_7ya.js",
+      "rawBytes": 294,
+      "gzipBytes": 237
+    },
+    {
+      "file": "authPages-C0c09b5t.css",
+      "rawBytes": 23894,
+      "gzipBytes": 5581
+    },
+    {
+      "file": "authPages-Dde-BNTE.js",
+      "rawBytes": 631,
+      "gzipBytes": 406
+    },
+    {
+      "file": "authService-n-XdQjMK.js",
+      "rawBytes": 5375,
+      "gzipBytes": 1241
+    },
+    {
+      "file": "Brand-55IeFhO-.js",
+      "rawBytes": 502,
+      "gzipBytes": 312
+    },
+    {
+      "file": "CandidateDashboard-DC739TzZ.css",
+      "rawBytes": 1560,
+      "gzipBytes": 586
+    },
+    {
+      "file": "CandidateDashboard-L7xXBXP-.js",
+      "rawBytes": 73529,
+      "gzipBytes": 17029
+    },
+    {
+      "file": "CandidateProfileSetup-BfO4Z2Y-.js",
+      "rawBytes": 11352,
+      "gzipBytes": 3323
+    },
+    {
+      "file": "EmployerDashboard-Brz8TPCU.js",
+      "rawBytes": 44454,
+      "gzipBytes": 10154
+    },
+    {
+      "file": "EmployersPage-B7AzYr5V.css",
+      "rawBytes": 2154,
+      "gzipBytes": 813
+    },
+    {
+      "file": "EmployersPage-D6zFspr9.js",
+      "rawBytes": 1408,
+      "gzipBytes": 528
+    },
+    {
+      "file": "ForgotPasswordPage-CRmxYOew.js",
+      "rawBytes": 4281,
+      "gzipBytes": 1474
+    },
+    {
+      "file": "index-BJY8GYw0.js",
+      "rawBytes": 495907,
+      "gzipBytes": 150516
+    },
+    {
+      "file": "index-BXBhkc78.css",
+      "rawBytes": 27186,
+      "gzipBytes": 6050
+    },
+    {
+      "file": "jobDefinitions-y3q2Kp0y.js",
+      "rawBytes": 190,
+      "gzipBytes": 149
+    },
+    {
+      "file": "john-logo-C_nv42Qh.js",
+      "rawBytes": 54,
+      "gzipBytes": 74
+    },
+    {
+      "file": "LanguageSwitcher-D4dLiww3.js",
+      "rawBytes": 971,
+      "gzipBytes": 530
+    },
+    {
+      "file": "privacy-DvInAxxe.js",
+      "rawBytes": 34,
+      "gzipBytes": 54
+    },
+    {
+      "file": "PrivacyPage-ClVQS264.js",
+      "rawBytes": 1263,
+      "gzipBytes": 509
+    },
+    {
+      "file": "PrivacyPage-JoFCtX3f.css",
+      "rawBytes": 1313,
+      "gzipBytes": 626
+    },
+    {
+      "file": "profileCompletion-DfpFRNkj.css",
+      "rawBytes": 17025,
+      "gzipBytes": 3611
+    },
+    {
+      "file": "profileCompletion-HCn-Ag5z.js",
+      "rawBytes": 14013,
+      "gzipBytes": 4022
+    },
+    {
+      "file": "profileOptions-CJzbROpu.js",
+      "rawBytes": 1131,
+      "gzipBytes": 307
+    },
+    {
+      "file": "ResetPasswordPage-KHPrlKoZ.js",
+      "rawBytes": 4285,
+      "gzipBytes": 1498
+    },
+    {
+      "file": "SignInPage-B-2GZ3PT.js",
+      "rawBytes": 7555,
+      "gzipBytes": 2400
+    },
+    {
+      "file": "SignUpPage-1PEkz60-.js",
+      "rawBytes": 14891,
+      "gzipBytes": 4039
+    },
+    {
+      "file": "Trans-CfG5H6RA.js",
+      "rawBytes": 10648,
+      "gzipBytes": 4474
+    },
+    {
+      "file": "useDialogFocus-BDIZUunl.js",
+      "rawBytes": 1287,
+      "gzipBytes": 602
+    },
+    {
+      "file": "VerifierDashboard-CmmgNwFZ.js",
+      "rawBytes": 8189,
+      "gzipBytes": 2661
+    },
+    {
+      "file": "VerifierDashboard-Djx22sWV.css",
+      "rawBytes": 6305,
+      "gzipBytes": 1889
+    },
+    {
+      "file": "VoiceNavigationHelpPage-B8r4qL9D.css",
+      "rawBytes": 1811,
+      "gzipBytes": 738
+    },
+    {
+      "file": "VoiceNavigationHelpPage-Lqk8tmnI.js",
+      "rawBytes": 2285,
+      "gzipBytes": 662
+    },
+    {
+      "file": "WelcomePage-BiDGCR2j.css",
+      "rawBytes": 21367,
+      "gzipBytes": 5120
+    },
+    {
+      "file": "WelcomePage-DVZHuP2f.js",
+      "rawBytes": 15403,
+      "gzipBytes": 3561
     }
   ],
   "limitations": [
