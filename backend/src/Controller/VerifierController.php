@@ -146,8 +146,8 @@ final class VerifierController extends AbstractController
         if (!$verification->hasDocument()) {
             return $this->json(['message' => 'The verification document has reached the end of its retention period and was deleted.'], 410);
         }
-        $path = $storage->path((string) $verification->getDocumentStoredName());
-        if (!is_file($path)) {
+        $path = $storage->locate((string) $verification->getDocumentStoredName());
+        if ($path === null) {
             return $this->json(['message' => 'The private verification document is unavailable.'], 404);
         }
 
@@ -168,6 +168,9 @@ final class VerifierController extends AbstractController
             $disposition,
             (string) $verification->getDocumentOriginalName()
         );
+        if ($storage->usesTemporaryDownloads()) {
+            $response->deleteFileAfterSend(true);
+        }
         $response->headers->set('Cache-Control', 'private, no-store, max-age=0');
         $response->headers->set('X-Content-Type-Options', 'nosniff');
 

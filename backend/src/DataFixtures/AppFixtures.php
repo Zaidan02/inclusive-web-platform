@@ -20,6 +20,10 @@ final class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        $demoPassword = trim((string) ($_ENV['DEMO_ACCOUNT_PASSWORD'] ?? self::DEFAULT_PASSWORD));
+        if (strlen($demoPassword) < 12) {
+            throw new \RuntimeException('DEMO_ACCOUNT_PASSWORD must contain at least 12 characters.');
+        }
         $candidateUser = null;
         $employerUsers = [];
         $accounts = [
@@ -41,7 +45,7 @@ final class AppFixtures extends Fixture
                 ->setIsArchived(false)
                 ->setVerificationToken(null);
 
-            $user->setPassword(password_hash(self::DEFAULT_PASSWORD, PASSWORD_BCRYPT));
+            $user->setPassword(password_hash($demoPassword, PASSWORD_BCRYPT));
 
             $manager->persist($user);
 

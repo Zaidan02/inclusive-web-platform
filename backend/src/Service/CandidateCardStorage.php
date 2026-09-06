@@ -14,8 +14,11 @@ final class CandidateCardStorage
         'image/png' => 'png',
     ];
 
-    public function __construct(private readonly string $candidateCardDirectory)
-    {
+    public function __construct(
+        private readonly string $candidateCardDirectory,
+        private readonly SupabaseStorageClient $supabaseStorage,
+        private readonly string $candidateCardBucket,
+    ) {
     }
 
     /** @return array{storedName: string, originalName: string, mimeType: string, size: int} */
@@ -36,13 +39,28 @@ final class CandidateCardStorage
             throw new \InvalidArgumentException('Upload a PDF, JPEG, or PNG disability card.');
         }
 
+        $storedName = bin2hex(random_bytes(24)) . '.' . $extension;
+        if ($this->supabaseStorage->isConfigured()) {
+            $this->supabaseStorage->upload(
+                $this->candidateCardBucket,
+                $storedName,
+                $file->getPathname(),
+                $mimeType
+            );
+
+            return [
+                'storedName' => $storedName,
+                'originalName' => mb_substr(basename($file->getClientOriginalName()), 0, 255),
+                'mimeType' => $mimeType,
+                'size' => $size,
+            ];
+        }
+
         if (!is_dir($this->candidateCardDirectory)
             && !mkdir($concurrentDirectory = $this->candidateCardDirectory, 0700, true)
             && !is_dir($concurrentDirectory)) {
             throw new \RuntimeException('The private document directory could not be created.');
         }
-
-        $storedName = bin2hex(random_bytes(24)) . '.' . $extension;
         $file->move($this->candidateCardDirectory, $storedName);
         @chmod($this->path($storedName), 0600);
 
@@ -64,8 +82,40 @@ final class CandidateCardStorage
         return $this->candidateCardDirectory . DIRECTORY_SEPARATOR . $safeName;
     }
 
+    public function locate(string $storedName): ?string
+    {
+        if (!$this->supabaseStorage->isConfigured()) {
+            $path = $this->path($storedName);
+            return is_file($path) ? $path : null;
+        }
+
+        $temporaryPath = tempnam(sys_get_temp_dir(), 'join-card-');
+        if ($temporaryPath === false) {
+            throw new \RuntimeException('The private document could not be prepared for delivery.');
+        }
+        try {
+            if (!$this->supabaseStorage->download($this->candidateCardBucket, $storedName, $temporaryPath)) {
+                @unlink($temporaryPath);
+                return null;
+            }
+        } catch (\Throwable $error) {
+            @unlink($temporaryPath);
+            throw $error;
+        }
+        return $temporaryPath;
+    }
+
+    public function usesTemporaryDownloads(): bool
+    {
+        return $this->supabaseStorage->isConfigured();
+    }
+
     public function delete(string $storedName): void
     {
+        if ($this->supabaseStorage->isConfigured()) {
+            $this->supabaseStorage->delete($this->candidateCardBucket, $storedName);
+            return;
+        }
         $path = $this->path($storedName);
         if (is_file($path)) {
             @unlink($path);

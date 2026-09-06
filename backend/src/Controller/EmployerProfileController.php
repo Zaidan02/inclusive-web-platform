@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\EmployerProfile;
 use App\Entity\User;
+use App\Service\EmployerLogoStorage;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -97,32 +98,6 @@ final class EmployerProfileController extends AbstractController
         return $profile;
     }
 
-    private function uploadLogo(UploadedFile $file): string
-    {
-        $allowedMimeTypes = ['image/jpeg', 'image/png'];
-
-        if (!in_array($file->getMimeType(), $allowedMimeTypes, true)) {
-            throw new \RuntimeException('Logo must be an image file.');
-        }
-
-        if ($file->getSize() > 3 * 1024 * 1024) {
-            throw new \RuntimeException('Logo image must be smaller than 3MB.');
-        }
-
-        $uploadDir = $this->getParameter('kernel.project_dir') . '/public/uploads/employer-logos';
-
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0775, true);
-        }
-
-        $extension = $file->guessExtension() ?: 'png';
-        $fileName = uniqid('employer_logo_', true) . '.' . $extension;
-
-        $file->move($uploadDir, $fileName);
-
-        return '/uploads/employer-logos/' . $fileName;
-    }
-
     #[Route('/api/employer/profile', name: 'api_employer_profile_get', methods: ['GET'])]
     public function getProfile(
         Request $request,
@@ -153,7 +128,8 @@ final class EmployerProfileController extends AbstractController
     public function updateProfile(
         Request $request,
         EntityManagerInterface $entityManager,
-        JWTEncoderInterface $jwtEncoder
+        JWTEncoderInterface $jwtEncoder,
+        EmployerLogoStorage $logoStorage
     ): JsonResponse {
         $employerCheck = $this->verifyEmployer($request, $jwtEncoder);
 
@@ -183,8 +159,8 @@ final class EmployerProfileController extends AbstractController
 
             if ($logoFile instanceof UploadedFile) {
                 try {
-                    $profile->setLogoUrl($this->uploadLogo($logoFile));
-                } catch (\RuntimeException $e) {
+                    $profile->setLogoUrl($logoStorage->store($logoFile));
+                } catch (\InvalidArgumentException|\RuntimeException $e) {
                     return $this->json(['message' => $e->getMessage()], 400);
                 }
             }

@@ -1,17 +1,27 @@
 FROM php:8.4-apache
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     unzip \
+    libonig-dev \
     libpq-dev \
-    && docker-php-ext-install pdo pdo_pgsql pgsql \
-    && a2enmod rewrite \
+    python3 \
+    python3-openpyxl \
+    && docker-php-ext-install mbstring opcache pdo pdo_pgsql pgsql \
+    && a2enmod rewrite headers \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
-COPY . /app
+
+COPY backend/composer.json backend/composer.lock backend/symfony.lock ./
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts \
+    && mkdir -p var/cache var/log public/uploads/employer-logos \
+    && chown -R www-data:www-data var public/uploads
+
+COPY backend /app
+COPY tools /tools
 RUN touch /app/.env
 
 ENV APACHE_DOCUMENT_ROOT=/app/public
@@ -20,14 +30,14 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
     /etc/apache2/sites-available/*.conf \
     /etc/apache2/apache2.conf \
     /etc/apache2/conf-available/*.conf \
-    && printf '<Directory /app/public>\n\
-    AllowOverride All\n\
-    Require all granted\n\
-</Directory>\n' > /etc/apache2/conf-available/app.conf \
+    && printf '<Directory /app/public>\nAllowOverride All\nRequire all granted\n</Directory>\n' \
+       > /etc/apache2/conf-available/app.conf \
     && a2enconf app \
-    && composer install --no-dev --optimize-autoloader --no-interaction --no-scripts \
-    && mkdir -p /app/public/uploads/applications \
-    && chown -R www-data:www-data /app/public/uploads \
-    && chmod -R 775 /app/public/uploads
+    && printf 'opcache.enable=1\nopcache.enable_cli=1\nopcache.memory_consumption=192\nopcache.max_accelerated_files=20000\nopcache.validate_timestamps=0\nrealpath_cache_size=4096K\nrealpath_cache_ttl=600\n' \
+       > /usr/local/etc/php/conf.d/zz-performance.ini \
+    && composer dump-autoload --optimize --classmap-authoritative --no-scripts \
+    && chown -R www-data:www-data /app/var /app/public/uploads
 
-CMD ["sh", "-c", "php bin/console cache:clear --env=prod && php bin/console doctrine:migrations:migrate --no-interaction && apache2-foreground"]
+EXPOSE 10000
+
+CMD ["sh", "/app/docker/render-entrypoint.sh"]

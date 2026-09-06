@@ -11,7 +11,9 @@ final class CompatibilityScoringService
 {
     public function __construct(
         private readonly HttpClientInterface $httpClient,
-        private readonly string $scoringEngineUrl
+        private readonly string $scoringEngineUrl,
+        private readonly string $scoringEngineToken,
+        private readonly float $scoringEngineTimeout,
     ) {}
 
     /**
@@ -64,10 +66,14 @@ final class CompatibilityScoringService
     /** @return array<string, mixed> */
     private function request(array $payload): array
     {
-        $response = $this->httpClient->request('POST', rtrim($this->scoringEngineUrl, '/') . '/score', [
+        $options = [
             'json' => $payload,
-            'timeout' => 15,
-        ]);
+            'timeout' => $this->scoringEngineTimeout,
+        ];
+        if ($this->scoringEngineToken !== '') {
+            $options['headers'] = ['X-Scoring-Token' => $this->scoringEngineToken];
+        }
+        $response = $this->httpClient->request('POST', rtrim($this->scoringEngineUrl, '/') . '/score', $options);
         $status = $response->getStatusCode();
         $data = $response->toArray(false);
         if ($status >= 400) {

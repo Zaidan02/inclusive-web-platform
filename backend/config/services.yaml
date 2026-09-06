@@ -9,9 +9,17 @@
 parameters:
     env(PROFILE_AI_URL): 'http://127.0.0.1:5002'
     env(PROFILE_AI_TOKEN): ''
+    env(SCORING_ENGINE_TOKEN): ''
+    env(SCORING_ENGINE_TIMEOUT): '15'
     candidate_card_directory: '%kernel.project_dir%/var/private/disability_cards'
     application_document_directory: '%kernel.project_dir%/var/private/application_documents'
     legacy_application_document_directory: '%kernel.project_dir%/public/uploads/applications'
+    employer_logo_directory: '%kernel.project_dir%/public/uploads/employer-logos'
+    env(SUPABASE_URL): ''
+    env(SUPABASE_SECRET_KEY): ''
+    env(SUPABASE_CANDIDATE_CARD_BUCKET): 'candidate-verification'
+    env(SUPABASE_APPLICATION_DOCUMENT_BUCKET): 'application-documents'
+    env(SUPABASE_EMPLOYER_LOGO_BUCKET): 'employer-logos'
 
 services:
     # default configuration for services in *this* file
@@ -20,11 +28,19 @@ services:
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
             $scoringEngineUrl: '%env(SCORING_ENGINE_URL)%'
+            $scoringEngineToken: '%env(SCORING_ENGINE_TOKEN)%'
+            $scoringEngineTimeout: '%env(float:SCORING_ENGINE_TIMEOUT)%'
             $profileAiUrl: '%env(PROFILE_AI_URL)%'
             $profileAiToken: '%env(PROFILE_AI_TOKEN)%'
             $candidateCardDirectory: '%candidate_card_directory%'
             $applicationDocumentDirectory: '%application_document_directory%'
             $legacyApplicationDocumentDirectory: '%legacy_application_document_directory%'
+            $employerLogoDirectory: '%employer_logo_directory%'
+            $supabaseUrl: '%env(SUPABASE_URL)%'
+            $supabaseSecretKey: '%env(SUPABASE_SECRET_KEY)%'
+            $candidateCardBucket: '%env(SUPABASE_CANDIDATE_CARD_BUCKET)%'
+            $applicationDocumentBucket: '%env(SUPABASE_APPLICATION_DOCUMENT_BUCKET)%'
+            $employerLogoBucket: '%env(SUPABASE_EMPLOYER_LOGO_BUCKET)%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

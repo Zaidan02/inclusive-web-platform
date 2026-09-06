@@ -1,0 +1,126 @@
+services:
+  - type: web
+    name: join-hospitality-zm-scoring-staging
+    runtime: docker
+    plan: free
+    region: frankfurt
+    branch: staging-deployment
+    dockerfilePath: ./scoring_engine/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: SCORING_ENGINE_TOKEN
+        sync: false
+
+  - type: web
+    name: join-hospitality-zm-voice-staging
+    runtime: docker
+    plan: free
+    region: frankfurt
+    branch: staging-deployment
+    dockerfilePath: ./backend/voice_navigation/Dockerfile
+    dockerContext: ./backend/voice_navigation
+    healthCheckPath: /health
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: PROFILE_AI_TOKEN
+        sync: false
+      - key: VOICE_ALLOWED_ORIGIN
+        value: https://join-hospitality-zm-staging.onrender.com
+      - key: VOICE_MAX_AUDIO_BYTES
+        value: "10485760"
+      - key: VOICE_MAX_TRANSCRIPT_CHARS
+        value: "500"
+
+  - type: web
+    name: join-hospitality-zm-api-staging
+    runtime: docker
+    plan: free
+    region: frankfurt
+    branch: staging-deployment
+    dockerfilePath: ./backend/Dockerfile.render
+    dockerContext: .
+    healthCheckPath: /health
+    initialDeployHook: APP_ENV=dev php bin/console doctrine:fixtures:load --no-interaction
+    envVars:
+      - key: APP_ENV
+        value: prod
+      - key: APP_DEBUG
+        value: "0"
+      - key: APP_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_PRIVATE_KEY_BASE64
+        sync: false
+      - key: JWT_PUBLIC_KEY_BASE64
+        sync: false
+      - key: JWT_PASSPHRASE
+        sync: false
+      - key: DEMO_ACCOUNT_PASSWORD
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+      - key: SUPABASE_CANDIDATE_CARD_BUCKET
+        value: candidate-verification
+      - key: SUPABASE_APPLICATION_DOCUMENT_BUCKET
+        value: application-documents
+      - key: SUPABASE_EMPLOYER_LOGO_BUCKET
+        value: employer-logos
+      - key: SCORING_ENGINE_URL
+        value: https://join-hospitality-zm-scoring-staging.onrender.com
+      - key: SCORING_ENGINE_TOKEN
+        sync: false
+      - key: SCORING_ENGINE_TIMEOUT
+        value: "90"
+      - key: PROFILE_AI_URL
+        value: https://join-hospitality-zm-voice-staging.onrender.com
+      - key: PROFILE_AI_TOKEN
+        sync: false
+      - key: CORS_ALLOW_ORIGIN
+        value: ^https://join-hospitality-zm-staging\.onrender\.com$
+      - key: DEFAULT_URI
+        value: https://join-hospitality-zm-api-staging.onrender.com
+      - key: VERIFICATION_BASE_URL
+        value: https://join-hospitality-zm-api-staging.onrender.com
+      - key: RESET_PASSWORD_BASE_URL
+        value: https://join-hospitality-zm-staging.onrender.com
+      - key: MAILER_DSN
+        value: null://null
+      - key: MAILER_FROM
+        value: inclusive.web.platform@example.com
+
+  - type: web
+    name: join-hospitality-zm-staging
+    runtime: static
+    branch: staging-deployment
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_BACKEND_URL
+        value: https://join-hospitality-zm-api-staging.onrender.com
+      - key: VITE_API_URL
+        value: https://join-hospitality-zm-api-staging.onrender.com/api
+      - key: VITE_VOICE_NAVIGATION_URL
+        value: https://join-hospitality-zm-voice-staging.onrender.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: Permissions-Policy
+        value: microphone=(self), camera=(), geolocation=()

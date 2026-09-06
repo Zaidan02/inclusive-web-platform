@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import hmac
+import os
+
 from flask import Flask, jsonify, request
 
 from .engine import ScoringEngine
@@ -17,6 +20,10 @@ def create_app() -> Flask:
 
     @app.post("/score")
     def score():
+        configured_token = os.getenv("SCORING_ENGINE_TOKEN", "").strip()
+        supplied_token = request.headers.get("X-Scoring-Token", "")
+        if configured_token and not hmac.compare_digest(configured_token, supplied_token):
+            return jsonify({"message": "Unauthorized scoring request."}), 401
         try:
             payload = request.get_json(force=True)
             candidate = _candidate_from_dict(payload["candidate"])

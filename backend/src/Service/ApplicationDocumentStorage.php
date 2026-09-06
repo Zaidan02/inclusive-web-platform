@@ -17,6 +17,8 @@ final class ApplicationDocumentStorage
     public function __construct(
         private readonly string $applicationDocumentDirectory,
         private readonly string $legacyApplicationDocumentDirectory,
+        private readonly SupabaseStorageClient $supabaseStorage,
+        private readonly string $applicationDocumentBucket,
     ) {
     }
 
@@ -48,12 +50,29 @@ final class ApplicationDocumentStorage
         if ($extension === null) {
             throw new \InvalidArgumentException('Only validated PDF, DOC, and DOCX documents are allowed.');
         }
+        $storedName = bin2hex(random_bytes(24)) . '.' . $extension;
+        if ($this->supabaseStorage->isConfigured()) {
+            $storageMimeType = match ($extension) {
+                'pdf' => 'application/pdf',
+                'doc' => 'application/msword',
+                'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            };
+            $this->supabaseStorage->upload(
+                $this->applicationDocumentBucket,
+                $storedName,
+                $file->getPathname(),
+                $storageMimeType
+            );
+            return [
+                'storedName' => $storedName,
+                'originalName' => mb_substr(basename($file->getClientOriginalName()), 0, 255),
+            ];
+        }
         if (!is_dir($this->applicationDocumentDirectory)
             && !mkdir($directory = $this->applicationDocumentDirectory, 0700, true)
             && !is_dir($directory)) {
             throw new \RuntimeException('The private application-document directory could not be created.');
         }
-        $storedName = bin2hex(random_bytes(24)) . '.' . $extension;
         $file->move($this->applicationDocumentDirectory, $storedName);
         @chmod($this->path($storedName), 0600);
         return [
@@ -72,6 +91,22 @@ final class ApplicationDocumentStorage
 
     public function locate(string $storedName): ?string
     {
+        if ($this->supabaseStorage->isConfigured()) {
+            $temporaryPath = tempnam(sys_get_temp_dir(), 'join-application-');
+            if ($temporaryPath === false) {
+                throw new \RuntimeException('The private document could not be prepared for delivery.');
+            }
+            try {
+                if (!$this->supabaseStorage->download($this->applicationDocumentBucket, $storedName, $temporaryPath)) {
+                    @unlink($temporaryPath);
+                    return null;
+                }
+            } catch (\Throwable $error) {
+                @unlink($temporaryPath);
+                throw $error;
+            }
+            return $temporaryPath;
+        }
         $private = $this->path($storedName);
         if (is_file($private)) return $private;
         $legacy = $this->legacyApplicationDocumentDirectory . DIRECTORY_SEPARATOR . basename($storedName);
@@ -80,6 +115,9 @@ final class ApplicationDocumentStorage
 
     public function delete(string $storedName): void
     {
+        if ($this->supabaseStorage->isConfigured()) {
+            $this->supabaseStorage->delete($this->applicationDocumentBucket, $storedName);
+        }
         foreach ([$this->path($storedName), $this->legacyApplicationDocumentDirectory . DIRECTORY_SEPARATOR . basename($storedName)] as $path) {
             if (is_file($path)) @unlink($path);
         }
@@ -89,6 +127,19 @@ final class ApplicationDocumentStorage
     {
         $legacy = $this->legacyApplicationDocumentDirectory . DIRECTORY_SEPARATOR . basename($storedName);
         if (!is_file($legacy)) return false;
+        if ($this->supabaseStorage->isConfigured()) {
+            $mimeType = match (strtolower(pathinfo($storedName, PATHINFO_EXTENSION))) {
+                'pdf' => 'application/pdf',
+                'doc' => 'application/msword',
+                'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                default => 'application/octet-stream',
+            };
+            $this->supabaseStorage->upload($this->applicationDocumentBucket, $storedName, $legacy, $mimeType);
+            if (!@unlink($legacy)) {
+                throw new \RuntimeException('Could not remove the migrated legacy document.');
+            }
+            return true;
+        }
         if (!is_dir($this->applicationDocumentDirectory)) mkdir($this->applicationDocumentDirectory, 0700, true);
         $target = $this->path($storedName);
         if (!rename($legacy, $target)) throw new \RuntimeException('Could not move a legacy document to private storage.');
@@ -99,5 +150,10 @@ final class ApplicationDocumentStorage
     public function legacyExists(string $storedName): bool
     {
         return is_file($this->legacyApplicationDocumentDirectory . DIRECTORY_SEPARATOR . basename($storedName));
+    }
+
+    public function usesTemporaryDownloads(): bool
+    {
+        return $this->supabaseStorage->isConfigured();
     }
 }
