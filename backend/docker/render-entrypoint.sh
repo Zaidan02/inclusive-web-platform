@@ -13,7 +13,8 @@ fi
 mkdir -p /tmp/join-jwt
 printf '%s' "$JWT_PRIVATE_KEY_BASE64" | base64 -d > /tmp/join-jwt/private.pem
 printf '%s' "$JWT_PUBLIC_KEY_BASE64" | base64 -d > /tmp/join-jwt/public.pem
-chmod 600 /tmp/join-jwt/private.pem
+chown root:www-data /tmp/join-jwt/private.pem /tmp/join-jwt/public.pem
+chmod 640 /tmp/join-jwt/private.pem
 chmod 644 /tmp/join-jwt/public.pem
 export JWT_SECRET_KEY=/tmp/join-jwt/private.pem
 export JWT_PUBLIC_KEY=/tmp/join-jwt/public.pem
