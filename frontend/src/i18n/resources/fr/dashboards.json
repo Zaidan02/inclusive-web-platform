@@ -67,7 +67,13 @@
       "removeDisability": "Retirer {{name}}",
       "clearAll": "Tout effacer",
       "saving": "Enregistrement…",
-      "save": "Enregistrer le profil"
+      "save": "Enregistrer le profil",
+      "reset": "Réinitialiser le profil",
+      "resetting": "Réinitialisation…",
+      "resetTitle": "Recommencer votre profil ?",
+      "resetDescription": "Cette action efface les informations enregistrées dans votre profil, les handicaps sélectionnés, vos aptitudes, les postes qui vous intéressent et vos compétences confirmées. Votre compte, votre vérification, vos candidatures et vos données de confidentialité sont conservés.",
+      "resetConfirm": "Oui, réinitialiser mon profil",
+      "resetCancel": "Conserver mon profil"
     },
     "match": {
       "title": "Compatibilité fondée sur les tâches",
@@ -185,6 +191,7 @@
       "positionKnowledge": "Indiquez votre niveau actuel de connaissances de base pour ce poste.",
       "requiredProfile": "Ajoutez votre nom, votre localisation, votre niveau d'études, vos capacités pratiques et au moins un handicap.",
       "profileSave": "Votre profil n'a pas pu être enregistré. Réessayez.",
+      "profileReset": "Votre profil n'a pas pu être réinitialisé. Réessayez.",
       "applicationSubmit": "Votre candidature n'a pas pu être envoyée. Réessayez.",
       "positionsLoad": "Les postes d'hôtellerie n'ont pas pu être chargés. Réessayez."
     },

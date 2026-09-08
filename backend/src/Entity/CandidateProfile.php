@@ -171,6 +171,26 @@ class CandidateProfile
         return $this;
     }
 
+    public function resetSavedData(): static
+    {
+        $this->disabilities->clear();
+        $this->taskSkills->clear();
+        $this->positionInterests->clear();
+        $this->opportunityPreference = 'both';
+        $this->educationLevel = null;
+        $this->readingAbility = null;
+        $this->writingAbility = null;
+        $this->numeracyAbility = null;
+        $this->firstName = null;
+        $this->lastName = null;
+        $this->phone = null;
+        $this->location = null;
+        $this->about = null;
+        $this->updatedAt = new \DateTimeImmutable();
+
+        return $this;
+    }
+
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;

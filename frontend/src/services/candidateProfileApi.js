@@ -28,6 +28,14 @@ export async function updateCandidateProfile(profileData) {
   return readJson(response);
 }
 
+export async function resetCandidateProfile() {
+  const response = await fetch(`${API_BASE_URL}/candidate/profile/reset`, {
+    method: "POST",
+    headers: { "X-Auth-Token": getToken() },
+  });
+  return readJson(response);
+}
+
 export async function requestAiProfileSuggestions(profileData) {
   const response = await fetch(`${API_BASE_URL}/candidate/profile/ai-suggestions`, {
     method: "POST",

@@ -129,6 +129,30 @@ class CandidateProfileController extends AbstractController
         return $this->json(['profile' => $this->serializeProfile($user, $profile)]);
     }
 
+    #[Route('/api/candidate/profile/reset', name: 'candidate_profile_reset', methods: ['POST'])]
+    public function resetProfile(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        JWTEncoderInterface $jwtEncoder
+    ): JsonResponse {
+        $user = $this->getUserFromToken($request, $jwtEncoder, $entityManager);
+
+        if ($user instanceof JsonResponse) {
+            return $user;
+        }
+
+        $profile = $user->getCandidateProfile();
+        if ($profile) {
+            $profile->resetSavedData();
+            $entityManager->flush();
+        }
+
+        return $this->json([
+            'message' => 'Profile reset successfully.',
+            'profile' => $this->serializeProfile($user, $profile),
+        ]);
+    }
+
     #[Route('/api/candidate/profile', name: 'candidate_profile_update', methods: ['PATCH'])]
     public function updateProfile(
         Request $request,

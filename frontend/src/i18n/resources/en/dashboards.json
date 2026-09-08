@@ -67,7 +67,13 @@
       "removeDisability": "Remove {{name}}",
       "clearAll": "Clear all",
       "saving": "Saving…",
-      "save": "Save profile"
+      "save": "Save profile",
+      "reset": "Reset profile",
+      "resetting": "Resetting…",
+      "resetTitle": "Start your profile again?",
+      "resetDescription": "This clears your saved profile details, selected disabilities, abilities, position interests, and confirmed task skills. Your account, verification, applications, and privacy records will remain.",
+      "resetConfirm": "Yes, reset my profile",
+      "resetCancel": "Keep my profile"
     },
     "match": {
       "title": "Task-based compatibility",
@@ -185,6 +191,7 @@
       "positionKnowledge": "Choose your current level of basic knowledge for this position.",
       "requiredProfile": "Add your name, location, education level, practical abilities, and at least one disability.",
       "profileSave": "Your profile could not be saved. Please try again.",
+      "profileReset": "Your profile could not be reset. Please try again.",
       "applicationSubmit": "Your application could not be submitted. Please try again.",
       "positionsLoad": "Hospitality positions could not be loaded. Please try again."
     },

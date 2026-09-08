@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getToken, logout } from "../services/authService";
 import { applyToJob, getCandidateApplications, getCandidateMatches } from "../services/candidateApi";
-import { getCandidateJobDefinitions, getCandidateProfile, updateCandidateProfile } from "../services/candidateProfileApi";
+import { getCandidateJobDefinitions, getCandidateProfile, resetCandidateProfile, updateCandidateProfile } from "../services/candidateProfileApi";
 import { isCandidateProfileComplete } from "../features/candidate/profile/profileCompletion";
 import { disabilityOptions } from "../features/candidate/profile/profileOptions";
 import AiProfileBuilder from "../features/candidate/profile/AiProfileBuilder";
@@ -390,6 +390,8 @@ function CandidateDashboard() {
   const [errorMessage, setErrorMessage] = useState("");
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [savingProfile, setSavingProfile] = useState(false);
+  const [resettingProfile, setResettingProfile] = useState(false);
+  const [showResetProfileDialog, setShowResetProfileDialog] = useState(false);
   const [aiResults, setAiResults] = useState(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState("");
@@ -426,6 +428,9 @@ function CandidateDashboard() {
   const aiResultsRef = useRef(null);
   const voiceActionHandlerRef = useRef(null);
   const companyDialogRef = useDialogFocus(Boolean(selectedCompany), () => setSelectedCompany(null));
+  const resetProfileDialogRef = useDialogFocus(showResetProfileDialog, () => {
+    if (!resettingProfile) setShowResetProfileDialog(false);
+  });
 
   useEffect(() => {
     const requestedTab = location.state?.voiceTab;
@@ -629,6 +634,37 @@ function CandidateDashboard() {
       setErrorMessage(t("candidate.errors.profileSave"));
       requestAnimationFrame(() => profileErrorRef.current?.focus());
     } finally { setSavingProfile(false); }
+  }
+
+  async function handleResetProfile() {
+    try {
+      setResettingProfile(true);
+      setSuccessMessage("");
+      setErrorMessage("");
+      await resetCandidateProfile();
+      setSelectedDisabilities([]);
+      setEducationLevel("");
+      setPracticalAbilities({ readingAbility: "", writingAbility: "", numeracyAbility: "" });
+      setBasicInfo({ firstName: "", lastName: "", phone: "", location: "", about: "" });
+      setConfirmedTaskSkills([]);
+      setOpportunityPreference("both");
+      setPositionInterests([]);
+      setSearchTerm("");
+      setProfileErrors({});
+      setSavedProfileSignature("");
+      setProfileOutcome("");
+      setAiResults(null);
+      setAiError("");
+      setSelectedJob(null);
+      setShowResetProfileDialog(false);
+      navigate("/candidate/setup", { replace: true, state: { profileReset: true } });
+    } catch {
+      setShowResetProfileDialog(false);
+      setErrorMessage(t("candidate.errors.profileReset"));
+      requestAnimationFrame(() => profileErrorRef.current?.focus());
+    } finally {
+      setResettingProfile(false);
+    }
   }
 
   async function handleSubmitApplication(event) {
@@ -967,8 +1003,11 @@ function CandidateDashboard() {
                 {profileErrors.disabilities && <p id="candidate-profile-disabilities-error" style={styles.fieldError} role="alert">{profileErrors.disabilities}</p>}
 
                 <div style={styles.saveRow}>
-                  <button type="button" data-voice-control="save_profile" onClick={handleSaveProfile} style={styles.saveButton} disabled={savingProfile} aria-busy={savingProfile}>
+                  <button type="button" data-voice-control="save_profile" onClick={handleSaveProfile} style={styles.saveButton} disabled={savingProfile || resettingProfile} aria-busy={savingProfile}>
                     {savingProfile ? t("candidate.profile.saving") : t("candidate.profile.save")}
+                  </button>
+                  <button type="button" onClick={() => setShowResetProfileDialog(true)} style={styles.resetProfileButton} disabled={savingProfile || resettingProfile}>
+                    {t("candidate.profile.reset")}
                   </button>
                 </div>
                 {successMessage && profileOutcome === "ai" && (
@@ -1176,6 +1215,32 @@ function CandidateDashboard() {
         </main>
       </div>
 
+      {showResetProfileDialog && (
+        <div style={styles.companyOverlay} className="candidate-dashboard__dialog-overlay">
+          <div
+            ref={resetProfileDialogRef}
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="reset-profile-dialog-title"
+            aria-describedby="reset-profile-dialog-description"
+            tabIndex={-1}
+            style={styles.resetProfileModal}
+            className="candidate-dashboard__dialog"
+          >
+            <h2 id="reset-profile-dialog-title" style={styles.resetProfileTitle}>{t("candidate.profile.resetTitle")}</h2>
+            <p id="reset-profile-dialog-description" style={styles.resetProfileDescription}>{t("candidate.profile.resetDescription")}</p>
+            <div style={styles.resetProfileActions}>
+              <button type="button" style={styles.cancelResetButton} onClick={() => setShowResetProfileDialog(false)} disabled={resettingProfile}>
+                {t("candidate.profile.resetCancel")}
+              </button>
+              <button type="button" style={styles.confirmResetButton} onClick={handleResetProfile} disabled={resettingProfile} aria-busy={resettingProfile}>
+                {resettingProfile ? t("candidate.profile.resetting") : t("candidate.profile.resetConfirm")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {selectedCompany && (
         <div style={styles.companyOverlay} className="candidate-dashboard__dialog-overlay">
           <div
@@ -1290,6 +1355,13 @@ const styles = {
   disabilityName: { marginTop: "6px", fontSize: "11px", fontWeight: "500", textAlign: "center" },
   saveRow: { display: "flex", alignItems: "center", gap: "12px", marginTop: "18px", flexWrap: "wrap" },
   saveButton: { border: "none", background: "#173e68", color: "#ffffff", padding: "9px 18px", borderRadius: "3px", cursor: "pointer", fontWeight: "650", fontSize: "13px", fontFamily: "Inter, sans-serif", boxShadow: "none" },
+  resetProfileButton: { border: "1px solid #b91c1c", background: "#ffffff", color: "#b91c1c", padding: "8px 17px", borderRadius: "3px", cursor: "pointer", fontWeight: "650", fontSize: "13px", fontFamily: "Inter, sans-serif" },
+  resetProfileModal: { width: "min(100%, 520px)", background: "#ffffff", borderRadius: "6px", padding: "26px", boxShadow: "0 16px 50px rgba(15,23,42,0.18)", position: "relative" },
+  resetProfileTitle: { margin: "0 0 10px", color: "#0f172a", fontSize: "20px", fontWeight: "700", textAlign: "start" },
+  resetProfileDescription: { margin: 0, color: "#475569", fontSize: "14px", lineHeight: "1.6", textAlign: "start" },
+  resetProfileActions: { display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "22px", flexWrap: "wrap" },
+  cancelResetButton: { border: "1px solid #94a3b8", background: "#ffffff", color: "#334155", padding: "9px 15px", borderRadius: "3px", cursor: "pointer", fontWeight: "650", fontSize: "13px", fontFamily: "Inter, sans-serif" },
+  confirmResetButton: { border: "none", background: "#b91c1c", color: "#ffffff", padding: "10px 16px", borderRadius: "3px", cursor: "pointer", fontWeight: "650", fontSize: "13px", fontFamily: "Inter, sans-serif" },
   successText: { color: "#16a34a", fontWeight: "500", fontSize: "13px" },
   errorText: { color: "#dc2626", fontWeight: "500", fontSize: "13px", marginTop: "6px" },
   infoText: { color: "#64748b", fontSize: "13px" },
