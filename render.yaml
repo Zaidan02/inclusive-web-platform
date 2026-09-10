@@ -86,12 +86,16 @@ services:
         value: https://join-hospitality-zm-api-staging.onrender.com
       - key: VERIFICATION_BASE_URL
         value: https://join-hospitality-zm-api-staging.onrender.com
+      - key: VERIFICATION_FRONTEND_BASE_URL
+        value: https://join-hospitality-zm-staging.onrender.com
       - key: RESET_PASSWORD_BASE_URL
         value: https://join-hospitality-zm-staging.onrender.com
       - key: MAILER_DSN
-        value: null://null
+        sync: false
       - key: MAILER_FROM
-        value: inclusive.web.platform@example.com
+        sync: false
+      - key: MAILER_DELIVERY_REQUIRED
+        value: "1"
 
   - type: web
     name: join-hospitality-zm-staging

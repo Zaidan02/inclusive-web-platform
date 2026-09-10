@@ -38,6 +38,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $verificationToken = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $verificationEmailSentAt = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $resetPasswordToken = null;
 
@@ -140,6 +143,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setVerificationToken(?string $verificationToken): static
     {
         $this->verificationToken = $verificationToken;
+        return $this;
+    }
+
+    public function getVerificationEmailSentAt(): ?\DateTimeImmutable
+    {
+        return $this->verificationEmailSentAt;
+    }
+
+    public function setVerificationEmailSentAt(?\DateTimeImmutable $verificationEmailSentAt): static
+    {
+        $this->verificationEmailSentAt = $verificationEmailSentAt;
         return $this;
     }
 

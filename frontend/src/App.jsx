@@ -13,6 +13,8 @@ const SignInPage = lazy(() => import("./pages/SignInPage"));
 const SignUpPage = lazy(() => import("./pages/SignUpPage"));
 const ForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage"));
 const ResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage"));
+const ResendVerificationPage = lazy(() => import("./pages/ResendVerificationPage"));
+const VerifyEmailPage = lazy(() => import("./pages/VerifyEmailPage"));
 const CandidateDashboard = lazy(() => import("./pages/CandidateDashboard"));
 const EmployerDashboard = lazy(() => import("./pages/EmployerDashboard"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
@@ -39,6 +41,8 @@ function AppContent() {
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/resend-verification" element={<ResendVerificationPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/employers" element={<EmployersPage />} />
           <Route path="/voice-help" element={<VoiceNavigationHelpPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />

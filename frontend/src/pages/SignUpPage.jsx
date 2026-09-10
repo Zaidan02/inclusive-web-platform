@@ -229,9 +229,11 @@ function SignUpPage() {
       if (formData.accountType === "candidate" && disabilityCard) {
         registration.append("disabilityCard", disabilityCard);
       }
-      await registerUser(registration);
+      const result = await registerUser(registration);
       setSuccess(
-        formData.accountType === "candidate"
+        result.emailSent === false
+          ? t("signup.emailNotSent")
+          : formData.accountType === "candidate"
           ? t("signup.candidateSuccess")
           : t("signup.employerSuccess")
       );
@@ -488,7 +490,12 @@ function SignUpPage() {
           </div>
 
           {serverError && <p className="auth-error" role="alert">{serverError}</p>}
-          {success && <p ref={successRef} className="auth-success" role="status" tabIndex={-1}>{success} {t("shared.signInReady")}</p>}
+          {success && <>
+            <p ref={successRef} className="auth-success" role="status" tabIndex={-1}>{success} {t("shared.signInReady")}</p>
+            <Link to={`/resend-verification?email=${encodeURIComponent(formData.email)}`} className="forgot-link">
+              {t("signup.resendVerification")}
+            </Link>
+          </>}
 
           <button type="submit" className="primary-btn primary-btn--full" disabled={loading || Boolean(success)}>
             {loading ? (

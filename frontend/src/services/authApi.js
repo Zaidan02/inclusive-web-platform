@@ -1,1 +1,1 @@
-export { loginUser, registerUser, requestPasswordReset, resetPassword } from "./authService";
+export { loginUser, registerUser, requestPasswordReset, resendVerificationEmail, resetPassword, verifyEmail } from "./authService";

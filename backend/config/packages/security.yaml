@@ -38,7 +38,7 @@ security:
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
         public_api:
-            pattern: ^/api/(register|verify-email|forgot-password|reset-password)$|^/api/docs(?:\.|/|$)
+            pattern: ^/api/(register|verify-email|resend-verification|forgot-password|reset-password)$|^/api/docs(?:\.|/|$)
             security: false
 
         api:
@@ -57,6 +57,7 @@ security:
         - { path: ^/api/login_check$, roles: PUBLIC_ACCESS }
         - { path: ^/api/register$, roles: PUBLIC_ACCESS }
         - { path: ^/api/verify-email$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/resend-verification$, roles: PUBLIC_ACCESS }
         - { path: ^/api/forgot-password$, roles: PUBLIC_ACCESS }
         - { path: ^/api/reset-password$, roles: PUBLIC_ACCESS }
         - { path: ^/api/docs(?:\.|/|$), roles: PUBLIC_ACCESS }

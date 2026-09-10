@@ -247,6 +247,9 @@ function SignInPage() {
           <Link to="/signup" className="ghost-btn">
             {t("signIn.createPrompt")} <span>{t("signIn.createLink")}</span>
           </Link>
+          <Link to="/resend-verification" className="ghost-btn">
+            {t("signIn.verificationPrompt")} <span>{t("signIn.resendVerification")}</span>
+          </Link>
 
         </div>
 

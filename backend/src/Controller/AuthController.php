@@ -16,9 +16,54 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Psr\Log\LoggerInterface;
 
 final class AuthController extends AbstractController
 {
+    private const VERIFICATION_RESEND_COOLDOWN_SECONDS = 60;
+
+    private function sendVerificationEmail(User $user, MailerInterface $mailer): void
+    {
+        $deliveryRequired = filter_var(
+            $_ENV['MAILER_DELIVERY_REQUIRED'] ?? false,
+            FILTER_VALIDATE_BOOL,
+            FILTER_NULL_ON_FAILURE
+        ) === true;
+        if ($deliveryRequired && (($_ENV['MAILER_DSN'] ?? '') === '' || ($_ENV['MAILER_DSN'] ?? '') === 'null://null')) {
+            throw new \RuntimeException('Transactional email delivery is not configured.');
+        }
+
+        $token = $user->getVerificationToken();
+        if (!$token) {
+            throw new \LogicException('An unverified account must have a verification token.');
+        }
+
+        $frontendBaseUrl = rtrim(
+            $_ENV['VERIFICATION_FRONTEND_BASE_URL']
+                ?? $_ENV['RESET_PASSWORD_BASE_URL']
+                ?? 'http://localhost:5173',
+            '/'
+        );
+        $verificationLink = $frontendBaseUrl . '/verify-email?token=' . rawurlencode($token);
+        $isCandidate = in_array('ROLE_CANDIDATE', $user->getRoles(), true);
+
+        $email = (new Email())
+            ->from($_ENV['MAILER_FROM'] ?? 'inclusive.web.platform@example.com')
+            ->to((string) $user->getEmail())
+            ->subject('Verify your JoIn Hospitality email')
+            ->text(
+                "Welcome {$user->getUsername()}!\n\n" .
+                "Please verify your email by clicking this link:\n" .
+                $verificationLink . "\n\n" .
+                ($isCandidate
+                    ? "After email verification, an authorized verifier must also approve your disability card before you can sign in.\n\n"
+                    : '') .
+                "If you did not create this account, you can ignore this email."
+            );
+
+        $mailer->send($email);
+    }
+
     private function isPasswordValid(string $password): bool
     {
         return strlen($password) >= 8 &&
@@ -33,7 +78,8 @@ final class AuthController extends AbstractController
         EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher,
         MailerInterface $mailer,
-        CandidateCardStorage $cardStorage
+        CandidateCardStorage $cardStorage,
+        LoggerInterface $logger
     ): JsonResponse {
         $contentType = (string) $request->headers->get('Content-Type', '');
         $data = str_contains($contentType, 'multipart/form-data')
@@ -59,7 +105,7 @@ final class AuthController extends AbstractController
         ) ?? true;
 
         $username = trim($data['username']);
-        $emailAddress = trim($data['email']);
+        $emailAddress = strtolower(trim($data['email']));
         $password = $data['password'];
         $accountType = $data['accountType'];
 
@@ -209,33 +255,94 @@ final class AuthController extends AbstractController
             throw $e;
         }
 
+        $emailSent = false;
         if ($sendVerificationEmail) {
-            $baseUrl = $_ENV['VERIFICATION_BASE_URL'] ?? 'http://localhost:8081';
-            $verificationLink = $baseUrl . '/api/verify-email?token=' . $verificationToken;
-
-            $email = (new Email())
-                ->from($_ENV['MAILER_FROM'] ?? 'inclusive.web.platform@outlook.com')
-                ->to($user->getEmail())
-                ->subject('Verify your email')
-                ->text(
-                    "Welcome {$user->getUsername()}!\n\n" .
-                    "Please verify your email by clicking this link:\n" .
-                    $verificationLink . "\n\n" .
-                    ($accountType === 'candidate'
-                        ? "After email verification, an authorized verifier must also approve your disability card before you can sign in.\n\n"
-                        : '') .
-                    "If you did not create this account, you can ignore this email."
-                );
-
-            $mailer->send($email);
+            try {
+                $this->sendVerificationEmail($user, $mailer);
+                $user->setVerificationEmailSentAt(new \DateTimeImmutable());
+                $entityManager->flush();
+                $emailSent = true;
+            } catch (\Throwable $error) {
+                $logger->error('Verification email delivery failed after registration.', [
+                    'userId' => $user->getId(),
+                    'exception' => $error,
+                ]);
+            }
         }
 
         return $this->json([
-            'message' => $accountType === 'candidate'
-                ? 'Registration submitted. Verify your email and wait for disability-card approval before signing in.'
-                : 'User registered successfully. Please check your email to verify your account.',
+            'message' => $emailSent
+                ? ($accountType === 'candidate'
+                    ? 'Registration submitted. Verify your email and wait for disability-card approval before signing in.'
+                    : 'User registered successfully. Please check your email to verify your account.')
+                : 'Your account was created, but the verification email could not be sent. Use Resend verification email to try again.',
             'verificationStatus' => $accountType === 'candidate' ? 'pending' : null,
+            'emailSent' => $emailSent,
         ], 201);
+    }
+
+    #[Route('/api/resend-verification', name: 'api_resend_verification', methods: ['POST'])]
+    public function resendVerification(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        MailerInterface $mailer,
+        LoggerInterface $logger
+    ): JsonResponse {
+        $data = json_decode($request->getContent(), true);
+        $emailAddress = is_array($data) ? strtolower(trim((string) ($data['email'] ?? ''))) : '';
+
+        if (!filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
+            return $this->json(['message' => 'Enter a valid email address.'], 400);
+        }
+
+        $genericMessage = 'If an unverified account exists with this email, a verification link has been sent.';
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $emailAddress]);
+        if (!$user || $user->isVerified() || $user->isArchived()) {
+            return $this->json([
+                'message' => $genericMessage,
+                'retryAfterSeconds' => self::VERIFICATION_RESEND_COOLDOWN_SECONDS,
+            ]);
+        }
+
+        $now = new \DateTimeImmutable();
+        $lastSentAt = $user->getVerificationEmailSentAt();
+        if ($lastSentAt) {
+            $elapsed = $now->getTimestamp() - $lastSentAt->getTimestamp();
+            if ($elapsed < self::VERIFICATION_RESEND_COOLDOWN_SECONDS) {
+                $retryAfter = self::VERIFICATION_RESEND_COOLDOWN_SECONDS - max(0, $elapsed);
+                return $this->json([
+                    'message' => 'Please wait before requesting another verification email.',
+                    'retryAfterSeconds' => $retryAfter,
+                ], 429, ['Retry-After' => (string) $retryAfter]);
+            }
+        }
+
+        if (!$user->getVerificationToken()) {
+            $user->setVerificationToken(bin2hex(random_bytes(32)));
+        }
+
+        $user->setVerificationEmailSentAt($now);
+        $entityManager->flush();
+
+        try {
+            $this->sendVerificationEmail($user, $mailer);
+        } catch (\Throwable $error) {
+            $user->setVerificationEmailSentAt($lastSentAt);
+            $entityManager->flush();
+            $logger->error('Verification email resend failed.', [
+                'userId' => $user->getId(),
+                'exception' => $error,
+            ]);
+
+            return $this->json([
+                'message' => 'The verification email service is temporarily unavailable. Please try again.',
+            ], 503);
+        }
+
+        return $this->json([
+            'message' => $genericMessage,
+            'retryAfterSeconds' => self::VERIFICATION_RESEND_COOLDOWN_SECONDS,
+        ]);
     }
 
     #[Route('/api/verify-email', name: 'api_verify_email', methods: ['GET'])]
