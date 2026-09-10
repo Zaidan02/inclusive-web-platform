@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\CandidateProfile;
 use App\Entity\CandidateProfileAiEvent;
+use App\Entity\CandidatePositionInterest;
 use App\Entity\ConsentRecord;
 use App\Entity\CandidateTaskSkill;
 use App\Entity\Disability;
@@ -36,6 +37,10 @@ class CandidateProfileAiController extends AbstractController
         'location' => 255,
         'about' => 3000,
     ];
+
+    private const PRACTICAL_ABILITY_LEVELS = ['independent', 'with_support', 'not_yet'];
+    private const PRACTICAL_ABILITY_FIELDS = ['readingAbility', 'writingAbility', 'numeracyAbility'];
+    private const OPPORTUNITY_PREFERENCES = ['work', 'training', 'both'];
 
     public function __construct(
         private readonly HttpClientInterface $httpClient,
@@ -107,6 +112,14 @@ class CandidateProfileAiController extends AbstractController
                 'writingAbility' => $profile?->getWritingAbility(),
                 'numeracyAbility' => $profile?->getNumeracyAbility(),
                 'selectedDisabilities' => $profile?->getSelectedDisabilities() ?? [],
+                'opportunityPreference' => $profile?->getOpportunityPreference() ?? 'both',
+                'positionInterests' => $profile
+                    ? array_values($profile->getPositionInterests()->map(static fn (CandidatePositionInterest $interest): array => [
+                        'jobDefinitionId' => $interest->getJobDefinition()?->getId(),
+                        'jobName' => $interest->getJobDefinition()?->getName(),
+                        'knowledgeLevel' => $interest->getKnowledgeLevel(),
+                    ])->toArray())
+                    : [],
             ],
             'allowedDisabilities' => array_map(
                 static fn (Disability $disability): array => [
@@ -118,6 +131,7 @@ class CandidateProfileAiController extends AbstractController
             'taskVocabulary' => array_map(
                 static fn (JobDefinitionTask $task): array => [
                     'taskId' => $task->getId(),
+                    'jobDefinitionId' => $task->getJobDefinition()?->getId(),
                     'taskName' => $task->getName(),
                     'jobName' => $task->getJobDefinition()?->getName(),
                 ],
@@ -180,6 +194,9 @@ class CandidateProfileAiController extends AbstractController
             'suggestionCounts' => [
                 'profileFields' => count($filtered['profileFields']),
                 'educationLevel' => $filtered['educationLevel'] ? 1 : 0,
+                'practicalAbilities' => count($filtered['practicalAbilities']),
+                'opportunityPreference' => $filtered['opportunityPreference'] ? 1 : 0,
+                'positionInterests' => count($filtered['positionInterests']),
                 'disabilities' => count($filtered['disabilities']),
                 'taskSkills' => count($filtered['taskSkills']),
                 'unmappedStatements' => count($filtered['unmappedStatements']),
@@ -211,9 +228,11 @@ class CandidateProfileAiController extends AbstractController
         }
 
         $profileFields = $data['profileFields'] ?? [];
+        $practicalAbilities = $data['practicalAbilities'] ?? [];
         $disabilityNames = $data['disabilities'] ?? [];
         $taskSkills = $data['taskSkills'] ?? [];
-        if (!is_array($profileFields) || !is_array($disabilityNames) || !is_array($taskSkills)) {
+        $positionInterests = $data['positionInterests'] ?? [];
+        if (!is_array($profileFields) || !is_array($practicalAbilities) || !is_array($disabilityNames) || !is_array($taskSkills) || !is_array($positionInterests)) {
             return $this->json(['message' => 'Confirmed suggestions have an invalid format.'], 400);
         }
         if (array_key_exists('replaceDisabilities', $data) && !is_bool($data['replaceDisabilities'])) {
@@ -243,6 +262,40 @@ class CandidateProfileAiController extends AbstractController
                 return $this->json(['message' => 'The confirmed education level is invalid.'], 400);
             }
             $profile->setEducationLevel($data['educationLevel']);
+        }
+
+        foreach ($practicalAbilities as $field => $value) {
+            if (!in_array($field, self::PRACTICAL_ABILITY_FIELDS, true) || !is_string($value) || !in_array($value, self::PRACTICAL_ABILITY_LEVELS, true)) {
+                return $this->json(['message' => 'A confirmed practical ability is invalid.'], 400);
+            }
+            $setter = 'set' . ucfirst($field);
+            $profile->{$setter}($value);
+        }
+
+        if (array_key_exists('opportunityPreference', $data) && $data['opportunityPreference'] !== null) {
+            if (!is_string($data['opportunityPreference']) || !in_array($data['opportunityPreference'], self::OPPORTUNITY_PREFERENCES, true)) {
+                return $this->json(['message' => 'The confirmed opportunity preference is invalid.'], 400);
+            }
+            $profile->setOpportunityPreference($data['opportunityPreference']);
+        }
+
+        foreach ($positionInterests as $item) {
+            $definitionId = is_array($item) ? ($item['jobDefinitionId'] ?? null) : null;
+            $knowledgeLevel = is_array($item) ? ($item['knowledgeLevel'] ?? null) : null;
+            if (!is_int($definitionId) || ($knowledgeLevel !== null && (!is_string($knowledgeLevel) || !in_array($knowledgeLevel, self::PRACTICAL_ABILITY_LEVELS, true)))) {
+                return $this->json(['message' => 'A confirmed position interest is invalid.'], 400);
+            }
+            $definition = $entityManager->getRepository(\App\Entity\JobDefinition::class)->find($definitionId);
+            if (!$definition || !$definition->isActive()) {
+                return $this->json(['message' => 'A confirmed position interest is unknown or inactive.'], 400);
+            }
+            $interest = $entityManager->getRepository(CandidatePositionInterest::class)->findOneBy([
+                'candidateProfile' => $profile,
+                'jobDefinition' => $definition,
+            ]) ?? (new CandidatePositionInterest())->setJobDefinition($definition);
+            $interest->setKnowledgeLevel($knowledgeLevel);
+            $profile->addPositionInterest($interest);
+            $entityManager->persist($interest);
         }
 
         $confirmedDisabilities = [];
@@ -298,6 +351,9 @@ class CandidateProfileAiController extends AbstractController
             'confirmedCounts' => [
                 'profileFields' => count($profileFields),
                 'educationLevel' => isset($data['educationLevel']) && $data['educationLevel'] !== null ? 1 : 0,
+                'practicalAbilities' => count($practicalAbilities),
+                'opportunityPreference' => isset($data['opportunityPreference']) && $data['opportunityPreference'] !== null ? 1 : 0,
+                'positionInterests' => count($positionInterests),
                 'disabilities' => count(array_unique($disabilityNames)),
                 'taskSkills' => count($taskSkills),
             ],
@@ -351,8 +407,13 @@ class CandidateProfileAiController extends AbstractController
             true,
         );
         $allowedTasks = [];
+        $allowedJobs = [];
         foreach ($tasks as $task) {
             $allowedTasks[$task->getId()] = $task;
+            $definition = $task->getJobDefinition();
+            if ($definition) {
+                $allowedJobs[$definition->getId()] = $definition;
+            }
         }
 
         $profileFields = [];
@@ -385,6 +446,49 @@ class CandidateProfileAiController extends AbstractController
                 'value' => $education['value'],
                 'confidence' => $this->confidence($education['confidence'] ?? null),
                 'evidence' => $this->boundedText($education['evidence'] ?? '', 500),
+            ];
+        }
+        $practicalAbilities = [];
+        $seenAbilities = [];
+        foreach (is_array($result['practical_abilities'] ?? null) ? $result['practical_abilities'] : [] as $item) {
+            $field = is_array($item) ? ($item['field'] ?? null) : null;
+            $value = is_array($item) ? ($item['value'] ?? null) : null;
+            if (!in_array($field, self::PRACTICAL_ABILITY_FIELDS, true) || !in_array($value, self::PRACTICAL_ABILITY_LEVELS, true) || isset($seenAbilities[$field])) {
+                continue;
+            }
+            $seenAbilities[$field] = true;
+            $practicalAbilities[] = [
+                'field' => $field,
+                'value' => $value,
+                'confidence' => $this->confidence($item['confidence'] ?? null),
+                'evidence' => $this->boundedText($item['evidence'] ?? '', 500),
+            ];
+        }
+        $opportunityPreference = $result['opportunity_preference'] ?? null;
+        if (!is_array($opportunityPreference) || !in_array($opportunityPreference['value'] ?? null, self::OPPORTUNITY_PREFERENCES, true)) {
+            $opportunityPreference = null;
+        } else {
+            $opportunityPreference = [
+                'value' => $opportunityPreference['value'],
+                'confidence' => $this->confidence($opportunityPreference['confidence'] ?? null),
+                'evidence' => $this->boundedText($opportunityPreference['evidence'] ?? '', 500),
+            ];
+        }
+        $positionInterests = [];
+        $seenJobs = [];
+        foreach (is_array($result['position_interests'] ?? null) ? $result['position_interests'] : [] as $item) {
+            $definitionId = is_array($item) ? ($item['job_definition_id'] ?? null) : null;
+            $knowledgeLevel = is_array($item) ? ($item['knowledge_level'] ?? null) : null;
+            if (!is_int($definitionId) || !isset($allowedJobs[$definitionId]) || isset($seenJobs[$definitionId]) || ($knowledgeLevel !== null && !in_array($knowledgeLevel, self::PRACTICAL_ABILITY_LEVELS, true))) {
+                continue;
+            }
+            $seenJobs[$definitionId] = true;
+            $positionInterests[] = [
+                'jobDefinitionId' => $definitionId,
+                'jobName' => $allowedJobs[$definitionId]->getName(),
+                'knowledgeLevel' => $knowledgeLevel,
+                'confidence' => $this->confidence($item['confidence'] ?? null),
+                'evidence' => $this->boundedText($item['evidence'] ?? '', 500),
             ];
         }
         $suggestedDisabilities = [];
@@ -429,6 +533,9 @@ class CandidateProfileAiController extends AbstractController
             'language' => $result['language'] ?? 'und',
             'profileFields' => $profileFields,
             'educationLevel' => $education,
+            'practicalAbilities' => $practicalAbilities,
+            'opportunityPreference' => $opportunityPreference,
+            'positionInterests' => $positionInterests,
             'disabilities' => $suggestedDisabilities,
             'taskSkills' => $taskSkills,
             'unmappedStatements' => array_values(array_filter(array_map(

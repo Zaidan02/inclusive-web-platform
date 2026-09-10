@@ -173,6 +173,19 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
       if (accepted[`field-${index}`]) profileFields[item.field] = fieldValues[`field-${index}`];
     });
     const educationLevel = accepted.education ? suggestions?.educationLevel?.value : null;
+    const practicalAbilities = {};
+    (suggestions?.practicalAbilities || []).forEach((item, index) => {
+      if (accepted[`ability-${index}`]) practicalAbilities[item.field] = item.value;
+    });
+    const opportunityPreference = accepted.opportunity
+      ? suggestions?.opportunityPreference?.value
+      : null;
+    const positionInterests = (suggestions?.positionInterests || [])
+      .filter((_, index) => accepted[`position-${index}`])
+      .map((item) => ({
+        jobDefinitionId: item.jobDefinitionId,
+        knowledgeLevel: item.knowledgeLevel || null,
+      }));
     const disabilities = (suggestions?.disabilities || [])
       .filter((_, index) => accepted[`disability-${index}`])
       .map((item) => item.name);
@@ -182,7 +195,8 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
         taskId: item.task_id ?? item.taskId,
         note: item.note || item.evidence || "",
       }));
-    if (!Object.keys(profileFields).length && !educationLevel && !disabilities.length && !taskSkills.length) {
+    if (!Object.keys(profileFields).length && !educationLevel && !Object.keys(practicalAbilities).length
+      && !opportunityPreference && !positionInterests.length && !disabilities.length && !taskSkills.length) {
       showError(t("errors.selection"), resultsHeadingRef);
       return;
     }
@@ -193,6 +207,9 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
       const data = await confirmAiProfileSuggestions({
         profileFields,
         educationLevel,
+        practicalAbilities,
+        opportunityPreference,
+        positionInterests,
         disabilities,
         replaceDisabilities: disabilities.length > 0,
         taskSkills,
@@ -212,6 +229,9 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
 
   const suggestionCount = (suggestions?.profileFields?.length || 0)
     + (suggestions?.educationLevel ? 1 : 0)
+    + (suggestions?.practicalAbilities?.length || 0)
+    + (suggestions?.opportunityPreference ? 1 : 0)
+    + (suggestions?.positionInterests?.length || 0)
     + (suggestions?.disabilities?.length || 0)
     + (suggestions?.taskSkills?.length || 0);
 
@@ -312,7 +332,7 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
           {(suggestions.profileFields || []).map((item, index) => {
             const key = `field-${index}`;
             return (
-              <div className="ai-profile-builder__suggestion" key={key}>
+              <div className="ai-profile-builder__suggestion" key={key} data-suggestion-kind="profile" data-suggestion-field={item.field}>
                 <label className="ai-profile-builder__choice">
                   <input type="checkbox" checked={Boolean(accepted[key])} onChange={() => toggleAccepted(key)} />
                   <strong>{t("addField", { field: t(`fields.${item.field}`, { defaultValue: item.field }) })}</strong>
@@ -331,7 +351,7 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
           })}
 
           {suggestions.educationLevel && (
-            <div className="ai-profile-builder__suggestion">
+            <div className="ai-profile-builder__suggestion" data-suggestion-kind="education" data-suggestion-value={suggestions.educationLevel.value}>
               <label className="ai-profile-builder__choice">
                 <input type="checkbox" checked={Boolean(accepted.education)} onChange={() => toggleAccepted("education")} />
                 <strong>{t("addEducation", { education: t(`education.${suggestions.educationLevel.value}`) })}</strong>
@@ -340,10 +360,52 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
             </div>
           )}
 
+          {(suggestions.practicalAbilities || []).map((item, index) => {
+            const key = `ability-${index}`;
+            return (
+              <div className="ai-profile-builder__suggestion" key={key} data-suggestion-kind="ability" data-suggestion-field={item.field} data-suggestion-value={item.value}>
+                <label className="ai-profile-builder__choice">
+                  <input type="checkbox" checked={Boolean(accepted[key])} onChange={() => toggleAccepted(key)} />
+                  <strong>{t("addPracticalAbility", {
+                    ability: t(`setup.abilities.${item.field}`),
+                    level: t(`setup.abilityLevels.${item.value}`),
+                  })}</strong>
+                </label>
+                <small dir="auto">{t("confidenceEvidence", { confidence: confidenceLabel(item.confidence), evidence: item.evidence })}</small>
+              </div>
+            );
+          })}
+
+          {suggestions.opportunityPreference && (
+            <div className="ai-profile-builder__suggestion" data-suggestion-kind="opportunity" data-suggestion-value={suggestions.opportunityPreference.value}>
+              <label className="ai-profile-builder__choice">
+                <input type="checkbox" checked={Boolean(accepted.opportunity)} onChange={() => toggleAccepted("opportunity")} />
+                <strong>{t("addOpportunityPreference", {
+                  preference: t(`setup.opportunities.preferences.${suggestions.opportunityPreference.value}`),
+                })}</strong>
+              </label>
+              <small dir="auto">{t("confidenceEvidence", { confidence: confidenceLabel(suggestions.opportunityPreference.confidence), evidence: suggestions.opportunityPreference.evidence })}</small>
+            </div>
+          )}
+
+          {(suggestions.positionInterests || []).map((item, index) => {
+            const key = `position-${index}`;
+            return (
+              <div className="ai-profile-builder__suggestion" key={key} data-suggestion-kind="position" data-suggestion-job-id={item.jobDefinitionId}>
+                <label className="ai-profile-builder__choice">
+                  <input type="checkbox" checked={Boolean(accepted[key])} onChange={() => toggleAccepted(key)} />
+                  <strong dir="auto">{t("addPositionInterest", { name: item.jobName })}</strong>
+                </label>
+                {item.knowledgeLevel && <span>{t("positionKnowledge", { level: t(`setup.abilityLevels.${item.knowledgeLevel}`) })}</span>}
+                <small dir="auto">{t("confidenceEvidence", { confidence: confidenceLabel(item.confidence), evidence: item.evidence })}</small>
+              </div>
+            );
+          })}
+
           {(suggestions.disabilities || []).map((item, index) => {
             const key = `disability-${index}`;
             return (
-              <div className="ai-profile-builder__suggestion" key={key}>
+              <div className="ai-profile-builder__suggestion" key={key} data-suggestion-kind="disability" data-suggestion-value={item.name}>
                 <label className="ai-profile-builder__choice">
                   <input type="checkbox" checked={Boolean(accepted[key])} onChange={() => toggleAccepted(key)} />
                   <strong dir="auto">{t("addDisability", { name: item.name })}</strong>
@@ -356,7 +418,7 @@ export default function AiProfileBuilder({ currentProfile = {}, onProfileConfirm
           {(suggestions.taskSkills || []).map((item, index) => {
             const key = `skill-${index}`;
             return (
-              <div className="ai-profile-builder__suggestion" key={key}>
+              <div className="ai-profile-builder__suggestion" key={key} data-suggestion-kind="task" data-suggestion-task-id={item.task_id ?? item.taskId}>
                 <label className="ai-profile-builder__choice">
                   <input type="checkbox" checked={Boolean(accepted[key])} onChange={() => toggleAccepted(key)} />
                   <strong dir="auto">{t("addTaskSkill", { name: item.task_name || item.taskName })}</strong>

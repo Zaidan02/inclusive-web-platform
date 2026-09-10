@@ -190,6 +190,9 @@ EducationLevel = Literal[
     "vocational",
     "university",
 ]
+PracticalAbilityField = Literal["readingAbility", "writingAbility", "numeracyAbility"]
+PracticalAbilityLevel = Literal["independent", "with_support", "not_yet"]
+OpportunityPreference = Literal["work", "training", "both"]
 
 
 class ProfileFieldSuggestion(BaseModel):
@@ -205,6 +208,33 @@ class EducationSuggestion(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     value: EducationLevel
+    confidence: float = Field(ge=0, le=1)
+    evidence: str = Field(min_length=1, max_length=500)
+
+
+class PracticalAbilitySuggestion(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    field: PracticalAbilityField
+    value: PracticalAbilityLevel
+    confidence: float = Field(ge=0, le=1)
+    evidence: str = Field(min_length=1, max_length=500)
+
+
+class OpportunityPreferenceSuggestion(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    value: OpportunityPreference
+    confidence: float = Field(ge=0, le=1)
+    evidence: str = Field(min_length=1, max_length=500)
+
+
+class PositionInterestSuggestion(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    job_definition_id: int = Field(gt=0)
+    job_name: str = Field(min_length=1, max_length=255)
+    knowledge_level: PracticalAbilityLevel | None = None
     confidence: float = Field(ge=0, le=1)
     evidence: str = Field(min_length=1, max_length=500)
 
@@ -235,6 +265,9 @@ class ProfileExtractionResult(BaseModel):
     language: str = Field(min_length=2, max_length=16)
     profile_fields: list[ProfileFieldSuggestion] = Field(default_factory=list, max_length=5)
     education_level: EducationSuggestion | None = None
+    practical_abilities: list[PracticalAbilitySuggestion] = Field(default_factory=list, max_length=3)
+    opportunity_preference: OpportunityPreferenceSuggestion | None = None
+    position_interests: list[PositionInterestSuggestion] = Field(default_factory=list, max_length=6)
     disabilities: list[DisabilitySuggestion] = Field(default_factory=list, max_length=10)
     task_skills: list[TaskSkillSuggestion] = Field(default_factory=list, max_length=12)
     unmapped_statements: list[str] = Field(default_factory=list, max_length=10)

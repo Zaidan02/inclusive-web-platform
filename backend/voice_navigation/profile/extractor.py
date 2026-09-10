@@ -6,6 +6,7 @@ from typing import Any
 from openai import OpenAI
 
 from core.schemas import ProfileExtractionResult
+from profile.practical_abilities import add_explicit_practical_abilities
 
 
 class OpenAIProfileExtractor:
@@ -44,6 +45,16 @@ class OpenAIProfileExtractor:
                 "meaning of Arabic, French, or English input. Evidence must be a short paraphrase, "
                 "not unsupported reasoning. Use canonical English schema keys, field names, and enum "
                 "values, but preserve candidate-provided profile values in their original script. "
+                "Map explicit statements about reading, writing, and counting to practical_abilities. "
+                "Use independent when the candidate says they can do the ability without help, "
+                "with_support when they say they can do it with help, and not_yet only when they "
+                "explicitly say they cannot do it yet. Recognize natural and imperfect speech in all "
+                "three languages, including Arabic expressions such as بعرف اقرأ واكتب وعد, "
+                "أستطيع القراءة والكتابة والحساب, and close transcription variants. Do not treat "
+                "formal education as evidence of these practical abilities. Map an explicit desire "
+                "for work, hospitality training, or both to opportunity_preference. Suggest a "
+                "position interest only by copying jobDefinitionId and jobName from taskVocabulary; "
+                "knowledge_level describes claimed current knowledge and may be null. "
                 "Write evidence and unmapped statements in the declared language and return that "
                 "language code in the language field. Return no suggestion when evidence is ambiguous. These "
                 "results will be shown to the candidate and remain unsaved until individually accepted."
@@ -57,7 +68,11 @@ class OpenAIProfileExtractor:
         )
         if response.output_parsed is None:
             raise ValueError("The profile assistant did not return structured suggestions.")
-        return response.output_parsed
+        return add_explicit_practical_abilities(
+            response.output_parsed,
+            narrative,
+            language,
+        )
 
     @staticmethod
     def _bounded_context(
@@ -72,7 +87,12 @@ class OpenAIProfileExtractor:
             "location",
             "about",
             "educationLevel",
+            "readingAbility",
+            "writingAbility",
+            "numeracyAbility",
             "selectedDisabilities",
+            "opportunityPreference",
+            "positionInterests",
         }
         safe_profile = {
             key: value
@@ -94,13 +114,14 @@ class OpenAIProfileExtractor:
             task_name = " ".join(str(item.get("taskName", "")).split())[:500]
             job_name = " ".join(str(item.get("jobName", "")).split())[:255]
             if task_name and job_name:
-                safe_tasks.append(
-                    {
-                        "taskId": item["taskId"],
-                        "taskName": task_name,
-                        "jobName": job_name,
-                    }
-                )
+                safe_task = {
+                    "taskId": item["taskId"],
+                    "taskName": task_name,
+                    "jobName": job_name,
+                }
+                if isinstance(item.get("jobDefinitionId"), int):
+                    safe_task["jobDefinitionId"] = item["jobDefinitionId"]
+                safe_tasks.append(safe_task)
         return {
             "existingProfile": safe_profile,
             "allowedDisabilities": safe_disabilities,
