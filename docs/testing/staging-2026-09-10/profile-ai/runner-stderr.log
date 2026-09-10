@@ -1,0 +1,16 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.waitFor: Timeout 120000ms exceeded.
+Call log:
+[2m  - waiting for locator('.ai-profile-builder__review') to be visible[22m
+
+    at C:\Users\User\Desktop\FYP_26\inclusive-web-platform-main\frontend\scripts\profile-ai-multilingual-test.mjs:109:55 {
+  log: [
+    "  - waiting for locator('.ai-profile-builder__review') to be visible"
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v24.18.0

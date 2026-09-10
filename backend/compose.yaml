@@ -31,6 +31,8 @@ services:
     build:
       context: ..
       dockerfile: scoring_engine/Dockerfile
+    environment:
+      PORT: 5001
     ports:
       - "5001:5001"
     healthcheck:
@@ -47,6 +49,7 @@ services:
       - path: ./voice_navigation/.env
         required: false
     environment:
+      PORT: 5002
       VOICE_HOST: 0.0.0.0
       VOICE_PORT: 5002
       VOICE_ALLOWED_ORIGIN: 'http://localhost:5173,http://127.0.0.1:5173,http://192\.168\.[0-9]+\.[0-9]+:5173'

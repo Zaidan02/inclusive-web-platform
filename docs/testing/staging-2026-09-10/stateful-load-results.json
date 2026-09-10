@@ -1,0 +1,127 @@
+{
+  "generatedAt": "2026-09-10T11:26:58.075Z",
+  "environment": {
+    "apiBase": "https://join-hospitality-zm-api-staging.onrender.com/api",
+    "rounds": 3,
+    "apiHealth": 200,
+    "scoringHealth": 200
+  },
+  "method": "Idempotent synthetic profile writes and matching reads at loads 1, 5 and 10; temporary profile reset after execution.",
+  "thresholds": {
+    "1": 1000,
+    "5": 3000,
+    "10": 5000
+  },
+  "summary": {
+    "passed": 3,
+    "failed": 3,
+    "total": 6,
+    "successRate": 50
+  },
+  "cases": [
+    {
+      "operation": "Save profile",
+      "load": 1,
+      "rounds": 3,
+      "requests": 3,
+      "successful": 3,
+      "failed": 0,
+      "serverErrors": 0,
+      "clientTimeouts": 0,
+      "p50Ms": 200.7,
+      "p95Ms": 260.8,
+      "thresholdMs": 1000,
+      "status": "passed",
+      "httpStatuses": {
+        "200": 3
+      }
+    },
+    {
+      "operation": "Save profile",
+      "load": 5,
+      "rounds": 3,
+      "requests": 15,
+      "successful": 8,
+      "failed": 7,
+      "serverErrors": 7,
+      "clientTimeouts": 0,
+      "p50Ms": 800.9,
+      "p95Ms": 2635.9,
+      "thresholdMs": 3000,
+      "status": "failed",
+      "httpStatuses": {
+        "200": 8,
+        "500": 7
+      }
+    },
+    {
+      "operation": "Save profile",
+      "load": 10,
+      "rounds": 3,
+      "requests": 30,
+      "successful": 12,
+      "failed": 18,
+      "serverErrors": 18,
+      "clientTimeouts": 0,
+      "p50Ms": 2261.2,
+      "p95Ms": 3624,
+      "thresholdMs": 5000,
+      "status": "failed",
+      "httpStatuses": {
+        "200": 12,
+        "500": 18
+      }
+    },
+    {
+      "operation": "Matching",
+      "load": 1,
+      "rounds": 3,
+      "requests": 3,
+      "successful": 3,
+      "failed": 0,
+      "serverErrors": 0,
+      "clientTimeouts": 0,
+      "p50Ms": 664.8,
+      "p95Ms": 752,
+      "thresholdMs": 1000,
+      "status": "passed",
+      "httpStatuses": {
+        "200": 3
+      }
+    },
+    {
+      "operation": "Matching",
+      "load": 5,
+      "rounds": 3,
+      "requests": 15,
+      "successful": 15,
+      "failed": 0,
+      "serverErrors": 0,
+      "clientTimeouts": 0,
+      "p50Ms": 2528.4,
+      "p95Ms": 2804,
+      "thresholdMs": 3000,
+      "status": "passed",
+      "httpStatuses": {
+        "200": 15
+      }
+    },
+    {
+      "operation": "Matching",
+      "load": 10,
+      "rounds": 3,
+      "requests": 30,
+      "successful": 30,
+      "failed": 0,
+      "serverErrors": 0,
+      "clientTimeouts": 0,
+      "p50Ms": 4854.4,
+      "p95Ms": 5293.4,
+      "thresholdMs": 5000,
+      "status": "failed",
+      "httpStatuses": {
+        "200": 30
+      }
+    }
+  ]
+}

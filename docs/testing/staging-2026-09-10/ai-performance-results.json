@@ -1,0 +1,65 @@
+{
+  "generatedAt": "2026-09-10T16:49:27.106Z",
+  "environment": {
+    "apiBase": "https://join-hospitality-zm-api-staging.onrender.com/api",
+    "healthStatus": 200
+  },
+  "method": "Three rounds of deployed structured AI-suggestion requests at concurrency levels 1, 5 and 10. Suggestions are not confirmed or saved; the synthetic profile is reset before and after execution.",
+  "thresholdMs": 30000,
+  "summary": {
+    "passed": 0,
+    "failed": 3,
+    "blocked": 0,
+    "total": 3
+  },
+  "cases": [
+    {
+      "operation": "Generate AI suggestions",
+      "load": 1,
+      "rounds": 3,
+      "requests": 3,
+      "successful": 0,
+      "failed": 3,
+      "serverErrors": 3,
+      "p50Ms": 461.1,
+      "p95Ms": 547.7,
+      "thresholdMs": 30000,
+      "status": "failed",
+      "httpStatuses": {
+        "503": 3
+      }
+    },
+    {
+      "operation": "Generate AI suggestions",
+      "load": 5,
+      "rounds": 3,
+      "requests": 15,
+      "successful": 0,
+      "failed": 15,
+      "serverErrors": 15,
+      "p50Ms": 2589.2,
+      "p95Ms": 3269.2,
+      "thresholdMs": 30000,
+      "status": "failed",
+      "httpStatuses": {
+        "503": 15
+      }
+    },
+    {
+      "operation": "Generate AI suggestions",
+      "load": 10,
+      "rounds": 3,
+      "requests": 30,
+      "successful": 0,
+      "failed": 30,
+      "serverErrors": 30,
+      "p50Ms": 5689.5,
+      "p95Ms": 6204.5,
+      "thresholdMs": 30000,
+      "status": "failed",
+      "httpStatuses": {
+        "503": 30
+      }
+    }
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "generatedAt": "2026-09-10T16:56:38.526Z",
+  "environment": {
+    "apiBase": "https://join-hospitality-zm-api-staging.onrender.com/api",
+    "healthStatus": 200
+  },
+  "method": "Three rounds at concurrency 1, 5 and 10 with a unique disposable record per request. Setup is excluded from timings; all jobs/applications and the synthetic profile are removed after every batch.",
+  "thresholdMs": 1000,
+  "summary": {
+    "passed": 2,
+    "failed": 4,
+    "total": 6
+  },
+  "cleanup": {
+    "jobsRemaining": 0,
+    "applicationsRemaining": 0,
+    "profileReset": true
+  },
+  "cases": [
+    {
+      "operation": "Publish opportunity",
+      "load": 1,
+      "rounds": 3,
+      "requests": 3,
+      "successful": 3,
+      "failed": 0,
+      "serverErrors": 0,
+      "p50Ms": 195.3,
+      "p95Ms": 233.1,
+      "thresholdMs": 1000,
+      "status": "passed",
+      "httpStatuses": {
+        "201": 3
+      }
+    },
+    {
+      "operation": "Publish opportunity",
+      "load": 5,
+      "rounds": 3,
+      "requests": 15,
+      "successful": 15,
+      "failed": 0,
+      "serverErrors": 0,
+      "p50Ms": 674.8,
+      "p95Ms": 700.4,
+      "thresholdMs": 1000,
+      "status": "passed",
+      "httpStatuses": {
+        "201": 15
+      }
+    },
+    {
+      "operation": "Publish opportunity",
+      "load": 10,
+      "rounds": 3,
+      "requests": 30,
+      "successful": 30,
+      "failed": 0,
+      "serverErrors": 0,
+      "p50Ms": 1291,
+      "p95Ms": 1476.6,
+      "thresholdMs": 1000,
+      "status": "failed",
+      "httpStatuses": {
+        "201": 30
+      }
+    },
+    {
+      "operation": "Submit application",
+      "load": 1,
+      "rounds": 3,
+      "requests": 3,
+      "successful": 3,
+      "failed": 0,
+      "serverErrors": 0,
+      "p50Ms": 886.1,
+      "p95Ms": 1216.6,
+      "thresholdMs": 1000,
+      "status": "failed",
+      "httpStatuses": {
+        "201": 3
+      }
+    },
+    {
+      "operation": "Submit application",
+      "load": 5,
+      "rounds": 3,
+      "requests": 15,
+      "successful": 15,
+      "failed": 0,
+      "serverErrors": 0,
+      "p50Ms": 4639.1,
+      "p95Ms": 4825.7,
+      "thresholdMs": 1000,
+      "status": "failed",
+      "httpStatuses": {
+        "201": 15
+      }
+    },
+    {
+      "operation": "Submit application",
+      "load": 10,
+      "rounds": 3,
+      "requests": 30,
+      "successful": 30,
+      "failed": 0,
+      "serverErrors": 0,
+      "p50Ms": 9500.8,
+      "p95Ms": 10685.9,
+      "thresholdMs": 1000,
+      "status": "failed",
+      "httpStatuses": {
+        "201": 30
+      }
+    }
+  ]
+}

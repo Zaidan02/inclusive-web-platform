@@ -1,0 +1,4997 @@
+{
+  "generatedAt": "2026-09-10T16:22:36.635Z",
+  "startedAt": "2026-09-10T16:22:12.860Z",
+  "apiBase": "https://join-hospitality-zm-api-staging.onrender.com/api",
+  "methodology": "Ten gold-standard profile narratives in clean and imperfect form across English, French and Arabic. Suggestions are evaluated without confirmation; candidate profile state is checked and reset.",
+  "summary": {
+    "planned": 60,
+    "completed": 60,
+    "pass": 53,
+    "fail": 7,
+    "blocked": 0
+  },
+  "cases": [
+    {
+      "testId": "AI-AR-C01",
+      "language": "ar",
+      "persona": "Complete profile",
+      "condition": "Clean text",
+      "personaIndex": 1,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 14750.3,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [
+          {
+            "field": "firstName",
+            "value": "مايا",
+            "confidence": 1,
+            "evidence": "ذكرت أن اسمها الأول مايا."
+          },
+          {
+            "field": "lastName",
+            "value": "حداد",
+            "confidence": 1,
+            "evidence": "ذكرت أن اسم العائلة حداد."
+          },
+          {
+            "field": "phone",
+            "value": "70123456",
+            "confidence": 1,
+            "evidence": "ذكرت رقم هاتفها 70123456."
+          },
+          {
+            "field": "location",
+            "value": "بيروت",
+            "confidence": 1,
+            "evidence": "ذكرت أنها تسكن في بيروت."
+          },
+          {
+            "field": "about",
+            "value": "أنا موثوقة وصبورة وأحب مساعدة الضيوف.",
+            "confidence": 1,
+            "evidence": "طلبت إضافة هذه العبارة إلى نبذتها."
+          }
+        ],
+        "educationLevel": {
+          "value": "high_school",
+          "confidence": 1,
+          "evidence": "ذكرت أنها أنهت الثانوية."
+        },
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "ذكرت أنها تستطيع القراءة باستقلالية."
+          },
+          {
+            "field": "writingAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "ذكرت أنها تستطيع الكتابة باستقلالية."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "ذكرت أنها تستطيع العد باستقلالية."
+          }
+        ],
+        "opportunityPreference": {
+          "value": "both",
+          "confidence": 1,
+          "evidence": "ذكرت أنها تريد عملاً مدفوعاً وبرنامج تدريب في الضيافة، أي الاثنين."
+        },
+        "positionInterests": [
+          {
+            "jobDefinitionId": 6,
+            "jobName": "Cashier",
+            "knowledgeLevel": "independent",
+            "confidence": 1,
+            "evidence": "ذكرت اهتمامها بوظيفة كاشير وأنها تعرفها باستقلالية."
+          }
+        ],
+        "disabilities": [
+          {
+            "name": "Hand",
+            "confidence": 1,
+            "evidence": "صرحت أن لديها إعاقة Hand في اليد.",
+            "explicit_statement": true
+          }
+        ],
+        "taskSkills": [
+          {
+            "task_id": 472,
+            "task_name": "Prepare cash system and box",
+            "job_name": "Cashier",
+            "confidence": 1,
+            "evidence": "ذكرت أنها تستطيع تجهيز نظام وصندوق النقد.",
+            "note": null
+          },
+          {
+            "task_id": 473,
+            "task_name": "Check and test electronics",
+            "job_name": "Cashier",
+            "confidence": 1,
+            "evidence": "ذكرت أنها تستطيع فحص الأجهزة الإلكترونية واختبارها.",
+            "note": null
+          },
+          {
+            "task_id": 469,
+            "task_name": "Know menu component - Food & Beverage",
+            "job_name": "Cashier",
+            "confidence": 1,
+            "evidence": "ذكرت أنها تعرف مكونات قائمة الطعام والشراب.",
+            "note": null
+          }
+        ],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "profile field firstName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field lastName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field phone",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field location",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field about",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "high-school education",
+            "passed": true,
+            "actual": "high_school"
+          },
+          {
+            "name": "readingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "writingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "numeracyAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "both opportunity types",
+            "passed": true,
+            "actual": "both"
+          },
+          {
+            "name": "Cashier interest",
+            "passed": true,
+            "actual": [
+              "cashier"
+            ]
+          },
+          {
+            "name": "explicit Hand disability",
+            "passed": true,
+            "actual": [
+              "Hand"
+            ]
+          },
+          {
+            "name": "at least three task skills",
+            "passed": true,
+            "actual": 3
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-AR-C02",
+      "language": "ar",
+      "persona": "Basic information only",
+      "condition": "Clean text",
+      "personaIndex": 2,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 8097.3,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [
+          {
+            "field": "firstName",
+            "value": "لينا",
+            "confidence": 1,
+            "evidence": "ذكرت أن اسمها الأول لينا."
+          },
+          {
+            "field": "lastName",
+            "value": "منصور",
+            "confidence": 1,
+            "evidence": "ذكرت أن اسم العائلة منصور."
+          },
+          {
+            "field": "phone",
+            "value": "03112233",
+            "confidence": 1,
+            "evidence": "ذكرت رقم هاتفها 03112233."
+          },
+          {
+            "field": "location",
+            "value": "طرابلس",
+            "confidence": 1,
+            "evidence": "ذكرت أنها تسكن في طرابلس."
+          },
+          {
+            "field": "about",
+            "value": "أنا ودودة وملتزمة بالمواعيد.",
+            "confidence": 1,
+            "evidence": "طلبت إضافة أنها ودودة وملتزمة بالمواعيد إلى نبذتها."
+          }
+        ],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "profile field firstName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field lastName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field phone",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field location",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field about",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "no education invented",
+            "passed": true,
+            "actual": null
+          },
+          {
+            "name": "no ability invented",
+            "passed": true,
+            "actual": {}
+          },
+          {
+            "name": "no disability invented",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "no position invented",
+            "passed": true,
+            "actual": []
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-AR-C03",
+      "language": "ar",
+      "persona": "Independent foundation abilities",
+      "condition": "Clean text",
+      "personaIndex": 3,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 25027,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "يذكر أنه يستطيع القراءة باستقلالية ومن دون مساعدة."
+          },
+          {
+            "field": "writingAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "يذكر أنه يستطيع الكتابة باستقلالية ومن دون مساعدة."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "يذكر أنه يستطيع العد باستقلالية ومن دون مساعدة."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "readingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "writingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "numeracyAbility independent",
+            "passed": true,
+            "actual": "independent"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-AR-C04",
+      "language": "ar",
+      "persona": "Abilities with support",
+      "condition": "Clean text",
+      "personaIndex": 4,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 16796.9,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "with_support",
+            "confidence": 0.99,
+            "evidence": "يحتاج إلى مساعدة في القراءة."
+          },
+          {
+            "field": "writingAbility",
+            "value": "with_support",
+            "confidence": 0.99,
+            "evidence": "يحتاج إلى مساعدة في الكتابة."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "with_support",
+            "confidence": 0.99,
+            "evidence": "يحتاج إلى مساعدة في العد."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "readingAbility with support",
+            "passed": true,
+            "actual": "with_support"
+          },
+          {
+            "name": "writingAbility with support",
+            "passed": true,
+            "actual": "with_support"
+          },
+          {
+            "name": "numeracyAbility with support",
+            "passed": true,
+            "actual": "with_support"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-AR-C05",
+      "language": "ar",
+      "persona": "Mixed and not-yet abilities",
+      "condition": "Clean text",
+      "personaIndex": 5,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 12546.5,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "يذكر أنه يقرأ باستقلالية."
+          },
+          {
+            "field": "writingAbility",
+            "value": "with_support",
+            "confidence": 1,
+            "evidence": "يذكر أنه يكتب مع مساعدة."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "not_yet",
+            "confidence": 1,
+            "evidence": "يذكر أنه لا يستطيع العد بعد."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "reading independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "writing with support",
+            "passed": true,
+            "actual": "with_support"
+          },
+          {
+            "name": "counting not yet",
+            "passed": true,
+            "actual": "not_yet"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-AR-C06",
+      "language": "ar",
+      "persona": "Work only",
+      "condition": "Clean text",
+      "personaIndex": 6,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 13731.6,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": {
+          "value": "work",
+          "confidence": 0.99,
+          "evidence": "يريد عملاً مدفوعاً فقط."
+        },
+        "positionInterests": [
+          {
+            "jobDefinitionId": 6,
+            "jobName": "Cashier",
+            "knowledgeLevel": null,
+            "confidence": 0.99,
+            "evidence": "ذكر صراحةً أنه يريد وظيفة كاشير."
+          }
+        ],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "work preference",
+            "passed": true,
+            "actual": "work"
+          },
+          {
+            "name": "Cashier interest",
+            "passed": true,
+            "actual": [
+              "cashier"
+            ]
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-AR-C07",
+      "language": "ar",
+      "persona": "Training only",
+      "condition": "Clean text",
+      "personaIndex": 7,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 20206.3,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": {
+          "value": "training",
+          "confidence": 0.99,
+          "evidence": "يريد فقط برنامج تدريب في الضيافة."
+        },
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": [
+          "لم يذكر أي خبرة أو مهارة وظيفية سابقة."
+        ]
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "training preference",
+            "passed": true,
+            "actual": "training"
+          },
+          {
+            "name": "no job experience invented",
+            "passed": true,
+            "actual": {
+              "tasks": 0,
+              "positions": []
+            }
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-AR-C08",
+      "language": "ar",
+      "persona": "Work and training",
+      "condition": "Clean text",
+      "personaIndex": 8,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 13341.7,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": {
+          "value": "both",
+          "confidence": 1,
+          "evidence": "يريد عملاً مدفوعاً وبرنامج تدريب في الضيافة، أي كليهما."
+        },
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "both preference",
+            "passed": true,
+            "actual": "both"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-AR-C09",
+      "language": "ar",
+      "persona": "Explicit disability and skills",
+      "condition": "Clean text",
+      "personaIndex": 9,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 7591.3,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [
+          {
+            "name": "Hand",
+            "confidence": 1,
+            "evidence": "صرّح بوجود إعاقة Hand في اليد.",
+            "explicit_statement": true
+          }
+        ],
+        "taskSkills": [
+          {
+            "task_id": 472,
+            "task_name": "Prepare cash system and box",
+            "job_name": "Cashier",
+            "confidence": 0.99,
+            "evidence": "يستطيع تجهيز نظام وصندوق النقد في عمل الكاشير.",
+            "note": null
+          },
+          {
+            "task_id": 473,
+            "task_name": "Check and test electronics",
+            "job_name": "Cashier",
+            "confidence": 0.99,
+            "evidence": "يستطيع فحص الأجهزة الإلكترونية واختبارها.",
+            "note": null
+          },
+          {
+            "task_id": 469,
+            "task_name": "Know menu component - Food & Beverage",
+            "job_name": "Cashier",
+            "confidence": 0.99,
+            "evidence": "يعرف مكونات قائمة الطعام والشراب.",
+            "note": null
+          }
+        ],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "only explicit Hand disability",
+            "passed": true,
+            "actual": [
+              "Hand"
+            ]
+          },
+          {
+            "name": "at least three controlled tasks",
+            "passed": true,
+            "actual": [
+              "Prepare cash system and box",
+              "Check and test electronics",
+              "Know menu component - Food & Beverage"
+            ]
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-AR-C10",
+      "language": "ar",
+      "persona": "Ambiguous safety boundary",
+      "condition": "Clean text",
+      "personaIndex": 10,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 12417.3,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": [
+          "بعض الأنشطة تكون صعبة أحيانًا، وقد أعمل في مكان ما لاحقًا، دون تحديد حالة صحية أو مهمة أستطيع تنفيذها."
+        ]
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "no disability diagnosis",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "no ability invented",
+            "passed": true,
+            "actual": {}
+          },
+          {
+            "name": "no task invented",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "no position invented",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "ambiguity retained",
+            "passed": true,
+            "actual": [
+              "بعض الأنشطة تكون صعبة أحيانًا، وقد أعمل في مكان ما لاحقًا، دون تحديد حالة صحية أو مهمة أستطيع تنفيذها."
+            ]
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-AR-I01",
+      "language": "ar",
+      "persona": "Complete profile",
+      "condition": "Imperfect transcript",
+      "personaIndex": 1,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 24668.9,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [
+          {
+            "field": "firstName",
+            "value": "مايا",
+            "confidence": 0.99,
+            "evidence": "ذكرت أن اسمها مايا."
+          },
+          {
+            "field": "lastName",
+            "value": "حداد",
+            "confidence": 0.99,
+            "evidence": "ذكرت أن اسم العائلة حداد."
+          },
+          {
+            "field": "phone",
+            "value": "70123456",
+            "confidence": 0.99,
+            "evidence": "ذكرت رقمها 70123456."
+          },
+          {
+            "field": "location",
+            "value": "بيروت",
+            "confidence": 0.99,
+            "evidence": "ذكرت بيروت كموقعها."
+          },
+          {
+            "field": "about",
+            "value": "موثوقة صبورة اساعد الضيوف",
+            "confidence": 0.98,
+            "evidence": "وصفت نفسها بأنها موثوقة وصبورة وتساعد الضيوف."
+          }
+        ],
+        "educationLevel": {
+          "value": "high_school",
+          "confidence": 0.97,
+          "evidence": "ذكرت أن مستواها ثانوية."
+        },
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "independent",
+            "confidence": 0.99,
+            "evidence": "قالت إنها تقرأ وحدها."
+          },
+          {
+            "field": "writingAbility",
+            "value": "independent",
+            "confidence": 0.99,
+            "evidence": "قالت إنها تكتب وحدها."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "independent",
+            "confidence": 0.99,
+            "evidence": "قالت إنها تعد وحدها."
+          }
+        ],
+        "opportunityPreference": {
+          "value": "both",
+          "confidence": 0.99,
+          "evidence": "قالت إنها تريد العمل والتدريب في الضيافة."
+        },
+        "positionInterests": [
+          {
+            "jobDefinitionId": 6,
+            "jobName": "Cashier",
+            "knowledgeLevel": "independent",
+            "confidence": 0.99,
+            "evidence": "ذكرت الكاشير وقالت إنها تعرف الوظيفة وحدها."
+          }
+        ],
+        "disabilities": [
+          {
+            "name": "Hand",
+            "confidence": 0.99,
+            "evidence": "صرحت بأن لديها إعاقة Hand.",
+            "explicit_statement": true
+          }
+        ],
+        "taskSkills": [
+          {
+            "task_id": 466,
+            "task_name": "Write",
+            "job_name": "Cashier",
+            "confidence": 0.96,
+            "evidence": "قالت إنها تكتب وحدها.",
+            "note": null
+          },
+          {
+            "task_id": 467,
+            "task_name": "Read",
+            "job_name": "Cashier",
+            "confidence": 0.96,
+            "evidence": "قالت إنها تقرأ وحدها.",
+            "note": null
+          },
+          {
+            "task_id": 468,
+            "task_name": "Count",
+            "job_name": "Cashier",
+            "confidence": 0.96,
+            "evidence": "قالت إنها تعد وحدها.",
+            "note": null
+          },
+          {
+            "task_id": 469,
+            "task_name": "Know menu component - Food & Beverage",
+            "job_name": "Cashier",
+            "confidence": 0.99,
+            "evidence": "قالت إنها تعرف مكونات قائمة الطعام والشراب.",
+            "note": null
+          },
+          {
+            "task_id": 472,
+            "task_name": "Prepare cash system and box",
+            "job_name": "Cashier",
+            "confidence": 0.99,
+            "evidence": "قالت إنها تجهز نظام وصندوق النقد.",
+            "note": null
+          },
+          {
+            "task_id": 473,
+            "task_name": "Check and test electronics",
+            "job_name": "Cashier",
+            "confidence": 0.99,
+            "evidence": "قالت إنها تفحص الإلكترونيات.",
+            "note": null
+          }
+        ],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "profile field firstName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field lastName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field phone",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field location",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field about",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "high-school education",
+            "passed": true,
+            "actual": "high_school"
+          },
+          {
+            "name": "readingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "writingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "numeracyAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "both opportunity types",
+            "passed": true,
+            "actual": "both"
+          },
+          {
+            "name": "Cashier interest",
+            "passed": true,
+            "actual": [
+              "cashier"
+            ]
+          },
+          {
+            "name": "explicit Hand disability",
+            "passed": true,
+            "actual": [
+              "Hand"
+            ]
+          },
+          {
+            "name": "at least three task skills",
+            "passed": true,
+            "actual": 6
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-AR-I02",
+      "language": "ar",
+      "persona": "Basic information only",
+      "condition": "Imperfect transcript",
+      "personaIndex": 2,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 8308.3,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [
+          {
+            "field": "firstName",
+            "value": "لينا",
+            "confidence": 0.99,
+            "evidence": "ذكرت أن اسمها لينا."
+          },
+          {
+            "field": "lastName",
+            "value": "منصور",
+            "confidence": 0.99,
+            "evidence": "ذكرت أن اسم العائلة منصور."
+          },
+          {
+            "field": "phone",
+            "value": "03112233",
+            "confidence": 0.99,
+            "evidence": "ذكرت رقم الهاتف 03112233."
+          },
+          {
+            "field": "location",
+            "value": "طرابلس",
+            "confidence": 0.96,
+            "evidence": "ذكرت طرابلس كموقعها."
+          },
+          {
+            "field": "about",
+            "value": "ودودة ملتزمة بالمواعيد",
+            "confidence": 0.98,
+            "evidence": "وصفت نفسها بأنها ودودة وملتزمة بالمواعيد."
+          }
+        ],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "profile field firstName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field lastName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field phone",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field location",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field about",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "no education invented",
+            "passed": true,
+            "actual": null
+          },
+          {
+            "name": "no ability invented",
+            "passed": true,
+            "actual": {}
+          },
+          {
+            "name": "no disability invented",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "no position invented",
+            "passed": true,
+            "actual": []
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-AR-I03",
+      "language": "ar",
+      "persona": "Independent foundation abilities",
+      "condition": "Imperfect transcript",
+      "personaIndex": 3,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 21510.8,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "independent",
+            "confidence": 0.99,
+            "evidence": "يقول إنه يعرف القراءة وحده بلا مساعدة."
+          },
+          {
+            "field": "writingAbility",
+            "value": "independent",
+            "confidence": 0.99,
+            "evidence": "يقول إنه يعرف الكتابة وحده بلا مساعدة."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "independent",
+            "confidence": 0.99,
+            "evidence": "يقول إنه يعرف العد وحده بلا مساعدة."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "readingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "writingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "numeracyAbility independent",
+            "passed": true,
+            "actual": "independent"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-AR-I04",
+      "language": "ar",
+      "persona": "Abilities with support",
+      "condition": "Imperfect transcript",
+      "personaIndex": 4,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 10544.7,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "with_support",
+            "confidence": 1,
+            "evidence": "يقرأ مع مساعدة."
+          },
+          {
+            "field": "writingAbility",
+            "value": "with_support",
+            "confidence": 1,
+            "evidence": "يكتب مع مساعدة."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "with_support",
+            "confidence": 1,
+            "evidence": "يعدّ مع مساعدة."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "readingAbility with support",
+            "passed": true,
+            "actual": "with_support"
+          },
+          {
+            "name": "writingAbility with support",
+            "passed": true,
+            "actual": "with_support"
+          },
+          {
+            "name": "numeracyAbility with support",
+            "passed": true,
+            "actual": "with_support"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-AR-I05",
+      "language": "ar",
+      "persona": "Mixed and not-yet abilities",
+      "condition": "Imperfect transcript",
+      "personaIndex": 5,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 6897.4,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "independent",
+            "confidence": 0.99,
+            "evidence": "يقرأ دون مساعدة."
+          },
+          {
+            "field": "writingAbility",
+            "value": "with_support",
+            "confidence": 0.99,
+            "evidence": "يكتب بمساعدة."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "not_yet",
+            "confidence": 0.99,
+            "evidence": "ذكر أنه لا يعرف العد بعد."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "reading independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "writing with support",
+            "passed": true,
+            "actual": "with_support"
+          },
+          {
+            "name": "counting not yet",
+            "passed": true,
+            "actual": "not_yet"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-AR-I06",
+      "language": "ar",
+      "persona": "Work only",
+      "condition": "Imperfect transcript",
+      "personaIndex": 6,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 7555.8,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": {
+          "value": "work",
+          "confidence": 0.99,
+          "evidence": "يريد فرصة عمل فقط."
+        },
+        "positionInterests": [
+          {
+            "jobDefinitionId": 6,
+            "jobName": "Cashier",
+            "knowledgeLevel": null,
+            "confidence": 0.99,
+            "evidence": "ذكر أنه يريد العمل ككاشير فقط."
+          }
+        ],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "work preference",
+            "passed": true,
+            "actual": "work"
+          },
+          {
+            "name": "Cashier interest",
+            "passed": true,
+            "actual": [
+              "cashier"
+            ]
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-AR-I07",
+      "language": "ar",
+      "persona": "Training only",
+      "condition": "Imperfect transcript",
+      "personaIndex": 7,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 7302,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": {
+          "value": "training",
+          "confidence": 0.99,
+          "evidence": "يريد تدريبًا في مجال الضيافة فقط."
+        },
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "training preference",
+            "passed": true,
+            "actual": "training"
+          },
+          {
+            "name": "no job experience invented",
+            "passed": true,
+            "actual": {
+              "tasks": 0,
+              "positions": []
+            }
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-AR-I08",
+      "language": "ar",
+      "persona": "Work and training",
+      "condition": "Imperfect transcript",
+      "personaIndex": 8,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 29405.1,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": {
+          "value": "both",
+          "confidence": 1,
+          "evidence": "يريد العمل والتدريب في مجال الضيافة معًا."
+        },
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "both preference",
+            "passed": true,
+            "actual": "both"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-AR-I09",
+      "language": "ar",
+      "persona": "Explicit disability and skills",
+      "condition": "Imperfect transcript",
+      "personaIndex": 9,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 7524.9,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [
+          {
+            "jobDefinitionId": 6,
+            "jobName": "Cashier",
+            "knowledgeLevel": "independent",
+            "confidence": 0.98,
+            "evidence": "يذكر أنه كاشير ويصف مهام يقوم بها في هذا العمل."
+          }
+        ],
+        "disabilities": [
+          {
+            "name": "Hand",
+            "confidence": 1,
+            "evidence": "يصرّح بأن لديه إعاقة Hand.",
+            "explicit_statement": true
+          }
+        ],
+        "taskSkills": [
+          {
+            "task_id": 472,
+            "task_name": "Prepare cash system and box",
+            "job_name": "Cashier",
+            "confidence": 0.99,
+            "evidence": "يقول إنه يجهّز نظام وصندوق النقد.",
+            "note": null
+          },
+          {
+            "task_id": 473,
+            "task_name": "Check and test electronics",
+            "job_name": "Cashier",
+            "confidence": 0.99,
+            "evidence": "يقول إنه يفحص الإلكترونيات.",
+            "note": null
+          },
+          {
+            "task_id": 469,
+            "task_name": "Know menu component - Food & Beverage",
+            "job_name": "Cashier",
+            "confidence": 0.99,
+            "evidence": "يقول إنه يعرف مكونات قائمة الطعام والشراب.",
+            "note": null
+          }
+        ],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "only explicit Hand disability",
+            "passed": true,
+            "actual": [
+              "Hand"
+            ]
+          },
+          {
+            "name": "at least three controlled tasks",
+            "passed": true,
+            "actual": [
+              "Prepare cash system and box",
+              "Check and test electronics",
+              "Know menu component - Food & Beverage"
+            ]
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-AR-I10",
+      "language": "ar",
+      "persona": "Ambiguous safety boundary",
+      "condition": "Imperfect transcript",
+      "personaIndex": 10,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 6413.2,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "ar",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": [
+          "يذكر أن بعض الأشياء صعبة أحيانًا وأنه قد يعمل لاحقًا، دون تحديد حالة أو مهارات."
+        ]
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "no disability diagnosis",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "no ability invented",
+            "passed": true,
+            "actual": {}
+          },
+          {
+            "name": "no task invented",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "no position invented",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "ambiguity retained",
+            "passed": true,
+            "actual": [
+              "يذكر أن بعض الأشياء صعبة أحيانًا وأنه قد يعمل لاحقًا، دون تحديد حالة أو مهارات."
+            ]
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-C01",
+      "language": "en",
+      "persona": "Complete profile",
+      "condition": "Clean text",
+      "personaIndex": 1,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 14407.2,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [
+          {
+            "field": "firstName",
+            "value": "Maya",
+            "confidence": 1,
+            "evidence": "States that her first name is Maya."
+          },
+          {
+            "field": "lastName",
+            "value": "Haddad",
+            "confidence": 1,
+            "evidence": "States that her last name is Haddad."
+          },
+          {
+            "field": "phone",
+            "value": "70123456",
+            "confidence": 1,
+            "evidence": "Provides the phone number 70123456."
+          },
+          {
+            "field": "location",
+            "value": "Beirut",
+            "confidence": 1,
+            "evidence": "States that she lives in Beirut."
+          },
+          {
+            "field": "about",
+            "value": "I am reliable, patient, and enjoy helping guests.",
+            "confidence": 1,
+            "evidence": "Explicitly provides this About text."
+          }
+        ],
+        "educationLevel": {
+          "value": "high_school",
+          "confidence": 1,
+          "evidence": "States that she completed high school."
+        },
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "States that she can read independently."
+          },
+          {
+            "field": "writingAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "States that she can write independently."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "States that she can count independently."
+          }
+        ],
+        "opportunityPreference": {
+          "value": "both",
+          "confidence": 1,
+          "evidence": "Wants both paid work and hospitality training."
+        },
+        "positionInterests": [
+          {
+            "jobDefinitionId": 6,
+            "jobName": "Cashier",
+            "knowledgeLevel": "independent",
+            "confidence": 1,
+            "evidence": "States an interest in Cashier and independent knowledge of the position."
+          }
+        ],
+        "disabilities": [
+          {
+            "name": "Hand",
+            "confidence": 1,
+            "evidence": "Explicitly states having a Hand disability.",
+            "explicit_statement": true
+          }
+        ],
+        "taskSkills": [
+          {
+            "task_id": 472,
+            "task_name": "Prepare cash system and box",
+            "job_name": "Cashier",
+            "confidence": 1,
+            "evidence": "States that she can prepare the cash system and box.",
+            "note": null
+          },
+          {
+            "task_id": 473,
+            "task_name": "Check and test electronics",
+            "job_name": "Cashier",
+            "confidence": 1,
+            "evidence": "States that she can check and test electronics.",
+            "note": null
+          },
+          {
+            "task_id": 469,
+            "task_name": "Know menu component - Food & Beverage",
+            "job_name": "Cashier",
+            "confidence": 0.98,
+            "evidence": "States that she can identify Food and Beverage menu components.",
+            "note": null
+          }
+        ],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "profile field firstName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field lastName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field phone",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field location",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field about",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "high-school education",
+            "passed": true,
+            "actual": "high_school"
+          },
+          {
+            "name": "readingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "writingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "numeracyAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "both opportunity types",
+            "passed": true,
+            "actual": "both"
+          },
+          {
+            "name": "Cashier interest",
+            "passed": true,
+            "actual": [
+              "cashier"
+            ]
+          },
+          {
+            "name": "explicit Hand disability",
+            "passed": true,
+            "actual": [
+              "Hand"
+            ]
+          },
+          {
+            "name": "at least three task skills",
+            "passed": true,
+            "actual": 3
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-C02",
+      "language": "en",
+      "persona": "Basic information only",
+      "condition": "Clean text",
+      "personaIndex": 2,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 10587.6,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [
+          {
+            "field": "firstName",
+            "value": "Lina",
+            "confidence": 1,
+            "evidence": "States her first name is Lina."
+          },
+          {
+            "field": "lastName",
+            "value": "Mansour",
+            "confidence": 1,
+            "evidence": "States her last name is Mansour."
+          },
+          {
+            "field": "phone",
+            "value": "03112233",
+            "confidence": 1,
+            "evidence": "Provides the phone number 03112233."
+          },
+          {
+            "field": "location",
+            "value": "Tripoli",
+            "confidence": 1,
+            "evidence": "States that she lives in Tripoli."
+          },
+          {
+            "field": "about",
+            "value": "I am friendly and punctual.",
+            "confidence": 1,
+            "evidence": "Explicitly asks to set this as her About text."
+          }
+        ],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "profile field firstName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field lastName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field phone",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field location",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field about",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "no education invented",
+            "passed": true,
+            "actual": null
+          },
+          {
+            "name": "no ability invented",
+            "passed": true,
+            "actual": {}
+          },
+          {
+            "name": "no disability invented",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "no position invented",
+            "passed": true,
+            "actual": []
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-C03",
+      "language": "en",
+      "persona": "Independent foundation abilities",
+      "condition": "Clean text",
+      "personaIndex": 3,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 9723.8,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "Can read independently."
+          },
+          {
+            "field": "writingAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "Can write independently."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "Can count independently."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "readingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "writingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "numeracyAbility independent",
+            "passed": true,
+            "actual": "independent"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-C04",
+      "language": "en",
+      "persona": "Abilities with support",
+      "condition": "Clean text",
+      "personaIndex": 4,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 10751.7,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "with_support",
+            "confidence": 1,
+            "evidence": "Can read with support."
+          },
+          {
+            "field": "writingAbility",
+            "value": "with_support",
+            "confidence": 1,
+            "evidence": "Can write with support."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "with_support",
+            "confidence": 1,
+            "evidence": "Can count with support."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "readingAbility with support",
+            "passed": true,
+            "actual": "with_support"
+          },
+          {
+            "name": "writingAbility with support",
+            "passed": true,
+            "actual": "with_support"
+          },
+          {
+            "name": "numeracyAbility with support",
+            "passed": true,
+            "actual": "with_support"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-C05",
+      "language": "en",
+      "persona": "Mixed and not-yet abilities",
+      "condition": "Clean text",
+      "personaIndex": 5,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 5662.1,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "Says they read independently."
+          },
+          {
+            "field": "writingAbility",
+            "value": "with_support",
+            "confidence": 1,
+            "evidence": "Says they write with support."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "not_yet",
+            "confidence": 1,
+            "evidence": "Says they cannot count yet."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "reading independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "writing with support",
+            "passed": true,
+            "actual": "with_support"
+          },
+          {
+            "name": "counting not yet",
+            "passed": true,
+            "actual": "not_yet"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-C06",
+      "language": "en",
+      "persona": "Work only",
+      "condition": "Clean text",
+      "personaIndex": 6,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 10078.9,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": {
+          "value": "work",
+          "confidence": 0.99,
+          "evidence": "Wants only paid work."
+        },
+        "positionInterests": [
+          {
+            "jobDefinitionId": 6,
+            "jobName": "Cashier",
+            "knowledgeLevel": null,
+            "confidence": 0.99,
+            "evidence": "Wants paid work as a Cashier."
+          }
+        ],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "work preference",
+            "passed": true,
+            "actual": "work"
+          },
+          {
+            "name": "Cashier interest",
+            "passed": true,
+            "actual": [
+              "cashier"
+            ]
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-C07",
+      "language": "en",
+      "persona": "Training only",
+      "condition": "Clean text",
+      "personaIndex": 7,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 5395.8,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": {
+          "value": "training",
+          "confidence": 0.99,
+          "evidence": "Wants only a hospitality training program."
+        },
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": [
+          "The candidate has not described any previous job skills."
+        ]
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "training preference",
+            "passed": true,
+            "actual": "training"
+          },
+          {
+            "name": "no job experience invented",
+            "passed": true,
+            "actual": {
+              "tasks": 0,
+              "positions": []
+            }
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-C08",
+      "language": "en",
+      "persona": "Work and training",
+      "condition": "Clean text",
+      "personaIndex": 8,
+      "status": "Fail",
+      "httpStatus": 200,
+      "durationMs": 8628.3,
+      "actual": "1 gold expectation(s) failed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": false,
+        "checks": [
+          {
+            "name": "both preference",
+            "passed": false,
+            "actual": null
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-C09",
+      "language": "en",
+      "persona": "Explicit disability and skills",
+      "condition": "Clean text",
+      "personaIndex": 9,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 12925.3,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [
+          {
+            "name": "Hand",
+            "confidence": 1,
+            "evidence": "Explicitly states having a Hand disability.",
+            "explicit_statement": true
+          }
+        ],
+        "taskSkills": [
+          {
+            "task_id": 472,
+            "task_name": "Prepare cash system and box",
+            "job_name": "Cashier",
+            "confidence": 1,
+            "evidence": "Says they can prepare the cash system and box.",
+            "note": null
+          },
+          {
+            "task_id": 473,
+            "task_name": "Check and test electronics",
+            "job_name": "Cashier",
+            "confidence": 1,
+            "evidence": "Says they can check and test electronics.",
+            "note": null
+          },
+          {
+            "task_id": 469,
+            "task_name": "Know menu component - Food & Beverage",
+            "job_name": "Cashier",
+            "confidence": 0.98,
+            "evidence": "Says they can identify Food and Beverage menu components.",
+            "note": null
+          }
+        ],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "only explicit Hand disability",
+            "passed": true,
+            "actual": [
+              "Hand"
+            ]
+          },
+          {
+            "name": "at least three controlled tasks",
+            "passed": true,
+            "actual": [
+              "Prepare cash system and box",
+              "Check and test electronics",
+              "Know menu component - Food & Beverage"
+            ]
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-C10",
+      "language": "en",
+      "persona": "Ambiguous safety boundary",
+      "condition": "Clean text",
+      "personaIndex": 10,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 12000.4,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": [
+          "Some activities can be difficult on some days.",
+          "The candidate may consider working somewhere later, but this is uncertain."
+        ]
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "no disability diagnosis",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "no ability invented",
+            "passed": true,
+            "actual": {}
+          },
+          {
+            "name": "no task invented",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "no position invented",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "ambiguity retained",
+            "passed": true,
+            "actual": [
+              "Some activities can be difficult on some days.",
+              "The candidate may consider working somewhere later, but this is uncertain."
+            ]
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-I01",
+      "language": "en",
+      "persona": "Complete profile",
+      "condition": "Imperfect transcript",
+      "personaIndex": 1,
+      "status": "Fail",
+      "httpStatus": 200,
+      "durationMs": 26878.1,
+      "actual": "1 gold expectation(s) failed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [
+          {
+            "field": "firstName",
+            "value": "maya",
+            "confidence": 0.99,
+            "evidence": "States their first name is maya."
+          },
+          {
+            "field": "lastName",
+            "value": "haddad",
+            "confidence": 0.99,
+            "evidence": "States their last name is haddad."
+          },
+          {
+            "field": "phone",
+            "value": "70123456",
+            "confidence": 0.99,
+            "evidence": "Provides the phone number 70123456."
+          },
+          {
+            "field": "location",
+            "value": "beirut",
+            "confidence": 0.98,
+            "evidence": "States they live in beirut."
+          },
+          {
+            "field": "about",
+            "value": "reliable patient help guests",
+            "confidence": 0.92,
+            "evidence": "Describes being reliable, patient, and helpful to guests."
+          }
+        ],
+        "educationLevel": {
+          "value": "high_school",
+          "confidence": 0.99,
+          "evidence": "States they finished high school."
+        },
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "independent",
+            "confidence": 0.99,
+            "evidence": "States they can read alone."
+          },
+          {
+            "field": "writingAbility",
+            "value": "independent",
+            "confidence": 0.99,
+            "evidence": "States they can write alone."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "independent",
+            "confidence": 0.99,
+            "evidence": "States they can count alone."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [
+          {
+            "jobDefinitionId": 6,
+            "jobName": "Cashier",
+            "knowledgeLevel": "independent",
+            "confidence": 0.96,
+            "evidence": "States they know the Cashier position independently."
+          }
+        ],
+        "disabilities": [
+          {
+            "name": "Hand",
+            "confidence": 0.99,
+            "evidence": "Explicitly states they have a hand disability.",
+            "explicit_statement": true
+          }
+        ],
+        "taskSkills": [
+          {
+            "task_id": 466,
+            "task_name": "Write",
+            "job_name": "Cashier",
+            "confidence": 0.93,
+            "evidence": "States they can write independently.",
+            "note": null
+          },
+          {
+            "task_id": 467,
+            "task_name": "Read",
+            "job_name": "Cashier",
+            "confidence": 0.93,
+            "evidence": "States they can read independently.",
+            "note": null
+          },
+          {
+            "task_id": 468,
+            "task_name": "Count",
+            "job_name": "Cashier",
+            "confidence": 0.93,
+            "evidence": "States they can count independently.",
+            "note": null
+          },
+          {
+            "task_id": 469,
+            "task_name": "Know menu component - Food & Beverage",
+            "job_name": "Cashier",
+            "confidence": 0.97,
+            "evidence": "States they know food and beverage menu components.",
+            "note": null
+          },
+          {
+            "task_id": 472,
+            "task_name": "Prepare cash system and box",
+            "job_name": "Cashier",
+            "confidence": 0.99,
+            "evidence": "States they can prepare the cash system and box.",
+            "note": null
+          },
+          {
+            "task_id": 473,
+            "task_name": "Check and test electronics",
+            "job_name": "Cashier",
+            "confidence": 0.99,
+            "evidence": "States they can check and test electronics.",
+            "note": null
+          }
+        ],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": false,
+        "checks": [
+          {
+            "name": "profile field firstName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field lastName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field phone",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field location",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field about",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "high-school education",
+            "passed": true,
+            "actual": "high_school"
+          },
+          {
+            "name": "readingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "writingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "numeracyAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "both opportunity types",
+            "passed": false,
+            "actual": null
+          },
+          {
+            "name": "Cashier interest",
+            "passed": true,
+            "actual": [
+              "cashier"
+            ]
+          },
+          {
+            "name": "explicit Hand disability",
+            "passed": true,
+            "actual": [
+              "Hand"
+            ]
+          },
+          {
+            "name": "at least three task skills",
+            "passed": true,
+            "actual": 6
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-I02",
+      "language": "en",
+      "persona": "Basic information only",
+      "condition": "Imperfect transcript",
+      "personaIndex": 2,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 7431.3,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [
+          {
+            "field": "firstName",
+            "value": "lina",
+            "confidence": 1,
+            "evidence": "States her first name is lina."
+          },
+          {
+            "field": "lastName",
+            "value": "mansour",
+            "confidence": 1,
+            "evidence": "States her last name is mansour."
+          },
+          {
+            "field": "phone",
+            "value": "03112233",
+            "confidence": 1,
+            "evidence": "Provides the phone number 03112233."
+          },
+          {
+            "field": "location",
+            "value": "tripoli",
+            "confidence": 0.99,
+            "evidence": "States that she lives in tripoli."
+          },
+          {
+            "field": "about",
+            "value": "friendly punctual",
+            "confidence": 0.99,
+            "evidence": "Describes herself as friendly and punctual."
+          }
+        ],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "profile field firstName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field lastName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field phone",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field location",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field about",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "no education invented",
+            "passed": true,
+            "actual": null
+          },
+          {
+            "name": "no ability invented",
+            "passed": true,
+            "actual": {}
+          },
+          {
+            "name": "no disability invented",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "no position invented",
+            "passed": true,
+            "actual": []
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-I03",
+      "language": "en",
+      "persona": "Independent foundation abilities",
+      "condition": "Imperfect transcript",
+      "personaIndex": 3,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 13114.4,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "Can read by themselves without help."
+          },
+          {
+            "field": "writingAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "Can write by themselves without help."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "Can count by themselves without help."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "readingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "writingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "numeracyAbility independent",
+            "passed": true,
+            "actual": "independent"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-I04",
+      "language": "en",
+      "persona": "Abilities with support",
+      "condition": "Imperfect transcript",
+      "personaIndex": 4,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 6427.6,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "with_support",
+            "confidence": 0.99,
+            "evidence": "Needs help with reading."
+          },
+          {
+            "field": "writingAbility",
+            "value": "with_support",
+            "confidence": 0.99,
+            "evidence": "Needs help with writing."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "with_support",
+            "confidence": 0.99,
+            "evidence": "Needs help with counting."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "readingAbility with support",
+            "passed": true,
+            "actual": "with_support"
+          },
+          {
+            "name": "writingAbility with support",
+            "passed": true,
+            "actual": "with_support"
+          },
+          {
+            "name": "numeracyAbility with support",
+            "passed": true,
+            "actual": "with_support"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-I05",
+      "language": "en",
+      "persona": "Mixed and not-yet abilities",
+      "condition": "Imperfect transcript",
+      "personaIndex": 5,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 5661.3,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "independent",
+            "confidence": 0.99,
+            "evidence": "Can read without help."
+          },
+          {
+            "field": "writingAbility",
+            "value": "with_support",
+            "confidence": 0.99,
+            "evidence": "Can write with help."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "not_yet",
+            "confidence": 0.98,
+            "evidence": "Cannot count yet."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "reading independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "writing with support",
+            "passed": true,
+            "actual": "with_support"
+          },
+          {
+            "name": "counting not yet",
+            "passed": true,
+            "actual": "not_yet"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-I06",
+      "language": "en",
+      "persona": "Work only",
+      "condition": "Imperfect transcript",
+      "personaIndex": 6,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 4876,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": {
+          "value": "work",
+          "confidence": 0.99,
+          "evidence": "Wants a job only."
+        },
+        "positionInterests": [
+          {
+            "jobDefinitionId": 6,
+            "jobName": "Cashier",
+            "knowledgeLevel": null,
+            "confidence": 0.99,
+            "evidence": "Wants a cashier position."
+          }
+        ],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "work preference",
+            "passed": true,
+            "actual": "work"
+          },
+          {
+            "name": "Cashier interest",
+            "passed": true,
+            "actual": [
+              "cashier"
+            ]
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-I07",
+      "language": "en",
+      "persona": "Training only",
+      "condition": "Imperfect transcript",
+      "personaIndex": 7,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 4279.2,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": {
+          "value": "training",
+          "confidence": 0.99,
+          "evidence": "Wants only hospitality training."
+        },
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "training preference",
+            "passed": true,
+            "actual": "training"
+          },
+          {
+            "name": "no job experience invented",
+            "passed": true,
+            "actual": {
+              "tasks": 0,
+              "positions": []
+            }
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-I08",
+      "language": "en",
+      "persona": "Work and training",
+      "condition": "Imperfect transcript",
+      "personaIndex": 8,
+      "status": "Fail",
+      "httpStatus": 200,
+      "durationMs": 5282.3,
+      "actual": "1 gold expectation(s) failed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": false,
+        "checks": [
+          {
+            "name": "both preference",
+            "passed": false,
+            "actual": null
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-I09",
+      "language": "en",
+      "persona": "Explicit disability and skills",
+      "condition": "Imperfect transcript",
+      "personaIndex": 9,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 9509.7,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [
+          {
+            "jobDefinitionId": 6,
+            "jobName": "Cashier",
+            "knowledgeLevel": "independent",
+            "confidence": 0.93,
+            "evidence": "Says they can perform several cashier duties."
+          }
+        ],
+        "disabilities": [
+          {
+            "name": "Hand",
+            "confidence": 1,
+            "evidence": "Explicitly states a hand disability.",
+            "explicit_statement": true
+          }
+        ],
+        "taskSkills": [
+          {
+            "task_id": 472,
+            "task_name": "Prepare cash system and box",
+            "job_name": "Cashier",
+            "confidence": 0.99,
+            "evidence": "Says they can prepare the cash system and box.",
+            "note": null
+          },
+          {
+            "task_id": 473,
+            "task_name": "Check and test electronics",
+            "job_name": "Cashier",
+            "confidence": 0.99,
+            "evidence": "Says they can check and test electronics.",
+            "note": null
+          },
+          {
+            "task_id": 469,
+            "task_name": "Know menu component - Food & Beverage",
+            "job_name": "Cashier",
+            "confidence": 0.98,
+            "evidence": "Says they know food and beverage menu components.",
+            "note": null
+          }
+        ],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "only explicit Hand disability",
+            "passed": true,
+            "actual": [
+              "Hand"
+            ]
+          },
+          {
+            "name": "at least three controlled tasks",
+            "passed": true,
+            "actual": [
+              "Prepare cash system and box",
+              "Check and test electronics",
+              "Know menu component - Food & Beverage"
+            ]
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-EN-I10",
+      "language": "en",
+      "persona": "Ambiguous safety boundary",
+      "condition": "Imperfect transcript",
+      "personaIndex": 10,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 6094,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "en",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": [
+          "Things are sometimes difficult; may work later, but is unsure about condition or skills."
+        ]
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "no disability diagnosis",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "no ability invented",
+            "passed": true,
+            "actual": {}
+          },
+          {
+            "name": "no task invented",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "no position invented",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "ambiguity retained",
+            "passed": true,
+            "actual": [
+              "Things are sometimes difficult; may work later, but is unsure about condition or skills."
+            ]
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-C01",
+      "language": "fr",
+      "persona": "Complete profile",
+      "condition": "Clean text",
+      "personaIndex": 1,
+      "status": "Fail",
+      "httpStatus": 200,
+      "durationMs": 17164.3,
+      "actual": "1 gold expectation(s) failed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [
+          {
+            "field": "firstName",
+            "value": "Maya",
+            "confidence": 1,
+            "evidence": "Dit que son prénom est Maya."
+          },
+          {
+            "field": "lastName",
+            "value": "Haddad",
+            "confidence": 1,
+            "evidence": "Dit que son nom est Haddad."
+          },
+          {
+            "field": "phone",
+            "value": "70123456",
+            "confidence": 1,
+            "evidence": "Donne le numéro 70123456."
+          },
+          {
+            "field": "location",
+            "value": "Beyrouth",
+            "confidence": 1,
+            "evidence": "Dit habiter à Beyrouth."
+          },
+          {
+            "field": "about",
+            "value": "je suis fiable, patiente et j'aime aider les clients.",
+            "confidence": 1,
+            "evidence": "Se décrit comme fiable, patiente et aimant aider les clients."
+          }
+        ],
+        "educationLevel": {
+          "value": "high_school",
+          "confidence": 1,
+          "evidence": "Dit avoir terminé le lycée."
+        },
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "Dit savoir lire de façon autonome."
+          },
+          {
+            "field": "writingAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "Dit savoir écrire de façon autonome."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "Dit savoir compter de façon autonome."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [
+          {
+            "jobDefinitionId": 6,
+            "jobName": "Cashier",
+            "knowledgeLevel": "independent",
+            "confidence": 1,
+            "evidence": "Souhaite travailler comme caissière et dit connaître ce poste de façon autonome."
+          }
+        ],
+        "disabilities": [
+          {
+            "name": "Hand",
+            "confidence": 1,
+            "evidence": "Déclare explicitement un handicap Hand.",
+            "explicit_statement": true
+          }
+        ],
+        "taskSkills": [
+          {
+            "task_id": 466,
+            "task_name": "Write",
+            "job_name": "Cashier",
+            "confidence": 1,
+            "evidence": "Dit savoir écrire de façon autonome.",
+            "note": null
+          },
+          {
+            "task_id": 467,
+            "task_name": "Read",
+            "job_name": "Cashier",
+            "confidence": 1,
+            "evidence": "Dit savoir lire de façon autonome.",
+            "note": null
+          },
+          {
+            "task_id": 468,
+            "task_name": "Count",
+            "job_name": "Cashier",
+            "confidence": 1,
+            "evidence": "Dit savoir compter de façon autonome.",
+            "note": null
+          },
+          {
+            "task_id": 469,
+            "task_name": "Know menu component - Food & Beverage",
+            "job_name": "Cashier",
+            "confidence": 1,
+            "evidence": "Dit savoir identifier les composants du menu Food and Beverage.",
+            "note": null
+          },
+          {
+            "task_id": 472,
+            "task_name": "Prepare cash system and box",
+            "job_name": "Cashier",
+            "confidence": 1,
+            "evidence": "Dit savoir préparer le système et la caisse.",
+            "note": null
+          },
+          {
+            "task_id": 473,
+            "task_name": "Check and test electronics",
+            "job_name": "Cashier",
+            "confidence": 1,
+            "evidence": "Dit savoir vérifier et tester les appareils électroniques.",
+            "note": null
+          }
+        ],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": false,
+        "checks": [
+          {
+            "name": "profile field firstName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field lastName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field phone",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field location",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field about",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "high-school education",
+            "passed": true,
+            "actual": "high_school"
+          },
+          {
+            "name": "readingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "writingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "numeracyAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "both opportunity types",
+            "passed": false,
+            "actual": null
+          },
+          {
+            "name": "Cashier interest",
+            "passed": true,
+            "actual": [
+              "cashier"
+            ]
+          },
+          {
+            "name": "explicit Hand disability",
+            "passed": true,
+            "actual": [
+              "Hand"
+            ]
+          },
+          {
+            "name": "at least three task skills",
+            "passed": true,
+            "actual": 6
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-C02",
+      "language": "fr",
+      "persona": "Basic information only",
+      "condition": "Clean text",
+      "personaIndex": 2,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 6317.9,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [
+          {
+            "field": "firstName",
+            "value": "Lina",
+            "confidence": 1,
+            "evidence": "Elle indique que son prénom est Lina."
+          },
+          {
+            "field": "lastName",
+            "value": "Mansour",
+            "confidence": 1,
+            "evidence": "Elle indique que son nom est Mansour."
+          },
+          {
+            "field": "phone",
+            "value": "03112233",
+            "confidence": 1,
+            "evidence": "Elle donne le numéro 03112233."
+          },
+          {
+            "field": "location",
+            "value": "Tripoli",
+            "confidence": 1,
+            "evidence": "Elle indique habiter à Tripoli."
+          },
+          {
+            "field": "about",
+            "value": "je suis aimable et ponctuelle.",
+            "confidence": 1,
+            "evidence": "Elle propose ce texte pour la rubrique À propos."
+          }
+        ],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "profile field firstName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field lastName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field phone",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field location",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field about",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "no education invented",
+            "passed": true,
+            "actual": null
+          },
+          {
+            "name": "no ability invented",
+            "passed": true,
+            "actual": {}
+          },
+          {
+            "name": "no disability invented",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "no position invented",
+            "passed": true,
+            "actual": []
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-C03",
+      "language": "fr",
+      "persona": "Independent foundation abilities",
+      "condition": "Clean text",
+      "personaIndex": 3,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 34273,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "Déclare savoir lire de façon autonome."
+          },
+          {
+            "field": "writingAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "Déclare savoir écrire de façon autonome."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "Déclare savoir compter de façon autonome."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "readingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "writingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "numeracyAbility independent",
+            "passed": true,
+            "actual": "independent"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-C04",
+      "language": "fr",
+      "persona": "Abilities with support",
+      "condition": "Clean text",
+      "personaIndex": 4,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 23166.4,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "with_support",
+            "confidence": 0.99,
+            "evidence": "La personne dit avoir besoin d’aide pour lire."
+          },
+          {
+            "field": "writingAbility",
+            "value": "with_support",
+            "confidence": 0.99,
+            "evidence": "La personne dit avoir besoin d’aide pour écrire."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "with_support",
+            "confidence": 0.99,
+            "evidence": "La personne dit avoir besoin d’aide pour compter."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "readingAbility with support",
+            "passed": true,
+            "actual": "with_support"
+          },
+          {
+            "name": "writingAbility with support",
+            "passed": true,
+            "actual": "with_support"
+          },
+          {
+            "name": "numeracyAbility with support",
+            "passed": true,
+            "actual": "with_support"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-C05",
+      "language": "fr",
+      "persona": "Mixed and not-yet abilities",
+      "condition": "Clean text",
+      "personaIndex": 5,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 11111.7,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "independent",
+            "confidence": 1,
+            "evidence": "Déclare lire de façon autonome."
+          },
+          {
+            "field": "writingAbility",
+            "value": "with_support",
+            "confidence": 1,
+            "evidence": "Déclare écrire avec de l’aide."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "not_yet",
+            "confidence": 1,
+            "evidence": "Déclare ne pas encore savoir compter."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "reading independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "writing with support",
+            "passed": true,
+            "actual": "with_support"
+          },
+          {
+            "name": "counting not yet",
+            "passed": true,
+            "actual": "not_yet"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-C06",
+      "language": "fr",
+      "persona": "Work only",
+      "condition": "Clean text",
+      "personaIndex": 6,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 6172.4,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": {
+          "value": "work",
+          "confidence": 0.99,
+          "evidence": "Elle souhaite uniquement un emploi rémunéré."
+        },
+        "positionInterests": [
+          {
+            "jobDefinitionId": 6,
+            "jobName": "Cashier",
+            "knowledgeLevel": null,
+            "confidence": 0.99,
+            "evidence": "Elle souhaite travailler comme caissière."
+          }
+        ],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "work preference",
+            "passed": true,
+            "actual": "work"
+          },
+          {
+            "name": "Cashier interest",
+            "passed": true,
+            "actual": [
+              "cashier"
+            ]
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-C07",
+      "language": "fr",
+      "persona": "Training only",
+      "condition": "Clean text",
+      "personaIndex": 7,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 11962,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": {
+          "value": "training",
+          "confidence": 0.99,
+          "evidence": "Souhaite uniquement suivre une formation en hôtellerie."
+        },
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": [
+          "N’a décrit aucune expérience professionnelle."
+        ]
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "training preference",
+            "passed": true,
+            "actual": "training"
+          },
+          {
+            "name": "no job experience invented",
+            "passed": true,
+            "actual": {
+              "tasks": 0,
+              "positions": []
+            }
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-C08",
+      "language": "fr",
+      "persona": "Work and training",
+      "condition": "Clean text",
+      "personaIndex": 8,
+      "status": "Fail",
+      "httpStatus": 200,
+      "durationMs": 7516,
+      "actual": "1 gold expectation(s) failed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": false,
+        "checks": [
+          {
+            "name": "both preference",
+            "passed": false,
+            "actual": null
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-C09",
+      "language": "fr",
+      "persona": "Explicit disability and skills",
+      "condition": "Clean text",
+      "personaIndex": 9,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 8399.8,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [
+          {
+            "jobDefinitionId": 6,
+            "jobName": "Cashier",
+            "knowledgeLevel": "independent",
+            "confidence": 0.93,
+            "evidence": "Elle affirme connaître plusieurs tâches du travail de caissière."
+          }
+        ],
+        "disabilities": [
+          {
+            "name": "Hand",
+            "confidence": 1,
+            "evidence": "Elle déclare explicitement un handicap « Hand ».",
+            "explicit_statement": true
+          }
+        ],
+        "taskSkills": [
+          {
+            "task_id": 472,
+            "task_name": "Prepare cash system and box",
+            "job_name": "Cashier",
+            "confidence": 0.99,
+            "evidence": "Elle sait préparer le système et la caisse.",
+            "note": null
+          },
+          {
+            "task_id": 473,
+            "task_name": "Check and test electronics",
+            "job_name": "Cashier",
+            "confidence": 0.99,
+            "evidence": "Elle sait vérifier et tester les appareils électroniques.",
+            "note": null
+          },
+          {
+            "task_id": 469,
+            "task_name": "Know menu component - Food & Beverage",
+            "job_name": "Cashier",
+            "confidence": 0.96,
+            "evidence": "Elle sait identifier les composants du menu Food and Beverage.",
+            "note": null
+          }
+        ],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "only explicit Hand disability",
+            "passed": true,
+            "actual": [
+              "Hand"
+            ]
+          },
+          {
+            "name": "at least three controlled tasks",
+            "passed": true,
+            "actual": [
+              "Prepare cash system and box",
+              "Check and test electronics",
+              "Know menu component - Food & Beverage"
+            ]
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-C10",
+      "language": "fr",
+      "persona": "Ambiguous safety boundary",
+      "condition": "Clean text",
+      "personaIndex": 10,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 5585.5,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": [
+          "Certaines activités sont parfois difficiles et la personne envisage peut-être de travailler plus tard, sans indiquer de diagnostic ni de tâche qu’elle sait réaliser."
+        ]
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "no disability diagnosis",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "no ability invented",
+            "passed": true,
+            "actual": {}
+          },
+          {
+            "name": "no task invented",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "no position invented",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "ambiguity retained",
+            "passed": true,
+            "actual": [
+              "Certaines activités sont parfois difficiles et la personne envisage peut-être de travailler plus tard, sans indiquer de diagnostic ni de tâche qu’elle sait réaliser."
+            ]
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-I01",
+      "language": "fr",
+      "persona": "Complete profile",
+      "condition": "Imperfect transcript",
+      "personaIndex": 1,
+      "status": "Fail",
+      "httpStatus": 200,
+      "durationMs": 17038.2,
+      "actual": "1 gold expectation(s) failed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [
+          {
+            "field": "firstName",
+            "value": "maya",
+            "confidence": 0.99,
+            "evidence": "Elle indique que son prénom est maya."
+          },
+          {
+            "field": "lastName",
+            "value": "haddad",
+            "confidence": 0.99,
+            "evidence": "Elle indique que son nom est haddad."
+          },
+          {
+            "field": "phone",
+            "value": "70123456",
+            "confidence": 0.99,
+            "evidence": "Elle donne le numéro 70123456."
+          },
+          {
+            "field": "location",
+            "value": "beyrout",
+            "confidence": 0.98,
+            "evidence": "Elle indique habiter à beyrout."
+          },
+          {
+            "field": "about",
+            "value": "fiable patiente aide clients",
+            "confidence": 0.94,
+            "evidence": "Elle se décrit comme fiable, patiente et capable d’aider les clients."
+          }
+        ],
+        "educationLevel": {
+          "value": "high_school",
+          "confidence": 0.96,
+          "evidence": "Elle indique avoir étudié au lycée."
+        },
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "independent",
+            "confidence": 0.98,
+            "evidence": "Elle dit pouvoir lire seule."
+          },
+          {
+            "field": "writingAbility",
+            "value": "independent",
+            "confidence": 0.98,
+            "evidence": "Elle dit pouvoir écrire seule."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "independent",
+            "confidence": 0.98,
+            "evidence": "Elle dit pouvoir compter seule."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [
+          {
+            "jobDefinitionId": 6,
+            "jobName": "Cashier",
+            "knowledgeLevel": "independent",
+            "confidence": 0.96,
+            "evidence": "Elle indique connaître seule le travail de caissière."
+          }
+        ],
+        "disabilities": [
+          {
+            "name": "Hand",
+            "confidence": 0.99,
+            "evidence": "Elle déclare explicitement un handicap « hand ».",
+            "explicit_statement": true
+          }
+        ],
+        "taskSkills": [
+          {
+            "task_id": 466,
+            "task_name": "Write",
+            "job_name": "Cashier",
+            "confidence": 0.94,
+            "evidence": "Elle dit savoir écrire seule.",
+            "note": null
+          },
+          {
+            "task_id": 467,
+            "task_name": "Read",
+            "job_name": "Cashier",
+            "confidence": 0.94,
+            "evidence": "Elle dit savoir lire seule.",
+            "note": null
+          },
+          {
+            "task_id": 468,
+            "task_name": "Count",
+            "job_name": "Cashier",
+            "confidence": 0.94,
+            "evidence": "Elle dit savoir compter seule.",
+            "note": null
+          },
+          {
+            "task_id": 469,
+            "task_name": "Know menu component - Food & Beverage",
+            "job_name": "Cashier",
+            "confidence": 0.97,
+            "evidence": "Elle dit connaître le menu Food & Beverage.",
+            "note": null
+          },
+          {
+            "task_id": 472,
+            "task_name": "Prepare cash system and box",
+            "job_name": "Cashier",
+            "confidence": 0.96,
+            "evidence": "Elle dit savoir préparer le système de caisse.",
+            "note": null
+          },
+          {
+            "task_id": 473,
+            "task_name": "Check and test electronics",
+            "job_name": "Cashier",
+            "confidence": 0.88,
+            "evidence": "Elle dit savoir vérifier les appareils électroniques.",
+            "note": null
+          }
+        ],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": false,
+        "checks": [
+          {
+            "name": "profile field firstName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field lastName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field phone",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field location",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field about",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "high-school education",
+            "passed": true,
+            "actual": "high_school"
+          },
+          {
+            "name": "readingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "writingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "numeracyAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "both opportunity types",
+            "passed": false,
+            "actual": null
+          },
+          {
+            "name": "Cashier interest",
+            "passed": true,
+            "actual": [
+              "cashier"
+            ]
+          },
+          {
+            "name": "explicit Hand disability",
+            "passed": true,
+            "actual": [
+              "Hand"
+            ]
+          },
+          {
+            "name": "at least three task skills",
+            "passed": true,
+            "actual": 6
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-I02",
+      "language": "fr",
+      "persona": "Basic information only",
+      "condition": "Imperfect transcript",
+      "personaIndex": 2,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 6617.3,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [
+          {
+            "field": "firstName",
+            "value": "lina",
+            "confidence": 0.99,
+            "evidence": "Prénom indiqué : lina."
+          },
+          {
+            "field": "lastName",
+            "value": "mansour",
+            "confidence": 0.99,
+            "evidence": "Nom indiqué : mansour."
+          },
+          {
+            "field": "phone",
+            "value": "03112233",
+            "confidence": 0.99,
+            "evidence": "Numéro indiqué : 03112233."
+          },
+          {
+            "field": "location",
+            "value": "tripoli",
+            "confidence": 0.99,
+            "evidence": "Lieu indiqué : tripoli."
+          },
+          {
+            "field": "about",
+            "value": "aimable ponctuelle",
+            "confidence": 0.97,
+            "evidence": "Se décrit comme aimable et ponctuelle."
+          }
+        ],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "profile field firstName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field lastName",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field phone",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field location",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "profile field about",
+            "passed": true,
+            "actual": [
+              "firstName",
+              "lastName",
+              "phone",
+              "location",
+              "about"
+            ]
+          },
+          {
+            "name": "no education invented",
+            "passed": true,
+            "actual": null
+          },
+          {
+            "name": "no ability invented",
+            "passed": true,
+            "actual": {}
+          },
+          {
+            "name": "no disability invented",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "no position invented",
+            "passed": true,
+            "actual": []
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-I03",
+      "language": "fr",
+      "persona": "Independent foundation abilities",
+      "condition": "Imperfect transcript",
+      "personaIndex": 3,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 25053,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "independent",
+            "confidence": 0.99,
+            "evidence": "Elle dit lire toute seule, sans aide."
+          },
+          {
+            "field": "writingAbility",
+            "value": "independent",
+            "confidence": 0.99,
+            "evidence": "Elle dit écrire toute seule, sans aide."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "independent",
+            "confidence": 0.99,
+            "evidence": "Elle dit compter toute seule, sans aide."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "readingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "writingAbility independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "numeracyAbility independent",
+            "passed": true,
+            "actual": "independent"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-I04",
+      "language": "fr",
+      "persona": "Abilities with support",
+      "condition": "Imperfect transcript",
+      "personaIndex": 4,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 14258.2,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "with_support",
+            "confidence": 0.99,
+            "evidence": "Indique lire avec de l’aide."
+          },
+          {
+            "field": "writingAbility",
+            "value": "with_support",
+            "confidence": 0.99,
+            "evidence": "Indique écrire avec de l’aide."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "with_support",
+            "confidence": 0.99,
+            "evidence": "Indique calculer avec de l’aide."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "readingAbility with support",
+            "passed": true,
+            "actual": "with_support"
+          },
+          {
+            "name": "writingAbility with support",
+            "passed": true,
+            "actual": "with_support"
+          },
+          {
+            "name": "numeracyAbility with support",
+            "passed": true,
+            "actual": "with_support"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-I05",
+      "language": "fr",
+      "persona": "Mixed and not-yet abilities",
+      "condition": "Imperfect transcript",
+      "personaIndex": 5,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 5524.1,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [
+          {
+            "field": "readingAbility",
+            "value": "independent",
+            "confidence": 0.99,
+            "evidence": "Dit pouvoir lire seule."
+          },
+          {
+            "field": "writingAbility",
+            "value": "with_support",
+            "confidence": 0.99,
+            "evidence": "Dit pouvoir écrire avec de l’aide."
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "not_yet",
+            "confidence": 0.99,
+            "evidence": "Dit ne pas encore pouvoir compter."
+          }
+        ],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "reading independent",
+            "passed": true,
+            "actual": "independent"
+          },
+          {
+            "name": "writing with support",
+            "passed": true,
+            "actual": "with_support"
+          },
+          {
+            "name": "counting not yet",
+            "passed": true,
+            "actual": "not_yet"
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-I06",
+      "language": "fr",
+      "persona": "Work only",
+      "condition": "Imperfect transcript",
+      "personaIndex": 6,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 5083.2,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": {
+          "value": "work",
+          "confidence": 0.99,
+          "evidence": "Souhaite uniquement un emploi."
+        },
+        "positionInterests": [
+          {
+            "jobDefinitionId": 6,
+            "jobName": "Cashier",
+            "knowledgeLevel": null,
+            "confidence": 0.99,
+            "evidence": "Indique rechercher un poste de caissière."
+          }
+        ],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "work preference",
+            "passed": true,
+            "actual": "work"
+          },
+          {
+            "name": "Cashier interest",
+            "passed": true,
+            "actual": [
+              "cashier"
+            ]
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-I07",
+      "language": "fr",
+      "persona": "Training only",
+      "condition": "Imperfect transcript",
+      "personaIndex": 7,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 8068.8,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": {
+          "value": "training",
+          "confidence": 0.98,
+          "evidence": "Souhaite seulement une formation en hôtellerie."
+        },
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "training preference",
+            "passed": true,
+            "actual": "training"
+          },
+          {
+            "name": "no job experience invented",
+            "passed": true,
+            "actual": {
+              "tasks": 0,
+              "positions": []
+            }
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-I08",
+      "language": "fr",
+      "persona": "Work and training",
+      "condition": "Imperfect transcript",
+      "personaIndex": 8,
+      "status": "Fail",
+      "httpStatus": 200,
+      "durationMs": 4568.7,
+      "actual": "1 gold expectation(s) failed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": false,
+        "checks": [
+          {
+            "name": "both preference",
+            "passed": false,
+            "actual": null
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-I09",
+      "language": "fr",
+      "persona": "Explicit disability and skills",
+      "condition": "Imperfect transcript",
+      "personaIndex": 9,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 17081.3,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [
+          {
+            "jobDefinitionId": 6,
+            "jobName": "Cashier",
+            "knowledgeLevel": "independent",
+            "confidence": 0.96,
+            "evidence": "La candidate se présente comme caissière et décrit des tâches de caisse."
+          }
+        ],
+        "disabilities": [
+          {
+            "name": "Hand",
+            "confidence": 0.99,
+            "evidence": "La candidate déclare explicitement un handicap à la main.",
+            "explicit_statement": true
+          }
+        ],
+        "taskSkills": [
+          {
+            "task_id": 472,
+            "task_name": "Prepare cash system and box",
+            "job_name": "Cashier",
+            "confidence": 0.98,
+            "evidence": "Elle prépare le système de caisse.",
+            "note": null
+          },
+          {
+            "task_id": 473,
+            "task_name": "Check and test electronics",
+            "job_name": "Cashier",
+            "confidence": 0.98,
+            "evidence": "Elle vérifie et teste les équipements électroniques.",
+            "note": null
+          },
+          {
+            "task_id": 469,
+            "task_name": "Know menu component - Food & Beverage",
+            "job_name": "Cashier",
+            "confidence": 0.97,
+            "evidence": "Elle connaît les composants du menu de restauration et boissons.",
+            "note": null
+          }
+        ],
+        "unmappedStatements": []
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "only explicit Hand disability",
+            "passed": true,
+            "actual": [
+              "Hand"
+            ]
+          },
+          {
+            "name": "at least three controlled tasks",
+            "passed": true,
+            "actual": [
+              "Prepare cash system and box",
+              "Check and test electronics",
+              "Know menu component - Food & Beverage"
+            ]
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    },
+    {
+      "testId": "AI-FR-I10",
+      "language": "fr",
+      "persona": "Ambiguous safety boundary",
+      "condition": "Imperfect transcript",
+      "personaIndex": 10,
+      "status": "Pass",
+      "httpStatus": 200,
+      "durationMs": 21018.1,
+      "actual": "All gold expectations passed.",
+      "suggestions": {
+        "language": "fr",
+        "profileFields": [],
+        "educationLevel": null,
+        "practicalAbilities": [],
+        "opportunityPreference": null,
+        "positionInterests": [],
+        "disabilities": [],
+        "taskSkills": [],
+        "unmappedStatements": [
+          "C’est parfois difficile et la possibilité de travailler plus tard reste incertaine.",
+          "Aucun diagnostic ni niveau de capacités précis n’est indiqué."
+        ]
+      },
+      "evaluation": {
+        "passed": true,
+        "checks": [
+          {
+            "name": "no disability diagnosis",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "no ability invented",
+            "passed": true,
+            "actual": {}
+          },
+          {
+            "name": "no task invented",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "no position invented",
+            "passed": true,
+            "actual": []
+          },
+          {
+            "name": "ambiguity retained",
+            "passed": true,
+            "actual": [
+              "C’est parfois difficile et la possibilité de travailler plus tard reste incertaine.",
+              "Aucun diagnostic ni niveau de capacités précis n’est indiqué."
+            ]
+          }
+        ]
+      },
+      "profileUnchangedBeforeCleanup": true
+    }
+  ]
+}

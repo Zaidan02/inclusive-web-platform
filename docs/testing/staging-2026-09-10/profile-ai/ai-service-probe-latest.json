@@ -1,0 +1,101 @@
+{
+  "generatedAt": "2026-09-10T16:11:00.448Z",
+  "apiBase": "https://join-hospitality-zm-api-staging.onrender.com/api",
+  "healthStatus": 200,
+  "httpStatus": 200,
+  "durationMs": 16275.3,
+  "body": {
+    "message": "Suggestions are ready for your review. Nothing has been saved.",
+    "notSaved": true,
+    "suggestions": {
+      "language": "en",
+      "profileFields": [
+        {
+          "field": "firstName",
+          "value": "Maya",
+          "confidence": 1,
+          "evidence": "She states that her first name is Maya."
+        },
+        {
+          "field": "lastName",
+          "value": "Haddad",
+          "confidence": 1,
+          "evidence": "She states that her last name is Haddad."
+        },
+        {
+          "field": "location",
+          "value": "Beirut",
+          "confidence": 1,
+          "evidence": "She says she lives in Beirut."
+        }
+      ],
+      "educationLevel": {
+        "value": "high_school",
+        "confidence": 1,
+        "evidence": "She says she completed high school."
+      },
+      "practicalAbilities": [
+        {
+          "field": "readingAbility",
+          "value": "independent",
+          "confidence": 1,
+          "evidence": "She says she can read independently."
+        },
+        {
+          "field": "writingAbility",
+          "value": "independent",
+          "confidence": 1,
+          "evidence": "She says she can write independently."
+        },
+        {
+          "field": "numeracyAbility",
+          "value": "independent",
+          "confidence": 1,
+          "evidence": "She says she can count independently."
+        }
+      ],
+      "opportunityPreference": {
+        "value": "both",
+        "confidence": 1,
+        "evidence": "She is interested in both cashier work and training."
+      },
+      "positionInterests": [
+        {
+          "jobDefinitionId": 6,
+          "jobName": "Cashier",
+          "knowledgeLevel": null,
+          "confidence": 1,
+          "evidence": "She explicitly expresses interest in cashier work."
+        }
+      ],
+      "disabilities": [],
+      "taskSkills": [
+        {
+          "task_id": 466,
+          "task_name": "Write",
+          "job_name": "Cashier",
+          "confidence": 1,
+          "evidence": "She says she can write independently.",
+          "note": null
+        },
+        {
+          "task_id": 467,
+          "task_name": "Read",
+          "job_name": "Cashier",
+          "confidence": 1,
+          "evidence": "She says she can read independently.",
+          "note": null
+        },
+        {
+          "task_id": 468,
+          "task_name": "Count",
+          "job_name": "Cashier",
+          "confidence": 1,
+          "evidence": "She says she can count independently.",
+          "note": null
+        }
+      ],
+      "unmappedStatements": []
+    }
+  }
+}

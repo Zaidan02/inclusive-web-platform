@@ -1,0 +1,190 @@
+{
+  "generatedAt": "2026-09-10T11:49:53.692Z",
+  "environment": {
+    "api": "https://join-hospitality-zm-api-staging.onrender.com/api",
+    "web": "https://join-hospitality-zm-staging.onrender.com",
+    "voice": "https://join-hospitality-zm-voice-staging.onrender.com"
+  },
+  "methodology": "Negative security and privacy checks against healthy staging services using synthetic fixture accounts. Blocked cases are excluded from the executed-output success rate.",
+  "summary": {
+    "planned": 20,
+    "pass": 18,
+    "fail": 1,
+    "blocked": 1
+  },
+  "cleanup": {
+    "profileReset": true,
+    "applicationDeleted": true,
+    "errors": []
+  },
+  "results": [
+    {
+      "testId": "SEC-01",
+      "status": "Pass",
+      "actual": "Protected candidate profile returned HTTP 401 without a JWT.",
+      "httpStatus": 401
+    },
+    {
+      "testId": "SEC-02",
+      "status": "Pass",
+      "actual": "Malformed JWT returned HTTP 401.",
+      "httpStatus": 401
+    },
+    {
+      "testId": "SEC-03",
+      "status": "Pass",
+      "actual": "Correctly signed expired JWT returned HTTP 401.",
+      "httpStatus": 401
+    },
+    {
+      "testId": "SEC-04",
+      "status": "Pass",
+      "actual": "JWT with modified payload and original signature returned HTTP 401.",
+      "httpStatus": 401
+    },
+    {
+      "testId": "SEC-05",
+      "status": "Pass",
+      "actual": "Candidate token on employer endpoint returned HTTP 403.",
+      "httpStatus": 403
+    },
+    {
+      "testId": "SEC-06",
+      "status": "Pass",
+      "actual": "Employer token on administrator endpoint returned HTTP 403.",
+      "httpStatus": 403
+    },
+    {
+      "testId": "SEC-07",
+      "status": "Pass",
+      "actual": "No cross-candidate profile-ID route was exposed; attempted object path returned HTTP 404.",
+      "httpStatus": 404
+    },
+    {
+      "testId": "SEC-08",
+      "status": "Pass",
+      "actual": "Anonymous private-document request returned HTTP 401 before object access.",
+      "httpStatus": 401
+    },
+    {
+      "testId": "SEC-09",
+      "status": "Pass",
+      "actual": "Unexpected education enum returned HTTP 400; invalid value persisted=false.",
+      "httpStatus": 400
+    },
+    {
+      "testId": "SEC-10",
+      "status": "Pass",
+      "actual": "SQL-style login text returned HTTP 401; API health afterward was HTTP 200.",
+      "httpStatus": 401
+    },
+    {
+      "testId": "SEC-11",
+      "status": "Pass",
+      "actual": "HTML payload saved as editable text=true; script executed=false.",
+      "httpStatus": 200,
+      "blocker": null
+    },
+    {
+      "testId": "SEC-12",
+      "status": "Fail",
+      "actual": "10 MB + 1 byte upload returned HTTP 200; application created=true.",
+      "httpStatus": 200,
+      "response": "<br />\n<b>Warning</b>:  PHP Request Startup: POST Content-Length of 10486070 bytes exceeds the limit of 8388608 bytes in <b>Unknown</b> on line <b>0</b><br />\n{\"message\":\"Application submitted successfully.\"}",
+      "cleanup": [
+        {
+          "id": 11,
+          "status": 200
+        }
+      ]
+    },
+    {
+      "testId": "SEC-13",
+      "status": "Pass",
+      "actual": "Unsupported text/plain upload returned HTTP 400; application created=false; message=Only validated PDF, DOC, and DOCX documents are allowed..",
+      "httpStatus": 400,
+      "response": {
+        "message": "Only validated PDF, DOC, and DOCX documents are allowed."
+      },
+      "cleanup": []
+    },
+    {
+      "testId": "SEC-14",
+      "status": "Pass",
+      "actual": "Non-PDF content renamed and declared as PDF returned HTTP 400; application created=false; message=Only validated PDF, DOC, and DOCX documents are allowed..",
+      "httpStatus": 400,
+      "response": {
+        "message": "Only validated PDF, DOC, and DOCX documents are allowed."
+      },
+      "cleanup": []
+    },
+    {
+      "testId": "SEC-15",
+      "status": "Pass",
+      "actual": "First submission HTTP 201; duplicate HTTP 400; one new application located=true.",
+      "firstStatus": 201,
+      "firstResponse": {
+        "message": "Application submitted successfully."
+      },
+      "duplicateStatus": 400,
+      "duplicateResponse": {
+        "message": "You already applied to this job."
+      }
+    },
+    {
+      "testId": "SEC-16",
+      "status": "Blocked",
+      "actual": "Password-reset token reuse requires delivery or controlled retrieval of a real staging reset token; staging mail delivery is disabled."
+    },
+    {
+      "testId": "SEC-17",
+      "status": "Pass",
+      "actual": "AI profile request without consent returned HTTP 400.",
+      "httpStatus": 400
+    },
+    {
+      "testId": "SEC-18",
+      "status": "Pass",
+      "actual": "Invented task identifier confirmation returned HTTP 400.",
+      "httpStatus": 400
+    },
+    {
+      "testId": "SEC-19",
+      "status": "Pass",
+      "actual": "Wrong-role voice action returned HTTP 200; route status=rejected; action object present=true.",
+      "httpStatus": 200,
+      "response": {
+        "classification": {
+          "category": "ACTION",
+          "confidence": 0.99,
+          "language": "en"
+        },
+        "feedback": "I could not safely perform that action.",
+        "language": "en",
+        "proposal": {
+          "command": "UNKNOWN",
+          "confidence": 0.99,
+          "language": "en",
+          "target": null,
+          "value": null
+        },
+        "request_id": "41bb2426-e6b1-4670-a05c-da7407f03bc1",
+        "route": {
+          "action": null,
+          "command": "UNKNOWN",
+          "reason": "The requested action is unsupported or ambiguous.",
+          "status": "rejected",
+          "target": null
+        },
+        "transcript": "Delete an administrator account"
+      }
+    },
+    {
+      "testId": "SEC-20",
+      "status": "Pass",
+      "actual": "Reset HTTP 200; retrieved profile cleared=true.",
+      "resetStatus": 200,
+      "retrieveStatus": 200
+    }
+  ]
+}

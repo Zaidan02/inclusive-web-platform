@@ -1,0 +1,221 @@
+{
+  "generatedAt": "2026-09-10T10:27:25.028Z",
+  "apiBase": "https://join-hospitality-zm-api-staging.onrender.com/api",
+  "summary": {
+    "passed": 22,
+    "failed": 3,
+    "total": 25
+  },
+  "results": [
+    {
+      "name": "anonymous session is rejected",
+      "status": "passed",
+      "durationMs": 400.4,
+      "detail": {
+        "httpStatus": 401
+      }
+    },
+    {
+      "name": "public jobs catalogue is available",
+      "status": "passed",
+      "durationMs": 1808.8,
+      "detail": {
+        "httpStatus": 200,
+        "recordCount": 74
+      }
+    },
+    {
+      "name": "public job-definitions catalogue is available",
+      "status": "passed",
+      "durationMs": 147.3,
+      "detail": {
+        "httpStatus": 200,
+        "recordCount": 15
+      }
+    },
+    {
+      "name": "public overview returns aggregates and safe published-job fields",
+      "status": "passed",
+      "durationMs": 206.4,
+      "detail": {
+        "httpStatus": 200,
+        "stats": {
+          "registeredCandidates": 3,
+          "publishedJobPosts": 74,
+          "activeJobDescriptions": 15
+        },
+        "latestJobCount": 6
+      }
+    },
+    {
+      "name": "candidate fixture authenticates and opens its session",
+      "status": "passed",
+      "durationMs": 3452.4,
+      "detail": {
+        "httpStatus": 200,
+        "role": "ROLE_CANDIDATE"
+      }
+    },
+    {
+      "name": "employer fixture authenticates and opens its session",
+      "status": "passed",
+      "durationMs": 3259,
+      "detail": {
+        "httpStatus": 200,
+        "role": "ROLE_EMPLOYER"
+      }
+    },
+    {
+      "name": "admin fixture authenticates and opens its session",
+      "status": "passed",
+      "durationMs": 3493.7,
+      "detail": {
+        "httpStatus": 200,
+        "role": "ROLE_ADMIN"
+      }
+    },
+    {
+      "name": "verifier fixture authenticates and opens its session",
+      "status": "passed",
+      "durationMs": 3620.4,
+      "detail": {
+        "httpStatus": 200,
+        "role": "ROLE_VERIFIER"
+      }
+    },
+    {
+      "name": "candidate can read /candidate/profile",
+      "status": "passed",
+      "durationMs": 268.4,
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "candidate can read /candidate/applications",
+      "status": "passed",
+      "durationMs": 579.8,
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "employer can read /employer/jobs",
+      "status": "passed",
+      "durationMs": 918.6,
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "employer can read /employer/applications",
+      "status": "passed",
+      "durationMs": 349.7,
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "admin can read /admin/users",
+      "status": "passed",
+      "durationMs": 514.7,
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "verifier can read /verifier/requests?status=all",
+      "status": "passed",
+      "durationMs": 173.9,
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "candidate profile exposes hospitality foundation abilities",
+      "status": "failed",
+      "durationMs": 388.8,
+      "error": "Expected values to be strictly equal:\n\n400 !== 200\n"
+    },
+    {
+      "name": "employer vacancies expose controlled HR requirements",
+      "status": "passed",
+      "durationMs": 997.1,
+      "detail": {
+        "httpStatus": 200,
+        "vacancyCount": 16
+      }
+    },
+    {
+      "name": "employer can publish a hospitality training program",
+      "status": "passed",
+      "durationMs": 846.3,
+      "detail": {
+        "httpStatus": 201,
+        "opportunityType": "training"
+      }
+    },
+    {
+      "name": "candidate preferences replace old selections and focus matching",
+      "status": "failed",
+      "durationMs": 2350,
+      "error": "Expected values to be strictly equal:\n\n400 !== 200\n"
+    },
+    {
+      "name": "admin can inspect catalogue datasets and task status",
+      "status": "passed",
+      "durationMs": 5202.8,
+      "detail": {
+        "httpStatus": 200,
+        "datasetCount": 15,
+        "inspectedTaskCount": 189
+      }
+    },
+    {
+      "name": "candidate matching separates personal education from operational tasks",
+      "status": "failed",
+      "durationMs": 210.7,
+      "error": "Expected values to be strictly equal:\n\n400 !== 200\n"
+    },
+    {
+      "name": "candidate is blocked from /admin/users",
+      "status": "passed",
+      "durationMs": 188.6,
+      "detail": {
+        "httpStatus": 403
+      }
+    },
+    {
+      "name": "candidate is blocked from /admin/job-catalogue",
+      "status": "passed",
+      "durationMs": 194.8,
+      "detail": {
+        "httpStatus": 403
+      }
+    },
+    {
+      "name": "candidate is blocked from /verifier/requests",
+      "status": "passed",
+      "durationMs": 196.2,
+      "detail": {
+        "httpStatus": 403
+      }
+    },
+    {
+      "name": "employer is blocked from /candidate/applications",
+      "status": "passed",
+      "durationMs": 151.7,
+      "detail": {
+        "httpStatus": 403
+      }
+    },
+    {
+      "name": "verifier is blocked from /employer/applications",
+      "status": "passed",
+      "durationMs": 170.8,
+      "detail": {
+        "httpStatus": 403
+      }
+    }
+  ]
+}

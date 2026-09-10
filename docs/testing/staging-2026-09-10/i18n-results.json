@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-09-10T10:40:00+03:00",
+  "environment": "https://join-hospitality-zm-staging.onrender.com",
+  "method": "Translation-resource contract verification plus deployed headless-browser checks.",
+  "summary": {
+    "evaluatedCases": 3,
+    "passed": 3,
+    "failed": 0,
+    "successRate": 100
+  },
+  "resourceContract": {
+    "status": "passed",
+    "locales": 3,
+    "namespaces": 7,
+    "checks": [
+      "locale normalization",
+      "English, French and Arabic namespace parity",
+      "non-empty translation values",
+      "Arabic RTL direction"
+    ]
+  },
+  "deployedChecks": [
+    {
+      "testId": "I18N-01-EN",
+      "status": "passed",
+      "actual": "The English sign-in page rendered with a semantic main region, visible heading and no page error."
+    },
+    {
+      "testId": "I18N-01-FR",
+      "status": "passed",
+      "actual": "French switching updated the document language, retained LTR direction, translated the sign-in heading and title, synchronized the voice-language control and persisted after reload."
+    },
+    {
+      "testId": "I18N-01-AR",
+      "status": "passed",
+      "actual": "Arabic switching updated lang and RTL direction; sign-in rendered without horizontal overflow, kept the email input LTR and synchronized the voice-language control."
+    }
+  ],
+  "limitations": "Only the sign-in rows are scored in this batch. Other multilingual screen interactions remain Not Run until their full principal workflows are exercised."
+}

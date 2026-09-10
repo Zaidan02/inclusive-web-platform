@@ -1,0 +1,30 @@
+{
+  "generatedAt": "2026-09-10T11:03:31.310Z",
+  "environment": {
+    "apiBase": "https://join-hospitality-zm-api-staging.onrender.com/api",
+    "scoringHealth": "https://join-hospitality-zm-scoring-staging.onrender.com/health"
+  },
+  "method": "Fifteen catalogue roles by three controlled synthetic candidate archetypes. Each result is independently recalculated and requested twice.",
+  "summary": {
+    "passed": 1,
+    "failed": 0,
+    "blocked": 0,
+    "executed": 1,
+    "total": 1,
+    "successRate": 100
+  },
+  "cases": [
+    {
+      "testId": "ME-03-1",
+      "role": "Bakery / Pastry Worker",
+      "archetype": "Independent",
+      "status": "passed",
+      "durationMs": 4030.8,
+      "offerCount": 8,
+      "eligibleCount": 8,
+      "ineligibleCount": 0,
+      "configuredAbilityCount": 0,
+      "note": "Formula, components, explanations and repeated outputs are consistent."
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "generatedAt": "2026-09-10T11:16:49.851Z",
+  "environment": {
+    "apiBase": "https://join-hospitality-zm-api-staging.onrender.com/api",
+    "rounds": 3,
+    "healthStatus": 200
+  },
+  "method": "Safe non-destructive concurrent requests at loads 1, 5 and 10.",
+  "thresholds": {
+    "1": 1500,
+    "5": 3000,
+    "10": 5000
+  },
+  "summary": {
+    "passed": 4,
+    "failed": 5,
+    "total": 9,
+    "successRate": 44.44
+  },
+  "cases": [
+    {
+      "operation": "Sign in",
+      "load": 1,
+      "rounds": 3,
+      "requests": 3,
+      "successful": 3,
+      "failed": 0,
+      "serverErrors": 0,
+      "p50Ms": 3196.8,
+      "p95Ms": 3306.4,
+      "thresholdMs": 1500,
+      "status": "failed",
+      "httpStatuses": {
+        "200": 3
+      }
+    },
+    {
+      "operation": "Sign in",
+      "load": 5,
+      "rounds": 3,
+      "requests": 15,
+      "successful": 15,
+      "failed": 0,
+      "serverErrors": 0,
+      "p50Ms": 15601.1,
+      "p95Ms": 16098.3,
+      "thresholdMs": 3000,
+      "status": "failed",
+      "httpStatuses": {
+        "200": 15
+      }
+    },
+    {
+      "operation": "Sign in",
+      "load": 10,
+      "rounds": 3,
+      "requests": 30,
+      "successful": 30,
+      "failed": 0,
+      "serverErrors": 0,
+      "p50Ms": 27297.5,
+      "p95Ms": 32688.8,
+      "thresholdMs": 5000,
+      "status": "failed",
+      "httpStatuses": {
+        "200": 30
+      }
+    },
+    {
+      "operation": "Load profile",
+      "load": 1,
+      "rounds": 3,
+      "requests": 3,
+      "successful": 3,
+      "failed": 0,
+      "serverErrors": 0,
+      "p50Ms": 210.2,
+      "p95Ms": 213.2,
+      "thresholdMs": 1500,
+      "status": "passed",
+      "httpStatuses": {
+        "200": 3
+      }
+    },
+    {
+      "operation": "Load profile",
+      "load": 5,
+      "rounds": 3,
+      "requests": 15,
+      "successful": 15,
+      "failed": 0,
+      "serverErrors": 0,
+      "p50Ms": 702,
+      "p95Ms": 809.1,
+      "thresholdMs": 3000,
+      "status": "passed",
+      "httpStatuses": {
+        "200": 15
+      }
+    },
+    {
+      "operation": "Load profile",
+      "load": 10,
+      "rounds": 3,
+      "requests": 30,
+      "successful": 30,
+      "failed": 0,
+      "serverErrors": 0,
+      "p50Ms": 1381.1,
+      "p95Ms": 1601.7,
+      "thresholdMs": 5000,
+      "status": "passed",
+      "httpStatuses": {
+        "200": 30
+      }
+    },
+    {
+      "operation": "Load opportunities",
+      "load": 1,
+      "rounds": 3,
+      "requests": 3,
+      "successful": 3,
+      "failed": 0,
+      "serverErrors": 0,
+      "p50Ms": 1278.7,
+      "p95Ms": 1311.7,
+      "thresholdMs": 1500,
+      "status": "passed",
+      "httpStatuses": {
+        "200": 3
+      }
+    },
+    {
+      "operation": "Load opportunities",
+      "load": 5,
+      "rounds": 3,
+      "requests": 15,
+      "successful": 15,
+      "failed": 0,
+      "serverErrors": 0,
+      "p50Ms": 4418.3,
+      "p95Ms": 4949.6,
+      "thresholdMs": 3000,
+      "status": "failed",
+      "httpStatuses": {
+        "200": 15
+      }
+    },
+    {
+      "operation": "Load opportunities",
+      "load": 10,
+      "rounds": 3,
+      "requests": 30,
+      "successful": 30,
+      "failed": 0,
+      "serverErrors": 0,
+      "p50Ms": 9174.1,
+      "p95Ms": 9803.8,
+      "thresholdMs": 5000,
+      "status": "failed",
+      "httpStatuses": {
+        "200": 30
+      }
+    }
+  ]
+}

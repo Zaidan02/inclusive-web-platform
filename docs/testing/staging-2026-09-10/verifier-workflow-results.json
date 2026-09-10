@@ -1,0 +1,39 @@
+{
+  "generatedAt": "2026-09-10T16:40:11.167Z",
+  "apiBase": "https://join-hospitality-zm-api-staging.onrender.com/api",
+  "methodology": "Disposable candidate accounts and synthetic PDF cards; one approval and one rejection; all accounts and private documents deleted afterward.",
+  "summary": {
+    "planned": 3,
+    "pass": 3,
+    "fail": 0,
+    "blocked": 0,
+    "cleanupSuccessful": true
+  },
+  "cleanup": [
+    {
+      "userId": 15,
+      "status": 200
+    },
+    {
+      "userId": 14,
+      "status": 200
+    }
+  ],
+  "results": [
+    {
+      "testId": "WF-VER-01",
+      "status": "Pass",
+      "actual": "Synthetic candidate registration HTTP 201; pending request found=true; authorized document HTTP 200; private no-store caching=true."
+    },
+    {
+      "testId": "WF-VER-02",
+      "status": "Pass",
+      "actual": "Approval returned HTTP 200; approved status, reviewer and timestamp persisted=true."
+    },
+    {
+      "testId": "WF-VER-03",
+      "status": "Pass",
+      "actual": "Rejection returned HTTP 200; reason, reviewer and timestamp persisted=true."
+    }
+  ]
+}

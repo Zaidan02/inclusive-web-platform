@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-09-10T13:59:00+03:00",
+  "environment": {
+    "webBase": "https://join-hospitality-zm-staging.onrender.com",
+    "apiBase": "https://join-hospitality-zm-api-staging.onrender.com/api",
+    "aiServiceHealth": "https://join-hospitality-zm-voice-staging.onrender.com/health"
+  },
+  "preconditions": {
+    "symfonyHealth": 200,
+    "aiServiceHealth": 200,
+    "openaiConfiguredFlag": true,
+    "candidateAuthentication": "passed"
+  },
+  "probe": {
+    "endpoint": "/api/candidate/profile/ai-suggestions",
+    "input": "Fictional short English profile narrative",
+    "consentVersion": "2026-08-03",
+    "httpStatus": 503,
+    "durationMs": 603,
+    "message": "The AI profile assistant is temporarily unavailable."
+  },
+  "browserObservation": {
+    "result": "No review output was produced within 120000 ms.",
+    "runnerErrorEvidence": "runner-stderr.log"
+  },
+  "classification": {
+    "outputEvaluation": "blocked",
+    "reason": "The end-to-end AI path was unavailable, so no AI content existed to score.",
+    "includedInOutputSuccessRate": false
+  }
+}

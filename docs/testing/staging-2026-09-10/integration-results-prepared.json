@@ -1,0 +1,234 @@
+{
+  "generatedAt": "2026-09-10T11:59:01.002Z",
+  "apiBase": "https://join-hospitality-zm-api-staging.onrender.com/api",
+  "summary": {
+    "passed": 25,
+    "failed": 0,
+    "total": 25
+  },
+  "results": [
+    {
+      "name": "anonymous session is rejected",
+      "status": "passed",
+      "durationMs": 145,
+      "detail": {
+        "httpStatus": 401
+      }
+    },
+    {
+      "name": "public jobs catalogue is available",
+      "status": "passed",
+      "durationMs": 1835.5,
+      "detail": {
+        "httpStatus": 200,
+        "recordCount": 74
+      }
+    },
+    {
+      "name": "public job-definitions catalogue is available",
+      "status": "passed",
+      "durationMs": 134.5,
+      "detail": {
+        "httpStatus": 200,
+        "recordCount": 15
+      }
+    },
+    {
+      "name": "public overview returns aggregates and safe published-job fields",
+      "status": "passed",
+      "durationMs": 224.6,
+      "detail": {
+        "httpStatus": 200,
+        "stats": {
+          "registeredCandidates": 3,
+          "publishedJobPosts": 74,
+          "activeJobDescriptions": 15
+        },
+        "latestJobCount": 6
+      }
+    },
+    {
+      "name": "candidate fixture authenticates and opens its session",
+      "status": "passed",
+      "durationMs": 3280.7,
+      "detail": {
+        "httpStatus": 200,
+        "role": "ROLE_CANDIDATE"
+      }
+    },
+    {
+      "name": "employer fixture authenticates and opens its session",
+      "status": "passed",
+      "durationMs": 3440.9,
+      "detail": {
+        "httpStatus": 200,
+        "role": "ROLE_EMPLOYER"
+      }
+    },
+    {
+      "name": "admin fixture authenticates and opens its session",
+      "status": "passed",
+      "durationMs": 3380.8,
+      "detail": {
+        "httpStatus": 200,
+        "role": "ROLE_ADMIN"
+      }
+    },
+    {
+      "name": "verifier fixture authenticates and opens its session",
+      "status": "passed",
+      "durationMs": 3334.6,
+      "detail": {
+        "httpStatus": 200,
+        "role": "ROLE_VERIFIER"
+      }
+    },
+    {
+      "name": "candidate can read /candidate/profile",
+      "status": "passed",
+      "durationMs": 230.5,
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "candidate can read /candidate/applications",
+      "status": "passed",
+      "durationMs": 217.9,
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "employer can read /employer/jobs",
+      "status": "passed",
+      "durationMs": 911.6,
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "employer can read /employer/applications",
+      "status": "passed",
+      "durationMs": 178.2,
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "admin can read /admin/users",
+      "status": "passed",
+      "durationMs": 181.5,
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "verifier can read /verifier/requests?status=all",
+      "status": "passed",
+      "durationMs": 198.5,
+      "detail": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "candidate profile exposes hospitality foundation abilities",
+      "status": "passed",
+      "durationMs": 190.5,
+      "detail": {
+        "httpStatus": 200,
+        "abilities": {
+          "reading": "independent",
+          "writing": "independent",
+          "numeracy": "independent"
+        }
+      }
+    },
+    {
+      "name": "employer vacancies expose controlled HR requirements",
+      "status": "passed",
+      "durationMs": 889.6,
+      "detail": {
+        "httpStatus": 200,
+        "vacancyCount": 16
+      }
+    },
+    {
+      "name": "employer can publish a hospitality training program",
+      "status": "passed",
+      "durationMs": 727.8,
+      "detail": {
+        "httpStatus": 201,
+        "opportunityType": "training"
+      }
+    },
+    {
+      "name": "candidate preferences replace old selections and focus matching",
+      "status": "passed",
+      "durationMs": 3103.5,
+      "detail": {
+        "httpStatus": 200,
+        "filteredJobDefinitionId": 12
+      }
+    },
+    {
+      "name": "admin can inspect catalogue datasets and task status",
+      "status": "passed",
+      "durationMs": 5198.7,
+      "detail": {
+        "httpStatus": 200,
+        "datasetCount": 15,
+        "inspectedTaskCount": 189
+      }
+    },
+    {
+      "name": "candidate matching separates personal education from operational tasks",
+      "status": "passed",
+      "durationMs": 2157.5,
+      "detail": {
+        "httpStatus": 200,
+        "resultCount": 8
+      }
+    },
+    {
+      "name": "candidate is blocked from /admin/users",
+      "status": "passed",
+      "durationMs": 127.9,
+      "detail": {
+        "httpStatus": 403
+      }
+    },
+    {
+      "name": "candidate is blocked from /admin/job-catalogue",
+      "status": "passed",
+      "durationMs": 180,
+      "detail": {
+        "httpStatus": 403
+      }
+    },
+    {
+      "name": "candidate is blocked from /verifier/requests",
+      "status": "passed",
+      "durationMs": 132.7,
+      "detail": {
+        "httpStatus": 403
+      }
+    },
+    {
+      "name": "employer is blocked from /candidate/applications",
+      "status": "passed",
+      "durationMs": 170.5,
+      "detail": {
+        "httpStatus": 403
+      }
+    },
+    {
+      "name": "verifier is blocked from /employer/applications",
+      "status": "passed",
+      "durationMs": 228.3,
+      "detail": {
+        "httpStatus": 403
+      }
+    }
+  ]
+}

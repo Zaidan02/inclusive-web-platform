@@ -1,0 +1,70 @@
+{
+  "generatedAt": "2026-09-10T16:31:57.369Z",
+  "webBase": "https://join-hospitality-zm-staging.onrender.com",
+  "apiBase": "https://join-hospitality-zm-api-staging.onrender.com/api",
+  "profileReset": true,
+  "profileConfirmationPerformed": true,
+  "cases": [
+    {
+      "language": "en",
+      "status": "passed",
+      "suggestions": {
+        "profileFields": [
+          "firstName",
+          "lastName",
+          "phone",
+          "location",
+          "about"
+        ],
+        "abilityItems": [
+          {
+            "field": "readingAbility",
+            "value": "independent"
+          },
+          {
+            "field": "writingAbility",
+            "value": "independent"
+          },
+          {
+            "field": "numeracyAbility",
+            "value": "independent"
+          }
+        ],
+        "education": "high_school",
+        "opportunity": "both",
+        "positionIds": [
+          6
+        ],
+        "disabilities": [
+          "Hand"
+        ],
+        "taskIds": [
+          466,
+          467,
+          468,
+          469,
+          472,
+          473
+        ]
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\testing\\staging-2026-09-10\\profile-ai\\screenshots-en-confirmed\\profile-suggestions-en.png"
+    },
+    {
+      "language": "en",
+      "status": "confirmed",
+      "profile": {
+        "educationLevel": "high_school",
+        "readingAbility": "independent",
+        "writingAbility": "independent",
+        "numeracyAbility": "independent",
+        "opportunityPreference": "both",
+        "positionInterestIds": [
+          6
+        ],
+        "disabilityCount": 1,
+        "confirmedTaskSkillCount": 6
+      },
+      "screenshot": "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\testing\\staging-2026-09-10\\profile-ai\\screenshots-en-confirmed\\profile-confirmed-en.png"
+    }
+  ]
+}

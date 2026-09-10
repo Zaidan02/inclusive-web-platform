@@ -1,0 +1,47 @@
+PASSED Bakery / Pastry Worker / Independent
+BLOCKED Bakery / Pastry Worker / With support
+BLOCKED Bakery / Pastry Worker / Eligibility gates
+PASSED Cashier / Independent
+PASSED Cashier / With support
+PASSED Cashier / Eligibility gates
+PASSED Chocolate / Confectionery Worker / Independent
+BLOCKED Chocolate / Confectionery Worker / With support
+BLOCKED Chocolate / Confectionery Worker / Eligibility gates
+PASSED Cold Kitchen - Garde manger / Independent
+PASSED Cold Kitchen - Garde manger / With support
+PASSED Cold Kitchen - Garde manger / Eligibility gates
+PASSED Cold Preparation: Butcher / Poultry / Independent
+PASSED Cold Preparation: Butcher / Poultry / With support
+PASSED Cold Preparation: Butcher / Poultry / Eligibility gates
+PASSED Fish preparation / Independent
+PASSED Fish preparation / With support
+PASSED Fish preparation / Eligibility gates
+PASSED Food service point of sales management / Independent
+PASSED Food service point of sales management / With support
+PASSED Food service point of sales management / Eligibility gates
+PASSED Head Barman / Barman / Independent
+PASSED Head Barman / Barman / With support
+PASSED Head Barman / Barman / Eligibility gates
+PASSED Host / Hostess / Independent
+PASSED Host / Hostess / With support
+PASSED Host / Hostess / Eligibility gates
+PASSED Ice Cream Maker / Independent
+BLOCKED Ice Cream Maker / With support
+BLOCKED Ice Cream Maker / Eligibility gates
+PASSED Point of sales manager - Self service / Independent
+PASSED Point of sales manager - Self service / With support
+PASSED Point of sales manager - Self service / Eligibility gates
+PASSED Pot - Dish - Glass Washing / Independent
+PASSED Pot - Dish - Glass Washing / With support
+PASSED Pot - Dish - Glass Washing / Eligibility gates
+PASSED Rotating Chef - Self service, Banquet & other / Independent
+PASSED Rotating Chef - Self service, Banquet & other / With support
+PASSED Rotating Chef - Self service, Banquet & other / Eligibility gates
+PASSED Sommelier / Independent
+PASSED Sommelier / With support
+PASSED Sommelier / Eligibility gates
+PASSED Vegetable Preparation / Independent
+PASSED Vegetable Preparation / With support
+PASSED Vegetable Preparation / Eligibility gates
+Matching quality summary: {"passed":39,"failed":0,"blocked":6,"executed":39,"total":45,"successRate":100}
+Report: C:\Users\User\Desktop\FYP_26\inclusive-web-platform-main\docs\testing\staging-2026-09-10\matching-quality-results.json

@@ -1,0 +1,137 @@
+{
+  "generatedAt": "2026-09-10T16:34:25.121Z",
+  "environment": "https://join-hospitality-zm-api-staging.onrender.com/api",
+  "methodology": "Deployed end-to-end and API workflow outputs using synthetic fixture accounts; state-changing records were isolated and removed. Blocked cases are excluded from executed success rates.",
+  "supportingReports": [
+    "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\testing\\staging-2026-09-10\\e2e-results-prepared.json",
+    "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\testing\\staging-2026-09-10\\integration-results-prepared.json",
+    "C:\\Users\\User\\Desktop\\FYP_26\\inclusive-web-platform-main\\docs\\testing\\staging-2026-09-10\\profile-ai\\ai-service-probe.json",
+    "..\\docs\\testing\\staging-2026-09-10\\profile-ai\\screenshots-en-confirmed\\multilingual-results.json"
+  ],
+  "summary": {
+    "planned": 20,
+    "pass": 15,
+    "fail": 0,
+    "blocked": 5
+  },
+  "cleanup": {
+    "profileReset": true,
+    "applicationDeleted": true,
+    "jobsDeleted": [
+      {
+        "id": 90,
+        "status": 200
+      },
+      {
+        "id": 89,
+        "status": 200
+      }
+    ],
+    "errors": []
+  },
+  "results": [
+    {
+      "testId": "WF-PUB-01",
+      "status": "Pass",
+      "actual": "Anonymous published-opportunity request returned HTTP 200, 74 records and no known private identity fields."
+    },
+    {
+      "testId": "WF-PUB-02",
+      "status": "Pass",
+      "actual": "Anonymous candidate, employer, administrator and verifier dashboard visits redirected to sign-in without page errors."
+    },
+    {
+      "testId": "WF-CAN-01",
+      "status": "Blocked",
+      "actual": "A new candidate registration cannot complete email verification and human disability-card approval in staging because outbound email delivery is disabled."
+    },
+    {
+      "testId": "WF-CAN-02",
+      "status": "Pass",
+      "actual": "Reset then complete profile rebuild returned HTTP 200; retrieved identity, disability and position selections matched=true."
+    },
+    {
+      "testId": "WF-CAN-03",
+      "status": "Pass",
+      "actual": "The deployed browser completed consent, produced structured reviewable suggestions, confirmed the selected items and verified the saved profile; screenshots were captured before and after confirmation."
+    },
+    {
+      "testId": "WF-CAN-04",
+      "status": "Pass",
+      "actual": "Work matching returned HTTP 200; target result found=true; corresponding opportunity details opened=true; score/explanation present=true."
+    },
+    {
+      "testId": "WF-CAN-05",
+      "status": "Pass",
+      "actual": "Training-only matching returned HTTP 200; training result found and opened=true."
+    },
+    {
+      "testId": "WF-EMP-01",
+      "status": "Pass",
+      "actual": "Employer profile read, idempotent update and verification returned HTTP 200/200/200; company identity preserved=true."
+    },
+    {
+      "testId": "WF-EMP-02",
+      "status": "Pass",
+      "actual": "Controlled work opportunity creation returned HTTP 201; published work record created=true."
+    },
+    {
+      "testId": "WF-EMP-03",
+      "status": "Pass",
+      "actual": "Hospitality training opportunity creation returned HTTP 201; published training record created=true."
+    },
+    {
+      "testId": "WF-EMP-04",
+      "status": "Pass",
+      "actual": "Created opportunity preserved education, three practical/knowledge requirements, assistance and 1 highlighted task(s); configured output matched=true."
+    },
+    {
+      "testId": "WF-CAN-06",
+      "status": "Pass",
+      "actual": "Valid PDF application returned HTTP 201; one stored application found=true; private document recorded=true.",
+      "response": {
+        "message": "Application submitted successfully."
+      }
+    },
+    {
+      "testId": "WF-CAN-07",
+      "status": "Pass",
+      "actual": "Candidate application tracking returned HTTP 200; newly submitted pending record visible=true."
+    },
+    {
+      "testId": "WF-EMP-05",
+      "status": "Pass",
+      "actual": "Employer status update returned HTTP 200; candidate tracking displayed in_review=true."
+    },
+    {
+      "testId": "WF-ADM-01",
+      "status": "Pass",
+      "actual": "Administrator active/archived filters returned HTTP 200/200 with 9/0 records."
+    },
+    {
+      "testId": "WF-ADM-02",
+      "status": "Pass",
+      "actual": "Catalogue list/detail returned HTTP 200/200; ordered task data available=true."
+    },
+    {
+      "testId": "WF-ADM-03",
+      "status": "Blocked",
+      "actual": "A valid catalogue import would version or replace shared staging catalogue data; no disposable catalogue namespace is available for isolated cleanup."
+    },
+    {
+      "testId": "WF-VER-01",
+      "status": "Blocked",
+      "actual": "Verifier queue returned HTTP 200, but no pending synthetic request with an available document existed."
+    },
+    {
+      "testId": "WF-VER-02",
+      "status": "Blocked",
+      "actual": "No disposable pending verification request was available for an isolated approval decision and cleanup."
+    },
+    {
+      "testId": "WF-VER-03",
+      "status": "Blocked",
+      "actual": "No disposable pending verification request was available for an isolated rejection decision and cleanup."
+    }
+  ]
+}

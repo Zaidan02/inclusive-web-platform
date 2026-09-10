@@ -1,0 +1,239 @@
+{
+  "generatedAt": "2026-09-10T12:00:33.252Z",
+  "webBase": "https://join-hospitality-zm-staging.onrender.com",
+  "summary": {
+    "passed": 26,
+    "failed": 0,
+    "total": 26
+  },
+  "results": [
+    {
+      "name": "public route / renders semantic page structure",
+      "status": "passed",
+      "durationMs": 2205.6,
+      "detail": {
+        "finalUrl": "https://join-hospitality-zm-staging.onrender.com/",
+        "title": "JoIn Hospitality"
+      }
+    },
+    {
+      "name": "public route /signin renders semantic page structure",
+      "status": "passed",
+      "durationMs": 1455.6,
+      "detail": {
+        "finalUrl": "https://join-hospitality-zm-staging.onrender.com/signin",
+        "title": "Sign in | JoIn Hospitality"
+      }
+    },
+    {
+      "name": "public route /signup renders semantic page structure",
+      "status": "passed",
+      "durationMs": 1472.3,
+      "detail": {
+        "finalUrl": "https://join-hospitality-zm-staging.onrender.com/signup",
+        "title": "Create account | JoIn Hospitality"
+      }
+    },
+    {
+      "name": "public route /forgot-password renders semantic page structure",
+      "status": "passed",
+      "durationMs": 1503,
+      "detail": {
+        "finalUrl": "https://join-hospitality-zm-staging.onrender.com/forgot-password",
+        "title": "Forgot password | JoIn Hospitality"
+      }
+    },
+    {
+      "name": "public route /employers renders semantic page structure",
+      "status": "passed",
+      "durationMs": 1525.3,
+      "detail": {
+        "finalUrl": "https://join-hospitality-zm-staging.onrender.com/employers",
+        "title": "For employers | JoIn Hospitality"
+      }
+    },
+    {
+      "name": "public route /voice-help renders semantic page structure",
+      "status": "passed",
+      "durationMs": 1808,
+      "detail": {
+        "finalUrl": "https://join-hospitality-zm-staging.onrender.com/voice-help",
+        "title": "Voice navigation help | JoIn Hospitality"
+      }
+    },
+    {
+      "name": "public route /privacy renders semantic page structure",
+      "status": "passed",
+      "durationMs": 1497.7,
+      "detail": {
+        "finalUrl": "https://join-hospitality-zm-staging.onrender.com/privacy",
+        "title": "Privacy notice | JoIn Hospitality"
+      }
+    },
+    {
+      "name": "anonymous visitor is redirected from /candidate",
+      "status": "passed",
+      "durationMs": 705.2,
+      "detail": {
+        "finalUrl": "https://join-hospitality-zm-staging.onrender.com/signin"
+      }
+    },
+    {
+      "name": "anonymous visitor is redirected from /employer",
+      "status": "passed",
+      "durationMs": 1724.5,
+      "detail": {
+        "finalUrl": "https://join-hospitality-zm-staging.onrender.com/signin"
+      }
+    },
+    {
+      "name": "anonymous visitor is redirected from /admin",
+      "status": "passed",
+      "durationMs": 654,
+      "detail": {
+        "finalUrl": "https://join-hospitality-zm-staging.onrender.com/signin"
+      }
+    },
+    {
+      "name": "anonymous visitor is redirected from /verifier",
+      "status": "passed",
+      "durationMs": 710.5,
+      "detail": {
+        "finalUrl": "https://join-hospitality-zm-staging.onrender.com/signin"
+      }
+    },
+    {
+      "name": "sign-in validation identifies and focuses the first invalid field",
+      "status": "passed",
+      "durationMs": 852.5,
+      "detail": {
+        "focusedField": "email"
+      }
+    },
+    {
+      "name": "invalid credentials produce an accessible alert",
+      "status": "passed",
+      "durationMs": 1559.7,
+      "detail": {
+        "alertText": "The email or password is incorrect, or the account is not yet verified."
+      }
+    },
+    {
+      "name": "candidate opens the authorized dashboard",
+      "status": "passed",
+      "durationMs": 5717.8,
+      "detail": {
+        "finalUrl": "https://join-hospitality-zm-staging.onrender.com/candidate",
+        "heading": "Find hospitality work and training that fit your abilities"
+      }
+    },
+    {
+      "name": "employer opens the authorized dashboard",
+      "status": "passed",
+      "durationMs": 2027.3,
+      "detail": {
+        "finalUrl": "https://join-hospitality-zm-staging.onrender.com/employer",
+        "heading": "Post an opportunity"
+      }
+    },
+    {
+      "name": "admin opens the authorized dashboard",
+      "status": "passed",
+      "durationMs": 2027.7,
+      "detail": {
+        "finalUrl": "https://join-hospitality-zm-staging.onrender.com/admin",
+        "heading": "Users"
+      }
+    },
+    {
+      "name": "verifier opens the authorized dashboard",
+      "status": "passed",
+      "durationMs": 2080.6,
+      "detail": {
+        "finalUrl": "https://join-hospitality-zm-staging.onrender.com/verifier",
+        "heading": "Candidate verification"
+      }
+    },
+    {
+      "name": "wrong-role dashboard access redirects to the user's own dashboard",
+      "status": "passed",
+      "durationMs": 837.2,
+      "detail": {
+        "finalUrl": "https://join-hospitality-zm-staging.onrender.com/candidate"
+      }
+    },
+    {
+      "name": "employer workspace keeps its desktop rail and sign-out in view",
+      "status": "passed",
+      "durationMs": 2572.6,
+      "detail": {
+        "role": "employer",
+        "position": "sticky",
+        "signOutVisible": true
+      }
+    },
+    {
+      "name": "admin workspace keeps its desktop rail and sign-out in view",
+      "status": "passed",
+      "durationMs": 2192.5,
+      "detail": {
+        "role": "admin",
+        "position": "sticky",
+        "signOutVisible": true
+      }
+    },
+    {
+      "name": "verifier workspace keeps its desktop rail and sign-out in view",
+      "status": "passed",
+      "durationMs": 1882.8,
+      "detail": {
+        "role": "verifier",
+        "position": "sticky",
+        "signOutVisible": true
+      }
+    },
+    {
+      "name": "keyboard entry exposes the skip link",
+      "status": "passed",
+      "durationMs": 382.5,
+      "detail": {
+        "firstTabStop": "Skip to main content"
+      }
+    },
+    {
+      "name": "public grouped navigation opens and closes from the keyboard",
+      "status": "passed",
+      "durationMs": 1655.4,
+      "detail": {
+        "trigger": "Job seekers",
+        "escapeReturnedFocus": true
+      }
+    },
+    {
+      "name": "saved candidate profile offers and follows the next journey step",
+      "status": "passed",
+      "durationMs": 5225.9,
+      "detail": {
+        "destination": "Jobs",
+        "currentJourneyStep": "Match and explore"
+      }
+    },
+    {
+      "name": "employer can configure personal-education requirements accessibly",
+      "status": "passed",
+      "durationMs": 4323.4,
+      "detail": {
+        "configuredFields": 5
+      }
+    },
+    {
+      "name": "admin can inspect imported catalogue datasets and their tasks",
+      "status": "passed",
+      "durationMs": 6667.9,
+      "detail": {
+        "datasetName": "Bakery / Pastry Worker",
+        "taskRows": 189
+      }
+    }
+  ]
+}

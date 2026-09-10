@@ -1,0 +1,269 @@
+{
+  "generatedAt": "2026-09-10T11:20:31.057Z",
+  "environment": {
+    "webBase": "https://join-hospitality-zm-staging.onrender.com",
+    "apiBase": "https://join-hospitality-zm-api-staging.onrender.com/api",
+    "healthStatus": 200
+  },
+  "method": "Six representative screens in English, French and Arabic; document language/direction, heading output, unresolved keys, page errors and horizontal reflow.",
+  "summary": {
+    "passed": 18,
+    "failed": 0,
+    "total": 18,
+    "successRate": 100
+  },
+  "cases": [
+    {
+      "testId": "I18N-01-EN",
+      "screen": "Sign in",
+      "locale": "en",
+      "status": "passed",
+      "durationMs": 2644.6,
+      "observation": {
+        "lang": "en",
+        "dir": "ltr",
+        "heading": "Welcome back.",
+        "horizontalOverflow": false,
+        "unresolvedKey": null
+      }
+    },
+    {
+      "testId": "I18N-01-FR",
+      "screen": "Sign in",
+      "locale": "fr",
+      "status": "passed",
+      "durationMs": 1857.6,
+      "observation": {
+        "lang": "fr",
+        "dir": "ltr",
+        "heading": "Heureux de vous revoir.",
+        "horizontalOverflow": false,
+        "unresolvedKey": null
+      }
+    },
+    {
+      "testId": "I18N-01-AR",
+      "screen": "Sign in",
+      "locale": "ar",
+      "status": "passed",
+      "durationMs": 1777.5,
+      "observation": {
+        "lang": "ar",
+        "dir": "rtl",
+        "heading": "مرحبًا بعودتك.",
+        "horizontalOverflow": false,
+        "unresolvedKey": null
+      }
+    },
+    {
+      "testId": "I18N-02-EN",
+      "screen": "Candidate profile",
+      "locale": "en",
+      "status": "passed",
+      "durationMs": 1754.4,
+      "observation": {
+        "lang": "en",
+        "dir": "ltr",
+        "heading": "Find hospitality work and training that fit your abilities",
+        "horizontalOverflow": false,
+        "unresolvedKey": null
+      }
+    },
+    {
+      "testId": "I18N-02-FR",
+      "screen": "Candidate profile",
+      "locale": "fr",
+      "status": "passed",
+      "durationMs": 1391.6,
+      "observation": {
+        "lang": "fr",
+        "dir": "ltr",
+        "heading": "Trouvez un emploi ou une formation en hôtellerie adapté à vos capacités",
+        "horizontalOverflow": false,
+        "unresolvedKey": null
+      }
+    },
+    {
+      "testId": "I18N-02-AR",
+      "screen": "Candidate profile",
+      "locale": "ar",
+      "status": "passed",
+      "durationMs": 1477.8,
+      "observation": {
+        "lang": "ar",
+        "dir": "rtl",
+        "heading": "اعثر على عمل أو تدريب في الضيافة يناسب قدراتك",
+        "horizontalOverflow": false,
+        "unresolvedKey": null
+      }
+    },
+    {
+      "testId": "I18N-03-EN",
+      "screen": "AI profile builder",
+      "locale": "en",
+      "status": "passed",
+      "durationMs": 1339.5,
+      "observation": {
+        "lang": "en",
+        "dir": "ltr",
+        "heading": "Find hospitality work and training that fit your abilities",
+        "horizontalOverflow": false,
+        "unresolvedKey": null
+      }
+    },
+    {
+      "testId": "I18N-03-FR",
+      "screen": "AI profile builder",
+      "locale": "fr",
+      "status": "passed",
+      "durationMs": 2450.4,
+      "observation": {
+        "lang": "fr",
+        "dir": "ltr",
+        "heading": "Trouvez un emploi ou une formation en hôtellerie adapté à vos capacités",
+        "horizontalOverflow": false,
+        "unresolvedKey": null
+      }
+    },
+    {
+      "testId": "I18N-03-AR",
+      "screen": "AI profile builder",
+      "locale": "ar",
+      "status": "passed",
+      "durationMs": 1398.7,
+      "observation": {
+        "lang": "ar",
+        "dir": "rtl",
+        "heading": "اعثر على عمل أو تدريب في الضيافة يناسب قدراتك",
+        "horizontalOverflow": false,
+        "unresolvedKey": null
+      }
+    },
+    {
+      "testId": "I18N-04-EN",
+      "screen": "Job matching",
+      "locale": "en",
+      "status": "passed",
+      "durationMs": 1426.6,
+      "observation": {
+        "lang": "en",
+        "dir": "ltr",
+        "heading": "Find hospitality work and training that fit your abilities",
+        "horizontalOverflow": false,
+        "unresolvedKey": null
+      }
+    },
+    {
+      "testId": "I18N-04-FR",
+      "screen": "Job matching",
+      "locale": "fr",
+      "status": "passed",
+      "durationMs": 1690.5,
+      "observation": {
+        "lang": "fr",
+        "dir": "ltr",
+        "heading": "Trouvez un emploi ou une formation en hôtellerie adapté à vos capacités",
+        "horizontalOverflow": false,
+        "unresolvedKey": null
+      }
+    },
+    {
+      "testId": "I18N-04-AR",
+      "screen": "Job matching",
+      "locale": "ar",
+      "status": "passed",
+      "durationMs": 1430,
+      "observation": {
+        "lang": "ar",
+        "dir": "rtl",
+        "heading": "اعثر على عمل أو تدريب في الضيافة يناسب قدراتك",
+        "horizontalOverflow": false,
+        "unresolvedKey": null
+      }
+    },
+    {
+      "testId": "I18N-05-EN",
+      "screen": "Employer opportunity creation",
+      "locale": "en",
+      "status": "passed",
+      "durationMs": 1805,
+      "observation": {
+        "lang": "en",
+        "dir": "ltr",
+        "heading": "Post an opportunity",
+        "horizontalOverflow": false,
+        "unresolvedKey": null
+      }
+    },
+    {
+      "testId": "I18N-05-FR",
+      "screen": "Employer opportunity creation",
+      "locale": "fr",
+      "status": "passed",
+      "durationMs": 2365.3,
+      "observation": {
+        "lang": "fr",
+        "dir": "ltr",
+        "heading": "Publier une opportunité",
+        "horizontalOverflow": false,
+        "unresolvedKey": null
+      }
+    },
+    {
+      "testId": "I18N-05-AR",
+      "screen": "Employer opportunity creation",
+      "locale": "ar",
+      "status": "passed",
+      "durationMs": 2657.7,
+      "observation": {
+        "lang": "ar",
+        "dir": "rtl",
+        "heading": "نشر فرصة",
+        "horizontalOverflow": false,
+        "unresolvedKey": null
+      }
+    },
+    {
+      "testId": "I18N-06-EN",
+      "screen": "Admin dashboard",
+      "locale": "en",
+      "status": "passed",
+      "durationMs": 1979.2,
+      "observation": {
+        "lang": "en",
+        "dir": "ltr",
+        "heading": "Users",
+        "horizontalOverflow": false,
+        "unresolvedKey": null
+      }
+    },
+    {
+      "testId": "I18N-06-FR",
+      "screen": "Admin dashboard",
+      "locale": "fr",
+      "status": "passed",
+      "durationMs": 1356.3,
+      "observation": {
+        "lang": "fr",
+        "dir": "ltr",
+        "heading": "Utilisateurs",
+        "horizontalOverflow": false,
+        "unresolvedKey": null
+      }
+    },
+    {
+      "testId": "I18N-06-AR",
+      "screen": "Admin dashboard",
+      "locale": "ar",
+      "status": "passed",
+      "durationMs": 1360.2,
+      "observation": {
+        "lang": "ar",
+        "dir": "rtl",
+        "heading": "المستخدمون",
+        "horizontalOverflow": false,
+        "unresolvedKey": null
+      }
+    }
+  ]
+}

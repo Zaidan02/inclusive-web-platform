@@ -1,0 +1,10 @@
+{
+  "generatedAt": "2026-09-10T16:49:58.992Z",
+  "apiBase": "https://join-hospitality-zm-api-staging.onrender.com/api",
+  "healthStatus": 200,
+  "httpStatus": 503,
+  "durationMs": 489.8,
+  "body": {
+    "message": "The AI profile assistant is temporarily unavailable."
+  }
+}

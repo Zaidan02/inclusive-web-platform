@@ -1,0 +1,18 @@
+{
+  "generatedAt": "2026-09-10T14:02:00+03:00",
+  "environment": "https://join-hospitality-zm-api-staging.onrender.com",
+  "serviceHealthRequired": true,
+  "summary": {
+    "checks": 51,
+    "passed": 51,
+    "failed": 0
+  },
+  "coverage": {
+    "anonymousProtectedRoutes": 37,
+    "forgedTokenChecks": 1,
+    "crossRoleAuthorizationAndValidAccessChecks": 11,
+    "publicCatalogueChecks": 2
+  },
+  "evidence": "security-route-audit.txt",
+  "reportingTreatment": "Supporting security evidence; kept separate from AI, matching and voice output-quality percentages."
+}
