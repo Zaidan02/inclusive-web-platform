@@ -6,5 +6,10 @@
 __pycache__/
 *.py[cod]
 
+# Local agent, obsolete service, and temporary workspaces
+.agents/
+ai_service/
+tmp/
+
 # Source job-description datasets (local only)
 job descriptions/
