@@ -1,0 +1,2532 @@
+           Quadra Informatique
+
+                                      TESTS ET VALIDATION DU LOGICIEL
+
+        Tests et Validation du logiciel
+
+                              Merci à Willy ANDRZEJAK,
+AP.TELLE & S.MILOVANOVIC, Stéphane CALIMET, Philippe FIRMIN, Eric LELEU
+Problématique
+du test
+
+ • On ne peut pas tester tout le temps ni tous les
+   cas possibles
+
+     – Il faut des critères pour choisir les cas intéressants
+       et la bonne échelle pour le test
+
+ • Prouver l’absence d’erreurs dans un
+   programme est un problème indécidable
+
+     – il faut des heuristiques réalistes
+Problématique
+du test
+
+                                     objectif irréaliste : 0 défaut
+                                     objectif réaliste : pas de bug sévère, pas
+                                     de bug récurrent (-> attentes usagers)
+
+                                   tests
+
+               Pourquoi ?
+                             Coût
+
+               Effort
+
+                                   Confiance
+              Vocabulaire
+
+• Cas de tests (CT) ou test : “scénario” que l’on veut exercer
+
+     – suppose l'existence d'une spécification (entrées, sorties et fonction).
+     – comprend, en plus de la donnée de test, le résultat attendu après
+
+        l'exécution du programme.
+
+• Jeu de tests : un ensemble fini de cas de test
+• Données de tests (DT) : input devant exercer le cas de test
+
+     – exprimé dans le format d’entrée du code ex: DT = {x = 5, y = 5, b = 58}
+
+• Script de Test : code / script qui lance le programme sur les
+   DT, observe les résultats, calcule le verdict
+
+     – Verdict : est-ce que l’exécution est conforme à l’Oracle ?
+Problématique
+du test
+
+  • En moyenne, un jeune diplômé sur trois
+     commence par faire du test
+
+  • 50% des start-up échouent à cause du trop
+     grand nombre de bugs
+
+       – mauvaise campagne de test
+       – maintenance difficile
+       – pas de non régression
+        Une campagne de test
+
+• comporte obligatoirement plusieurs étapes :
+
+   – définition des objectifs de test,
+   – écriture des jeux de tests,
+   – passage des tests,
+   – exploitation des résultats,
+   – et enfin conclusion.
+
+• Or justement, le temps passé à préparer la
+  campagne de test est du temps gagné.
+Préambule
+Quelques exemples de « Bugs »
+Définitions des tests
+Les classes de défaut
+Les difficultés liées aux tests
+Les différentes façons de classifier les tests
+Les méthodes de test statiques
+Les méthodes de test dynamiques
+Quelques principes
+La stratégie de tests
+Préambule
+- Les tests existent depuis toujours (mauvaise perception).
+- Prise de conscience actuelle de la part des sociétés et notamment des directions
+
+    informatiques (risque de dysfonctionnement, perte financière, retard…).
+- Les tests rassurent et permettent de palier aux erreurs humaines.
+
+- Le sujet des tests est vaste.
+- Nous allons tenter dans cette présentation d'en présenter les principaux aspects
+
+    (généralités, techniques et outils).
+
+        « La politique de tests est aujourd’hui une
+         dimension incontournable de la gestion de
+
+                              projet. »
+Quelques exemples de « Bugs »
+       Quelques Bugs connus
+
+• En 1996 la fusée Ariane 5 explose après 30s de vol
+
+      – Erreur de conversion entre données numériques!
+
+             • H0 -> H0+37s : nominal
+             • Dans SRI 2:
+
+                       – BH (Bias Horizontal: Vitesse) > 2^15
+                       – convert_double_to_int(BH) échoue ! (Dans Ariane 4: BH < 32768)
+                       – crash SRI2
+
+             • H0 + 39s: auto-destruction
+
+      – Mauvaise réutilisation (Module Ariane 4) ->Problème de test d’intégration
+      – $500M en matériel + $7B en développement!
+       Quelques bugs connus
+
+• En 2004 une défaillance du système d’alarme d’une
+  centrale électrique produit une coupure d’électricité
+  aux Etats-Unis et au Canada
+
+    – 50M de personnes privées d'électricité
+    – $6B perdus!
+
+• En 1992 les ambulances de Londres sont dirigées par
+  un logiciel fautif: London Ambulance System –
+  dispatch ambulances
+
+    – Des personnes perdent la vie…
+Défaillances
+Dues à des bugs
+
+ • Catastrophe humaine ou financière:
+
+       – Therac-25 (1985-1987) – radiologie et contrôle d'injection de
+          substances radioactives
+
+       – Iran Air Flight 655 (1988) – guerre d'Irak et missile américain – système
+          radar-> 290 morts
+
+       – Mars Climate Orbiter (1999) – Plusieurs unités de mesure (Force :
+          anglais-métrique)
+
+       – USS Yorktown (1998)
+
+              • Une division par zéro coupe les moteurs du sous-marin
+
+       – The Patriot and the Scud (1991 Gulf War)
+
+              • mauvais arrondi dans une soustraction-> 28 soldats américains morts et
+                 98 blessés
+
+ • Image de marque :
+
+       – Bouygues en 2004 – crash des serveurs – indisponibilité 48h
+
+      Les bugs sont omniprésents et ont parfois des conséquences dramatiques.
+Therac-25
+(official report)
+
+           – The software code was not independently reviewed.
+           – The software design was not documented with enough detail to support
+
+              reliability modelling. (reliability=1-probability of failure) -> Failure Mode
+              Analysis.
+           – The system documentation did not adequately explain error codes.
+           – AECL personnel were at first dismissive of complaints.
+           – The design did not have any hardware interlocks to prevent the electron-
+              beam from operating in its high-energy mode without the target in place.
+           – Software from older models had been reused without properly
+              considering the hardware differences.
+           – The software assumed that sensors always worked correctly, since there
+              was no way to verify them.
+           – Arithmetic overflows could cause the software to bypass safety checks.
+           – The software was written in assembly language. While this was more
+              common at the time than it is today, assembly language is harder to
+              debug than high-level languages.
+           – ….
+Définitions des tests
+                                « On constate une ANOMALIE
+
+                            due à un DEFAUT du logiciel lui même
+
+                             du a une ERREUR de programmeur. »
+
+"Test" dérive du mot en latin testum qui signifie "pot de terre". Ce dernier permettait aux
+     Romains de déterminer la qualité de matières telles que les minéreaux de métal
+     précieux.
+
+Selon Glendford.J Myers dans « The art of software testing »:
+« Un test réussi n'est pas un test qui n'a pas trouvé de défauts, mais un test qui a
+
+     effectivement trouvé un défaut. »
+Selon Edsger Wybe Dijkstra
+« Program testing can be used to show the presence of bugs, but never to show their
+
+     absence! »
+Selon l'IEEE (Institute of Electrical and Electronics Engineers):
+« Le test est l'exécution ou l'évaluation d'un système ou d'un composant, par des moyens
+
+     automatiques ou manuels, pour vérifier qu'il répond à ses spécifications ou identifier les
+     différences entre les résultats attendus et les résultats obtenus. »
+
+                              Faute -> Erreur ->Défaut ->Panne
+          Définition du test
+
+• Est-ce que le logiciel fonctionne comme prévu ?
+• Le test est souvent associé avec les termes vérification et validation.
+
+• La validation est le moyen de confirmer le respect d’exigences
+    déterminées pour une utilisation spécifique prévue.
+
+      – Validation : Faisons-nous le travail attendu ?
+
+• La Vérification est l’action de confirmer la satisfaction des exigences
+    spécifiques via l’étude et la mise à disposition de preuves objectives.
+
+      – Vérification : Faisons-nous le travail correctement ?
+
+             La v&v est une part cruciale du développement, (40% du
+             budget global): Le test est de loin la méthode la plus
+             utilisée.
+     Deux perspectives du test
+
+• Tests par l’affirmation (positive testing, validation testing): Pour démontrer la
+    qualité à postériori
+      – « Le test est une activité destinée à déterminer si l’évaluation d’une
+         caractéristique ou d’une aptitude d’un programme ou d’un système donne les
+         résultats requis. » -> test-to-pass
+      – Montrer que le système agit comme il est censé le faire, c'est l'analyse de la
+         spécification des exigences qui permet de concevoir les jeux d'essai.
+      – Implique des acteurs externes à l’entreprise
+
+• Tests par la négation (negative testing, defect testing): Pour améliorer la qualité
+      – « Tester c’est exécuter le programme dans l’intention d’y trouver des
+         anomalies ou des défauts » -> test-to-fail
+      – Sert fréquemment à examiner les aspects non décrits, mal formulés, ou
+         incomplètement définis dans les documents de spécification.
+      – Interne à l’entreprise
+Les classes de défaut
+Les erreurs peuvent être de divers ordres.
+
+Il peut s'agir d'erreurs :
+
+      - de calcul: x=x+2 au lieu de x=x-2
+      - de logique: if a > b au lieu de if a < b
+      - d'entrée / sortie: mauvaise description, conversion, formatage, des
+      entrées/sorties
+      - de traitement des données: dépassement de tableau, variable non définie,
+      - d'interface (communication entre les programmes): on appelle p1 au lieu de
+      p2, mauvais passage de paramètre
+      -de définition des données: int au lieu de long, etc…
+      -…
+
+          Ces erreurs représentent 90% des cas décelés.
+Les difficultés liées aux tests
+- Impossible de réaliser un test exhaustif
+- Qualité des tests dépend des données utilisées
+- Impossible de supprimer l’erreur humaine
+- Difficultés d’ordre psychologique, culturel
+- Taille et complexité des programmes
+- Différence entre environnement de développement et de production
+- Perte d’information naturelle
+
+    Difficulté formelle : pas d’algorithme capable de prouver
+                       l’exactitude d’un programme
+           Difficultés du test
+
+• Le test exhaustif est difficile à réaliser
+
+            • Exemple : fonction retournant la somme de deux nombre de 32 bits.
+
+                    – 1000 tests par seconde
+                    – 585 000 000 années : 2^(32+32) /1000/60/60/24/365.25
+
+• Le test est une méthode de vérification partielle de logiciels
+• La qualité du test dépend de la pertinence du choix des
+
+   données de test
+
+     – Il faut couvrir au mieux l'espace d'entrées avec un nombre réduit
+        d'exemples
+
+     – Les zones sujettes à erreurs nécessitent une attention particulière
+           Difficultés du test
+
+• Difficultés d’ordre psychologique ou culturel
+
+   – Activité tendant à montrer les erreurs des
+      programmeurs !
+
+   – Manque d’intérêt pour ce domaine du génie
+      logiciel
+Concernant la perte d’information…
+Difficultés du test                     Besoin réel
+
+• Perte d'information naturelle         Besoin perçu
+• Processus d’introduction des défauts
+
+– Manipulation de données abstraites                                        Besoin modélisé
+
+– Succession de transformations:
+
+• Idée « abstraite » et confuse du client, Spécifications, Conception, Code source,
+   Assemblage, ….
+
+• Une erreur détectée en phase terminale peut résulter d’un ensemble de petite
+   erreurs accumulées.
+
+– Exemple (bouche à oreille). D’où vient l’introduction de l’anomalie, perte
+   d’info , adaptation de la compréhension.
+
+– Exemple :
+
+• Chez un client, un numéro de client est calculé selon un algorithme précis.
+   La référence du n° de client est stockée dans une table, ce qui permet à
+   chacun de générer ses propres n° en incrémentant la valeur de 1.
+
+– Interprétation 1: prochain numéro de dispo. On prend, affecte et fait +1
+
+– Interprétation 2: dernier numéro traité. On fait + 1, on prend et on affecte.
+Les différentes façons de classifier les tests
+          Il n’existe pas de classification officielle
+
+Chaque ouvrage, chaque auteur, chaque site définit à sa
+         manière les différentes techniques de tests.
+                        Selon le mode d ’exécution
+
+Le test Manuel :
+
+Les tests sont exécutés par le testeur qui vérifie les traitements… et compare les
+résultats obtenus avec ceux attendus.
+
+Ces tests sont fastidieux et offrent une plus grande possibilité d’erreurs humaines.
+Ces tests sont très vite ingérables dans le cas d’applications de grandes tailles.
+
+Le test Automatique :
+
+Le testeur est en partie déchargé des tests dans la mesure où les tests sont
+réalisés par des outils (JUnit par exemple dans le monde Java).
+                        Selon les modalités du test
+
+Statiques :
+
+Les tests sont réalisés «par l'humain» (testeur), sans machine, par lecture du code dans le
+but de trouver des erreurs (revue de code, estimation de la complexité, détection d’erreurs
+indépendantes de l’application, vue globale algorithmique, etc. )
+•Limites tests statiques: être dissociés de l’exécution réelle du programme
+
+Dynamiques :
+
+On exécute le système de manière à tester l’ensemble des caractéristiques. Produire des DT,
+à partir du code source et spécification, qui exécuteront un ensemble de comportements,
+comparer les résultats avec ceux attendus…
+
+             Techniques de couverture du graphe de contrôle
+                           - Couverture du flot de contrôle
+                           - Couverture du flot de données
+
+             Test mutationnel (test par injection de défaut):
+                           Consiste a introduire des défauts dans le programme et à mesurer
+                           l'efficacité d'un test, en regardant en combien de temps, le test
+                           découvre le défaut.
+                                         Selon les niveaux de tests
+
+Il s’agit de tests réalisés tout au long de la vie du logiciel (cycle de vie).
+
+Unitaires : s'assurer que les composants logiciels pris individuellement sont
+
+conformes à leurs spécifications et prêts à être regroupés.
+
+D’intégration : s'assurer que les interfaces des composants sont cohérentes
+
+entre elles et que le résultat de leur intégration permet de réaliser les
+fonctionnalités prévues.
+
+Système : s'assurer que le système complet, matériel et logiciel, correspond bien
+
+à la définition des besoins tels qu'ils avaient été exprimés. On parle de validation
+ou de recette.
+
+De non régression : vérifier que la correction des erreurs n'a pas affecté les
+
+parties déjà développées et testées. Cela consiste à systématiquement rejouer les
+tests déjà exécutés.
+                                   SeSloenlol'naplepsromchéethodes de tests
+
+                               I1                                            O1
+                               I2
+Structurels (Boîte blanche) :  I3                                            O2
+
+Les tests structurels reposent sur des analyses du code source: utilisent la structure interne
+
+du programme. Les jeux d’essai dépendent de l’analyse du code source.
+
+Fonctionnels (Boîte noire) :
+
+Les tests fonctionnels reposent sur une spécification du programme. Le code source du
+programme n’est pas utilisé. Les tests fonctionnels permettent d’écrire les tests bien avant le
+« codage »: Utilise la description des fonctionnalités du programme
+
+                               I1                                            O1
+                               II2 O2
+                               3
+
+Les jeux d’essai dépendent des spécifications du besoin.
+
+             Il est parfois utile de combiner ces deux méthodes.
+Type de test  Structurel(Boîte blanche)  Fonctionnel (Boîte noire)
+Statique                     X                          X
+Dynamique                    X
+                                    Selon les caractéristiques des tests
+
+De Robustesse :
+
+Permet d'analyser le système dans le cas où ses ressources sont saturées
+ou bien d'analyser les réponses du système aux sollicitations proche ou
+hors des limites des domaines de définition des entrées.
+
+De performance :
+
+Permet d'évaluer la capacité du programme à fonctionner correctement
+vis-à-vis des critères de flux de données et de temps d'exécution.
+Récapitulatif
+
+   Techniques de couverture
+
+                                                                                                                                                      38
+Méthodes de test statiques
+Méthodes de tests statiques
+
+Les méthodes de test statiques consistent en l’analyse textuelle du code du
+logiciel afin d’y détecter des erreurs, sans exécution du programme:
+
+            -Revue de code (Code Inspection CheckList selon le langage)
+            -Analyse du graphe de contrôle
+            -Analyse des types
+            -Analyse du domaine de variation des variables
+
+                                                                                                                                                       40
+            Revue de Code
+
+• REVUE ou INSPECTION (REVIEW OR
+  iNSPECTION), IEEE 729:
+
+   – Examen détaillé d’une spécification, d’une
+      conception ou d’une implémentation
+
+   – par une personne ou un groupe de personnes,
+      afin de déceler des défauts (erreurs de logiques,
+      d'anomalie dans le code, de non-conformité aux
+      standards).
+     Inspection de programme
+
+• Pour mener une inspection, il faut:
+
+    – Disposer d'une spécification précise du code
+    – Disposer d'un membre de l'équipe familiarisé avec les
+
+       standards adoptés
+    – Disposer d'une version de code dépourvue de toute
+
+       erreur de syntaxe
+    – Que la direction soit prête à accepter le cout de la
+
+       vérification statique
+    – Que l'inspection soit acceptée par le chef du projet
+    – Suite à une inspection, le programmeur doit corriger son
+
+       programme avant de procéder à une réinspection
+              Code review
+
+• On étudie le code du programme et on détecte les fautes
+   avant l'exécution, en s'aidant souvent d'une check-list des
+   défauts les plus courants:
+
+     – L'utilisation de variables non initialisées
+     – Les sauts dans les boucles
+     – Les affectations incompatibles
+     – Les boucles infinies
+     – Les débordements de tableaux
+     – Les allocations et libérations impropres de zones mémoire.
+     – Les mauvaises correspondances entre paramètres formels et effectifs,
+     – Les tests d'égalité entre valeurs flottantes, etc…
+Java Inspection Check List (Document complet
+                    sur moodle)
+
+  • Variable and Constant Declaration Defects (VC)
+
+         – Are descriptive variable and constant names used in accord with naming conventions?
+         – Are there variables with confusingly similar names?
+         – Is every variable properly initialized?
+         – Could any non-local variables be made local?
+         – Are there variables that should be constants?
+
+  • Function Definition Defects (FD)
+
+         – Are descriptive function names used in accord with naming conventions?
+         – Is every function parameter value checked before being used?
+
+  • Class Definition Defects (CD)
+
+         – Does each class have an appropriate constructor ?
+         – For each member of every class: Could access to the member be further restricted?
+         – Do any derived classes have common members that should be in the base class?
+         – Can the class inheritance hierarchy be simplified?
+Java Inspection Check List: Exemple
+
+• Packaging Defects (LP)
+
+      – For each file: Does it contain only one class?
+      – For each function: Is it no more than about 60 lines long?
+      – For each class: Is no more than 2000 lines long (Sun Coding Standard) ?
+
+• Performance Defects (PE)
+
+      – Can better data structures or more efficient algorithms be used?
+      – Are logical tests arranged such that the often successful and inexpensive tests
+
+         precede the more expensive and less frequently successful tests?
+      – Can the cost of recomputing a value be reduced by computing it once and
+
+         storing the results?
+      – Can a computation be moved outside a loop?
+      – Are there tests within a loop that do not need to be done?
+      – Are there two loops operating on the same data that can be combined into
+
+         one?
+   Graphe de contrôle: Définition
+
+• Un graphe de contrôle présente la structure de contrôle du code.
+• Chaque nœud (représenté par un cercle) correspond à un bloc de code qui
+
+    ne contient qu'un seul trajet possible.
+• Cela veut dire qu'il n'y a qu'une entrée et qu'une seule sortie à ce bloc.
+
+      – Si une instruction du bloc est exécutée, alors toutes les autres le sont
+         également.
+
+• Les flèches entre les nœuds représentent les transferts de contrôle
+    possibles: si le bloc B peut être exécuté juste après que le bloc A l'a été, il
+    doit y avoir une flèche de A vers B.
+
+• Pour obtenir des diagrammes de contrôle corrects:
+
+      – il doit y avoir un nœud de départ
+      – Pour chaque nœud, il doit exister un chemin permettant de l'atteindre en
+
+         partant du nœud de départ.
+      – Pour chaque nœud, il doit exister un chemin permettant d'atteindre un nœud
+
+         de fin.
+                     https://code2flow.com/
+
+Eclipse Control Flow Graph
+Generator
+http://eclipsefcg.sourceforge.net/#
+Méthodes de tests statiques (suite)
+
+     Analyse du graphe de contrôle - Exemple
+
+Procedure Signe(a: IN OUT int; s: OUT string)
+
+Begin
+
+s := "nul";
+
+IF (a>0) THEN
+
+       s := "positif";
+
+       a := a+1;
+
+END IF;                 Le graphe de contrôle est
+
+IF (a<0) THEN s := "negatif"; généralement dérivé de
+                        l’organigramme du
+       a := a-1;
+
+     END IF;            programme
+END Signe;
+
+              https://code2flow.com/
+
+                                                                                                                 48
+ Méthodes de tests statiques (suite)
+
+                                                       Graphe de contrôle:
+
+                                                                             A
+
+                                                                             C
+                                                                   D
+
+                                                                            F
+
+                                                                  FIN
+
+Analyser le graphe de contrôle du programme peut révéler des
+erreurs (exemples: sauts anormaux, code inutilisé...).
+
+                                                                                                                                                           49
+Méthodes de tests statiques (Conclusion)
+
+    Avantages:
+
+         Méthodes efficaces et peu coûteuses.
+         60 à 95% des erreurs sont détectées lors de contrôles statiques
+
+ des méthodes de tests statiques sont nécessaires
+    Inconvénients:
+
+         Méthodes ne permettant pas de valider le comportement d’un
+         programme au cours de son exécution.
+         Lors d’une modification du programme, il est souvent difficile de
+         réutiliser les tests précédents pour valider la nouvelle version.
+
+    Les méthodes de tests statiques ne sont pas suffisant
+
+                                                                                                                                                      50
+Méthodes de test dynamiques
+   Méthodes de tests dynamiques
+
+   Oracle = un prédicat
+spécifiant le domaine des
+
+            valeurs
+     attendues comme
+correctes à l'exécution du
+
+         jeu d'essai.
+
+                                                                                                                                                                     52
+  Méthodes de tests dynamiques:
+           Processus du test
+
+1. Choisir un cas de tests (CT) = scénario à exécuter
+2. Estimer le résultat attendu (Oracle)
+3. Déterminer une donnée de test (DT) déclenchant CT
+
+     (concrétisation)
+4. Exécuter le programme sur la DT (script de test)
+5. Comparer le résultat obtenu au résultat attendu (verdict)
+
+    – Une différence entre les résultats obtenus et ceux attendus pour les
+          entrées sélectionnées révèle une défaillance
+
+6. rapport de test (pass/fail)
+
+          Pour déterminer qu'il y a différence, il faut avoir au préalable
+          déterminé un oracle, c'est à dire un prédicat spécifiant le
+          domaine des valeurs attendues comme correctes à l'exécution
+          du jeu d'essai.
+Sélection des
+jeux de test
+
+• Soit D le domaine d’entrée d’un programme P
+   spécifié par S, on voudrait pouvoir dire
+
+     – Soit D le domaine de P:  xD P(x) = S(x)
+
+• Test exhaustif impossible dans la plupart des
+   cas
+
+     – Domaine D trop grand, voire infini
+     – Trop long et coûteux
+Sélection des
+jeux de test
+
+• On cherche alors un ensemble de données de
+  test T tel que
+
+–TD
+
+– si  xT P(x) = S(x) alors  xD P(x) = S(x)
+
+• Critère d’arrêt pour la génération de données
+  de test
+
+   – {données de test} = T   Mais Comment on
+                                  fait cette
+• Test exhaustif (cas rare)
+
+– {données de test} = D      sélection????
+          Exécution des tests
+
+• Fourniture des entrées au programme
+
+    – Données entrées manuellement
+
+          • peut-on automatiser?
+
+    – Données complexes ou nombreuses (trajectoires d’un
+       missile, variation d’altitude d’un avion, …)
+
+          • prévoir des simulateurs/moniteurs
+
+• Récupération des sorties
+
+    – Volume important
+
+          • base de données
+
+    – Enregistrer toute information utile à l’analyse des résultats
+
+          • charge processeur
+          • occupation mémoire
+          •…
+Observation : « problème de l’oracle »
+
+• Objectif : répondre à «le programme a-t-il fourni le
+  bon résultat?»
+
+• Observation effectuée
+
+    – Pendant l’exécution
+
+          • détection des défaillances au moment où elles se produisent
+
+    – Après l’exécution
+
+          • analyse des traces de l’exécution
+
+• Observation par un humain ou automatique
+
+    – Observation automatique : est-ce possible et à quel prix?
+ Observation : « problème de l’oracle »
+
+• En théorie, l’oracle parfait ne peut pas exister
+
+• En pratique : oracle approximatif
+
+          • Table associant certaines entrées aux sorties attendues
+          • Propriétés essentielles (« l’avion ne s’écrasera pas »)
+          • Oracles partiels mais automatisés: instrumentation du code : assert
+
+             – attention, parfois code non instrumentable (code
+               embarqué)
+
+• Quelques cas pratiques d’oracles parfaits
+  automatisables
+
+    – comparer à référence : logiciel existant, tables de résultats
+    – résultat simple à vérifier (ex : solution d’une équation)
+    – deux logiciels similaires : test dos à dos
+  Méthodes de tests dynamiques
+
+• Pour expliquer le mécanisme des
+  méthodes de tests dynamiques, il faut
+  donc répondre aux questions:
+
+   – “Comment choisir le jeu de tests?”
+   – “Comment décider du succès ou de l’échec
+
+      d’un jeu de tests?”
+   – “A partir de quel moment peut-on estimer que
+
+      le programme n’a plus besoin d’être testé?”
+
+                                                                                                                                                             61
+ Comment choisir le jeu de tests?
+         Méthodes aléatoires
+
+• Le jeu de tests est sélectionné au hasard sur le domaine des entrées du
+    programme.
+
+• Le domaine des entrées du programme est déterminé à l’aide de
+    l’interface de la spécification ou de l’interface du programme.
+
+• Avantages:
+
+      – Ces méthodes ont le double avantage de la rapidité et de l'objectivité.
+      – Il est également plus facile d'appliquer des considérations statistiques dans ce
+
+         cas.
+
+             • On pourra faire des déductions statistiques sur le taux d'erreur après un temps t.
+
+• Inconvénient: Ces méthodes ne garantissent pas une bonne couverture de
+    l’ensemble des entrées du programme.
+
+      – En particulier, elles peuvent ne pas prendre en compte certains cas limites ou
+         exceptionnels.
+
+      – Ces méthodes ont donc une efficacité très variable.
+
+                                                                                                                                                            62
+   Comment choisir le jeu de tests?
+Méthodes structurelles (Boite Blanche)
+
+• Le critère de sélection du jeu de tests repose
+  sur le code du programme.
+
+• Le jeu de tests est choisi de manière à remplir
+  certaines exigences:
+
+    – Couverture de toutes les instructions.
+    – Couverture de toutes les branches.
+    – Couverture de tous les chemins exécutables
+    – Couverture des conditions multiples.
+
+                                                        •63
+          Code coverage tools
+
+JaCoCo, Clover, Ncover…are among Top Code coverage tools
+
+  a JaCoCo agent attaches itself to a JVM. ... and whenever a class is
+  loaded, JaCoCo can use the agent to see when the class is called and what
+  lines are executed. This is how code coverage statistics are collected. When the
+  JVM terminates it creates the coverage report file.
+               o Add JaCoCo plugin to the build configuration (e.g., Maven):
+
+                 o <plugin>
+                 o <groupId>org.jacoco</groupId>
+
+Mavo en<artiJfaactIcd>joacoccoo-mavepn-plluuging</airtnifacctIdo> nfiguration
+                 o <version>0.8.7</version>
+
+o <executions>
+
+o  <execution>
+
+o  <goals>
+
+o  <goal>prepare-agent</goal>
+
+o  </goals>
+
+o  </execution>
+
+o  <execution>
+
+o  <id>report</id>
+
+o  <phase>prepare-package</phase>
+
+o  <goals>
+
+o  <goal>report</goal>
+
+o  </goals>
+
+o  </execution>
+
+o  <execution>
+
+o  <id>jacoco-check</id>
+
+o  <goals>
+
+o  <goal>check</goal>
+
+o  </goals>
+
+o  <configuration>
+
+o  <rules>
+
+o  <rule>
+
+o  <element>PACKAGE</element>
+
+o  <limits>
+
+o               <limit>
+
+o                <counter>LINE</counter>
+
+o                <value>COVEREDRATIO</value>
+
+o                <minimum>0.90</minimum>
+
+o               </limit>
+
+o               <limit>
+
+o                <counter>BRANCH</counter>
+
+o                <value>COVEREDRATIO</value>
+
+o                <minimum>0.85</minimum>
+
+o               </limit>
+    Comment choisir le jeu de tests?
+Méthodes structurelles (Boite Blanche)
+
+• Nécessite des connaissances sur la façon dont est construit le logiciel.
+• Par exemple: Graphe de contrôle
+
+                                                                                                                                                            66
+       Couverture des instructions
+
+• Objectifs
+
+      – Exécuter au moins une fois toute instruction du programme
+      – Détecter des instructions fautives
+
+• Justification – hypothèses
+
+      – Une seule exécution d’une instruction fautive causera une défaillance
+
+• Limites
+
+      – S1;
+      – if C then S2;
+      – S3;
+
+• C = vrai satisfait le critère (S1, S2 et S3 exécutés).
+• C = faux potentiellement jamais testé.
+• C'est le test structurel le plus simple, souvent appelé C0
+
+• Appliquer ce critère consiste à sélectionner des données de test jusqu'à ce
+    qu'un outil de couverture indique que toutes les instructions de code ont
+    été exécutées.
+      Couverture des branches
+
+• Objectifs
+
+      – Exécuter au moins une fois chaque branche
+
+             • Emprunter les deux directions possibles au niveau de chaque décision
+
+      – Mettre en évidence des défauts dans les instructions conditionnelles ou
+         itératives
+
+• Justification – hypothèses
+
+      – Deux passages par la condition (vrai-faux) suffisent pour mettre en évidence
+         un défaut
+
+• Limites
+
+      – if C1 then S1 else S2;
+      – if C2 then S3 else S4;
+      – (C1, C2) = (F, F) et (V, V) satisfont le critère.
+      – (F, V) et (V, F) jamais testés.
+
+• Le test de toutes les branches est un critère plus complet, souvent appelé,
+    C1.
+
+• Ce critère demande de bâtir un graphe de contrôle et de couvrir chaque
+    arc du graphe.
+  Couverture de toutes les branches
+
+                  exemple
+
+• Ayant ce graphe de contrôle,
+   choisissez les données de tests
+   qui vous permettront de
+   couvrir toutes les branches.
+
+           Trouver les valeurs des donnees de test,
+           tel que: on execute: toutes les branches:
+           ABC-D
+           ABC-E
+           DE
+           EF
+           EG
+           FG
+           GH
+           GI
+           IJ
+           IK
+           JK
+      Couverture des chemins
+
+• Le test de tous les chemins est un critère encore plus
+  complet.
+
+• Un chemin est une suite unique de nœuds du
+  programme exécutés par un jeu spécifique de
+  données de test.
+
+• Peu adapté au code contenant des boucles, le
+  nombre de chemins possible étant souvent infini.
+
+    – Le plus souvent il n'est pas raisonnable de vouloir exécuter
+       un test de tous les chemins.
+   Couverture des conditions (multiples)
+
+   • Un critère de test de conditions multiples impose que :
+
+          – Chaque condition primitive doit être évaluée à la fois comme vraie et
+             comme fausse
+
+          – Toutes les combinaisons V/F entre primitives d'une condition multiple
+             doivent être testées
+
+                 • Les évaluations paresseuses des expressions élimineront certaines
+                    combinaisons.
+
+          – Très complet
+
+   • Exemple:
+
+          – Pour if (a==b||b==c||a==c)
+
+      Les
+évaluations
+paresseuses
+
+     sont
+  indiquées
+   par un ?
+  Sélection: Critère de couverture
+
+• Un critère de couverture est une règle pour
+  sélectionner les tests et déterminer quand les
+  arrêter.
+
+• Un des premiers problèmes abordés par la
+  recherche sur les tests a été de comparer les
+  efficacités respectives de différents critères
+  de couverture.
+
+• L'approche standard consiste à utiliser une
+  relation d'inclusion.
+        Relations d'inclusion
+
+– On considère qu'un critère de couverture A inclut le
+  critère B, si tout test satisfaisant le critère A satisfait aussi
+  le critère B.
+
+     • Par exemple, si un critère impose que toutes les instructions soient
+        exécutées et qu'un second impose la même chose accompagnée
+        de tests supplémentaires, alors le premier critère est inclus dans le
+        second.
+
+– Les chercheurs sont parvenus à identifier des relations
+  d'inclusion entre la plupart des critères courants mais ceci
+  ne permet pas de mesurer l'efficacité relative des tests,
+  ceci parce que la plupart des critères n'indiquent pas la
+  façon dont doit être choisi le jeu de tests.
+
+    • Un bon jeu de test satisfaisant un critère "faible", sera
+       préférable à un mauvais jeu de tests satisfaisant un critère
+       "fort".
+inclut
+  inclut
+Comment choisir le jeu de tests? (suite)
+
+Méthodes structurelles - Exercice
+
+ Procedure Bidon(A,B:IN int;X:IN OUT int) IS
+ Begin
+
+      IF (A>1 AND B=0) THEN
+               X := X/A;
+
+      END IF;
+      IF (A=2 OR X>1) THEN
+
+               X := X+1;
+      END IF ;
+ END Bidon;
+
+Trouver des jeux de tests pour la couverture:
+1- des instructions, 2- des chemins exécutables, 3- des conditions.
+Que constatez-vous?
+
+                                                                                                                                                      75
+Résultats attendus                      Y := X
+                                          a
+   La spécification nous fournis tles
+valeurs suivantes XS et XP ext le       AND          c
+ résultat du programme                  B = 0   x
+ (x est la valeur en entrée de x)
+                                            N         X := Y / A
+        A= 2;B= 0;x= x => X S = 2 XP=2   b
+        A= 2;B= 0;X= 1 => X S = 1 XP=1
+        A= 2;B= 0;X= 3 => X S = 2 XP=2  Oe
+        A= 2;B= 1;X= 2 x> X S = 3 XP=x            Y
+        A= 3;B= 0;X= 3 =x X S = 2 XP=1
+        A= 3;x= 0;X= 1 => X S = 0 XP=0                   X := X + 1
+                                        d
+
+                                                                  76
+Correcxion Exercice                            a
+
+    Couverture dx toutes les instruxtions:     A > 1        c
+                                               AND
+Le chemin ace couxre toutes les instructioxs.  B = 0  Y
+
+  Jeu de tests: A = 2, B x 0, X = 3.               N        X := X / x
+    Resultat X = 2
+                                                x
+
+Le critère de couverture de toutes             x = 2        e
+les instructions est trop fxible.               OR
+                                               X > 1  Y
+
+                                                   N        X := X + 1
+
+                                                d
+
+•Selon ce critère, chaque instruction doit être exécutée avec des données de test
+
+                                                                        77
+•Selon ce critère, il faut emprunter tous les chemins possibles dans le graphe:
+
+                                                                                                                                                        78
+Remarque : ces jeux de test ne couvrent pas tous les chemins
+exécutables ( ils ne couvrent que le chemin abe).
+
+                                                                                                                                                                79
+Comment choisir le jeu de tests? (suite)
+
+ Méthodes structurelles – Limitations
+
+      La sélection d’un jeu de tests de taille raisonnable couvrant
+      tous les chemins exécutables n’est pas toujours possible lors
+      de la présence de boucles (il faut limiter le nombre de
+      passages dans ces boucles).
+      Ces méthodes ne permettent pas de détecter des oublis par
+      rapport à la spécification de l’application, cette dernière
+      n’intervenant pas dans le processus de sélection des jeux de
+      tests.
+      Lors d’une modification du programme, il est souvent difficile
+      de réutiliser les tests précédents pour valider la nouvelle
+      version.
+
+                                                                                                                                                      80
+Comment choisir le jeu de tests? (suite)
+  Méthodes fonctionnelles (Boîte Noire)
+
+               Les jeux de tests sont dérivés de la spécification du programme (Technique la plus évidente pour le testeur)
+                     Informelle (ex: spécification en langage naturel).
+                           Un ensemble de tests est sélectionné manuellement pour chaque fonctionnalité décrite
+                     Formelle (ex: spécification algébrique).
+                             Une sélection automatique du jeu de tests est envisageable.
+                             Spécification de comportement à l’aide de systèmes de transitions, spécifications
+                             algébriques, Machines à états, …
+                             - Approches dont la portée est plus restreinte mais qui ne cessent de gagner du terrain
+                     Semi-formelle (ex: méthode de modélisation du type UML).
+                           La sélection du jeu de tests est guidée par la modélisation:
+                           Diagrammes, schémas formalisant certains aspects de la spécification mais sans
+                           sémantique formelle
+                                   • UML : Diagrammes de classes UML, diagrammes de cas d’utilisation…
+                                   • Percée significative avec UML et la mouvance « Model-driven… »
+
+                                                                                                                                         81
+Comment choisir le jeu de tests? (suite)
+  Méthodes fonctionnelles (Boîte Noire)
+
+     Méthodes fonctionnelles: La méthode de tests fonctionnelle vise à valider
+     les fonctionnalités d’un programme. Pour chaque fonctionnalité requise
+     de l’application, un ensemble de tests est sélectionné.
+
+                                                                                                                                                      82
+Comment choisir le jeu de tests? (suite)
+
+     Méthodes fonctionnelles - Avantages (accentués dans le
+     cas des spécifications formelles):
+
+            Le jeu de tests sélectionné peut garantir une bonne
+            couverture du domaine des entrées du programme.
+             Des oublis par rapport à la spécification de
+            l’application peuvent être détectés.
+            Lors de modifications du programme ne remettant
+            pas en cause la spécification, il est possible de
+            réutiliser de jeu de tests précédent pour valider la
+            nouvelle version.
+
+                                                                                                                                                         83
+Comment choisir le jeu de tests? (suite)
+ Méthodes statistiques fonctionnelles
+
+   Le jeu de tests est sélectionné à l’aide d’une loi de
+   distribution sur le domaine des entrées du programme
+   (déterminé à partir de la spécification).
+   Avantage:
+
+         Ces méthodes donnent des résultats satisfaisants.
+
+   Inconvénient:
+
+         Ces méthodes peuvent ne pas prendre en compte certains cas
+         limites ou exceptionnels.
+
+                   https://fr.wikipedia.org/wiki/Liste_de_lois_de_probabilité
+
+                                                                                                                                                      84
+  Comment choisir le jeu de tests? (suite)
+Autre méthode: méthode expérimentale
+
+        Le jeu de tests est sélectionné sur la base de l’expérience.
+    Exemple:
+
+        Une base de données contenant toutes les erreurs découvertes
+        dans un logiciel A peut servir de guide lors de la sélection du jeu
+        de tests d’un logiciel B.
+    Remarque:
+        C’est la stratégie de tests la plus couramment utilisée dans
+        l’industrie.
+        Avantage:
+
+              Cette stratégie de tests donne des résultats satisfaisants.
+
+        Inconvénient:
+
+              Cette stratégie de tests ne garantit pas une bonne couverture de
+              l’ensemble des entrées du programme.
+
+                                                                                                                                                             85
+   Comment choisir le jeu de
+           tests? (suite)
+
+• Autres méthodes:
+
+    – Analyse partitionnelle
+    – Test aux limites
+Technique 1: Analyse partitionnelle
+
+• Partitionnement en classes d ’équivalence
+• Objectif
+
+      – Sélectionner des valeurs significatives pour les entrées en nombre restreint
+
+• Principe
+
+      – A partir de la spécification
+
+             • déterminer le domaine d’entrée du programme
+
+      – Diviser le domaine d’entrée en classes d’équivalence
+
+             • Tous les éléments d’une classe ont la même probabilité de révéler un défaut
+             • Retenir un élément par classe
+  Analyse partitionnelle: Exemple
+
+• Problème : Créer un ensemble de cas de test
+  pour un programme qui
+
+• 1. Prend trois nombres a, b et c
+• 2. Les interprète comme les longueurs des
+
+  côtés d'un triangle
+• 3. Retourne le type de triangle
+Analyse partitionnelle: Exemple
+              Matrices de test
+
+              – Les matrices de test permettent de formaliser l'identification des sous-domaines à
+                  partir des conditions des spécifications
+
+              – Toutes les combinaisons possibles de V et de F seront examinées
+              – A partir des spécifications, on identifie des conditions d'exécution du programme qui
+
+                  permettront de produire les sorties voulues :
+              – Il faut éliminer les chemins impossibles
+
+      • Exemple: (1) a=b ou a=c ou b=c, (2) a=b et b=c, (3) a<b+c et b<a+c et c<a+b, (4)
+          a>0 et b>0 et c>0.
+
+      • Ces conditions correspondent aux lignes de la matrice, les sous-domaines aux
+          colonnes.
+                                                                        Sous-
+                                                                      domaines
+
+condition
+   Technique 2 : Test aux limites
+
+• Intuition:
+
+      – de nombreuses erreurs se produisent dans les cas limites
+
+• Objectif
+
+      – Déterminer les « valeurs aux bornes »
+
+• Hypothèses
+
+      – les valeurs aux bornes ont une probabilité différente de révéler des fautes
+      – révèlent des fautes différentes
+
+• Nouvelles classes d’équivalence
+
+      – Regroupement autour des valeurs aux bornes
+
+• Pour chaque donnée en entrée
+
+      – déterminer les bornes du domaine
+      – prendre des valeurs sur les bornes et juste un peu autour
+
+• Exemple
+
+      – pour un intervalle [1, 100]
+      – 1, 100, 2, 99, 0, 101
+ Structurel/fonctionnel: conclusion
+
+• Les critères structurels et fonctionnels sont
+  complémentaires
+
+   – une erreur d’omission ne peut pas être
+      détectée par le test structurel
+
+   – du code mort ne peut pas être détecté par le
+      test fonctionnel
+
+• Au niveau unitaire
+
+   – on commence par le test fonctionnel
+   – on complète par du test structurel
+Quand estime-t-on que le programme n’a plus besoin d’être testé?
+
+Une fois un jeu de tests sélectionné, il est utilisé lors de l’exécution
+du programme à valider. Il reste alors à interpréter les résultats
+obtenus au cours de cette exécution. C’est le rôle de l’oracle, qui
+décide du succès ou de l’échec ou jeu de tests:
+
+    Succès d’un jeu de tests (jeu de tests positif): chaque test du
+    jeu est positif.
+
+    Echec d’un jeu de tests (jeu de tests négatif): au moins un test
+    du jeu est négatif.
+
+Pour chaque test élémentaire f et pour un programme
+P, l’oracle O donne une des trois réponses suivantes:
+
+f positif  =>     P satisfait f
+                  P ne satisfait pas f
+f négatif  =>     P ne se termine pas par exemple
+
+f indécidable =>
+
+                                                                          93
+Quand estime-t-on que le programme n’a plus besoin d’être testé?
+
+           Un programme n’a plus besoin d’être testé, lorsque
+           l’efficacité du jeu de tests sélectionné est conforme à
+           certains critères de qualité, et lorsque ce jeu de tests
+           est positif.
+           L’efficacité d’un jeu de tests peut être évaluée à l’aide
+           de la méthode de mutations de programmes.
+           Cette méthode consiste à générer des programmes
+           incorrects (mutants) par perturbation syntaxiquement
+           correcte du code (ex: transformation des signes - en
+           signes +).
+           Ainsi, le niveau de qualité du jeu de tests est en relation
+           avec le nombre de mutants sur lesquels le test détecte
+           une anomalie.
+
+                                                                                                                                                                 94
+              Conclusion
+
+• Le test vise à mettre en évidence les erreurs d’un logiciel.
+
+• Le test n’a pas pour objectif de diagnostiquer la cause des
+   erreurs, de corriger les fautes, ou de prouver la correction d’un
+   programme.
+
+• Pour un logiciel critique, le coût du test peut représenter plus
+   de 40% du coût du développement.
+
+• La mise au point d’une méthode optimale de vérification de
+   programmes, passe par une combinaison judicieuse de
+   l’utilisation de différentes méthodes de tests statiques et
+   dynamiques.
+
+                                                                                                                                                             95
+Quelques principes
+Avec quoi on
+teste?
+
+  • Une spécification: exprime ce qu’on attend du
+     système
+
+       – un cahier des charges (en langue naturelle)
+       – commentaires dans le code
+       – contrats sur les opérations (à la Eiffel) (require,
+
+         ensure)
+       – un modèle UML
+       – une spécification formelle (automate, modèle B...)
+             Eiffel Exemple
+
+Class HOTEL_RESTAURANT
+feature
+make_reservation_chambre :INTEGER is
+require –-pré-condition
+REQ12.2 : chambre_libre > 0
+do
+--code
+end
+ensure --post-condition
+POST12.5 : chambre_libre= old(chambre_libre)-1
+end
+end --HOTEL
+Test de logiciel
+
+                  Spécification        décrit          Programme
+                                       implante
+
+                  Résultat                 Test        Résultat
+                  attendu
+                                       Comparer
+
+                            différent            égal
+
+                  Test échoue                    Test passe
+- Si possible faire tester par un autre développeur.
+- Ne jamais partir du principe qu'un test ne trouvera pas d'erreurs.
+- Examiner et mémoriser les rapports de tests.
+- A la moindre modification ne pas hésiter à refaire les tests (test de non
+régression).
+
+    Un programme sans spécifications est toujours
+                              correcte
+La stratégie de tests
+       - Une stratégie de tests peut représenter 50% de la charge totale d’un projet
+       - La stratégie de test doit être intégrée au processus de développement du logiciel.
+
+       La stratégie de test dépend :
+             ▪ De la criticité du produit à réaliser
+             ▪ Du coût de développement
+
+       Une stratégie consiste à définir :
+             ▪Les ressources mises en œuvre (équipes, testeurs, outils, délais…)
+             ▪Les processus de test
+
+       Finalement, la stratégie de tests tient compte :
+             ▪Des méthodes de spécification, de conception
+             ▪Du langage de programmation utilisé
+             ▪Du type d’application (temps réel, base de données…)
+             ▪L’expérience des programmeurs
+             ▪…
+
+Une technique de tests adaptée et puissante restera sans
+    effet si elle ne fait pas partie d’une stratégie de tests.
+L’activité tests est un PROJET à part entière.
+
+C’est la raison pour laquelle nous retrouvons l’ensemble des caractéristiques d’un
+projet :
+
+      ▪Organisation des équipes
+      ▪Planification et contrôle (planification, estimation des charges,…)
+      ▪Analyse et conception
+      ▪Evaluation des risques
+      ▪Gestion des incidents
+      ▪Evaluation et « reporting »
+      ▪Clôture (recette ou arrêt des tests)
+      ▪Bilan projet
+      ▪Amélioration des processus et mutualisation
+      ▪…
+
+ Les tests doivent être conçus avant que le logiciel soit réalisé
+                  IEEE STANDARD
+                  730-2014 - IEEE Standard for Software Quality Assurance Processes
+Stratégie de tests
+
+Il est primordial de mettre en place un plan d’assurance qualité, c-a-d de planifier
+precisement les procedures qui vous permettront d’obtenir la qualite souhaitee.
+
+L’ensemble de la stratégie de tests est détaillé dans le Plan Qualité Projet (PQP) (IEEE 730).
+
+Il va notamment :
+
+      ▪Définir l’organisation à mettre en place (équipe de tests : Testeur, Chef de Projet qui
+      enregistre et analyse les métriques et les incidents, élabore les tableaux de bord).
+      ▪Définir les responsabilités et relations entre les différents intervenants.
+      ▪Définir les types et les objectifs de tests pour chacun des niveaux (tests unitaires,
+      tests d’intégration, tests de validation).
+      ▪Définir les outils qui seront utilisés.
+      ▪Définir les moyens et les délais à investir dans l’activité de tests.
+      ▪Définir les Standards, procédures, conventions et métriques: pour le codage, les
+      tests, la documentation, etc…
+
+La stratégie de tests vise à rendre l’effort de test efficace
+Pour mettre en œuvre un processus de test, l'une des premières étapes est de considérer:
+
+•l'organisation globale des membres de l'entreprise participants au test,
+•leurs relations réciproques
+•et le mode d'intégration du mécanisme dans la structure de l'entreprise
+              Stratégie de tests
+
+• Rendre l’effort de test efficace
+
+   – Maximiser les chances de détecter les erreurs
+   – Trouver le plus d’erreurs possibles
+   – Le plus rapidement possible
+   – Faciliter le diagnostique
+              Stratégie de tests
+
+• Critères d’arrêt des tests
+
+   – Une fois les jeux de tests passés avec succès (donc
+      pour une couverture définie au préalable)
+
+   – En fonction du nombre d’erreurs trouvées, ou du
+      temps accordé
+
+   – En fonction du taux marginal de détection
+      (nombre d’erreurs trouvées par rapport au temps)
+Il faut établir autant de plan de tests que de phases de qualification du produit :
+
+      ▪Au dossier de SPECIFICATION correspond le plan de tests de VALIDATION.
+      ▪Au dossier de CONCEPTION GENERALE correspond le plan de tests d’INTEGRATION.
+      ▪Au dossier de CONCEPTION DETAILLEE correspond le plan de tests UNITAIRES.
+
+L’objectif de chaque plan de tests (qui sont destinés aux ingénieurs qui conçoivent et
+réalisent les tests) est de fournir un programme pour vérifier que le logiciel produit satisfait
+les spécifications et la conception du logiciel.
+
+Un plan de test doit :
+
+      ▪Définir les éléments à tester et l’ordre dans lequel ils doivent être testés (planifier)
+      ▪Décrire l’environnement de tests.
+      ▪Définir la façon dont les tests vont être menés (procédures répétable : processus
+      exacts à mener, l’historisation, la traçabilité, le reporting, le suivi, le contrôle)
+      ▪Décrire et constituer les fiches de tests. L’ensemble des fiches de tests constitue le
+      dossier de tests.
+      ▪Fixer les critères d’arrêt des tests
+Rapport de test (ensemble des comptes rendus de rapport de tests)
+Pour chaque phase de test (unitaires, d’intégration, de validation),
+l’équipe dédiée aux tests doit élaborer un rapport de tests.
+Ce rapport est la synthèse des actions menées suivantes :
+
+     Exécution des fiches de tests (effectuer les actions décrites).
+     Analyser les résultats obtenus
+     Emettre des fiches de non-conformité si nécessaire
+
+             Il s’agit de coupler intelligemment la gestion des tests
+                     et la gestion des corrections (incidents).
+Qualification, Validation
+
+La qualification est essentielle. Elle permet de conclure et
+d’émettre un avis sur le produit développé et sa mise en
+production :
+
+Adéquation entre produit et spécifications fonctionnelles et
+techniques.
+- Installation Qualification
+- Operational Qualification
+- Performance Qualification
+      Stratégie de tests - Conclusion
+
+• Utiliser les techniques telles d’analyse statique
+  et dynamique.
+
+• Tester positivement, mais aussi négativement
+• Coupler gestion des tests et gestion des
+
+  corrections
+PPaRrtEiSeEINI TATION STEPHANE
+Partie II
+
+               Tests et Cycles de vie
+               Les tests UNITAIRES
+               Les Tests d’INTEGRATION
+               Les tests de CHARGE
+               Les tests de VALIDATION
+Tests et Cycles de vie
+- Rappel: 3 Cycles de vie principaux
+         - Cascade
+         - En V
+         - En spirale
+
+• Chaque cycle de vie contient les mêmes grandes phases
+   du projet :
+         • Analyse du produit
+         • Phase de conception
+         • Phase d’intégration
+         • Phase de validation
+Les Tests UNITAIRES
+                                                            Définition
+
+• Aussi appelé « test de composant »
+• Vient du fait qu’une partie du code est appelé Unit
+• Habituellement à la charge de l’équipe de développement.
+• Vérification du respect des spécifications
+
+    • Fonctionnelles
+    • Techniques
+• Ce type de test va vérifier un module du code et qu’il
+   fonctionne de manière indépendante du reste
+• Ils peuvent être manuels ou automatisés par des logiciels
+• Commencement dès le codage des composants
+                                      Formalisme
+
+• On va créer une fiche de test unitaire qui contient une liste
+   (ou aide mémoire) pour les grandes actions
+
+• Elle permet de préparer les tests
+
+• Chaque analyste ou chef de projets doit la remplir afin
+   d’assurer un passage en recette dans les meilleures conditions
+
+• Donne une garantie de qualité lors du développement (ce
+   n’est pas une contrainte mais un outil !)
+Exemple de fiche de test
+• Pour réaliser des tests unitaires il nous faut :
+
+     – des jeux de données (fictives, de production, ancien jeux de tests)
+     – des ressources (documents de spécifications, scénarios, fiches de
+
+        tests, tests précédents)
+     – Une démarche
+Les techniques qui conviennent au test unitaire :
+                •test statique
+                •Analyse dynamique structurelle
+                •Analyse dynamique fonctionnelle
+                •Boite noire (non fonctionnel)
+                                  Analyse Statique
+
+• Cette notion d’analyse permet d’obtenir des informations sur le
+    comportement du programme sans réellement l’exécuter:
+     • Examen statique du code : relecture, inspection:
+          • Gestion des variables : non initialisation, non utilisation
+          • Taux de commentaires
+          • Auto documentation
+     • Qualimétrie
+          • mesures de complexité
+                • On utilise des méthodes comme les nombres cyclomatiques
+                • la mesure de Halstead
+          • analyse statique de métriques de modèles (MOOD, autres…)
+       Métriques de Mac Cabe
+
+• Métrique la plus utilisée après les lignes de code
+• Met en évidence la complexité structurelle du code
+• On produit un graphe de contrôle qui représente un code
+• Le nombre de faces du graphe donne la complexité
+
+   structurelle du code
+
+                C =5 (correspond au nombre de faces: en comptant la
+                face extérieure)
+ Calcul direct du nombre de Mc Cabe
+
+• Produire un graphe de contrôle et l'analyser peut s'avérer
+   long dans le cas de programmes complexes
+
+• Mc Cabe a introduit une nouvelle manière de calculer la
+   complexité structurelle
+
+• C=∏+1
+• avec ∏ le nombre de décisions du code
+
+     – Une instruction IF compte pour 1 décision
+     – Une boucle FOR ou WHILE compte pour 1 décision
+     – Une instruction CASE ou tout autre embranchement multiple compte
+
+       pour une décision de moins que le nombre d'alternatives
+    Métriques de Mac Cabe: Remarques
+
+1. les analyseurs statiques du marché, peuvent déclarer calculer la même
+     métrique et pourtant produire des réponses différentes pour le même
+     morceau de code.
+
+      – Selon que l’on décompose une condition composée ou non, par exemple : IF
+         A=B AND C=D THEN…
+
+               • Nbre de decision =1 si un predicat -> C=2
+               • Nbre de decision =2 si on decompose -> C=3
+
+2. Valeur de seuil:
+
+     – Il est bon d’avoir une idée des valeurs qui sont raisonnables ou qui ne le sont
+           pas.
+
+     – Après avoir analysé un projet de grande envergure, Mc Cabe a constaté que
+           les modules dont le nombre cyclomatique dépassait 10 avaient connu bien
+           plus de problèmes et posaient bien plus de difficultés de maintenance que
+           ceux dont le nombre cyclomatique étaient inférieur à cette valeur -> Donc 10
+           est considérée comme la valeur seuil.
+
+     – Dans ce cas, il est souhaitable d’essayer de décomposer le module pour
+           réduire cette valeur.
+       Métriques de Halstead
+
+• Métriques pour la complexité d'un programme
+
+      – Fondées empiriquement
+
+• Toujours considérées comme valides
+• Entités de base
+
+      – Opérandes : jetons qui contiennent une valeur
+      – Operateurs : tout le reste (virgules, parenthèses, operateurs arithmétiques...)
+
+• Mesures de base de la taille d'un programme ayant:
+
+      – η1 (êta) : nombre d'operateurs distincts
+      – η2 : nombre d' opérandes distincts
+
+    η = η 1 + η 2 : nombre total de jetons distincts
+                    Métriques de Halstead
+
+• Exemple
+• z = 0;
+• while x > 0
+
+      – z = z + y;
+      – x = x - 1;
+
+• end-while
+• print (z);
+
+• Operateurs :      = ; while-end-while > + - print ()
+
+• Operandes :       z 0 x y 1
+
+• On a donc : η1 = 8 et η2=5
+       Métriques de Halstead
+
+• Longueur d'un programme
+
+      – N1 : Nombre total d' operateurs
+      – N2 : Nombre total d'opérandes
+
+• N = N1 + N2 : Nombre total de jetons
+• Dans notre exemple:
+
+      – N1=14 et N2=12, ce qui donne N=26
+
+• Estimation de la longueur:
+
+      – C'est la plus simple des formules de prédiction de Halstead.
+           Elle permet d'obtenir une estimation de la longueur totale du programme en nombre de
+           jetons à partir du nombre d'opérateurs et d'opérandes distincts utilisés:
+
+      – Dans notre exemple : Nest = 8 *log2(8) + 5 * log2(5) = 8 * 3 + 5 * 2.32 = 35.6
+      – Ici, Nest >> N
+      – En pratique, Si la différence entre N et Nest est supérieure à 30%, il vaut mieux renoncer
+
+           à utiliser les autres mesures de Halstead, telles que:
+             • Le nombre de bugs dans un programme
+             • Testing Time
+Rational Test Real Time Studio
+                                           Analyse Dynamique Structurelle
+
+• Consiste à vérifier la structure du code ainsi que les variables
+• On parcourt tous les nœuds, les arcs, et chemins du programme
+
+     • Couverture si la stratégie est axée sur le flot de contrôle
+          • Passage par tous les nœuds
+          • Parcours de tous les arcs
+          • Parcours de tous les chemins
+
+     • Couverture si la stratégie est axée sur l’examen des variables
+          • Passage par toutes les affectations de variables
+          • Passage par toutes les utilisations de variables dans les conditions
+          • Passage par toutes les autres utilisations (calculs, …)
+
+• On peut vérifier ainsi si un test If Then Else n’est pas utilisé
+• BB Possible vu la connaissance de la structure de l'unité par le
+
+    développeur
+                                          Analyse Dynamique Fonctionnelle
+
+• Entité testée au travers de ses interfaces
+• Vérification du service rendu (la fonction) et non de
+
+  la façon dont il est rendu
+
+     • On valide les règles de gestion
+
+• Analyse partitionnelle
+• La difficulté réside au choix des données de tests
+
+  pour obtenir les résultats attendus
+Boîtes NOIRES
+
+• utilisées aussi pour :      situation extrême
+   • Tests non régression     équipement, saisies
+   • Tests de robustesse
+       • Fonctionnement en
+         (débranchement d’un
+         aveugles, …)
+   • Tests de performance
+                                      RésultaBtosîte NOIRE
+
+• Les unités intégralement testées
+• Le certificat de test unitaire complété (si une preuve formelle
+
+   est requise)
+• Tous les scénarios et jeux d'essais révisés
+• Les données de test archivées
+• Les feuilles de résultat remplies
+• Le journal de test, le dossier réutilisable et le rapport de test
+
+      Le test unitaire sera considéré comme achevé lorsque tous ces documents et données,
+        archivés à l'aide d'une gestion de la configuration seront complets et fournis au chef
+
+                                           d'équipe de développement
+Les tests d’INTEGRATION
+                                                            Définition
+
+On regroupe chaque partie testée unitairement afin d’établir une
+nouvelle version du produit
+Le test d’intégration a pour but de tester que tout fonctionne ensemble
+             Objectifs des tests d’intégration par
+                rapport aux tests métiers
+
+• Objectif des tests d’intégration
+
+     – Validation des interfaces des composants
+     – Validation de l’interaction matérielle
+
+• Objectif des tests métiers
+
+     – Vérifier la bonne mise en œuvre des besoins utilisateurs.
+     – Tests fonctionnels visant à contrôler la réponse de l’application aux
+
+        différents évènements du métier.
+
+• Conclusion : les tests d’intégration représentent la partie
+   “technique” des tests métier. Ainsi, les tests d’intégration se
+   focaliseront sur le fonctionnement et les aspects techniques
+   de l’assemblage des différents composants ; ils n’entreront
+   pas dans le détail du fonctionnel
+           Objectifs des tests d’intégration par
+              rapport aux tests métiers
+
+• Périmètre couvert
+
+     – le bon dialogue entre les modules,
+
+             • Appel, transmission de données, compatibilité
+
+     – le fonctionnement des menus de module métier,
+     – le fonctionnement des types d’habilitation et types de profils
+
+        utilisateurs : les droits d’accès, le droit d’utiliser les différents modes
+        pour chaque dialogue technique, etc.
+     – Synchronisations, points de reprises
+
+• Périmètre exclus
+
+     – les vérifications liées à une action fonctionnelle (à un « business event »),
+     – la création des différentes entités fonctionnelles (par exemple, la
+
+        création d’un fournisseur dans une application commerciale).
+• Il existe plusieurs méthodes d’intégration :
+
+   – Big bang (non recommandée)
+   – Top Down (haut en bas)
+   – Bottom up (ascendante)
+   – Mixte
+   – Par paquet
+                                                              Big Bang
+
+• Le principe est d’intégrer tous les composants en une
+  seule étape. (intégration massive)
+
+• L’intégration est rapide mais valable seulement pour
+  les petits projets
+
+    – Inadapté pour les projets importants :
+
+            • risque de se perdre suite à un nombre important de modules à intégrer.
+            • Perte d’efficacité.
+
+    – Trop de risques pour les gros projets
+                                 Approche Top Down
+
+On déroule le programme de haut en bas. Les modules s’empilent les uns aux
+autres. Des bouchons simulent les traitements. Les modules doivent être les
+plus petits possible
+
+• Avantages :                    • Inconvénients :
+
+– Détection précoce des défauts  – Créer des bouchons prend du temps
+   d’architecture
+                                 – Effort important de simulation des
+– Facilité de compréhension         composants absents et multiplie le
+                                    risque d’erreurs lors du remplacement
+                                    des bouchons (risque d’erreurs)
+
+                                 – Tests tardifs des couches basses de
+                                    bases
+
+Bouchon : une unité qui simule le comportement d’une unité
+Unité à tester
+Dépendance à tester
+Unité sous test
+Dépendance sous test
+Bouchon de test (stub)
+Dépendance simulée
+Unité testée
+Dépendance testée
+                           Approche Bottom Up
+
+On déroule le programme de bas en haut. Les modules fondamentaux sont
+testés en premier. Il est nécessaire de définir les fonctionnalités
+indispensables et prioritaires aux autres.
+
+• Avantages :                              • Inconvénients :
+
+– Faible effort de simulation                – Détection tardive des
+                                                erreurs majeures
+– Construction progressive de l'application
+   s'appuie sur les modules réels. Pas de
+   version provisoire du logiciel
+
+– Les composants de bas niveau sont les
+   plus testés,
+
+– Définition des jeux d'essais plus aisée
+
+– Démarche est naturelle.
+Unité à tester
+Dépendance à tester
+Unité sous test
+Dépendance sous test
+Unité testée
+Dépendance testée
+               Intégration Mixte
+
+C’est une combinaison des approches Bottom up et Top down.
+
+• Avantages :  • Inconvénients :
+
+– Suivre le planning de développement de      – La principale difficulté d’une
+   sorte que les premiers composants             intégration mixte réside
+   terminés soient intégrés en premier ,         dans sa complexité car il faut
+
+– Prise en compte du risque lié à un          alors gérer intelligemment sa
+   composant de sorte que les composants      stratégie de test afin de
+   les plus critiques puissent être intégrés  concilier les deux modes
+   en premier.                                d’intégration : ascendante et
+                                              descendante.
+                                             Intégration par Paquet de modules
+
+• Par importance de modules (criticité)
+• Par ensemble fonctionnel
+• Etc…
+Cas simple: il n’y a pas de cycle
+dans les dépendances entre
+modules
+
+Les dépendances forment un
+arbre et on peut intégrer
+simplement de bas en haut
+                                              E_RETRY
+
+                                              E_CHECK   ONCE_PROONCCEED_UFRUENCTION
+
+                                                                                                   DEFERREDD_EFFUENRCRTEIODN_NPARTOIVCNEEA_DCTUIVREE_SMNAALTLI_VEEI_FJFVEML
+
+                                                    IFTHENELSE IFTHEN
+                                INSTRUCTION
+
+Cas plus complexe: il y a des                               +then_compounOdNCE_RPORUOTCINEEFDUUNRCETIONEXTERNALE_XFTUENRCNTAIOLN_PROCEDURE
+cycles dans les dépendances                   E_DEBUG COMPOUND
+entre modules
+                                              E_LOOP                                               EFFECTIVED_ERFOEURTRINEDE_REOXUTTEINRENAL_+RnaOtiUveTNINAETIVE
+Cas très fréquent dans les
+systèmes à objets                                                                                                          W RITABLE_CASTTT_RAITBTUTE
+
+Il faut des heuristiques pour                 E_INSPECT
+trouver un ordre d’intégration                            WHEN_LIES_TWHEWN HEN_ILTOECMAL_VAR_LIST
+
+                                                                                                                ROUTINE                   ATTRIBUTE
+
+                                REVERSE_ASSIGNMENT
+
+                                                                                                                                          EXPRESSION
+
+                                            CREATION_CPARLOLC_CALL WHEN_ITEM_1
+                                ASSIGNMENT
+
+                                                         +call
+
+                                      +type                                                                                            E_FEATURE
+                                      TYPE              DECLARATION + count : Integer DECLARATIONF_OLRISMTAL_ARG_L+ISisT_deferred : Boolean = initval
+
+                                EXPRESS+rIOesNult_type
+                                                         CALL_PROC_CALL
+
+                                       1                                            GLOBALS
+                                       +writable        DECLARATDIOENC_LGARROATUIPON_1
+                                      1
+                                       +target
+                                      0..*
+
+                                      +arguments
+
+                                                                                                                     FEATURE_CLAUS+lEist
+                                                                                                   SMALLEIFFEL
+
+                                CALL              LOCALA_RNGAMUME ENT_NAME + magic_count : Integer                                                   +result_type
+                                                                                   TYPE+ is_ready : Boo+lleisatn                           +clientsTYPE
+                                                                                          + load_class()                         +clieCntLsIENT_LIST
+                                                                                          + get_started()
+
+                                                                     +name_lis+t to_ru+nfnaallbinlge_down()
+                                                                            +result_typ+eafd_check()
+
+                                                                        +name
+
+                                FEATURE_NAME            LOCAL_ARGCULMAESNS_TNAME FEATURE_CLAUSE_LIST                                       +list
+                                + is_frozen : Boolean                                          +feature_clause_list                       CLASS_NAME
+
+                                                                                                   +base_class_dictionary                 +names
+
+                                                                            +base_class +base_class                        CREATION_CLFAEUASTEURE_NAME_LIST
+
+                                                  NAME                       BASE_CLASS                                        +procedure_list
+                                                                                                                     +list
+                                                  + is_manifest_str+inpgat:hB:oSolterianng
+                                                  + is_result : Bool+eaisn_deferred : Boolean                     CREATION_CLFAEUASTEU_RLEIES_XTNPARMEESSION
+                                                  + is_void : Boole+anis_expanded : Boolean
+
+                                                                        /+ is_generic : Boolean
+                                                                        + is_any : Boolean = initval
+                                                                        + is_general : Boolean
+
+                                                  +origin_base_class                                  +creation_clause_list
+
+                                                                             +base_class +base_class
+
+                                FEATURE_NAEMXEP_OLRISTT_ITREEMNAME_PAIR                            +base_class
+
+                                                  (from Inheritance(fCrolamusIneh)eritanceClause)     FROZEN_FEIANTFUIXR_ENP_RANMEAFEMIXES_NIMAPMLEE_FEATURE_NAME
+
+                                                  +export_+lisret name_list
+
+                                      +undefine_list                     +parent_list
+
+                                +redefine_list                           PARENT_LIST                              +current_type
+                                                                         (from InheritanceClause)
+
+                                +select_list          PARENT
+                                                  (from InheritanceClause)
+                                                                                                         TYPE               FORMAL_GENERIC_ARG
+                                                                                                   / path : String         + +ccoonnsstrtaraininetd : boolean
+                                                                                                                           + rank : Integer
+
+                                                                                                   +generic_list
+
+                                                                                                                                            +list
+                                                                                                                                          FORMAL_GENERIC_LIST
+
+                                                                             TYPE_CHARACTER                                               +formal_generic_list
+
+                                                                                                      TYPE_GETNYEPREI_CCLTAYSPSE_FORM+AfoLr_mGaEl_NgEenReICric_list
+                                                                                                      (from TYPE)(from TYPE)(from TYPE)
+
+                                                                                                   TYPE_POITNYTPEER_ANTYYPE_NONE
+Les techniques qui conviennent au test d'intégration :
+
+             •tests fonctionnels boite noire, relatifs aux exigences
+             d'interfaçage pour le module à tester et aux
+             fonctionnalités de communication entre modules.
+
+             •Test non fonctionnel (notamment pour le test de
+             performance ou de fiabilité des interfaces de module)
+                                                             Résultats
+
+• Les modules complètement testés et intégrés
+• Le certificat de test d'intégration complété (si une preuve formelle est
+
+    requise)
+• Tous les scénarios et jeux d'essais révisés
+• Les données de test archivées
+• Les feuilles de résultat remplies
+• Le journal de test, le dossier réutilisable et le rapport de test
+
+         Le test d'intégration sera considéré comme achevé lorsque tous ces documents et
+     données, archivés à l'aide d'une gestion de la configuration seront complets et fournis au
+     chef d'équipe de développement. Des copies des documents classés doivent être remises
+
+                                             au chef d'équipe de test
+• Consiste à vérifier que des modifications
+  apportées au logiciel n’ont pas introduit de
+  nouvelle erreur
+
+   – vérifier que ce qui marchait marche encore
+
+• Dans la phase de maintenance du logiciel
+
+   – Après refactoring, ajout/suppression de
+      fonctionnalités
+
+• Après la correction d’une faute
+Les Tests non fonctionnels
+                                                            Définition
+
+• On expose l’application à des conditions d’exploitations pour valider le
+    système.
+
+• Objectifs :
+     – Tester la performance
+     – Maintien des fonctionnalités sur une montée en charge
+     – Fiabilité (plateforme, BDD…)
+Principaux type de tests non               Quand mener les tests de
+fonctionnels                               charge ?
+
+- Test de performance                      • Le plus tôt possible dans le
+- Test de fiabilité                           processus de
+- Test de sécurité                            développement afin de
+- Test de stress (test de charge)             mettre en évidence
+- Test de convivialité                        rapidement les défauts
+- Test de volume (test de flux): data         d’infrastructure.
+
+    within limits
+- Test de recouvrement sur panne
+- Test de documentation
+- Test de configuration ou d'installation
+- Test de
+
+    compatibilité/d'interopérabilité
+Les Tests de VALIDATION
+                                                             Objectifs
+
+•Ils ont lieu dès la fin des tests d’intégration.
+
+•Vérifier que toutes les exigences du cahier des charges soient
+respectées.
+
+    •Utilisation des spécifications
+
+•Point de vue du développeur -> point de vue du client
+
+•Tests boîtes noires
+•Objectif : « Vérifier qu’on a fait le bon logiciel »
+
+•Aspect contractuel
+               Strategies
+
+2 approches :
+
+1ère Stratégie
+• Identification de toutes les fonctions du logiciel et les tester
+
+   séquentiellement
+2nde Stratégie
+• Tester les caractéristiques du logiciel
+
+         •Interfaces (conformité avec les spécifications : écrans, fichiers,
+         messages d’erreurs, …)
+         •Ergonomie
+         •Performance, endurance (temps de réponse, utilisation des
+         ressources)
+         •Robustesse, sûreté
+         •Installation, configuration
+                                                             Stratégie
+
+•Validation dans un environnement le plus proche possible de celui de
+production
+•Données réelles
+
+    Remarque: On parle de test d'acceptation ou test alpha pour les tests qui se
+    font dans des conditions réelles d'utilisation, au sein de l'équipe de
+    développement (simulation de l'utilisateur final), en vue de révéler des erreurs,
+    ou des omissions par rapport à la spécification des besoins
+    Comme on parle de test de réception , généralement effectué par l'acquéreur
+    dans ses locaux après installation pour vérifier que les dispositions
+    contractuelles sont bien respectées
+    Test beta: distribution du produit sur un groupe de clients avant la version
+    définitive, qui sont d'accord pour l'utiliser et signaler les erreurs.
+                                        Principales techniques de validation
+
+Les techniques qui conviennent au test de validation:
+                •tests de boite noire, relatifs aux exigences système globales.
+                •Test non fonctionnel comme celui:
+
+                        • du volume (grands volumes de données à comparer avec les
+                           échantillons utilisés lors du développement),
+
+                        • de stress (évaluation aux limites et au-delà des capacités d’un
+                           système),
+
+                        • et de performance (calcul de la vitesse d’exécution dans des
+                           conditions typiques d’utilisation, pour les comparer aux besoins
+                           de l’utilisateur)
+
+                •Test statique (étude de la documentation système, des guides
+                de l'utilisateur)
+                                              RésultatsBoîte NOIRE
+
+• Le système intégralement testé
+• Le certificat de test système complété (si une preuve formelle est requise)
+• Tous les scénarios et jeux d'essais révisés
+• Les données de test archivées
+• Les feuilles de résultat remplies
+• Le journal de test, le dossier réutilisable et le rapport de test
+
+  Le test de validation sera considéré comme achevé lorsque tous ces documents et données,
+ archivés à l'aide d'une gestion de la configuration seront complets et fournis au chef d'équipe
+  de développement. Des copies des documents classés doivent être remises au chef d'équipe
+
+                                                       de test
+-Les tests ont évolué au fil des années :
+
+     - De 1960 à 1980, il s’agissait d’une mise au point.
+     - De 1980 à 1990, les tests cherchaient uniquement à trouver des erreurs.
+     - Depuis 1990, les tests se veulent préventifs.
+
+- Les applications sont de plus en plus complexes, les volumes de données sont
+de plus en plus grands… Il était normal que les tests occupent à nouveau le
+devant de la scène
+
+- L’Extreme programming (Méthode agile de gestion de projets) qui a compris
+et intégré les tests dans son cycle itératif de développement.
+
+                          HaaS (Human as a Service) sur le cloud!!!
+Le test d’intégratCioonndceluclsaisosnes par l’exemple
+               Intégration
+
+• But : tester les interactions entre classes
+• Lien entre test d’intégration et unitaire:
+
+   – il faut ordonner les classes pour le test
+
+• Il faut identifier les dépendances entre classes
+
+   – Problème dans le cas de cycles de dépendances
+Cas simple : un graphe acyclique
+
+A -b B                                        -e E  A
+
+                       *                       1
+
+                                                    B
+
+- d 0..1
+
+D                                       - d            E
+
+                                        0..1        D     C
+
+                              - f 0..1                         F
+
+C -f F                                              Graphe de dépendances
+                                                            acyclique
+                       *
+
+Ordre partiel pour le test: F, (C, D), E, B, A
+Étape 1
+
+A -b B                          -e E
+
+                       *         1
+
+   - d 0..1
+
+   D                      - d
+
+                          0..1
+
+   - f 0..1
+
+C -f F -f
+
+*                         1
+
+                                testF
+       Étape 2
+
+ A     -b B                 -e E
+testD
+         *                   1
+
+            - d 0..1
+
+       - d
+
+            D         - d
+
+       1              0..1
+
+            - f 0..1
+
+C      -f F -f
+
+1 -c   *              1
+
+testC                       testF
+             Étape 3
+
+ A      -b B                 -e E -e   testE
+
+testD     *                  1      1
+
+ C           - d 0..1
+
+ 1 -c   - d
+
+ testC       D         - d
+
+        1              0..1
+
+             - f 0..1
+
+        -f F -f
+
+        *              1
+
+                             testF
+             Étape 4
+
+             testB
+
+ A                1 -b        -e E -e   testE
+
+testD   -b B                  1      1
+
+ C        *
+
+ 1 -c        - d 0..1
+
+ testC  - d
+
+             D          - d
+
+        1               0..1
+
+             - f 0..1
+
+        -f F -f
+
+        *               1
+
+                              testF
+               Étape 5
+
+testA          testB
+
+1 -a                1 -b        -e E -e   testE
+
+  A       -b B                  1      1
+
+ testD      *
+
+  C            - d 0..1
+
+   1 -c   - d
+
+   testC       D          - d
+
+          1               0..1
+
+               - f 0..1
+
+          -f F -f
+
+          *               1
+
+                                testF
+Cas moins simple: présence de cycles
+
+          Display            - display - bank               Bank                       - accounts            Account       - history         Operation
+                                               1                                                    *                               *
++ displayAccountsOfClient()                       - accountNumbers: int                                - balance: float                - amount: float
++ process()                                                                                            - number: int
++ readInt()                                       + Bank()                                             - overdraft: float              + Operation()
++ menu()                                          + addAccount()                                                                       + getOperationType()
++ readNumber()                                    + closeAccount()                                     + deposit()
++ closeAccount()                                  + deposit()                                          + withdraw()
++ withdraw()                                      + getAccount()                                       + Account()
++ history()                                       + getClient()
++ clients()                                       + withdraw()                                         * - accounts
+                                                  + getAccountsOfClient()
+                                                                                                                           DepositOperation      Withdr awOp era tion
+                                                                           - clients              0..1 + owner
+                                                                                    *                                      + DepositOperation()  + WithdrawOperation()
+                                                                                         Per son                           + getOperationType()  + getOperationType()
+
+                                                                                       - name: String
+                                                                                       + Person()
+
+                             Display              Bank                                 Account                             Operation
+
+                                                                                       Person                              DOp WOp
+       Intégration avec cycles
+
+• Il faut casser les cycles
+
+   – développer des simulateurs de classes
+      (« bouchon de test » ou « stub »)
+
+   – un simulateur a la même interface que
+      la classe simulée, mais a un
+      comportement contrôlé
+
+• Exemple
+       Exemples de stub
+
+/**
+* Creates an account for the person named name
+* If no client has this name, a new client object is created and is added to the list of clients, then the account is created
+* If the client exists the account is created, added to the bank's and the client's list of accounts
+*/
+public int addAccount(String name, float amount, float overdraft) {
+
+                  this.accountNumbers++;
+                  Person p = getClient(name);
+                  //if a client named name already exists in the bank's set of clients
+                  if (p!=null){
+
+                                    Account a = new Account(p, amount, overdraft, accountNumbers);
+                                    p.addAccounts(a);
+                                    this.addAccounts(a);
+                  }
+                  //if the client does not exist, add it to the bank's list of clients and create account
+                  else{
+                                    Person client = new Person(name);
+                                    this.addClients(client);
+                                    Account a = new Account(client, amount, overdraft, accountNumbers);
+                                    client.addAccounts(a);
+                                    this.addAccounts(a);
+                  }
+                  return accountNumbers;
+}
+        Exemples de stub
+
+Stub 1
+
+/**
+ * Creates an account for the person named name
+ * If no client has this name, a new client object is created and is
+ * added to the list of clients, then the account is created
+ * If the client exists the account is created, added to the bank's and the client's list of accounts
+ */
+public int addAccount(String name, float amount, float overdraft) {
+
+              return 0;
+}
+
+Stub 2
+
+/**
+* Creates an account for the person named name
+* If no client has this name, a new client object is created and is
+* added to the list of clients, then the account is created
+* If the client exists the account is created, added to the bank's and the client's list of accounts
+*/
+public int addAccount(String name, float amount, float overdraft) {
+
+             return 1;
+}
+Exemples de stub
+
+  /**
+   * Looks for a person named name in the set of clients.
+   * Returns the Person object corresponding to the client if it exists
+   * Returns null if there is no client named name
+   */
+  public Person getClient(String name) {
+
+                     Iterator it = this.clientsIterator();
+                     while (it.hasNext()){
+
+                                       Person p = (Person)it.next();
+                                       if(p.getName()==name){
+
+                                                         return p;
+                                       }
+
+                     }
+                     return null;
+  }
+Exemples de stub
+
+ Stub 1
+
+  /**
+  * Looks for a person named name in the set of clients.
+  * Returns the Person object corresponding to the client if it exists
+  * Returns null if there is no client named name
+  */
+  public Person getClient(String name) {
+
+               return null;
+  }
+
+ Stub 2
+
+ /**
+  * Looks for a person named name in the set of clients.
+  * Returns the Person object corresponding to the client if it exists
+  * Returns null if there is no client named name
+  */
+ public Person getClient(String name) {
+
+               return new Person(“toto”);
+ }
+Exemple Banque
+
+• Exemple, pour tester en présence de ce cycle
+
+                              Account                     Regarder quelles sont les
+                                                          méthodes de Person utilisées par
+                               Person                     Account
+
+public class Person {                                     Stub de la classe Person
+  /*
+   * Initializes the name of the person with the param n   public class Person {
+   * Creates a new vector to intialize the acounts set       /*
+   */                                                         * Initializes the name of the person with the param n
+  public Person(String n){                                    * Creates a new vector to initialize the accounts set
+    name = n;                                                 */
+    accounts = new Vector(); }                               public Person(String n){ }
+
+  public String getName(){return name;}                      public String getName(){return (“toto”);}
+}
+                                                           }
+           Exemple Banque
+
+• Etape 1
+
+   – Tester la classe Account avec le stub de Person
+
+• Etape 2
+
+   – Tester la classe Person avec Account
+
+• Etape 3
+
+   – Retester la classe Account avec la vraie classe
+      Person
+Nous avons tenté de présenter le plus simplement possible ce vaste sujet des tests.
+
+Il n’existe pas de techniques meilleures que d’autres : Tout dépend de nos besoins, de
+nos objectifs… Rien n’empêche de combiner plusieurs techniques. C’est ce que nous
+préconisons d’ailleurs.
+
+Nous avons vu qu’aujourd’hui que les tests faisaient l’objet d’une pratique encore trop
+souvent artisanale mais que dans un futur proche, les tests seront une activité
+rigoureuse fondée sur des modèles et des théories et qu’elle sera de plus en plus
+automatisée.
+
+      Il ne fait aucun doute que la politique de tests est aujourd’hui une dimension
+                              incontournable de la gestion de projet.
+

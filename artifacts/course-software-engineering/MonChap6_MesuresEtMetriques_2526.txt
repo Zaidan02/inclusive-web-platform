@@ -1,0 +1,1336 @@
+                                                                                                                                 1
+
+Chapitre 6- Mesures et Métriques
+L'analyse du logiciel
+
+ Analyse quantitative
+
+    Métrologie
+
+ Analyse qualitative
+
+    Revues d'architecture
+    Revues de code
+
+       ◼ Automatisées (outils comme PMD)
+       ◼ Manuelles
+
+ Enfin, sélection des candidats au refactoring
+Analyse du logiciel
+
+                   Analyse qualitative
+Analyse qualitative
+
+    Consiste à effectuer une série de revues du logiciel, la
+     plupart du temps manuellement.
+
+       ◼ L'analyse quantitative étant loin d'être évidente et efficace,
+         mais elle permettra de cibler les revues sur les points
+         sensibles du logiciel, celui-ci ayant souvent atteint une telle
+         taille qu'une revue complète est impossible.
+
+    Ces revues seront des:
+
+       ◼ Revues d'architecture
+       ◼ Revues de code
+
+             ◼ Automatisées (outils comme PMD)
+             ◼ Manuelles
+Les revues d'architecture
+
+ Consistent à analyser la structuration des composants du
+   logiciel de manière à détecter d'éventuels points
+   d'inefficience pouvant être corrigés par refactoring.
+
+ Doit rester relativement macroscopique, les revues de code
+   traiteront les détails.
+
+ Pour analyser cette structuration, il est nécessaire de se
+   fonder sur la documentation, qui est souvent
+   désynchronisée par rapport aux évolutions du logiciel.
+
+     L'architecture d'un logiciel peut être représentée efficacement
+      par les diagrammes UML, faciles à obtenir par reverse
+      engineering. Ces diagrammes permettront d'identifier
+      beaucoup d'inefficiences.
+Les revues d'architecture
+
+ La principale difficulté, est de détecter ces inefficiences, vu qu'elles
+   dépendent du contexte du logiciel et du périmètre fonctionnel qu'il
+   couvre.
+
+     Des problèmes génériques ont néanmoins été formalisés et fournissent une
+        bonne base pour analyser la qualité d'un logiciel.
+
+ Pour le refactoring ce ne sont pas les qualités, mais les défauts que nous
+   cherchons à identifier.
+
+ Les anti-patterns, c.-à-d. les fausses solutions à de vrais problèmes (url du
+   catalogue: http://c2.com/cgi/wiki?AntiPatternsCatalog) peuvent aider à
+   identifier ces défauts et à les corriger par refactoring.
+
+     Antipatterns = leçons par la négative pour la réussite de vos projets.
+
+ Les problèmes détectés sont très difficiles à corriger, car ils touchent à la
+   conception même du logiciel.
+
+     Malheureusement, pour ce genre de problème, il faut effectuer une réécriture
+        complète.
+Quelques anti-patterns touchant
+l'architecture d'un logiciel
+
+ Le marteau en or
+ Les machines de Rube ColdBerg
+ Réinventer la roue
+ Les dépendances cycliques
+Le marteau en or
+
+ Toute nouvelle technologie est attrayante:
+
+     Elle se destine à régler beaucoup de problèmes
+     Mais elle est mal maitrisée et souvent mal utilisée
+
+         ◼ "C'est un peu comme quand on offre un marteau et qqes clous en plastique à
+            un enfant. Apres les clous, tous les objets deviennent une cible potentielle"
+
+ Dans le monde Java/J2EE, les EJB (Enterprise Java Beans) ont été comme
+   un marteau en or:
+
+     Destinés à être le Graal des composants d'entreprise, en dissociant les aspects
+        techniques (sécurité, transaction, persistance, etc.) des aspects fonctionnels,
+        réduits à leur plus simple expression, c.-à-d. presque programmables par des
+        non-informaticiens.
+
+     Mal maitrisés et mal conçus, ils ont malheureusement abouti à des résultats
+        désastreux.
+
+ Dans une revue d'architecture, il est utile d'identifier l'utilisation de
+   marteaux en or, qui constituent des sources de complexité inutiles pour les
+   besoins du logiciel,
+
+     Il faut quand même reconnaitre que leur utilisation est souvent si
+        profondément liée au code du logiciel, que leur éradication peut être longue
+        et couteuse.
+  Les machines de Rube ColdBerg
+
+9
+
+ Rube ColdBerg (1883-
+    1970) était un
+    cartooniste de talent,
+    dont une des spécialités
+    était de dessiner des
+    machines d'une
+    complexité extrême (ses
+    inventions) pour réaliser
+    des tâches simples ou
+    absurdes.
+Les machines de Rube ColdBerg
+
+ La revue d'architecture doit être l'occasion de prendre du recul
+   par rapport aux services que doit rendre le logiciel et
+   d'identifier les machines de Rube Goldberg crées à cette fin.
+
+ De telles "machines" peuvent apparaitre tardivement dans le
+   logiciel du fait d'une certaine dégénérescence faisant suite à
+   de multiples évolutions non maitrisées (les fameuses
+   rustines).
+
+ Le cout d'éradication varie fortement d'une machine à une
+   autre. Tout dépend de sa portée dans le logiciel. Une étude
+   d'impact précise doit être menée pour bien estimer les
+   conséquences d'un tel remplacement.
+Réinventer la roue
+
+ Réinventer la roue est extrêmement couteux pour les projets
+   informatiques.
+
+     Cela demande non seulement un investissement lors de la première
+       version du logiciel mais des couts de maintenance dans les suivantes.
+
+     C'est une occasion manquée pour la réutilisation.
+
+ L'origine= méconnaissance de la part des développeurs des
+   API à leur disposition (JEE ou autres)
+
+     C'est une des problématiques adressées par les méthodes agiles que
+       de favoriser la communication au sein des équipes afin de partager
+       les connaissances.
+
+ Lorsque la roue est complexe et mobilise inutilement vos
+   ressources, la remplacer par un produit extérieur.
+
+     Opération qui peut se révéler couteuse.
+        ◼ Dans le cas des couches basses, les remplacer revient
+          généralement à remplacer les fondements d'un bâtiment.
+Les dépendances cycliques
+
+ Les dépendances cycliques rendent le code difficile à
+   comprendre, et sa maintenance difficile.
+
+     Modification d'une classe -> effet de bord sur les autres.
+
+ Le plugin Eclipse Metrics (consacré à l'analyse quantitative)
+   permet par exemple, de détecter graphiquement les
+   dépendances cycliques
+Les revues de code
+
+ Nécessaires à tout projet de refactoring.
+ Peuvent être automatisées en partie, mais
+
+  nécessitent toujours le jugement humain pour
+  déterminer si le code doit être refondu ou non.
+ Les techniques précédentes sont macroscopiques et
+  ne permettent pas de juger "sur pièces" de
+  l'opportunité de procéder au refactoring.
+Les revues de code automatisées
+
+ Il existe plusieurs outils, commerciaux ou Open Source,
+   capables d'analyser le code d'un logiciel pour identifier de
+   mauvaises pratiques de programmation.
+
+     Bien sûr, leur capacité est limitée
+       ◼ Ne permettent de détecter que les problèmes simples, mais très
+          fréquents.
+
+     Leur fonctionnement est fondé sur un ensemble de règles
+      auxquelles sont confrontés toutes les lignes de code source.
+       ◼ Ces règles sont fournies en standard avec l'outil et dérivent de
+          bonnes pratiques de développement définies par exemple par
+          Sun, ou la communauté Java.
+
+               ◼ Elles peuvent être paramétrées (définir la longueur max d'une ligne de
+                  code) ou même être définies par l'utilisateur.
+Les revues de code automatisées
+
+ Parmi les problèmes typiquement détectés par ce type d'outils:
+     Code mort: variables ou paramètres inutilisés, importations de package
+       inutiles.
+     Règles de nommage: respect des bonnes pratiques dans le nommage
+       des différentes entités (classes, méthodes, packages, variables)
+     Règles de formatage du code: lignes de code trop longues, etc…
+     Règles sur la taille du code: classes ou méthodes trop longues, liste de
+       paramètres excessives, etc.
+     Règles sur la gestion des exceptions: clauses catch sans contenu,
+       utilisation abusive de la classe Exception, etc.
+     Règles sur la documentation javadoc: vérification de la présence de
+       documentation, vérification de l'exhaustivité de la documentation, etc.
+     Exemple de rapport avec PMD dans le slide suivant:
+PMD : exemple d'alertes
+Les revues de code automatisées
+
+ Les problèmes détectés avec ce type d'outils sont simples à corriger,
+   peuvent même l'être de manière automatique (typiquement le
+   formatage de code)
+
+ Il est donc intéressant dans le cadre d'un projet de refactoring de
+   prévoir la correction de tous ces problèmes.
+
+ Important: Ce genre d'outils génèrent un nombre colossal d'erreurs, vu
+   que certaines règles peu critiques peuvent générer beaucoup de
+   bruit.
+     Ceci peut être décourageant pour les programmeurs
+
+ Il est donc essentiel pour réussir la mise en œuvre de ce genre d'outils
+   de configurer intelligemment les règles de manière à adresser les
+   problèmes critiques en premier.
+
+ PMD offre un grand nombre de règles et permet de définir ses propres
+   règles soit en java, soit avec XPath.
+
+ Le détecteur de dupliquas fourni par PMD permet de détecter les
+   duplications (copier-coller) de code.
+PMD: configuration des règles
+Les revues de code manuelles
+
+ Consistent tout simplement à lire le code.
+ Idéalement doivent être menées par une ou plusieurs personnes d'expérience extérieure
+
+    au projet.
+ La revue de code, doit confirmer les problèmes potentiels détectés par les autres
+
+    méthodes.
+ Ce processus peut être géré grâce à des outils s'intégrant à des IDEs comme netbeans
+
+    ou Eclipse (plugin Jupiter).
+
+      En définissant les keywords qui représente une tâche à faire
+      Et grâce à Window -> Task List on visualise ces Tasks
+
+                                                               La proposition de révision (Pull
+                                                               Request) est l'action qui consiste
+                                                               à demander à un ou plusieurs
+                                                               reviewers d’accepter les
+                                                               modifications que vous avez
+                                                               apportées sur votre branche
+                                                               avant de la fusionner dans une
+                                                               autre
+Les revues de code manuelles
+Eclipse: Plugin Jupiter
+
+ Découpe le processus de revue de code en 3 phases:
+
+     La phase individuelle -> lire le code et l'annoter pour indiquer les
+       problèmes détectés.
+
+         ◼ Par un simple clic sur un menu contextuel ->Add Review issue, choisir a
+            partir d'une liste le niveau de sévérité, etc.
+
+     La phase équipe -> passer en revue tous les problèmes détectés et
+       décider s'ils doivent être corrigés ou non. C'est le chef de projet qui
+       doit faire dans ce cas l'affectation d'une correction à un développeur.
+
+     La phase de correction: chaque développeur consulte sa liste et
+       effectue les corrections.
+
+ Pour un même projet Eclipse, Jupiter peut gérer plusieurs
+   revues, chacune ayant un identifiant unique -> peut servir
+   comme outil de gestion de projet pour le refactoring.
+Analyse du logiciel
+
+                  Analyse quantitative
+L'analyse quantitative du logiciel
+
+ La métrologie est un domaine en phase de maturation
+ Elle fournit des indicateurs sur le logiciel qui pointent sur
+
+  d'éventuelles inefficiences dans le logiciel, dont
+  l'existence réelle doit être vérifiée en effectuant une
+  revue de code (analyse qualitative).
+ Les fondements de ces indicateurs sont souvent très
+  empiriques.
+    Ils sont donc parfois générateurs de fausses alarmes,
+
+     tandis que des zones à refondre peuvent leur
+     échapper.
+Notion d'unité et de référence
+
+ Au-delà de la notion d'unité, il est important d'avoir
+  des références:
+
+    Une mesure sans élément de comparaison est
+     rarement utile pour juger des qualités de l'objet
+     mesuré.
+
+       ◼ Dans le cadre du logiciel, dire qu'un outil de conversion de
+         monnaie contient mille lignes de code, ne donne pas
+         beaucoup d'indication sur les qualités de ce logiciel.
+
+       ◼ Il faut le comparer à un logiciel de même type pour
+         pouvoir donner un sens à la mesure.
+Le processus de mesurage
+
+1. Définition des objectifs du mesurage
+
+  1. Quoi (pas d’objectif trop large)
+
+2. Définition de la méthode de mesurage
+
+  1. Comment, outils. Etc…
+
+3. Application de la méthode de mesurage
+
+  1. Tenir compte du contexte, calibrage des outils
+
+4. Analyse des résultats de mesurage
+
+  1. Par comparaison
+Le processus de mesurage
+
+1. Définition des objectifs du mesurage
+
+   a. Un objectif trop large (comme par exemple si le
+       logiciel est de bonne qualité, ne saurait être couvert
+       par une seule méthode de mesure)
+
+2. Définition de la méthode de mesurage
+
+   a. Bien connaître ce qui est mesuré
+
+             Ex: si la propriété mesuré est "le nombre de lignes de code", alors
+                  répondre aux questions suivantes: les lignes blanches, les lignes
+                  de commentaires, les délimiteurs de blocs doivent-ils être
+                  comptés?
+
+   b. Et comment le mesurage est effectué: les moyens, les
+       outils, etc…
+Le processus de mesurage
+
+3. Application de la méthode de mesurage: Il faut
+     commencer par vérifier et calibrer les instruments de
+     mesurage:
+
+    a. Ex: un outil de mesure de performances Application Web, doit
+         être testé sur une page Web vide, et dans l'environnement le
+         plus stable (réseau, serveur, etc.…)
+
+    b. Certains instruments de mesure peuvent avoir un effet sur la
+         propriété observée (ex: les sondes qui permettent d'observer
+         le taux d'utilisation du processeur, consomment elles-mêmes
+         les ressources du processeur).
+         La connaissance de ces effets permet de calibrer l'instrument
+         de manière à produire les résultats les plus proches de la
+         réalité.
+Le processus de mesurage
+
+4. Analyse des résultats de mesurage: En
+    confrontant les mesures obtenues à des références
+    afin de tirer l'information sur la propriété de
+    l'objet observé.
+
+   a. Les références peuvent avoir différentes origines:
+
+       • Standards industriels, meilleures pratiques issues
+           d'études empiriques, valeurs optimales issues d'études
+           scientifiques, etc.
+La métrologie logicielle
+
+ La métrologie logicielle est à l'état embryonnaire.
+     La notion d'unité est très peu formalisée (ex : lignes de code)
+     Les références de comparaison empiriques
+     Les évolutions technologiques ne facilitent pas la tache, pour chaque
+       nouvelle technologie il faut de nouvelles références.
+
+         ◼ Par exemple la notion de performance a été complètement bouleversée par
+            l'augmentation de la puissance des microprocesseurs, et des architectures
+            parallèles.
+
+ En dépit, de leur faiblesse, les métriques sont utiles dans la mesure ou
+   elles peuvent remonter des points d'attention, qu'il conviendra de
+   vérifier par une revue de code.
+
+ De plus elles ne permettent pas de détecter tous les problèmes.
+Différents types de mesure
+
+ Les mesures des dimensions           Les mesures des risques
+   du logiciel
+                                           La complexité cyclomatique
+     Dimensions globales                  La profondeur du graphe
+
+        ◼ Nombre de lignes de code            d'héritage
+           source                          Le couplage
+                                           La profondeur d'imbrication des
+        ◼ Nombre de packages
+                                              blocs de code
+        ◼ Nombre de classes et
+           d'interfaces                Les mesures de cohérence
+
+     Les dimensions d'une classe ou       La cohésion d'une classe
+        d'une interface                    L'indice de spécialisation d'une
+
+        ◼ Nombre de méthodes                  classe
+                                           L'instabilité d'un package
+        ◼ Nombre de méthodes
+           redéfinies                  Les mesures de qualité du
+                                         logiciel
+        ◼ Nombre d'attributs
+                                           Le nombre d'anomalies
+        ◼ Nombre de descendants            Les changements
+           directs/indirects
+                                       Les mesures de performance
+Les mesures des dimensions du logiciel
+
+ Mesures les plus simples à obtenir, mais comme bq de mesures
+   logicielles varient d'une technologie à l'autre.
+
+     Les dimensions d'un logiciel développé à l'aide d'un langage orienté
+       objet, ne sont pas tout à fait les mêmes que celles d'un logiciel
+       développé à l'aide d'un langage procédural (la notion d'objet faisant
+       apparaitre de nouvelles dimensions).
+
+     De surcroît, de plus en plus de logiciels reposent sur plusieurs
+       technologies, ex: les technologies web avec JavaScript, XML, XSL, etc.
+       qui apportent chacune leurs propres dimensions.
+
+     Les unités utilisées pour ces différentes dimensions n'ont pas le même
+       poids. Ex: une ligne de code source écrite dans un langage de 4eme
+       génération a beaucoup plus de "puissance" qu'une ligne de source en
+       assembleur.
+
+ Il est donc primordial de savoir ce que l'on mesure et comment,
+   pour pouvoir exploiter efficacement les résultats.
+ Les dimensions globales
+
+ Tel que le nombre de lignes de code source, le nombre de
+   packages, le nombre de classes et d'interfaces
+
+ Offrent une vision macroscopique
+    Ne sont pas de très bons indicateurs pour détecter par
+      exemple les zones du logiciel à inclure dans le refactoring, sauf
+      quand elles prennent des valeurs extrêmes ou sans rapport
+      avec la nature du logiciel.
+    Cependant, en historisant les dimensions d'une version à l'autre
+      du logiciel, et en les comparant avec les évolutions
+      correspondantes, il est possible de détecter certains
+      phénomènes macroscopiques dénotant une érosion de
+      l'architecture du logiciel.
+
+        ◼ Ex: le cas de la croissance inexplicable du nombre de lignes de code du
+          logiciel, à la suite d'une évolution mineure.
+Le nombre de lignes de code source
+
+ La plus simple à mesurer , mais pose un certain nombre de problèmes.
+
+     Qu'est-ce qu'une ligne de code source
+     Quelle est la puissance d'une ligne de code source
+     Comment compter les lignes dans un logiciel intégrant différentes technologies?
+
+ Malheureusement: Pas de réponse unique!!
+ Au niveau de l'ensemble du logiciel, c'est une métrique non utilisable
+
+   pour détecter les cibles de refactoring, par contre au niveau d'une
+   certaine partie du logiciel, telle que par exemple une classe Java, ca
+   permet de détecter certains problèmes, à condition d'avoir des références.
+
+     Par exemple, dans le cadre de l'implémentation d'un algorithme de tri, il est
+        possible de détecter si le nombre de lignes de code est cohérent avec la
+        complexité de l'algorithme.
+
+ Les mesures historiées couplées aux évolutions du logiciel constituent aussi
+   de bonnes références pour l'interprétation de cette métrique:
+
+     Par exemple une classe Java ayant fortement augmenté en nombre de lignes de
+        code sans corrélation évidente avec l'évolution du logiciel, peut être devenue
+        une classe "poubelle" et nécessiter une refonte.
+Le nombre de packages
+
+ C'est un indicateur de regroupement des composants du
+   logiciel en des entités organisationnelles.
+
+ Les packages ayant une sémantique importante et non
+   quantifiable, cet indicateur n'est pas d'une grande aide
+   pour savoir si le regroupement est pertinent ou non.
+
+ Cette métrique est utilisée pour détecter des valeurs
+   extrêmes (petites ou grandes) injustifiables du point de
+   vue de la nature du logiciel:
+
+     Ex: un seul package pour un logiciel de traitement de texte.
+Nombre de classes et d'interfaces
+
+ Comme le nombre de packages, cet indicateur ne permet
+   pas de juger réellement de la pertinence des classes et
+   interfaces comptées.
+
+ Mais en comptant ce nombre pour un domaine
+   fonctionnel particulier, il est possible d'estimer s'il est
+   cohérent par rapport à la richesse du domaine.
+
+ On peut aussi comparer la différence entre les classes du
+   logiciel, et celles ayant été modélisées lors des phases de
+   conception successives.
+
+     Une forte déviation peut indiquer:
+       ◼ soit une mauvaise synchronisation entre la conception et la
+          réalisation,
+       ◼ soit l'existence de classes développées de manière opportuniste
+          et non optimale.
+Les dimensions d'une classe ou d'une
+
+interface
+
+ Utilisées comme base pour les mesures de risques
+  abordées plus loin dans ce chapitre.
+
+ Comme les valeurs précédentes, elles ne sont
+  pertinentes que dans la recherche des valeurs
+  extrêmes ou incohérentes par rapport à la
+  complexité fonctionnelle correspondante.
+
+ 4 dimensions:
+
+        ◼ Nombre de méthodes
+        ◼ Nombre de méthodes redéfinies
+        ◼ Nombre d'attributs
+        ◼ Nombre de descendants directs/indirects
+Les dimensions d'une classe ou d'une
+interface
+
+ Du point de vue de la conception orienté objet
+  il faut regarder:
+
+    Si le nombre de méthodes redéfinies est
+     important:
+
+      ◼ Peut indiquer une mauvaise utilisation de l'héritage
+
+    Et un nombre de descendants important:
+
+      ◼ Fait de la classe ancêtre un point sensible du logiciel, et
+         une modification de cet ancêtre peut avoir des effets de
+         bord très important sur les descendants.
+Le plugin Metrics pour Eclipse et
+Netbeans
+
+ Permet de calculer les différentes métriques
+  abordées dans ce cours, et a la particularité
+  d'intégrer un analyseur de dépendances cycliques.
+
+             IntelliJ: CodeMetrics, MetricsTree
+   Ensemble de Métriques pour la conception
+
+   Orientée Objet
+
+40
+
+    L'ensemble de métriques pour la conception orientée objet (Metric Suite for Object-
+        Oriented Design) a été conçu pour permettre d'effectuer une évaluation complète des
+        classes d'un système.
+
+    La plupart de ces métriques sont calculées classe par classe: aucune n'évalue le système
+        comme un tout et le passage des classes au système global n'est pas très clair, car il n'est
+        généralement pas approprié de calculer une moyenne pour l'ensemble des classes.
+
+    Les métriques de Chidamber et Kemerer
+
+          Métrique 1: méthodes pondérées par classe
+          Métrique 2: profondeur de l'arbre d'héritage
+          Métrique 3: nombre d'enfants
+          Métrique 4: couplage entre classes objet
+          Métrique 5: réponses pour une classe (RFC)
+          Métrique 6: manque de cohésion des méthodes
+
+    Les métriques MOOD
+
+          Encapsulation
+          Facteurs d'héritage
+          Facteurs de couplage
+          Facteurs de polymorphisme
+   Métrique 1: méthodes pondérées par
+
+   classe
+
+41
+
+       WMC (Weighted methods per class): repose sur l'idée que le nombre de
+           méthodes par classe est un indice significatif de la complexité de la classe.
+
+       Il convient cependant d'approfondir un peu cette idée afin de ne pas donner un
+           poids trop important aux méthodes de base comme get et set.
+
+       C'est pour cette raison que la métrique WMC permet de pondérer les différentes
+           méthodes.
+
+       Considérons C, une classe, comportant un nombre de méthodes Mi et dont la
+           complexité (le poids) est noté ci
+
+                                                                                                                n
+
+                                   WMC =  ci  Mi
+                                                                                                              i=0
+
+       On peut dire que ci vaut 1, ou calculer la compexité cyclomatique de Mi
+       D'après C&K:
+
+              Le nombre de méthode et leur complexité permet de faire un jugement sur le temps et
+                 l'effort requis pour développer et maintenir la classe
+
+              Un grand nombre de méthodes, va affecter les sous-classes, puisque ces sous-classes
+                 vont hériter de toutes ces méthodes.
+   Métrique 2: profondeur de l'arbre
+
+   d'héritage (DIT)
+
+42
+
+       La métrique DIT, (depth of Inheritance Tree) correspond simplement à la
+         distance maximale entre un nœud et la racine de l'arbre d'héritage de la
+         classe concernée.
+
+       L'héritage est susceptible d'augmenter la complexité d'un logiciel.
+
+       Cette métrique importante est calculée pour chaque classe, elle sert de
+         déterminer pour chaque classe le poids de son héritage.
+
+       C&K ont suggéré les conséquences suivantes d'une DIT 
+
+             Des arbres profonds implique un design plus complexe, puisqu'il y a plus de
+                méthodes et de classes qui rentrent en jeu-> conception moins claire ->
+                maintenance plus difficile.
+
+             Plus une classe est profonde dans l'hiérarchie d'héritage, plus elle hérite d'un
+                grand nombre de méthodes, rendant plus complexe la prédiction de son
+                comportement -> phénomène de dégénérescence (plus aucun rapport avec les
+                ancêtres)
+
+             Plus une classe est profonde dans l'hiérarchie d'héritage, le potentiel de
+                réutilisation des méthodes héritées devient plus grand.
+
+       Les 2 premiers points sont de mauvais indicateurs, le troisième semble être un
+         bon indicateur- alors que décider: DIT ou ?
+  Métrique 3: nombre d'enfants
+
+43
+
+   Tout comme la profondeur de l'arbre d'héritage, sa largeur est également
+      significative. La métrique du nombre d'enfants (NOC, number of children)
+      correspond au nombre de sous classes dépendant immédiatement d'une
+      classe donnée par une relation d'héritage.
+
+   D'après C&K:
+
+         NOC , donc amélioration de la réutilisabilité, (puisque l'héritage est une forme
+            de réutilisation).
+
+         NOC , indique probablement que l'abstraction de la classe parente pourrait
+            être inappropriée, et donc une mauvaise utilisation de l'héritage.
+
+         NOC donne une idée de l'influence potentielle qu'a la classe sur le design. Si
+            NOC, alors il faut plus de test sur les méthodes de la classe.
+
+   Donc:
+
+         Attention au design
+         Attention de compliquer les tests
+         Ca indique que le code devra être bien étudié, et devra être jugé
+
+            qualitativement.
+
+   Elle est calculée pour chaque classe.
+   Métrique 4: couplage entre classes
+
+   objet (CBO)
+
+44
+
+       Dans un contexte orienté objet, on définit le couplage comme l'utilisation de
+           méthodes ou d'attributs d'une autre classe.
+
+       Deux classes seront considérées comme couplées si les méthodes déclarées dans
+           l'une utilisent des méthodes ou des variables définies dans l'autre.
+
+       La métrique de couplage entre classes objet (CB), coupling between object
+           classes) compte le nombre d'autres classes avec lesquelles une classe donnée
+           est couplée. Couplage efferent. Elle est calculée pour chaque classe.
+
+                    The coupling between object classes (CBO) metric
+                    represents the number of classes coupled to a given class
+                    (efferent couplings, Ce). This coupling can occur through
+                    method calls, field accesses, inheritance, arguments,
+                    return types, and exceptions.
+Métrique 4: couplage entre classes
+objet (CBO)
+
+ CBO  dépendance 
+
+ Selon C & K, la métrique CBO doit être la plus petite possible, ceci pour 3
+    raisons:
+
+      Faciliter la réutilisation
+      Faciliter la maintenance
+      Faciliter les tests
+
+               ax
+
+        b                                          O                       y
+         c
+                                            Classe Observée       Classe efférentes = 2
+Classe afférentes = 3
+                                         O a un couplage
+                                         afférent de 3, et un
+                                         couplage efférent de 2.
+
+   La notion de couplage afférent est        La notion de couplage efférent permet
+importante dans le cadre du refactoring  d'associer un risque lié aux modifications de
+                                         l'environnement de l'entité étudiée. Plus il est
+  (permettre d’associer un risque à la   fort, plus les risques d'effets de bords induits
+         modification d’une entité)       par la modification de ces entités est grand
+   Métrique 5: réponses pour une classe
+
+   (RFC)
+
+46
+
+        L'ensemble des réponses pour une classe, est l'ensemble des méthodes qui peuvent être
+           exécutées en réponse à un message reçu par un objet de cette classe.
+
+        Il est constitué par la réunion de toutes les méthodes de la classe avec toutes les
+           méthodes appelées par celles-ci. (heritees, ou sur d’autres objets)
+
+               Une méthode est comptée une seule fois, quelque soit le nombre de fois qu'elle est appelée
+                Seul le premier niveau d'appel est pris en compte.
+
+        D'après C&K:
+
+               Si un grand nombre de méthodes peut être invoqué en réponse à un message, le test et le
+                  debugging de la classe devient plus compliqué, puisqu'il requiert un niveau de compréhension
+                  plus élevé, de la part du testeur.
+
+               RFC , donc complexité de la classe  couplage 
+
+        RFC est probablement la métrique la plus indicative - RFC  suggère que quelque
+           chose va mal.
+
+        Cette métrique est calculée pour chaque classe.
+
+                  The RFC for a class should usually not exceed 50 although it
+                 is acceptable to have a RFC up to 100
+   Métrique 6: manque de cohésion des
+   méthodes
+
+47
+
+       On qualifie un module (ou une classe) de cohésif lorsque tous ses éléments sont
+           étroitement liés.
+
+       La métrique de manque de cohésion des méthodes (LCOM, lack of cohesion in
+           methods) tente de mesurer l'absence de ce facteur.
+
+       La métrique LCOM peut être visualisée sous la forme d'un graphe bipartite.
+
+              Un premier ensemble de nœuds correspond aux différents attributs
+              et un second ensemble aux différentes fonctions.
+              Un attribut est lié à une fonction si celle-ci y accède ou en modifie la valeur.
+48
+
+      Supposons une classe avec trois méthodes (M1, M2, M3) et
+        deux variables d’instance (A, B) :
+
+      M1 utilise la variable A.
+      M2 utilise la variable B.
+      M3 utilise les variables A et B.
+      Calcul de P et Q
+      P : Nombre de paires de méthodes qui n’ont pas de variables
+
+        d’instance communes.
+      Q : Nombre de paires de méthodes qui ont des variables
+
+        d’instance communes.
+   Paires de Méthodes
+   M1 et M2 : N’ont pas de variables d’instance communes.
+49  M1 et M3 : Ont la variable A en commun.
+   M2 et M3 : Ont la variable B en commun.
+   Valeurs de P et Q
+   P : Il y a 1 paire de méthodes (M1 et M2) qui n’ont pas de
+
+      variables d’instance communes.
+   Q : Il y a 2 paires de méthodes (M1 et M3, M2 et M3) qui ont
+
+      des variables d’instance communes.
+   Donc, dans cet exemple :
+   P=1
+   Q=2
+   Calcul de LCOM
+   LCOM = P - Q Puisque ( P < Q ), LCOM = 0.
+   Cela indique que la classe est cohésive selon cette métrique.
+   Métrique 6: manque de cohésion des
+
+   méthodes
+
+50
+
+       Cette métrique est calculée pour chaque classe.
+       LCOM = P - Q , si P > Q sinon LCOM = 0
+       LCOM = 0 indique une classe cohésive.
+       LCOM > 0 indique que la classe doit être divisée en 2 ou plusieurs classes,
+
+         puisque ses variables sont utilisées par un ensemble disjoint de méthodes.
+
+       LCOM est une métrique qui a été très critiquée,
+
+            vu qu'elle se base sur l'interaction "données-méthodes" pour le calcul de la
+               cohésion, ce qui n'est pas très correct dans le monde POO
+
+                     ◼ Peut générer beaucoup de fausses alertes avec les logiciels écrits en Java
+
+                                ◼ Penser aux setters et getters pour chaque attribut.
+
+            Vu que des classes très différentes pourraient avoir le même degré LCOM de
+               cohésion (en particulier la valeur 0 par exemple)
+   Les métriques MOOD (Metrics for Object
+
+   Oriented Design)
+
+51
+
+        Les métriques MOOD ont aussi été prévues pour constituer un ensemble complet
+           permettant de mesurer les attributs d'encapsulation, d'héritage, de couplage et de
+           polymorphisme d'un système.
+
+        On appelle TC le nombre total de classes du système, et Md(Ci) le nombre de méthodes
+           déclarées dans une classe i.
+
+        On considère le prédicat Est_visible(Mm,i,Cj), où Mm,i désigne la méthode m, de la classe i,
+           et Cj la classe j.
+
+        Ce prédicat vaut 1 si i != j et Cj peut appeler Mm,i, sinon il vaut 0.
+        Par exemple, une méthode publique en C++ est visible à toutes les autres classes, alors
+
+           qu'une méthode privée n'est visible à aucune.
+        La visibilité d'une méthode Mm,i, V(Mm,i) est définie de la façon suivante:
+
+                                                      TC
+
+                     Est_visible(Mm,i , C j )
+
+                  V(M m,i ) = j=1
+                                          TC -1
+  MOOD: Encapsulation
+
+52  Le facteur de masquage des méthodes (MHF, method hiding factor) et le facteur de masquage
+            des attributs (AHF,attribute hiding factor) servent à mesurer l'encapsulation.
+
+        Idéalement tous les attributs doivent être private, AHF=100%
+               Si AHF  alors attention
+
+        Le nombre de méthodes visibles caractérise la mesure de la fonctionnalité d'une classe (tip of
+            the iceberg)
+
+        MHF donc bug-density et qualité 
+        MHF  donc une large proportion de méthodes non protégées et la probabilité d'erreurs est
+
+            grande
+
+Mh(Ci): hidden Methods in class Ci
+Md(Ci) = Mv(Ci) + Mh(Ci): Methods defined in Ci
+Mv(Ci): visible Methods in class Ci
+TC: Total number of Classes.
+
+  nombre de méthodes                                 nombre d'attributs
+cachées/nombre total de                          cachées/nombre total de
+
+    méthodes définies                                 d'attributs définis
+  MOOD: Encapsulation
+
+53
+
+         Le facteur de masquage des méthodes (MHF, method hiding factor) et le facteur de masquage des attributs
+              (AHF,attribute hiding factor) servent à mesurer l'encapsulation.
+
+         Idéalement tous les attributs doivent être private, AHF=100%
+                 Si AHF  alors attention
+
+         Le nombre de méthodes visibles caractérise la mesure de la fonctionnalité d'une classe (tip of the iceberg)
+         MHF donc bug-density et qualité 
+         MHF  donc une large proportion de méthodes non protégées et la probabilité d'erreurs est grande
+
+                  TC M d (Ci )                  TC  Ad (Ci )
+
+       1−V (M m,i ))                             1−V ( Am,i ))
+
+MHF = TC i=1 m=1                AHF = i=1            m=1
+
+           M d (Ci )                                TC
+
+                          i =1                       Ad (Ci )
+
+                                                     i =1
+
+  nombre de méthodes                nombre d'attributs
+cachées/nombre total de         cachées/nombre total de
+
+    méthodes définies                d'attributs définis
+  Facteurs d'héritage
+
+54
+
+       Il y a deux mesures pour l'héritage, le facteur d'héritage des méthodes (MIF, method
+           inheritance factor) et le facteur d'héritage des attributs (AIF, attribute inheritance
+           factor)
+
+ Md(Ci) désigne le nombre de méthodes déclarées dans une classe i, Mi(Ci), le
+    nombre de méthodes héritées (et non redéfinies) et Ma(Ci)=Md(Ci)+Mi(Ci) le
+    nombre de méthodes qui peuvent être appelées depuis la classe i.
+
+ Ad(Ci) désigne le nombre d'attributs déclarés dans une classe i, Ai(Ci), le nombre
+    d'attributs des classes de base accessibles à la classe i, et Aa(Ci)=Ad(Ci)+Ai(Ci) le
+    nombre d'attributs auxquels la classe i peut accéder.
+
+                             TC                                    TC
+
+                     Mi (Ci )                  Ai (Ci )
+
+              MIF = i=1 TC                AIF = i=1 TC
+
+nombre de méthodes            M a (Ci )  nombre d'attributs        Aa (Ci )
+
+                             i =1                                  i =1
+
+héritées(non                              hérités/nombre total
+
+redefinies)/nombre total de               d'attributs disponibles
+
+méthodes définies
+  Facteurs d'héritage
+
+55
+
+      Une classe qui hérite de bcp de méthodes (attributs) de ces
+        ancêtres a un MIF(AIF).
+
+      Une classe fille qui redéfinit les méthodes héritées (attributs) et
+        en ajoute de nouvelles a un MIF(AIF).
+
+      Une classe indépendante (pas d'héritage et pas d'enfants) a
+        un MIF(AIF) .
+
+      MIF et AIF doivent avoir des valeurs raisonnables, ni trop ni
+        trop
+
+            MIF(AIF) indiquent un héritage superflu ou des portées trop larges
+               des membres (pas assez de specialisation)
+
+            MIF(AIF)  indique un héritage insuffisant ou une utilisation lourde des
+               redéfinitions.
+  Facteur de couplage
+
+56
+
+       Le facteur de couplage (CF, coupling factor) mesure le couplage entre les
+         classes sans prendre en compte le couplage dû à l'héritage.
+
+       On pose est_client(ci, cj)=1 si la classe i a une relation avec la classe j, sinon
+         il vaut zéro.
+
+       La relation peut être que la classe i appelle une méthode de la classe j ou
+         qu'elle fait référence à la classe j ou à un de ses attributs. Les relations
+         d'héritage ne sont pas prises en compte.
+
+             Le couplage compte dans les 2 sens
+
+                                                  TC TC
+
+                     est _ client(Ci ,C j )
+
+                     CF = TC 2 i=1 j=1 − TC
+Facteur de couplage
+
+ Couplage Maximum: quand toutes les classes sont couplées
+   à (et à partir) de toutes les autres classes.
+
+     S'il n' y a pas de classes couplées, CF = 0%.
+     Si toutes les classes sont couplées ensemble, CF=100%.
+
+ Les relations de couplage :
+
+     Augmente la complexité,
+     Réduisent l'encapsulation et la réutilisation,
+     et limitent la compréhensibilité et la maintenabilité.
+
+ CF à éviter.
+
+     Quand même, les classes doivent coopérer, et CF ne doit pas
+      dépasser 12% (valeur qu'on ne peut pas commenter)
+  Facteur de polymorphisme
+
+58
+
+      Le facteur de polymorphisme (PF, polymorphism factor) permet
+        de mesurer le potentiel de polymorphisme d'un système.
+
+      Mo(Ci) désigne le nombre de méthodes redéfinies dans une classe
+        i, Mn(Ci), le nombre de nouvelles méthodes et DC(Ci) le
+        nombre de descendants de la classe i.
+
+                     PF =                            TC
+
+     PF = overrides / sum for each            M o (Ci )
+ class(new methods * descendants)
+Plus il y a des redéfinitions, plus PF              i =1
+
+                                         TC
+
+                                         [M n (Ci )  DC(Ci )]
+
+                                         i =1
+  Facteur de polymorphisme
+
+59
+
+     PF = 0% peut indiquer l'un des cas suivants:
+
+         Le projet n'utilise pas l'héritage
+         Le projet n'utilise pas le polymorphisme
+
+     Le polymorphisme (Overrides) peut être utilisé
+       raisonnablement, tant que le code ne devient pas
+       trop complexe à comprendre.
+
+     Plusieurs recommandations des valeurs de PF sont en
+       conflit:
+
+         Une source recommande PF>=10%
+         Mais Abreu et Melo suggèrent que PF >10% sont
+
+           considérés assez élevées
+Métriques MOOD: Description
+Les mesures des risques
+
+ Les mesures de la complexité sont efficaces pour détecter les cibles
+   potentielles du refactoring.
+
+      Elles doivent être utilisées avec précaution,
+
+          ◼ car elles sont sujettes à une forte incertitude,
+          ◼ et peuvent générer de fausses alertes, comme elles peuvent être incapables de
+
+             détecter certaines sources de complexité.
+          ◼ Et donc doivent être complétées par une revue de code.
+
+      Il est tentant pour un chef de projet d'utiliser ces mesures pour calculer la qualité de
+        la production des développeurs, mais ceux-ci ayant connaissance de ces mesures,
+         peuvent les contourner, ce qui se révèle contre-productif !!!
+
+ Les mesures les plus utilisés
+
+      La complexité cyclomatique
+      La profondeur du graphe d'héritage -> ref: Métrique 2: profondeur de l'arbre
+
+         d'héritage (DIT)
+      Le couplage -> ref . Métrique 4: couplage entre classes objet (CBO)
+      La profondeur d'imbrication des blocs de code
+La complexité cyclomatique
+
+ Mesure très répandue (introduite par Thomas McCabe en 1976).
+ Elle fournit un nombre unique représentant le nombre de chemins
+
+   linéairement indépendants dans un programme.
+     Cela donne une idée de l'effort à fournir pour tester le programme.
+ Conçue de manière à être le plus indépendante des langages
+   auxquels elle est appliquée.
+     Car la mesure repose sur une représentation du programme à mesurer
+
+       sous forme de graphe.
+ Plusieurs études ont montré une corrélation entre la complexité
+
+   cyclomatique d'un programme et la fréquence des erreurs au niveau
+   de ce programme.
+     Une complexité cyclomatique basse semble contribuer à la création
+
+       de programmes de meilleure qualité.
+La complexité cyclomatique
+
+ Le SEI (Software Engeneering Institute) de l'université Carnegie Mellon
+   propose une table pour estimer le risque associé à un programme à
+   partir de sa complexité cyclomatique.
+
+  Complexité cyclomatique Niveau de risque
+
+1-10   Programme simple, sans veritable risque
+11-20  Programme modérément complexe, et risqué
+21-50  Programme complexe, et hautement risqué
+>50    Programme non testable, et extrêmement risqué
+Calcul de la complexité cyclomatique
+
+ Les instructions représentent les nœuds
+ Leurs séquences possibles les arcs.
+
+     Les instructions de type structures de contrôle (boucles,
+      conditions) ont plusieurs arcs tandis que les autres instructions ne
+      peuvent avoir au maximum qu'un arc entrant et un arc sortant.
+
+ A partir du graphe représentant le programme, la
+   complexité cyclomatique CC, se calcule de la manière
+   suivante:
+
+     CC = a - n + p
+       ◼ Avec
+
+               ◼ a = nombre d'arcs du graphe de contrôle
+               ◼ n = nombre de nœuds du graphe de contrôle
+               ◼ p = somme des points d'entrée et de sortie dans le programme
+Calcul de la complexité cyclomatique : Exemples
+
+https://www.guru99.com/cyclomatic-complexity.html              Un point
+                                                               d'entrée
+
+ Ex 1: Code source
+
+         System.out.println("Calcul de la division de 4 par    Un point
+         2");                                                  de sortie
+         int resultat = 4/2;
+         System.out.println("Resultat" + resultat);               Les boucles
+                                                                       sont
+   CC = 2-3+2=1
+ Ex 2:                                                          représentées
+                                                                   par un arc
+           System.out.println("Calcul de la division de 4 par      allant de la
+           d");                                                      dernière
+           while (d>0) {
+                                                                 instruction de
+                 int resultat = 4/d;                                la boucle
+                 System.out.println("Resultat" + resultat);          jusqu’au
+                 d--;                                                 nœud
+           }
+                                                                  représentant
+     CC = 4-4+2=2
+Calcul de la complexité cyclomatique
+
+ Dans le monde orienté objet, la complexité cyclomatique
+   est généralement calculée pour chaque méthode d'une
+   classe.
+
+ Pour avoir une idée de la classe dans son ensemble, il est
+   possible de calculer une complexité cyclomatique
+   moyenne et un écart type.
+
+ Il est facile de corriger un problème de complexité
+   cyclomatique, il suffit au développeur de casser la méthode
+   en d'autre plus petites, de manière à repartir les
+   structures de contrôle.
+
+     Ca permettrait à un développeur de brouiller les pistes, au lieu
+      de faire une re-conception de la méthode.
+La profondeur d'imbrication des blocs
+de code
+
+ C'est une métrique déterminée pour chaque
+  méthode.
+
+ Elle est calculée tout simplement en déterminant les
+  niveaux d'imbrication des structures de contrôle au
+  niveau de la méthode.
+
+ N'offre pas de vision d'ensemble (elle s'intéresse à
+  l'imbrication la plus profonde) à la différence de la
+  complexité cyclomatique.
+Les mesures de cohérence
+
+ Les mesures de cohérence analysent les structures
+  internes des éléments ou leurs relations avec le reste
+  du logiciel.
+
+    La cohésion d'une classe -> ref Métrique 6: manque de
+     cohésion des méthodes
+
+    L'indice de spécialisation d'une classe -> Facteur de
+     polymorphisme
+
+    L'instabilité d'un package
+L'instabilité d'un package
+
+ La dépendance vis-à vis d'entités extérieures est source
+   d'instabilité du fait des effets de bord potentiels issus de la
+   modification de ces dernières.
+
+ La métrique d'instabilité d'un package est calculée en
+   divisant le nombre de classes du package observé
+   dépendant des classes extérieures (couplage efférent) par
+   la somme de ce nombre et du nombre des classes extérieurs
+   dépendant des classes du package (couplage afférent)
+
+ Un indice d'instabilité fort indique une fragilité par
+   rapport à son environnement extérieur.
+
+     Cependant une valeur forte peut être rencontrée sur la couche
+      haute (proche de l'IHM) vis-à-vis des couches basses sans que
+      cela soit anormal.
+
+                      Instabilite d’un package= Ce/(Ce+Ca)
+Les mesures de qualité du logiciel
+
+ Les mesures quantitatives de la qualité du logiciel
+  reposent essentiellement sur ce qui est directement
+  visible de l'utilisateur ou du testeur, à savoir les
+  anomalies et la performance.
+
+ Les informations sur les anomalies peuvent être
+  recoupées avec les statistiques issues de la gestion
+  de configuration afin d'identifier des zones du
+  logiciel candidates au refactoring.
+Le nombre d'anomalies
+
+ Grâce aux outils de gestion d'anomalies, il est possible de
+   dresser un historique des anomalies qu'a connues le logiciel
+   selon différents critères reposant sur les informations fournies
+   dans les fiches d'anomalie.
+
+     Pour que l'exploitation de cet historique soit efficace, il est important que les
+        fiches d'anomalies soient remplies avec soin.
+
+     But: trouver les zones du logiciel ayant rencontré le plus de bogues.
+
+          ◼ Une zone ayant rencontré beaucoup d'anomalies aura souvent tendance à en
+             rencontrer dans le futur.
+                 ◼ Problème de conception initial, un développement gâché, etc.
+
+          ◼ Plus cette zone est bien circonscrite, plus les opérations de refactoring à effectuer sont
+             faciles à identifier.
+                 ◼ !! Un découpage trop fin permettra de savoir quel est le développeur responsable!
+                 ◼ La peur du gendarme peut encourager les développeurs à brouiller les pistes, ce
+                    qui n'est pas du tout l'objectif.
+
+ Les maintenances correctives améliorent rarement la situation du
+   fait des contraintes de délai qui leur sont imposées.
+Le nombre d'anomalies
+
+ Exemple: L'outil BugZilla
+Les changements
+
+ L'outil de gestion de configuration garde la trace des
+   changements effectuées sur les ressources du logiciel.
+
+ En complément de l'analyse du nombre d'anomalies, il est
+   intéressant de recouper l'identification des zones les plus
+   sujettes à anomalies avec les fichiers du référentiel ayant
+   été le plus modifiés.
+
+ Un fichier de code source qui a été modifié de nombreuses
+   fois par plusieurs développeurs et qui appartient a une
+   zone peu stable est probablement candidat au refactoring.
+Les changements
+
+ Pour obtenir ce genre d'information, on peut utiliser par
+   exemple l'outil StatCVS. Ce logiciel se connecte à un
+   référentiel CVS et produit des rapports tels que:
+Les mesures de performance
+
+ Peuvent être utiles pour identifier les zones du logiciel dont la lenteur n'est pas
+    justifiée.
+
+ Il est pertinent d'utiliser les services d'un profiler pour s'interfacer étroitement avec
+    la machine virtuelle Java et récupérer les statistiques d'exécution des objets
+    (nombre d'appels, durée d'exécution, etc.) pendant les scénarios d'utilisation.
+   Les mesures de performance
+
+Le profiler, va mesurer :
+CPU sous forte charge
+contention entre
+threads
+saturation des pools
+latence des services
+Les mesures de performance
+
+ Un profiler analyse la totalité des objets (objets de l'application elle-même ainsi
+    que ceux du serveur d'application ou du web server), ce qui peut noyer
+    l'information.
+
+ Les profiles proposent un mécanisme de filtrage qui permet de n'afficher que les
+    packages et les classes qui nous intéressent.
+Les mesures de performance
+
+ Le profiler n'est pas suffisant en lui-même.
+ Il n'est qu'un observateur et ne dispose pas généralement d'injecteurs
+
+    permettant de simuler un comportement proche de la réalité, afin que le
+    profiler puisse fournir des statistiques représentatives.
+ il est donc utile de coupler le profiler avec un injecteur utilisé pour les tests
+    fonctionnels, à moins de dérouler les scénarios d'utilisation manuellement.
+ Le profiler s'intégrant directement à la machine virtuelle pour obtenir les
+    statistiques d'exécution, il dégrade de manière non négligeable les
+    performances.
+ Il ne faut pas donc être étonné des faibles performances obtenues pendant une
+    campagne de profiling.
+ Grâce au profiling, la détection des goulets d'étranglements est largement
+    facilitée. Cela permet aussi d'identifier les objets très sollicités par le logiciel.
+    Selenium + Profiler = injection “réaliste”,
+    JMeter + Profiler = charge massive
+
+83
+
+     Avec Selenium, vous pouvez :      Avec Jmeter, générer
+                                         des milliers de requêtes
+     simuler un vrai utilisateur :
+       clics, formulaires, navigation   simuler des
+                                         centaines/milliers
+     faire défiler des scénarios        d’utilisateurs
+       métier complets
+                                        créer des volumes
+     tester le comportement de          massifs d’opérations,
+       l’application dans un flux        transactions ou données
+       réel
+                                        pousser votre système à
+     observer cela avec le              ses limites
+       profiler (CPU, mémoire,
+       threads, I/O, GC…)
+

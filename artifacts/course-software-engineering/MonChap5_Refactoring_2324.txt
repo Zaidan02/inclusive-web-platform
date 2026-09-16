@@ -1,0 +1,2613 @@
+                                                                                                    1
+
+Refactorisation
+  Refactorisation
+
+2
+
+    Le processus de modification d’un logiciel de telle
+      sorte que
+
+        le comportement externe ne soit pas modifié
+
+        la structure interne soit améliorée
+  Génie Logiciel et Refactorisation
+
+3
+
+     Vision traditionnelle du développement de logiciels
+         D’abord un bon design, ensuite la programmation
+         Mais avec le temps le code sera modifié
+
+             ◼ l’intégrité du système par rapport au design va s’estomper
+             ◼ le code passe d’une approche « génie logiciel » ---> hacking
+
+     Refactorisation : approche inverse
+         Modifier petit à petit le code pour obtenir un design robuste
+         Le design se fait continuellement pendant le
+           développement
+         En construisant le système, on découvre comment en
+           améliorer le design
+Catégories de logiciel
+
+ Applications
+ Boîtes a outils
+ Frameworks
+  Framework
+
+5
+
+     Un framework est un ensemble de classes abstraites
+       collaborant entre elles pour faciliter la création de tout ou
+       partie d'un système logiciel.
+
+     Ils sont en principe spécialisés pour un type d'application.
+
+     On spécialise un framework pour qu'il réponde aux
+       caractéristiques d'une application, par création de sous-classes
+       spécifiques de classes abstraites du framework.
+
+           Le concepteur/développeur d'une application pourra concentrer ses
+             efforts sur les particularités de l'application.
+  Framework et réutilisation
+
+6
+
+   Un framework donne la priorité à la réutilisation de
+    conception par rapport à la réutilisation de code.
+      Attribution inversée du contrôle entre l'application et le
+       logiciel sur lequel elle est fondée.
+
+           ◼ Lorsqu'on utilise une boîte à outils (ou une bibliothèque), on écrit le tronc
+             principal de l'application et on appelle le code que l'on souhaite utiliser.
+
+           ◼ Lorsqu'on utilise un framework, on réutilise le tronc, et on écrit le code que
+             celui-ci appelle.
+
+      On aura à coder des opérations avec des noms et des
+       conventions d'appel particuliers,
+
+           ◼ mais l'approche réduit le nombre de décisions à prendre pour la
+             conception.
+Framework: Avantages/Inconv
+
+ Réalisation plus rapide d’applications, qui
+  présentent des structures semblables.
+
+    Donc maintenance de ces applications plus facile,
+     à cause de cette cohérence.
+
+ Mais, perte d’une certaine liberté de
+  conception, puisqu'un nombre de décisions dans
+  ce domaine auront déjà été prises.
+Framework: difficulté de conception
+
+ Si les applications sont difficiles à concevoir, et
+  les boîtes à outils encore plus, les frameworks
+  battent les records de difficulté.
+
+    Le choix d'une architecture qui convient à toutes les
+     applications du domaine.
+
+    Il est impératif de concevoir le framework aussi
+     souple et évolutif que possible.
+
+      ◼ Le couplage faible trouve son importance dans ce cas:
+         faute d'être garanti, une modification, même mineure,
+         du framework aura des répercussions majeures.
+Framework et les design patterns
+(avantages)
+
+ la documentation à l'aide des modèles de
+  conception qui le composent.
+
+ Un bon degré de réutilisabilité de la conception et
+  du code.
+
+    Les design patterns sont des cibles pour les
+     refactorisations.
+  Quelques raisons pour refactoriser un framework
+
+10
+
+     La refactorisation survient naturellement lors du
+       développement de frameworks via
+
+        le raffinement de la hiérarchie des classes
+        la suppression du code redondant ou inutile
+
+     Conserver le code lisible et modifiable
+
+        Le code est lu et modifié plus souvent qu’il n’est
+         écrit.
+  Un processus difficile et risqué
+
+11
+
+     Exige de modifier du code qui fonctionne
+
+         Introduction éventuelle de « bugs » subtils
+
+     Si la refactorisation est mal faite ou faite de
+      manière informelle,
+
+         elle peut ramener en arrière de plusieurs jours ou
+          semaines
+Niveaux de Refactoring
+
+ Trois niveaux de Refactoring selon la complexité de
+  sa mise en œuvre:
+
+    Le refactoring chirurgical
+    Le refactoring tactique
+    Le refactoring stratégique
+Le refactoring chirurgical
+
+ Réalisation d'opérations de refactoring limitées et localisées dans le
+   code source.
+
+ Refondre qqes composants sans altérer leurs relations avec le reste du
+   logiciel -> à l'aide de techniques de base.
+     Renommage, extraction de méthode, extraction de variable,
+      etc…
+
+ Périmètre limité -> réalisable dans le cadre de la maintenance
+     Il n'est pas nécessaire de mettre en place une structure de projet à part
+       entière.
+
+      Pertinent pour consolider certaines opérations de
+      maintenance réalisés pour répondre à l'urgence
+      mais nuisant à la qualité générale du logiciel.
+Le refactoring tactique
+
+ Refonte complète de quelques composants, repensés dans
+   leur fonctionnement interne et le reste du logiciel.
+
+     Il peut s'agir d'introduire les designs patterns dans le code.
+
+ Plus difficile à réaliser de manière intégrée à la
+   maintenance.
+
+ L'effort de test pour valider le refactoring peut devenir
+   rapidement incompatible avec la réactivité nécessaire aux
+   corrections de bogues ou aux évolutions demandées en
+   urgence.
+Le refactoring stratégique
+
+ Remise à plat de la conception du logiciel afin de
+  l'adapter aux exigences présentes et futures des
+  utilisateurs.
+
+ La frontière entre ce refactoring et une réécriture
+  du logiciel est si ténue qu'il est essentiel de bien
+  réfléchir aux objectifs à atteindre.
+
+ La démarche de refactoring stratégique est
+  évidemment inutile, si nous devons réécrire le
+  logiciel.
+Le processus de refactoring
+
+ Ce processus compte 4 phases principales:
+
+    Mise en place de la gestion du changement
+    Analyse du logiciel
+    Refonte du code
+    Validation du refactoring
+Mise en place de la gestion du
+
+changement
+
+ Le développement d'un logiciel nécessite l'utilisation d'une
+   infrastructure pour gérer les changements qu'il subira tout
+   au long de sa vie. Cette infrastructure est articulée autour
+   de 3 thèmes
+
+     Gestion de configuration
+       ◼ Concerne la gestion des versions successives des composants du
+          logiciel
+
+     Gestion des tests
+       ◼ Permet de valider le fonctionnement du logiciel en regard des
+          exigences des utilisateurs
+
+     Gestion des anomalies
+       ◼ Concerne la gestion du cycle de vie des anomalies détectées par
+          les recetteurs ou l’utilisateur final.
+ Mise en place de la gestion du
+
+ changement
+
+ Mise en place lors de la création du logiciel.
+
+ Peut être artisanale (gérée manuellement sans l'aide d'outils
+   spécialisés) dans le cadre de projets de taille modeste.
+
+ Peut sembler au premier abord lourde à mettre en œuvre et
+   inutilement couteuse.
+
+    C'est peut-être vrai pour la première version, mais pas pour le
+      cycle de vie dans sa globalité.
+
+    La contrainte forte du refactoring, qui consiste à ne pas modifier
+      le comportement du logiciel du point de vue des utilisateurs,
+      nécessite une infrastructure de gestion du changement solide,
+      afin de se dérouler avec un maximum de sécurité (grâce, par
+      exemple, à la possibilité de faire marche arrière au cours
+      d'une opération de refactoring non concluante.
+
+    Dans cette perspective, la mise en place d'une telle infrastructure
+      est vite rentabilisée.
+Analyse du logiciel
+
+ Consiste à détecter les composants candidats au refactoring.
+ Analyse quantitative
+
+     Consiste à calculer différentes métriques sur le logiciel.
+     Ces métriques sont comparées avec les règles de l'art pour identifier les
+
+       zones problématiques.
+     Malheureusement imparfaites -> elles peuvent signaler des anomalies là
+
+       où il n'y en a pas (fausses alertes) et passer à côté de problèmes
+       sérieux (faux amis).
+
+         ◼ De ce fait, l'analyse qualitative est cruciale pour le refactoring.
+
+ Analyse qualitative
+     Consiste à auditer le code manuellement ou à l'aide d'outils et à
+       revoir la conception du logiciel pour détecter d'éventuelles failles.
+     Pour optimiser cette phase (qui peut se révéler coûteuse et pas
+       rentable), les sondages seront guidés par les résultats obtenus lors de
+       l'analyse quantitative.
+Analyse du logiciel
+
+ A partir de la liste des zones à refondre identifiées lors de
+   cette phase, il faut décider quelles seront celles qui devront
+   effectivement l'être.
+
+ Pour cela, il est nécessaire d'évaluer pour chacune d'elles:
+
+     Le coût de la refonte
+     Le gain attendu en terme de maintenabilité ou d'évolutivité
+     Et les risques associés à cette refonte.
+
+       ◼ Les risques peuvent être déduits d'une analyse d'impact:
+
+               ◼ Une modification strictement interne à une classe est généralement peu
+                  risquée
+
+               ◼ La mise en œuvre d'un design pattern peut avoir des impacts très
+                  importants sur l'ensemble du logiciel.
+    Best Practices for Change Impact Analysis
+
+21
+
+           https://www.jamasoftware.com/blog/change-impact-analysis-2/
+  Impact Analysis Procedure
+
+22
+
+     The chairperson of the change control board will
+       typically ask a knowledgeable developer to perform
+       the impact analysis for a specific change proposal:
+
+         Understand the possible implications of making the
+           change. Change often produces a large ripple effect.
+
+         Identify all the files, models, and documents that might
+           have to be modified if the team incorporates the requested
+           change.
+
+         Identify the tasks required to implement the change, and
+           estimate the effort needed to complete those tasks.
+Refonte du code
+
+ Une fois les zones à refondre sélectionnées, la refonte peut
+   commencer.
+
+ Un souci majeur: s'assurer que les modifications n'altèrent pas le
+   fonctionnement du logiciel.
+
+ De ce fait, avant toute modification, mettre au point une batterie
+   de tests sur le code originel.
+    Ils seront utiles pour la phase de validation.
+
+ Lorsque les tests de non-regression sont validés sur le code
+   originel, nous pouvons effectuer la refonte.
+
+ Il est recommandé de réaliser une validation à chaque opération
+   de refactoring unitaire.
+    Si on accumule un grand nombre de modifications non testées,
+      toute erreur détectée devient plus difficile à corriger.
+Validation du refactoring
+
+ La réalisation de la validation repose sur la batterie de
+   tests mise en place en amont de la refonte.
+
+     Consiste à vérifier si la contrainte de non-modification du logiciel
+      a été respectée.
+
+     Ces tests doivent être les plus exhaustifs possible afin de valider
+      le plus de cas de figure possible.
+
+ Ces tests de validation soulignent l'importance de la
+   gestion de changement pour un logiciel.
+
+     Lors de la création du logiciel, des tests ont été spécifiés pour
+      effectuer sa recette.
+
+     Si aucune démarche de capitalisation des tests n'a été mise en
+      place, le cout du refactoring n'est pas optimisé puisqu'une partie
+      des tests doit être recréé ex nihilo.
+Validation du refactoring
+
+ Une fois la refonte validée, la nouvelle version du
+  logiciel peut être livrée aux utilisateurs finaux.
+
+ Comme pour toute nouvelle version, une partie de
+  l'équipe projet doit être maintenue le temps
+  nécessaire pour assurer le transfert de
+  compétence vers l'équipe de maintenance.
+
+    Des bogues seront en effet inévitablement détectés par
+     les utilisateurs et doivent être rapidement corrigés.
+Bénéfices du refactoring
+
+ Objectif du refactoring = Améliorer la qualité du code
+   -> optimiser sa maintenabilité et son évolutivité, afin de
+   rentabiliser les investissements tout au long de la vie du
+   logiciel.
+
+ Pour améliorer la maintenabilité d'un logiciel, il faut
+   chercher à:
+
+     réduire sa complexité
+     et à diminuer le nombre de lignes de code à maintenir:
+
+       ◼ chasser les duplications de code
+
+ Pour améliorer l'évolutivité d'un logiciel (garante de sa
+   pérennité), il faut chercher à:
+
+     Faire reposer le logiciel sur des standards
+     Respecter les meilleures pratiques (design patterns) ☺
+Challenges du refactoring: « Le
+
+vendre »
+
+ Le refactoring n'offre pas de gains directement visibles des utilisateurs finaux
+
+     Si utilisateur final=détenteur des budgets affectés au logiciel, alors leur
+        tentation=favoriser les évolutions par rapport à une consolidation du code existant.
+
+ Pour les convaincre de réaliser une ou plusieurs opérations de refactoring, il est
+   nécessaire de démontrer que l'investissement dans le refactoring est rentable:
+
+     bien connaitre les couts associés à la maintenance et à l'évolution du logiciel.
+
+ L'idéal est d'injecter des opérations de refactoring tout au long du
+   processus de maintenance (de manière à rendre l'opération plus indolore
+   pour les utilisateurs finaux).
+
+          ◼ Ceci dépend fortement de la qualité initiale du logiciel.
+          ◼ Et des dépassements de délai ou de budget que l'on constate dans la majorité des projets
+
+             informatiques,
+Challenges du refactoring:
+« Evaluation des risques »
+
+ Evaluation des risques à l'entreprendre comparés à ceux
+   de ne rien faire.
+
+     Dans certains cas, il peut être préférable de laisser les choses en
+      l'état plutôt que de se lancer dans une opération dont les chances
+      de succès sont faibles.
+
+ Il faut donc évaluer le périmètre de la refonte, en
+   analysant les impacts liés aux modifications du code
+   source.
+
+     les composants d'un logiciel peuvent être extrêmement dépendant
+      les uns des autres, induisant des effets de bord difficilement
+      contrôlables lorsque l'un d'eux est modifié.
+
+    https://www.jamasoftware.com/blog/change-impact-analysis-2/
+Challenges du refactoring: « motiver les
+équipes de développeurs »
+
+ Ce type d'opérations peut être perçu comme une tâche
+   ingrate et peu valorisante.
+
+ D'autre part, les développeurs font toujours preuve de
+   réticence pour modifier le code d'un autre, du simple fait
+   de la difficulté à le comprendre.
+
+ Pour les projets de refactoring lourds, qui ne peuvent être
+   intégrés à la maintenance, il est important de bien
+   communiquer pour démontrer l'intérêt de la démarche et
+   justifier le défi qu'elle présente pour les développeurs.
+Anticipation du refactoring
+
+ Bien concevoir le logiciel dès l'origine
+     Se reposer sur les meilleures pratiques (design patterns)
+
+ Séparer au maximum les préoccupations (métiers et techniques par
+   exemple), de manière à limiter les effets de bords lors d'un
+   refactoring.
+     Se reposer par exemple sur la POA (Aspect Oriented
+       Programming), mais ce n'est pas obligatoire.
+     Se reposer sur la technique d'inversion de contrôle comme dans la
+       plupart des frameworks (ex: Spring)
+
+ Anticiper l'avenir du logiciel dans la mesure du possible, afin de pallier
+   à l'érosion logicielle
+
+ La traçabilité des décisions de conception doit être assurée pour servir
+   de base à l'analyse du logiciel dans le cadre des opérations de
+   refactoring.
+Aspect Oriented Programming
+
+31                                                   aspect verification {
+
+       function mainProgram()                            before (doSomethingWith is called): {
+                                                            if (doSomethingWith.arguments[0]
+             { var x = foo();                              == null) { throw
+                doSomethingWith(x); return x;               NullArgumentException(); } if
+                                                            (!doSomethingWith.caller.isAuthentica
+            }
+                                                           ted) { throw Securityexception(); }}}
+       aspect logging {
+                                                     And then an aspect-weaver is used
+             before (mainProgram is called): {        to compile the code into this:
+                log.Write("entering mainProgram");
+                }                                         function mainProgram() {
+                                                            log.Write("entering mainProgram");
+             after (mainProgram is called): {              var x = foo(); if (x == null) throw
+                log.Write( "exiting mainProgram             NullArgumentException(); if
+                with return value of " +                    (!mainProgramIsAuthenticated())
+                mainProgram.returnValue);                   throw Securityexception();
+                                                            doSomethingWith(x);
+       }}                                                  log.Write("exiting mainProgram with
+                                                            return value of "+ x); return x;
+Anticipation du refactoring
+
+ Un soin particulier doit être apporté à la programmation et
+   à la documentation du code.
+
+     Suivre les règles de bonne programmation du langage utilisé.
+     Bien documenter pour rendre le code plus compréhensible
+
+ Capitaliser sur les tests afin de rendre le refactoring
+   efficace.
+
+     Plus les tests sont complets, plus nous avons des garanties de
+      non-régression du logiciel refondu.
+
+     Capitalisation assurée par la mise en place d'une infrastructure
+      de tests automatisés.
+Le processus de refactoring
+
+              Preparation du refactoring
+Preparation: Centrée sur la gestion du
+changement
+
+ S’appuie principalement sur 2 piliers:
+
+     Gestion de configuration: c.-à-d. l’utilisation d’un outil
+      permettant de gérer les évolutions successives des ressources
+      composants le logiciel, ainsi que les accès simultanés à ces
+      dernières.
+
+     Gestion des tests et des anomalies: c.-à-d. la définition d’une
+      stratégie de tests permettant d’assurer le bon déroulement du
+      refactoring.
+
+ Idéalement ces 2 piliers sont mis en place dès la création
+   du logiciel.
+La Gestion de configuration
+
+ Aussi appelée gestion des versions: sur elle reposent:
+
+     L’archivage des modifications successives des différentes ressources
+     Et la définition de ses différentes versions.
+
+ Les ressources = fichiers
+
+     Généralement: code source
+     Fichiers binaires (images ou bibliothèques externes)
+
+ Les ressources sont regroupées sous forme de projets
+
+     On peut gérer plusieurs projets au sein du même outil de gestion de
+       configuration
+
+     Chaque projet suit un cycle de vie qui lui est propre.
+GC: Principes
+
+ Tout logiciel est destiné à évoluer.
+ Le partage de ressource est incontournable dès que
+
+  le projet implique plus qu’un développeur
+ Mettre en place un référentiel unique permettant de
+
+  partager les ressources entre plusieurs
+  développeurs et de tracer les évolutions.
+
+La Gestion de configuration prend tout son sens
+lorsque:
+
+    les projets impliquent plusieurs développeurs
+    ou possèdent au moins deux versions simultanément,
+    une de maintenance corrective, et une d’évolution par
+    exemple.
+GC: Avantages (1/3):
+sécuriser l’infrastructure de développement
+
+        Ex: la perte d’un poste de travail d’un
+         développeur aura moins de conséquences,
+         si :
+
+          la totalité du code source est stockée sur un
+            serveur,
+
+          avec des disques redondants
+          et une politique de sauvegarde rigoureuse.
+GC: Avantages (2/3): Conserver
+les traces des modifications
+
+ Conserver la trace de toutes les modifications
+  opérées sur les ressources.
+
+    Une modification irréfléchie d’une ressource peut être
+     corrigée à partir des versions antérieures stockées dans
+     le référentiel.
+
+ Faciliter le travail en équipe, puisque les ressources,
+  en particulier le code source, sont partagés par
+  tous.
+
+    Et si nécessaire, dans le contexte du projet, une gestion
+     des autorisations
+GC: Avantages (3/3): Gérer
+plusieurs versions
+
+ Gérer plusieurs versions d'un même logiciel en
+  parallèle et assurer des synchronisations entre
+  elles grâce à la notion de branche.
+  Outils de gestion de configuration
+
+40
+
+   systèmes de gestion de version centralisés: les
+   clients acquièrent la derniere version d’un
+   fichier. Ex: CVS, Subversion, et Perforce
+
+                                                                     systèmes de gestion de version distribués:
+                                                                     les clients dupliquent tout le repository
+                                                                     Ex: GIT, Mercurial
+  Outils de gestion de configuration
+41 (Version control system: VCS)
+
+        Software     Development   Repository model       Concurrency model
+Azure DevOps             status                         Merge or lock
+
+CVS                  Active Client–server, Distributed  Merge
+
+Git                  maintained                         Merge
+Mercurial                                               Merge
+Perforce Helix Core  but new Client–server              Merge or lock
+Revision Control     features not                       Merge or lock
+System                                                  Merge or lock]
+Subversion (SVN)     added
+
+                     Active Distributed
+
+                     Active Distributed
+
+                     Active Client-server, Distributed
+
+                     Active local
+
+                     Active Client–server
+  Git
+
+42
+
+     The most popular, free, open source-> 80% of the
+      market share
+
+     You can use Git on the Command line, from your IDE
+      or using a client GUI like GitKraken
+
+     Key features:
+
+         Distributed nature: Each user has a complete copy of
+          the repository, enabling offline work.
+
+         Speed and efficiency: Git is known for its speed in
+          branching, merging, and diffing.
+
+         Offline work: Git allows you to work on your local copy
+          of the repository without needing a constant network
+          connection.
+43
+Outils de gestion de configuration
+
+ L'utilisation d'outils de gestion de configuration est courante
+   dans les projets Open source.
+
+ Le site Web communautaire SourceForge.net
+   (http://sourceforge.net), par exemple qui offre une
+   infrastructure de développement et de diffusion pour des
+   dizaines de milliers de projets Open Source, propose l'outil de
+   gestion de configuration CVS (Concurrent Version System).
+
+     Grâce à ce dernier, des développeurs du monde entier peuvent
+       collaborer en vue de la réalisation, de la maintenance ou de l'évolution
+       de projets Open Source de toute sorte.
+
+ GitHub.com de même
+  Source code repository
+
+45
+Gestion des modifications de
+ressources
+
+ L'inconvénient de ces outils est leur lourdeur:
+
+     Un référentiel unique -> suivre un processus spécifique de modification
+       des composants plus contraignant que lorsque les développeurs
+       travaillent chacun sur leur poste.
+
+     Beaucoup de manipulations:
+
+         ◼ Acquisition, libération, comparaison, synchronisation, mise a jour.
+
+     Manipulations sujettes à erreur.
+
+ Lourdeur compensée par les capacités de ces outils à gérer le
+   travail en équipe et le cycle de vie des composants.
+Outils de configuration:
+
+ Deux Stratégies pour traiter les accès concurrents:
+
+    Le verrou
+    Et la fusion
+Le verrou
+
+ C'est la stratégie la plus sécurisée, mais aussi la plus contraignante
+   pour l'accès simultané en modification à une ressource par différents
+   développeurs.
+
+ Le premier qui demande l'accès en modification obtient un accès
+   exclusif à la ressource. Cette demande est appelée check-out.
+     Il y a alors récupération d'une copie de la ressource sur le poste de
+       travail de ce dernier pour modification.
+
+ Les autres développeurs sont contraints d'attendre que la ressource soit
+   libérée pour la modifier.
+     Une tentative de pose de verrou se solderait par une erreur.
+
+ Cette libération est appelée commit ou check-in.
+     Elle consiste en la mise à jour de la ressource dans le référentiel
+       (création d'une nouvelle révision) et en la suppression du verrou pour
+       rendre le check-out à nouveau possible.
+Le verrou : Avantages et Inconvénients
+
+ Les modifications sont consistantes
+
+     Simultanéité bloquée
+     Les développeurs en attente de la ressource ont toujours possibilité de
+
+       récupérer la ressource en lecture seule.
+        ◼ Cela leur permet d'effectuer des modifications en local en attendant que
+
+          la ressource soit libérée.
+
+ Peut devenir rapidement problématique
+
+     Au cas où un développeur obtient un accès en modification sur plusieurs
+       ressources et qu'il oublie de les libérer avant de partir en vacances.
+        ◼ Bien sûr, on peut casser les verrous, mais ces opérations sont coûteuses
+          en terme d'administration.
+Le verrou : Avantages et
+Inconvénients
+
+ D'autre part, le verrou empêche inutilement la réalisation de
+   modifications compatibles entre elles.
+
+     Par exemple, si la ressource est une classe possédant plusieurs méthodes
+       et que chacune d'entre elles est la responsabilité exclusive d'un seul et
+       unique développeur, pourquoi empêcher ces développeurs de travailler
+       en même temps sur cette classe?
+
+ Le verrou donne une fausse impression de sécurité au
+   développeur, du fait de son accès exclusif.
+
+     Les modifications d'une ressource publiées tardivement peut entrainer
+       une inconsistance, car elles ne favorisent pas les points de
+       synchronisation, à la différence de la stratégie de fusion.
+La fusion
+
+ C'est une stratégie beaucoup moins contraignante que le verrou, qui permet
+    un véritable accès simultané en modification par plusieurs développeurs.
+
+ Elle corrige les défauts du verrou en préférant gérer les éventuels conflits de
+    modification, plutôt qu'en les empêchant, par une sérialisation des
+    modifications.
+
+ Tout développeur désirant modifier une ressource peut obtenir une copie en
+    écriture à tout moment de la part de l'outil de Gestion de Configuration. Une
+    fois sa modification effectuée, celle-ci est soumise à l'outil. Deux cas de figures
+    se présentent alors:
+
+      Si la version à partir de laquelle le développeur a travaillé est la même que celle
+        du référentiel, cette dernière est remplacée par la version modifiée.
+
+      Si la version du référentiel est plus récente que la version sur laquelle le
+         développeur a travaillé, il y a conflit, et un processus de fusion des deux versions
+         est lancé.
+
+      La version fusionnée remplace la version du référentiel.
+La fusion
+
+ Le processus de fusion déclenché en cas de conflit est très simple.
+ Il suffit de comparer la copie locale de la ressource, avec celle contenue dans le référentiel à
+
+     l'aide d'outils rendant cette tache aisée et d'identifier les différences
+
+       Pour chaque différence, le développeur peut choisir de la prendre ou non en compte afin d'obtenir enfin
+           une version fusionnée de la ressource R destinée à être stockée dans le référentiel.
+
+Local File  Assistant CVS de résolution
+              des conflits dans Eclipse
+
+                        Remote File (référentiel)
+Fusion vs Verrou
+
+ Plus complexe que le verrou, en cas de conflit, la
+  fusion peut paraître plus laxiste et difficile à mettre
+  en œuvre dans la pratique.
+
+ Cependant, la sécurité apportée par les verrous se
+  révèle très souvent disproportionnée par rapport
+  à la réalité des projets, et la résolution des conflits
+  est souvent moins consommatrice de temps.
+Gestion des branches
+
+ Les branches deviennent nécessaires à partir du moment où un
+   projet doit suivre des évolutions indépendantes et
+   incompatibles entre elles.
+
+     Un exemple classique est la gestion de 2 versions d'un même logiciel en
+       parallèle:
+        ◼ L'une d'elles est la version du logiciel diffusée aux utilisateurs
+          finaux (appelée n), et l'autre la prochaine version (appelée n+1)
+          en cours de développement.
+        ◼ La version n+1 peut être lancée peu de temps après la diffusion aux
+          utilisateurs de la version n.
+        ◼ La version n+1 part des ressources de la version n pour introduire
+          des évolutions dans le logiciel.
+        ◼ Pendant le temps de développement de la n+1, la version n qui est
+          diffusée peut être aussi amenée à évoluer au fil d'opérations de
+          maintenance principalement correctives.
+Gestion des branches (suite)
+
+ Si les conflits deviennent trop nombreux, Il est préférable d'effectuer des reports
+    périodiques de la branche vers le tronc (points de synchronisation), plutôt que de le faire en
+    une seule fois.
+
+Version n  Version n+1                   Version n+2
+en développement en développement TRONC  en développement
+
+           Points de synchro
+
+           Version n     BRANCHE         Version n+1
+                                         en maintenance
+           en maintenance
+
+                           Arrêt de la maintenance
+                           de la Version n
+Gestion des branches (suite)
+
+ Les contraintes qui s'appliquent à ces deux versions
+  sont différentes:
+
+    La version n se doit être un reflet exact de ce qui est
+      diffusé aux utilisateurs.
+
+        ◼ Les opérations de maintenance suivent un cycle court entre la
+          réalisation et la diffusion des correctifs.
+
+        ◼ Entre chacune de ces opérations, la consistance entre la branche n et
+          ce qui est diffusé doit être garantie.
+
+    La version n+1 étant en cours de développement,
+
+        ◼ elle introduit de nouveaux composants dans un état plus ou moins
+          avancé de développement
+
+        ◼ et, bien sûr, son propre lot de bogues, y compris des régressions.
+Gestion des branches (suite)
+
+ Ces contraintes soulignent bien l'importance de séparer la
+   gestion de évolutions de ces deux versions du logiciel à
+   l'aide de branches.
+
+ Concrètement la version n+1 étant la ligne principale de
+   développement de l'application, elle constitue le tronc.
+
+ Pour rendre indépendantes les évolutions de n et n+1, il
+   suffit de créer une branche pour n.
+
+     Celle-ci est destinée à devenir une branche morte des lors que la
+      version n+1 devient la version courante et que la version n n'est
+      plus supportée.
+Gestion des branches (suite)
+
+ Les outils de gestion de configuration permettent de gérer une
+   véritable arborescence et non seulement deux branches,
+   chaque branche pouvant elle-même être source d'autres
+   branches, etc…
+
+ L'intérêt des branches par rapport à une copie pure et simple
+   des ressources réside dans la capacité des outils de gestion
+   de configuration à les fusionner.
+
+ Par ex, il est vraisemblable que les opérations de
+   maintenance corrective de la branche n doivent être
+   reportées dans le tronc de la version n+1.
+
+     Plutôt que de le faire manuellement, avec des risques d'erreurs dans le
+       report de corrections, il est préférable de se faire assister par l'outil de
+       gestion de configuration.
+Gestion des clichés
+
+ Cette fonction est très utile pour figer l'état d'un
+  projet et lui associer une étiquette, généralement un
+  numéro de version global pour l'ensemble des
+  ressources composant le logiciel.
+
+ Il est intéressant de prendre un cliché comprenant
+  tout le code source et toutes les ressources pour
+  chaque version du logiciel qui sera diffusée aux
+  utilisateurs.
+
+ Ce cliché représente le logiciel dans un état stable,
+  puisqu'il est livré aux utilisateurs, et peut être extrait
+  à tout moment si nécessaire.
+Gestion des clichés
+
+ Dans la terminologie de CVS, les versions spécifiques à
+   chaque ressource s'appellent des révisions, alors que les
+   étiquettes s'appellent des versions ou tags.
+
+           R1        R1
+
+révisions  1.2       1.2
+
+           R2        R2
+
+           1.5       1.5
+
+           R3        R3
+
+           1.0       1.0
+
+                Etiquette=
+                Version Ou
+Gestion de configuration dans le cadre
+
+du refactoring: conclusion
+
+ Les stratégies de gestion de configuration à adopter ne sont
+   pas les mêmes:
+
+ Si le refactoring est chirurgical, et ne concerne aucun
+   composant sensible du logiciel, il peut être pris en compte
+   dans le cadre des opérations classiques de maintenance.
+
+     Les résultats du refactoring sont en ce cas intégrés directement
+      à la branche destinée à la maintenance, si elle existe, ou au
+      tronc.
+
+ Si le refactoring est important, il devient un projet à part
+   entière.
+
+     Idéalement il n'est pas mené en parallèle avec des évolutions
+      fonctionnelles et peut être traité au niveau de l'outil de gestion de
+      configuration comme une version n+1.
+64
+Gestion des tests et des anomalies
+
+ Les tests (ref chapitre correspondant):
+    Les tests unitaires
+    Les tests d’intégration
+    Les tests fonctionnels
+    Les tests de charge
+   Gestion des tests et des anomalies
+
+ Dans le cadre du refactoring:
+    Une gestion efficace des anomalies est un facteur de
+     succès d'un projet de refactoring.
+    Le traitement de ces dernières doit en effet être mené
+     de façon à fournir une nouvelle version du logiciel au
+     moins aussi stable que la précédente.
+    La base des anomalies est une source d'information
+     intéressante pour identifier les parties du logiciel
+     candidates au refactoring.
+    Elle permet d'avoir une traçabilité des problèmes et
+     des corrections associées, à la condition que les
+     développeurs documentent correctement leurs actions
+     correctives.
+Conclusion Phase 1
+
+ Grace à l'infrastructure présentée au niveau de ce
+  chapitre, le refactoring peut s'effectuer en toute
+  sérénité.
+
+ Cette infrastructure peut fournir des renseignements
+  intéressants pour analyser les faiblesses du logiciel
+  et détecter des candidats potentiels au refactoring.
+
+   (Gestion des configurations, des bugs, et tests)
+Le processus de refactoring
+
+ Ce processus compte 4 phases principales:
+
+    Mise en place de la gestion du changement
+    Analyse du logiciel
+    Refonte du code
+    Validation du refactoring
+Le processus de refactoring
+
+             Phase 2: L'analyse du logiciel
+    L'analyse du logiciel
+    (réf chapitre correspondant)
+
+ Analyse quantitative
+    Métrologie
+
+ Analyse qualitative
+    Revues d'architecture
+    Revues de code (Static Code Analysis)
+
+        ◼ Automatisées (outils comme PMD, SonarQube, etc…)
+        ◼ Manuelles
+
+ Enfin, sélection des candidats au refactoring, en tenant compte des
+   couts et des delais.
+    Il n'est ni possible, ni souhaitable de corriger tous les problèmes
+      détectés: dépendances qui risquent refondre tout le logiciel.
+    Les bénéfices attendus, combinés avec les risques associés
+      doivent être comparés au coût de ne rien faire.
+
+        ◼ Les problèmes non résolus représentent aussi des risques et ont un cout en
+          terme de maintenance.
+Le processus de refactoring
+
+       Phase 3: Mise en oeuvre du refactoring
+Support du refactoring dans les IDEs
+
+ Grâce aux assistants de refactoring
+
+    Qui supportent le mode prévisualisation
+    Qui permettent de défaire et refaire une opération de
+
+     refactoring
+Quelques
+techniques de refactorisation chirurgical (1/3)
+
+ Renommage
+ Extraction d'une méthode: un bloc d'instruction -> méthode
+ Extraction de variable locale :
+
+   une expression -> une variable locale
+ Extraction de constante :
+
+   une valeur littérale -> en faire une constante final static
+ Extraction d'interface:
+
+   une méthode dans une classe -> en créer une interface, et faire que
+   la classe implémente l'interface.
+     Permet de décorreler les services fournis par une classe de leur
+
+       interface.
+     Le choix de la classe qui implémente cette interface se fera au runtime
+
+         Ne pas etre lié à une implementation mais à une abstraction
+     Quelques
+     techniques de refactorisation chirurgical (2/3)
+
+ Changement de signature d'une méthode: modifier le nom, la valeur
+   de retour, les paramètres, les exceptions, la portée
+
+ Généralisation d'un type : le type d'un attribut ou d'une variable
+   pourrait être remplacé par un de ces ancêtres, soit par l'une des
+   interfaces qu'il implémente.
+
+ Déplacement d'éléments: une classe d'un package à l'autre, une
+   méthode ou un attribut d'une classe à l'autre.
+
+ Déplacement d'éléments dans le graphe d'héritage: Déplacer un
+   élément vers sa classe mère, ou le contraire.
+    De mère à fille: pour rendre la mère plus générique
+    De fille à mère: pour augmenter la réutilisation de l'élément
+      déplacé, pour qu'il puisse être utilisé par tous les descendants.
+Quelques
+techniques de refactorisation chirurgical (3/3)
+
+ Remplacement d'une variable locale par une expression:
+   c'est l'inverse de l'extraction de variable locale.
+
+     Ca pourrait être combiné avec une extraction de méthode.
+
+ Remplacement d'une méthode par son corps: c'est l'inverse
+   de l'extraction de méthode: cas d'une méthode privée qui ne
+   comporte que qqes lignes, et qui est invoquée par un
+   nombre minime de méthodes.
+
+ Remplacement d'une constante par sa valeur littérale: c'est
+   l'inverse de l'extraction de constante: mais il faut veiller à la
+   clarté du code dans ce cas.
+   Techniques de refactorisation chirurgical
+
+ Pour bien comprendre ces techniques et les réaliser avec
+  succès il faut tenir compte pour chacune d'elles:
+
+    Des objectifs de la technique et des risques à gérer.
+
+        ◼ Ex: cas de Class.forName(“nom d’une classe qui a ete renommee”); dans
+          le cas d’un rename
+
+    Des moyens de détection des cas d'application
+
+        ◼ Ex: extract method, si nombre de LOC > 30, ou profondeur d’imbrication
+          des blocs est grande, etc…
+
+    Des modalités d'application et tests associés
+
+       ◼ Utiliser un outil comme PMD, pour trouver les copier-coller, ou revue
+          manuelle.
+78
+ Exemples d'utilisations de qqes
+ techniques de refactorisation
+
+79
+
+  Composition de méthodes
+
+         « Extract Method »: une suite d'instruction peut-être regroupée ens. pour former une méthode
+         « Split with Temporary Variable »: une variable, est affectée à la suite différemment, alors créer 2 variables
+         « Replace Temp with Query »: une variable contient le résultat de calcul d'une expression, en faire une méthode,
+
+             pour qu'elle puisse être utilisée et appelée dans plusieurs contextes
+
+  Déplacement de « propriétés » entre les objets
+
+         « Move Method »
+
+  Organisation des données
+
+         « Self Encapsulate Field »
+         « Replace Type Code with State/Strategy »
+
+  Simplification des expressions conditionnelles
+
+        « Replace Conditional with Polymorphism »
+
+  Gestion de la généralisation
+
+         « Form Template Method » : On profite de la redéfinition en factorisant et en déplaçant vers la classe mère, des
+             fonctionnalités similaires dans la forme et non dans le fond.
+  Exemple
+
+80
+
+   Calculer et imprimer l’état de compte pour un client
+     d’un club vidéo
+
+       Le relevé de compte contient
+
+          ◼ Les films loués et la période de location
+          ◼ Le coût de location pour chaque film
+          ◼ Le coût total des locations
+          ◼ Les points de fidélité
+  Coût de location
+
+81
+
+       Le coût de location dépend
+
+             de la durée de la location
+             du type de film loué : régulier, pour enfant, nouveauté
+
+       Film régulier
+
+             $2.00 pour deux jours ou moins
+             $1.50 pour chaque jour supplémentaire
+
+       Film pour enfants
+
+             $1.50 pour trois jours ou moins
+             $1.50 pour chaque jour supplémentaire
+
+       Nouveautés
+
+             $3.00 par jour
+  Calcul des points de fidélité
+
+82
+
+     La valeur d’une location en points de fidélité
+      dépend du type de film
+
+         1 point pour chaque film
+
+         1 point supplémentaire pour la location d’une
+          nouveauté
+  Programme de départ
+
+83
+
+     3 classes
+
+         Movie
+         Rental
+         Customer
+   Movie
+
+84
+
+    // Movie is just a simple data class
+
+public class Movie {                             pricecodes
+       public static final int REGULAR = 0;
+       public static final int NEW_RELEASE = 1;
+       public static final int CHILDRENS = 2;
+
+private java.lang.String _title;
+private int _priceCode;
+
+public Movie(String title, int priceCode) {
+       _title = title;
+       _priceCode = priceCode;
+
+}
+
+public java.lang.String getTitle() { return _title;}
+
+     public int getPriceCode() { return _priceCode;}
+     public void setPriceCode(int newCode) { _priceCode = newCode;}
+}
+   Rental
+
+85
+
+         //The class Rental represents a customer renting a movie
+
+         public class Rental {
+             private int _daysRented;
+             private Movie _movie;
+
+             public Rental(Movie movie, int daysRented) {
+                      _movie = movie;
+                      _daysRented = daysRented;
+
+             }
+
+             public int getDaysRented() { return _daysRented;}
+
+             public Movie getMovie() { return _movie; }
+         }
+   Customer I
+
+86
+           import java.util.*;
+           // The Customer class represents the customer of the store.
+
+public class Customer {
+      private java.lang.String name_;
+      private Vector rentals_;
+
+   public Customer(String name) {      name_ = name;}
+
+   public void addRentals(Rental arg) { rentals_.addElement(arg);}
+
+   public java.lang.String getName() { return name_;}
+
+   public String statement() {
+              double totalAmount = 0;
+              int frequentRenterPoints = 0;
+              Enumeration rentals = rentals_.elements();
+              String result = "Rental Record for " + getName() + "\n";
+
+…
+public String statement() {                                Customer II
+       ………
+       while (rentals.hasMoreElements()) {
+
+double thisAmount = 0;
+
+            Rental each = (Rental) rentals.nextElement();
+87 //determines amount for each line
+
+switch (each.getMovie().getPriceCode()) {
+
+   case Movie.REGULAR :
+
+   thisAmount += 2;
+
+   if (each.getDaysRented() > 2)
+
+   thisAmount += (each.getDaysRented() - 2) * 1.5; break;
+
+   case Movie.NEW_RELEASE :
+
+   thisAmount += each.getDaysRented() * 3; break;
+
+   case Movie.CHILDRENS :
+
+   thisAmount += 1.5;
+
+   if (each.getDaysRented() > 3)
+
+   thisAmount += (each.getDaysRented() - 3) * 1.5; break;
+
+}
+
+// add frequent renter points
+
+frequentRenterPoints++;
+
+// add bonus for a two day new release rental
+
+if (each.getMovie().getPriceCode() == Movie.NEW_RELEASE)
+
+   frequentRenterPoints++;
+
+// show figures for this rental
+
+result += "\t" + each.getMovie().getTitle()
+
+   + "\t"+ String.valueOf(thisAmount) + "\n";
+
+totalAmount += thisAmount; }
+   Customer III
+
+88
+
+               public String statement() {
+                       ………
+                       ………
+
+               // add footer lines
+                      result += "Amount owed is "
+                                                    + String.valueOf(totalAmount)
+                                                     + "\n";
+                      result += "You earned "
+                                                     + String.valueOf(frequentRenterPoints)
+                                                    + "frequent renter points ";
+                      return result;
+
+               }
+         }
+   Quelques commentaires
+   sur le programme I
+
+89
+
+       Pas bien construit
+
+       Pas orienté objet
+
+           Ce n’est pas important pour un petit programme,
+              mais cela va créer des problèmes si le programme est intégré
+              dans un système plus vaste
+
+       La méthode statement() de Customer
+           fait trop de travail
+           une partie du travail qu’elle fait devrait être fait ailleurs
+   Quelques commentaires
+   sur le programme II
+
+90
+
+     Mais le programme fonctionne,
+        ne s’agit-il pas uniquement d’un jugement esthétique?
+
+          Oui, … jusqu’à ce que l’on veuille modifier le programme…
+
+            ◼ Un programme mal construit est difficile à modifier parce
+              que
+
+                      ◼ difficile à comprendre
+                      ◼ difficile de déterminer où faire les modifications
+                      ◼ modifications >>> introduction plus que probable d’erreurs…
+   Première modification…
+
+91
+
+   Produire l’état de compte en html
+
+        Impossible de réutiliser la méthode statement()
+
+        Solution :
+
+          ◼ réécrire une nouvelle méthode htmlStatement()
+          ◼ « cut and paste » en grande partie du corps de statement()
+    Deuxième modification
+
+92
+
+   Modifier les règles de facturation
+
+       Conséquences du « cut and paste » précédent
+
+          ◼ modifier htmlStatement()
+          ◼ modifier statement()
+          ◼ s’assurer que les changements sont consistants
+   Troisième modification
+
+93
+
+  L’usager veut modifier la classification des films, sans connaître exactement
+     les modifications qu’il désire apporter.
+
+      Ces modifications auront des impacts
+
+           ◼ sur le coût de location des films
+           ◼ sur le calcul des points de fidélité
+
+      La classification va évidemment changer régulièrement,
+        (même si l’usager n’en est pas nécessairement conscient)
+
+      Au niveau du code, il faudra modifier
+
+           ◼ la méthode statement()
+           ◼ la méthode htmlStatement()
+           ◼ et ce, toujours de manière consistante.
+  Conseil \ Règle
+
+94
+
+         Lorsqu’il faut ajouter une propriété à un programme
+         et que le code n’est pas structuré de manière appropriée pour
+         l’ajouter
+
+       1. Il faut d’abord refactoriser le programme pour rendre facile
+             l’ajout de cette propriété
+
+       2. Puis ajouter la propriété en question.
+  Conseil \ Règle
+
+95
+
+     Avant de commencer la refactorisation, s’assurer d’avoir une
+        bonne suite de tests
+
+          Ces tests doivent pouvoir être lancés automatiquement.
+96
+
+   Refactorisation de
+   statement()
+  Première étape: motivations
+
+97
+
+      Décomposition de la méthode statement() et redistribution des
+         fragments dans des classes plus appropriées
+
+           Fragments de code plus petits
+
+                ◼ Plus faciles à manipuler
+                ◼ Plus faciles à déplacer vers les classes appropriées
+
+           Objectifs:
+
+                ◼ Faciliter l’écriture de la méthode htmlStatement()
+                ◼ Diminuer les duplications de code lors de cette écriture
+    Décomposition de statement() : approche
+
+98
+
+     Approche par petits pas
+
+     Étape 1
+
+          Appliquer la technique « Extract Method »
+
+              ◼ Déterminer les morceaux de codes à extraire
+
+                       ◼ switch de statement()
+                       ◼ Variables à transporter :
+
+                               ◼ each : reste inchangée dans le fragment extrait >>> paramètre
+                               ◼ thisAmount : modifiée dans le fragment extrait >>> la rendre en résultat
+
+     Étape 2
+
+     Tester
+
+    ◼ Erreur: amountFor int -> double
+
+                               N’importe qui peut écrire du code compris par un compilateur.
+
+     Étape 3
+
+     Renommer les variables   Les bons programmeurs écrivent du code compréhensible par
+                               les humains
+        ◼ Each -> aRental
+
+    ◼ thisAmount -> result
+Décomposition de statement(): technique
+
+ 99
+     Décomposition de statement(): technique
+
+      « Extract Method » I
+
+100
+
+     Etapes     Créer une nouvelle méthode et la nommer en fonction de
+                l’intention visée
+            1.
+
+     2. Copier le code à extraire de la méthode source vers la nouvelle
+           méthode
+
+     3. Identifier dans le code extrait toute référence à des variables
+           locales à la méthode source ou à des paramètres
+
+     4. Déclarer comme variables locales dans la nouvelle méthode, les
+           variables qui ne sont pas référées ailleurs que dans le code
+           déplacé
+ Décomposition de statement(): technique
+
+    « Extract Method » II
+
+101
+
+        Etapes (suite)
+
+                 5. Identifier les variables locales de la méthode source qui sont modifiées dans
+                         l’extrait de code déplacé.
+                          1. Si une seule variable est modifiée dans la méthode source,
+                                 traiter la nouvelle méthode comme une requête qui modifie cette variable
+                                    Variable thisAmount → result
+
+                          2. Si plusieurs variables sont modifiées dans la méthode source,
+                                  utiliser les techniques de refactorisation « Split with Temporary Variable » ou encore
+                                  « Replace Temp with Query »
+
+                 6. Transmettre en paramètre à la nouvelle méthode les variables locales en provenance
+                         du code extrait
+                                  1. Variable each → aRental
+
+                 7. Remplacer le code extrait dans la méthode source par une invocation de la nouvelle
+                         méthode
+
+                 8. Compiler et tester
+      Décomposition de statement(): technique I
+
+              Split with Temporary Variable
+
+102
+    Décomposition de statement(): technique II
+
+              « Replace Temp with Query »
+
+103
+Résultat de l’extraction de l’énoncé switch I
+
+public class Customer {
+
+         . . .
+104 public double amountFor(Rental aRental) { // ETAPE 6
+
+                                                    // each → aRental
+
+   double result = 0;                               // ETAPE 5.1 et 7
+
+                                                    // thisAmount → result
+
+   switch (aRental.getMovie().getPriceCode()) {
+
+      case Movie.REGULAR :
+             result += 2;
+             if (aRental.getDaysRented() > 2)
+                    result += (aRental.getDaysRented() - 2) * 1.5;
+             break;
+
+      case Movie.NEW_RELEASE :
+             result += aRental.getDaysRented()* 3;
+             break;
+
+      case Movie.CHILDRENS :
+
+      result += 1.5;
+
+      if (aRental.getDaysRented() > 3)
+
+      result += (aRental.getDaysRented() - 3) * 1.5;
+
+      break;
+
+   }
+
+   return result;                                   // ETAPE 5.1 et 7
+
+}
+     Résultat de l’extraction de l’énoncé switch II
+
+     public class Customer {
+
+     . . .
+
+105  public String statement() {
+
+     double totalAmount = 0;
+
+     int frequentRenterPoints = 0;
+
+     Enumeration rentals = rentals_.elements();
+
+     String result = "Rental Record for " + getName() + "\n";
+
+     while (rentals.hasMoreElements()) {
+
+            double thisAmount = 0;
+
+            Rental each = (Rental) rentals.nextElement();
+
+            thisAmount = amountFor(each);                      // ETAPE 5.1 et 7
+
+            // add frequent renter points
+            frequentRenterPoints++;
+            // add bonus for a two day new release rental
+            if (each.getMovie().getPriceCode() == Movie.NEW_RELEASE)
+
+                   frequentRenterPoints++;
+            // show figures for this rental
+            result += "\t" + each.getMovie().getTitle() + "\t" + String.valueOf(thisAmount) + "\n";
+            totalAmount += thisAmount;
+     }
+     // add footer lines
+     result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
+     result += "You earned " + String.valueOf(frequentRenterPoints)
+            + "frequent renter points ";
+     return result;}
+   Redistribution des fragments dans les
+   classes appropriées
+
+106
+
+      La nouvelle méthode amountFor
+
+           Utilise les informations de la classe Rental
+           N’utilise aucune information de la classe Customer
+
+           La déplacer dans la classe Rental
+
+            ◼ Technique « Move Method »
+
+                      ◼ getCharge() dans la classe Rental
+                      ◼ Redéfinition de amountFor(Rental r) dans la classe Customer
+
+                         pour tester le bon fonctionnement des modifications
+                      ◼ Remplacement des invocations de amountFor() par des invocations
+
+                         directes de getCharge()
+   Redistribution… : technique
+
+107
+          Redistribution… : technique
+
+108
+
+                               Exemple:
+                               « Move Method »
+   Résultat : « Move Method »
+
+       public class Rental {. . .
+109 public double getCharge() {
+
+               double result = 0;
+               switch (getMovie().getPriceCode()) {
+
+                      case Movie.REGULAR :
+                             result += 2;
+                             if (getDaysRented() > 2)
+                                     result += (getDaysRented() - 2) * 1.5; break;
+
+                      case Movie.NEW_RELEASE :
+                             result += getDaysRented() * 3; break;
+
+                      case Movie.CHILDRENS :
+                             result += 1.5;
+                             if (getDaysRented() > 3)
+                                     result += (getDaysRented() - 3) * 1.5; break;
+
+               }
+               return result;
+       }
+       . . .}
+
+       public class Customer {
+       . . .
+       public double amountFor(Rental aRental) { return aRental.getCharge();}
+       . . .}
+     Éliminer la méthode amountFor(Rental)
+
+     de la classe Customer
+
+     public class Customer {
+
+     . . .
+
+110  public String statement() {
+
+     double totalAmount = 0;
+
+     int frequentRenterPoints = 0;
+
+     Enumeration rentals = rentals_.elements();
+
+     String result = "Rental Record for " + getName() + "\n";
+
+     while (rentals.hasMoreElements()) {
+
+            double thisAmount = 0;
+
+            Rental each = (Rental) rentals.nextElement();
+
+            thisAmount = each.getCharge();                     // thisAmount = amountFor(each);
+
+            // add frequent renter points
+            frequentRenterPoints++;
+            // add bonus for a two day new release rental
+            if (each.getMovie().getPriceCode() == Movie.NEW_RELEASE)
+
+                   frequentRenterPoints++;
+            // show figures for this rental
+            result += "\t" + each.getMovie().getTitle() + "\t" + String.valueOf(thisAmount) + "\n";
+            totalAmount += thisAmount;
+     }
+     // add footer lines
+     result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
+     result += "You earned " + String.valueOf(frequentRenterPoints)
+            + "frequent renter points ";
+     return result;
+ Éliminer les redondances
+ Éliminer les variables temporaires
+
+111
+
+       La variable locale thisAmount
+
+          reçoit le résultat de each.getCharge(), mais
+           n’est plus modifiée par la suite.
+
+          « Replace Temp With Query »
+
+          Remplacer thisAmount par l’appel direct
+
+             ◼ each.getCharge();
+      Décomposition de statement(): technique II
+
+              « Replace Temp with Query »
+
+112
+     Éliminer la redondance de la variable thisAmount dans la
+     méthode statement() de la classe Customer
+
+     public class Customer {
+
+113  . . .
+
+     public String statement() {
+
+     double totalAmount = 0;
+
+     int frequentRenterPoints = 0;
+
+     Enumeration rentals = rentals_.elements();
+
+     String result = "Rental Record for " + getName() + "\n";
+
+     while (rentals.hasMoreElements()) {
+
+                                                                                             //double thisAmount = 0;
+
+            Rental each = (Rental) rentals.nextElement();
+
+            // add frequent renter points
+            frequentRenterPoints++;
+            // add bonus for a two day new release rental
+            if (each.getMovie().getPriceCode() == Movie.NEW_RELEASE)
+
+                   frequentRenterPoints++;
+            // show figures for this rental
+            result += "\t" + each.getMovie().getTitle() + "\t"
+
+                                                + String.valueOf(each.getCharge() ) + "\n";
+            totalAmount += each.getCharge() ;
+     }
+     // add footer lines
+     result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
+     result += "You earned " + String.valueOf(frequentRenterPoints)
+
+                                                        + "frequent renter points ";
+     return result;}
+   Refactorisation et performance
+
+114
+
+         Refactorisation
+
+                souvent les modifications diminuent la performance
+                plus faciles à optimiser
+
+                      ◼ programme plus facile à comprendre,
+                      ◼ programme plus facile à modifier
+
+           Pour la plupart des programmes, la diminution de la performance provient d’une petite fraction
+               du code
+
+         Programme bien refactorisé
+
+                -> gain de temps pour optimisation
+                      ◼ Ajout plus rapide de fonctionnalités
+                      ◼ Granularité plus fine pour faire l’analyse de la performance
+
+                                   ◼ Portions plus petites de code à optimiser
+
+         Conclusion
+
+                La refactorisation diminue la performance à court terme
+                Rend le programme plus facile à ajuster lors de son optimisation
+   Points de fidélité
+
+115
+
+   Extraction du calcul des points d’assiduité dans
+     statement()
+
+       « Extract Method »
+
+   Déplacement de la méthode dans Rental
+
+       « Move Method »
+                                        Résultat de la factorisation
+
+     public class Customer{ . . .       du calcul des points de fidélité
+           public String statement() {
+
+        double totalAmount = 0;
+
+116     int frequentRenterPoints = 0;
+
+        Enumeration rentals = rentals_.elements();
+
+        String result = "Rental Record for " + getName() + "\n";
+
+        while (rentals.hasMoreElements()) {
+
+                Rental each = (Rental) rentals.nextElement();
+
+                frequentRenterPoints =+ each.getFrequentRenterPoints();
+
+                result += "\t" + each.getMovie().getTitle()
+
+                                        + "\t" + String.valueOf(each.getCharge()) + "\n";
+
+                totalAmount += each.getCharge();
+
+        }
+
+        result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
+
+        result += "You earned " + String.valueOf(frequentRenterPoints)
+
+                                        + "frequent renter points ";
+
+        return result;
+
+        }. . .
+
+     }
+
+     public class Rental{ . . .
+
+        public int getFrequentRenterPoints() {
+
+        if (this.getMovie().getPriceCode() == Movie.NEW_RELEASE)
+
+                return 2;
+
+        else return 1;
+
+        }. . .
+    Suppression des variables temporaires
+
+117
+
+         Les variables temporaires
+
+                encouragent l’écriture de méthodes longues et complexes.
+                forcent le passage de nombreux paramètres sans raison
+                il est facile de perdre la trace de leur signification dans des méthodes longues
+
+         Les variables à éliminer
+
+                totalAmount
+                frequentRenterPoints
+
+         Technique: « Replace Temp with Query »
+
+         Résultat
+
+                Les requêtes sont accessibles à n’importe quelle méthode de la classe
+                      ◼ Cette approche favorise les designs plus propres, évitant de surcroît les méthodes longues et
+                          complexes
+
+                Plus de code
+                Moins efficace
+Résultat de la suppression de la variable totalAmount
+
+public class Customer{ . . .
+
+     public String statement() {
+
+118     int frequentRenterPoints = 0;                     //double totalAmount = 0;
+
+        Enumeration rentals = rentals_.elements();
+
+        String result = "Rental Record for " + getName() + "\n";
+
+        while (rentals.hasMoreElements()) {
+
+           Rental each = (Rental) rentals.nextElement();
+
+           frequentRenterPoints =+ each.getFrequentRenterPoints();
+
+           result += "\t" + each.getMovie().getTitle() + "\t"
+
+           + String.valueOf(each.getCharge()) + "\n";
+
+        }
+
+        result += "Amount owed is " + String.valueOf( getTotalCharge() ) + "\n";
+
+        result += "You earned " + String.valueOf(frequentRenterPoints)
+
+                                       + "frequent renter points ";
+
+        return result;
+
+     }
+
+     public double getTotalCharge() {
+
+        double result = 0;
+
+        Enumeration rentals = rentals_.elements();
+
+        while (rentals.hasMoreElements()) {
+
+           Rental each = (Rental) rentals.nextElement();
+
+           result =+ each.getCharge();
+
+        }
+
+        return result;
+Résultat de la suppression de la variable frequentRenterPoints
+
+public class Customer{ . . .
+
+     public String statement() {
+
+119                                          //int frequentRenterPoints = 0;
+
+        Enumeration rentals = rentals_.elements();
+
+        String result = "Rental Record for " + getName() + "\n";
+
+        while (rentals.hasMoreElements()) {
+
+           Rental each = (Rental) rentals.nextElement();
+
+           result += "\t" + each.getMovie().getTitle() + "\t"
+
+           + String.valueOf(each.getCharge()) + "\n";
+
+        }
+
+        result += "Amount owed is "+ String.valueOf(this.getTotalCharge())+"\n";
+
+        result += "You earned " + String.valueOf( getTotalFrequentRenterPoints())
+
+                                  + "frequent renter points ";
+
+        return result;
+
+     }
+
+     public int getTotalFrequentRenterPoints() {
+
+        int result = 0;
+
+        Enumeration rentals = rentals_.elements();
+
+        while (rentals.hasMoreElements()) {
+
+           Rental each = (Rental) rentals.nextElement();
+
+           result =+ each.getFrequentRenterPoints();
+
+        }
+
+        return result;
+
+     }
+Quelques remarques sur le résultat obtenu
+
+120  La plupart des refactorisations réduisent la taille du code
+
+                toutefois ici, le code est plus long
+
+         En Java, une boucle demande 6 lignes de code de support
+
+                        int result = 0;
+                        Enumeration rentals = rentals_.elements();
+                        while (rentals.hasMoreElements()) {
+
+                                Rental each = (Rental) rentals.nextElement();
+                                result = +each.getFrequentRenterPoints();
+                        }
+                        return result;
+                 //alternative en Java 5.0
+                      int result = 0;
+                       for(Rental each : rentals) { result =+ each.getFrequentRenterPoints(); }
+                       return result;
+
+                En lisp
+                   (accumulate (lambda(res obj)) (+ res (frequentRenterPoints obj))
+                                          0
+                                          rentals)
+
+                En Smalltalk
+
+                      rentals inject: 0
+Quelques remarques sur le résultat obtenu
+
+121
+
+   L’ancienne version du code n’exécutait la boucle qu’une seule fois
+
+   La nouvelle version exécute la boucle trois fois :
+
+         statement(),
+         getTotalCharge(),
+         getTotalFrequentRenterPoints()
+
+   Tant que l’on n’aura pas fait le « profiling » de l’exécution du programme, on
+      ne saura pas qu’elles sont les conséquences réelles au niveau de la
+      performance
+
+   Sans des méthodes de requêtes comme getTotalCharge(),
+      getTotalFrequentRenterPoints(), les autres méthodes doivent avoir
+      plus de connaissances sur les locations et sur la construction des boucles
+
+       Plus de code à écrire et à maintenir
+    htmlStatement()
+
+  Utilisation des méthodes de calcul créées
+
+122
+   public class Customer{ . . .
+
+         public String htmlStatement() {
+                 Enumeration rentals = rentals_.elements();
+                 String result = "<H1>Rentals for <EM>" + getName() + "</EM><H1/><P>\n";
+
+                 while (rentals.hasMoreElements()) {
+                      Rental each = (Rental) rentals.nextElement();
+                        result += each.getMovie().getTitle()
+                               + ": " + String.valueOf(each.getCharge()) + "<BR>\n";
+
+                 }
+                 // add footer lines
+                 result += "<P>You owe <EM> " + String.valueOf(this.getTotalCharge())
+
+                                                                  + "</EM><P>\n";
+                 result += "On this rental you earned <EM>"
+
+                                                     + String.valueOf(this.getTotalFrequentRenterPoints())
+                                                     + "</EM>frequent renter points <P>";
+                 return result;
+         }
+         . . .
+    }
+  htmlStatement()
+
+123
+
+  Utilisation des méthodes de calcul créées
+       Si les règles de calcul changent -> un seul endroit à modifier
+
+  Factorisation de statement() et htmlStatement()
+       Méthodes pour les entêtes, bas de pages, corps, etc.
+
+  « Form Template Method »
+124
+125
+
+        public abstract class Statement {
+
+                public Statement() {
+                       super();
+
+                }
+
+                public String print(Customer c) {
+                       String result = this.printHeader(c);
+                       result += this.printDetails(c);
+                       result += this.printSummary(c);
+                       return result;
+
+                }
+
+                abstract protected String printHeader(Customer c);
+
+                abstract protected String printDetails(Customer c);
+
+                abstract protected String printSummary(Customer c);
+        }
+     public class HtmlStatement extends Statement {
+
+126  public HtmlStatement() { super();
+
+     }
+
+     protected String printHeader(Customer c) {
+
+         return "<H1>Rentals for <EM>" + c.getName() + "</EM><H1/><P>\n";
+
+     }
+
+     protected String printDetails(Customer c) {
+
+         Enumeration rentals = c.getRentals().elements();
+
+         String result = "";
+
+         while (rentals.hasMoreElements()) {
+
+            Rental each = (Rental) rentals.nextElement();
+
+            result += each.getMovie().getTitle() + ": "
+
+            + String.valueOf(each.getCharge()) + "<BR>\n";
+
+         }
+
+         return result;
+
+     }
+
+     protected String printSummary(Customer c) {
+
+         String result;
+
+         result = "<P>You owe <EM> " + String.valueOf(c.getTotalCharge())
+
+            + "</EM><P>\n";
+
+         result += "On this rental you earned <EM>"
+
+            + String.valueOf(c.getTotalFrequentRenterPoints())
+
+            + "</EM>frequent renter points <P>";
+
+         return result;
+
+     }}
+ Modification de la classification des films
+
+127
+
+        Remplacer les conditionnelles sur les codes de prix par du
+          polymorphisme
+
+        1ère étape
+            dans getCharge() de Rental
+
+                  ◼ switch … Movie.REGULAR
+                  ◼ Mauvaise approche: utiliser les attributs d’une autre classe pour contrôler la
+
+                     conditionnelle
+                  ◼ Déplacer getCharge() dans la classe Movie
+
+            La méthode getFrequentRenterPoints() de la classe
+              Rental fait référence à la constante Movie.NEW_RELEASE
+
+                  ◼ Déplacer getFrequentRenterPoints() dans la classe Movie
+    La classe Rental avant les modifications
+
+       public class Rental {. . .
+128 public double getCharge() {
+
+               double result = 0;
+               switch (getMovie().getPriceCode()) {
+
+                      case Movie.REGULAR :
+                             result += 2;
+                             if (getDaysRented() > 2)
+                                     result += (getDaysRented() - 2) * 1.5; break;
+
+                      case Movie.NEW_RELEASE :
+                             result += getDaysRented() * 3; break;
+
+                      case Movie.CHILDRENS :
+                             result += 1.5;
+                             if (getDaysRented() > 3)
+                                     result += (getDaysRented() - 3) * 1.5; break;
+
+               }
+               return result;
+       }
+       . . .}
+
+       public class Customer {
+       . . .
+       public double amountFor(Rental aRental) { return aRental.getCharge();}
+       . . .}
+Résultat du déplacement de la méthode getCharge()
+
+dans la classe Movie
+
+      public class Movie {
+
+129 . . .
+              public double getCharge(int daysRented) {
+
+      double result = 0;
+
+      switch (getPriceCode()) {
+
+           case Movie.REGULAR :    result += 2;
+
+                                   if (daysRented > 2)
+
+                                   result += (daysRented - 2) * 1.5;
+
+                                   break;
+
+           case Movie.NEW_RELEASE : result += daysRented * 3;
+
+                                                         break;
+
+           case Movie.CHILDRENS :  result += 1.5;
+
+                                   if (daysRented > 3)
+
+                                   result += (daysRented - 3) * 1.5;
+
+                                   break;
+
+      }
+
+      return result;
+
+   }. . .
+
+}
+
+public class Rental {…
+
+   public double getCharge() {
+
+      return _movie.getCharge(_daysRented);
+
+   }
+ Résultat du déplacement de la méthode getFrequentRenterPoints()
+
+130
+
+  public class Movie {
+  . . .
+
+        public int getFrequentRenterPoints() {
+               if (this.getPriceCode() == Movie.NEW_RELEASE)
+                       return 2;
+               else
+                       return 1;
+
+        }
+       . . .
+  }
+
+  public class Rental {…
+        public int getFrequentRenterPoints() {
+               return _movie.getFrequentRenterPoints();
+        }
+
+  . . .
+  }
+   Modification de la classification des films
+
+131
+
+        Remplacer les conditionnelles sur les codes de prix par le polymorphisme
+
+        2e étape
+
+             Utiliser l’héritage/polymorphisme pour supprimer les conditionnelles
+
+                  ◼ Sous-classer Movie, e.g. RegularMovie,
+                         ◼ ne fonctionne pas car un film peut changer de type durant sa vie
+
+                  ◼ Solution Price + RegularPrice, etc. >>> State Design Pattern
+
+                  ◼ Techniques
+
+                            ◼ « Self Encapsulate Field » : préparer le terrain
+                            ◼ « Replace Type Code with State/Strategy » : Price et State Design Pattern
+                            ◼ « Move Method » : switch >>> classe Price
+                            ◼ « Replace Conditional with Polymorphism » : éliminer switch
+ Encapsulation de la variable d’état _priceCode
+
+132
+    Résultat de l’encapsulation de la variable
+    d’instance _priceCode
+
+133
+
+        public class Movie {
+                . . .
+              public Movie(String title, int priceCode) {
+                      _title = title;
+                      setPriceCode( priceCode );
+              }
+              public int getPriceCode() {
+                   return _priceCode;
+              }
+              public void setPriceCode(int newCode) {
+                   _priceCode = newCode;
+              }
+
+             . . .
+        }
+Remplacement de la variable d’instance _priceCode par
+un objet Price contenant cet état
+
+134
+   State Design Pattern
+
+135
+
+        public class Movie
+           Price _price;
+           double getCharge() { return _price.getCharge(); }
+
+                                             Price
+                                        getCharge()
+
+RegularPrice  ChildrensPrice  NewReleasePrice
+ getCharge()    getCharge()       getCharge()
+   Création des classes Price
+
+136 public abstract class Price {
+               public abstract int getPriceCode();
+
+          }
+
+          public class ChildrensPrice extends Price {
+               public int getPriceCode() {
+                    return Movie.CHILDRENS;
+               }
+
+          }
+
+          public class NewReleasePrice extends Price {
+               public int getPriceCode() {
+                    return Movie.NEW_RELEASE;
+               }
+
+          }
+
+          public class RegularPrice extends Price {
+               public int getPriceCode() {
+                    return Movie.REGULAR;
+               }
+Intégrer les classes d’état Price dans la classe Movie
+
+public class Movie {
+
+      . . .                     //private int _priceCode;
+
+137
+
+private Price _price;
+
+public int getPriceCode() {
+
+   return _price.getPriceCode();
+
+}
+
+public void setPriceCode(int newCode) {
+
+   switch (newCode) {
+
+             case REGULAR :     _price = new RegularPrice();
+
+                        break;
+
+             case CHILDRENS :   _price = new ChildrensPrice();
+
+                        break;
+
+             case NEW_RELEASE : _price = new NewReleasePrice();
+
+                        break;
+
+             default :
+
+             throw new IllegalArgumentException("Incorrect Price Code");
+
+   }
+
+}
+
+. . .
+  Déplacement de la méthode getCharge(int)de la
+  classe Movie à la classe Price
+
+138
+                          Résultat de l’application de
+
+public class Movie {      « Move Method » à getCharge(int)
+       . . .
+
+139 public double getCharge(int daysRented) {
+
+          return _price.getCharge(daysRented);
+
+   }
+
+   . . .
+
+}
+
+public class Price {
+
+   . . .
+
+   public double getCharge(int daysRented) {
+
+      double result = 0;
+
+      switch (getPriceCode()) {
+
+          case Movie.REGULAR :   result += 2;
+
+                                 if (daysRented > 2)
+
+                                 result += (daysRented - 2) * 1.5;
+
+                                 break;
+
+          case Movie.NEW_RELEASE : result += daysRented * 3;
+
+                                 break;
+
+          case Movie.CHILDRENS : result += 1.5;
+
+                                 if (daysRented > 3)
+
+                                                result += (daysRented - 3) * 1.5;
+
+                                 break;
+
+      }
+
+      return result;
+140
+Suppression du switch en faveur du polymorphisme
+
+    public abstract class Price {
+           public abstract double getCharge(int daysRented);
+
+141 public abstract int getPriceCode();
+    }
+    public class RegularPrice extends Price {
+           public double getCharge(int daysRented) { double result = 2;
+                                                                                              if (daysRented > 2)
+                                                                                                   result += (daysRented-2)*1.5;
+                                                                                              return result;
+                                                                                          }
+           public int getPriceCode() { return Movie.REGULAR; }
+    }
+    public class ChildrensPrice extends Price {
+           public double getCharge(int daysRented) { double result = 1.5;
+                                                                                              if (daysRented > 3)
+                                                                                                   result += (daysRented-3)*1.5;
+                                                                                              return result;
+                                                                                          }
+           public int getPriceCode() { return Movie.CHILDRENS; }
+    }
+    public class NewReleasePrice extends Price {
+           public double getCharge(int daysRented) { return daysRented * 3; }
+           public int getPriceCode() { return Movie.NEW_RELEASE; }
+    }
+   Modification de la classification des films
+
+142
+
+        Remplacer les conditionnelles sur les points de fidélité à l’aide de la nouvelle classe
+            Price
+
+               Exploitation du polymorphisme qui vient d’être introduit
+
+               Techniques
+                     ◼ « Self Encapsulate Field »
+
+                                 ◼ préparer le terrain pour appliquer la technique suivante
+                                 ◼ déjà fait
+
+                     ◼ « Replace Type Code with State/Strategy »
+
+                                 ◼ Price et State Design Pattern
+                                 ◼ déjà fait
+
+                     ◼ « Move Method »
+
+                                 ◼ getFrequentRenterPoints() --- classe Price
+
+                     ◼ « Replace Conditional with Polymorphism »
+
+                                 ◼ Éliminer la conditionnelle de getFrequentRenterPoints
+                                          ◼ if ((getPriceCode()…)
+Résultat de l’application de
+« Move Method » à getFrequentRenterPoints (int)
+
+ 143
+
+        public class Movie {
+               . . .
+
+             public int getFrequentRenterPoints() {
+                      return _price.getFrequentRenterPoints();
+
+             }
+             . . .
+        }
+
+        public class Price {
+               . . .
+
+             public int getFrequentRenterPoints() {
+                      if (this.getPriceCode() == Movie.NEW_RELEASE)
+                                          return 2;
+                      else
+                             return 1;
+
+             }
+             . . .
+        }
+Suppression du if en faveur du polymorphisme
+
+144
+          public class Movie {
+                 . . .
+               public int getFrequentRenterPoints() {
+                            return _price.getFrequentRenterPoints();
+                }
+                . . .
+          }
+
+          public class Price {
+                 . . .
+
+               public int getFrequentRenterPoints() {
+                            return 1;
+
+                }
+                . . .
+          }
+
+          public class NewReleasePrice extends Price {
+                 . . .
+
+               public int getFrequentRenterPoints() {
+                            return 2;
+
+                }
+    Suppression du « switch » lors de la création
+
+145
+           public class Movie {
+
+                 public Movie(String title, Price price) {
+                         _title = title;
+                         setPrice(price);
+
+                  }
+Suppression du « switch » lors de la création
+
+146 public class Movie {
+
+static public  final int REGULAR = 0;
+static public  final int NEW_RELEASE = 1;
+static public  final int CHILDRENS = 2;
+
+static public Movie createRegular(String title)
+
+{  return create(title, new RegularMoviePrice());
+
+}
+
+static public Movie createChildren(String title)
+
+{  return create(title, new ChildrenMoviePrice());
+
+}
+
+static public Movie createNewRelease(String title)
+
+{  return create(title, new NewReleaseMoviePrice());
+
+}
+
+static public Movie create(String title, Price aPrice)
+
+{  return new Movie(title, aPrice);
+
+}
+
+private Movie(String title, Price price) {
+        _title = title;
+        setPrice(price);
+
+}
+   Conclusion
+
+147
+
+        Gains
+            Plus facile à maintenir et à modifier
+
+                  ◼ S’il y a des changements au niveau
+
+                          ◼ de la structure de classification des films,
+                          ◼ des règles de facturation
+                          ◼ des règles d’attribution des points de fidélité
+
+        Toutes les modifications ont mené
+            à une meilleure distribution des responsabilités
+            du code plus facile à maintenir
+
+        Rythme de la refactorisation
+            Petite modification, test, petite modification, test…
+   Références
+
+148
+
+      M. Fowler, et al., Refactoring, Improving the design of
+        existing code, Addison-Wiley, 2002.
+
+           Chapitre 15 : a longer example
+
+            ◼ http://www.refactoring.com/rejectedExample.pdf
+
+           Catalogue en-ligne de refactorisations
+
+            ◼ http://www.refactoring.com/catalog/index.html
+
+      Site web dédié à la refactorisation
+
+           http://www.refactoring.com/
+

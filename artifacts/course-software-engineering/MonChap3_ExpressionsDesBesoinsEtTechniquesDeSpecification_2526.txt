@@ -1,0 +1,2035 @@
+                                                                                                                     1
+
+Chapitre 3- Expressions Des
+  Besoins Et Techniques de
+         Spécification
+
+                    Merci à:
+                 Jorge Aranda
+  Plan
+
+2
+
+    Spécifications
+
+        C’est quoi, Pourquoi, Audience,
+        Structure d’une Spécification
+
+        Caractéristiques d’une Spécification des exigences
+         bien rédigée
+
+    Expression des besoins
+
+        Techniques d’Elicitation
+
+     Outils et Techniques de Spécification
+  Rappel: Cycle en V  Acceptance
+                         testing
+3
+
+                          Qualification testing
+                       provides developers the
+                      opportunity to locate and
+                      modify difficult procedures
+                        and causes of program
+
+                             failures before
+                      customers try the program
+C’est quoi les specs?
+
+4 Application Domain     pecificatio                Machine Domain
+
+                      s             n   programs
+domain properties                      computers
+
+requirements
+  A real world example
+
+5
+
+                        Shall be detailed
+                               in the
+
+                          specifications
+                            document:
+
+                         1-Detect sensor
+                               value
+
+                         2-Test if sensor
+                        value falls below
+                        x db, activate the
+
+                              buzzer
+                        3-once the buzzer
+
+                          activated send
+                          notification by
+                         sound, by light,
+
+                               etc…
+  C’est quoi les specs?
+
+6
+
+     1. EXPRESSION DES BESOINS -> Description abstraite
+
+           Que doit faire et ne pas faire le logiciel
+
+           rédigée par le client=MOA: Maitre D’ouvrage
+
+       Comment communiquer ces besoins (requirements) aux autres?
+
+             Dans un document de spécification: Software Requirement Specification
+                ou SRS
+
+                   ◼ Une SRS peut ne pas être un document d’une seule page !!!...
+
+     2. SPÉCIFICATIONS DU LOGICIEL ->Description détaillée
+          Depuis 1994: cahier de charges = spécifications
+          Base du contrat, rédigée par le MOE (Maitre D’œuvre) d’après 1.
+  Spécifications: Les éléments
+7 nécessaires (1/2)
+
+      Ce document décrit ce que le système doit faire sans spécifier
+        comment le faire.
+
+           Ce doit être un document complet et cohérent
+
+      Définition des besoins fonctionnels
+      Définition des besoins non fonctionnels (qualités requises, et
+
+        contraintes spécifiées par le client)
+      Organisation et stockage des données
+      Modèle conceptuel (Diagrammes)
+
+           C’est une vue d’ensemble des fonctionnalités et des relations entre les
+             fonctions et les composants du système.
+
+           Plusieurs représentations sont possibles (modèles et méthodes
+             différentes)
+  Spécifications: Les éléments
+8 nécessaires (2/2)
+
+      première version du glossaire
+
+           Definitions précises des termes techniques.
+
+               ◼ En pensant que le cahier des charges va être lu par des usagers non
+                   informaticiens mais qu’il sera aussi utilisé par les développeurs.
+
+      Index
+
+               ◼ La présentation des index doit être variée: par ordre alphabétique des
+                   fonctions, des données....
+
+               ◼ Penser à l’évolution des versions successives.
+               ◼ C’est une partie du cahier des charges souvent consultée.
+
+      (et dans le cas d'un cycle de vie en V préparer :
+
+           tests de validation et de qualification (vérification)
+           première version du manuel utilisateur)
+  Organisation des données: Modèle
+11 E-A
+
+  Le modèle Entité-Association est un formalisme connu par l’ISO pour
+  décrire l’aspect conceptuel des données
+
+  L’exemple traduit
+  - qu’ aucun exemplaire ou au plus 1 exemplaire de l’entité_1 est associée à l’entité_2
+  - qu’ aucun exemplaire ou au plus n exemplaires de l’entité_2 sont associés inversement à l’entité_1
+  - qu’obligatoirement 1 exemplaire et un seul de l’entité_3 est associé inversement à l’entité_1
+   Définitions des besoins non fonctionnels
+
+12
+
+       Contraintes sur les fonctions du système
+           Ex: Temps de réponse
+
+       langage naturel ou structuré:
+           matrice des besoins par propriété de Boehm (1974)
+
+                   ◼ On retrouve dans cette matrice les références des définitions (Di)
+                      explicitées de chacun des cas.
+
+       Les contraintes du système évoluent dans le temps car soumis aux évolutions
+          technologiques
+           Prévoir leurs évolutions possibles au cours du développement
+           Ou au moins indiquer lors de la définition des besoins leur lien avec le
+             matériel afin qu’ils soient facilement modifiables.
+
+       Faire apparaître les conflits et les compromis possible avec les contraintes
+          d’autres fonctions.
+  Définitions des besoins non
+13 fonctionnels
+
+     Faire apparaître les conflits et les compromis
+      possibles
+
+         Certaines contraintes peuvent entrer en conflit :
+         Par exemple, améliorer la sécurité peut ralentir les
+
+          performances.
+
+     Il faut donc :
+     Identifier ces conflits,
+     Documenter les compromis choisis (ex. : “priorité à
+
+      la sécurité, même si cela augmente le temps de
+      réponse”).
+  Besoins Non-Fonctionnels: Ex
+
+14
+
+      “temps de réponse < 3s sur une machine avec 8 Go de RAM”),
+      Cela permet de modifier facilement ces contraintes si le matériel change
+  Besoins Non-Fonctionnels: Ex
+
+15
+  I. Le modèle conceptuel du système
+
+16
+
+        Il fait partie intégrante du cahier des charges, et donne une première vue d'ensemble du
+            logiciel a réaliser.
+
+                 fonctions principales utilisateur et leurs relations, sans détails inutiles
+                 Après une présentation du modèle conceptuel général, on définit un modèle conceptuel pour chaque
+
+                     fonction principale.
+
+        Méthodes utilisées:
+
+                 Use Cases UML
+                 des automates finis (ex: en 1976 Salter):
+                 Diagrammes de Flots de Données
+
+        facilité d'une représentation graphique
+  C4 Model
+
+20
+
+           UML Diagrams Purpose
+
+Context Diagram Use Case Diagrams Show the system’s interactions with
+                                                  external entities.
+
+Container Diagram Component       Illustrate the high-level architecture of
+                        Diagrams  the system, including containers and
+                                  their interactions.
+
+Component  Class Diagrams         Detail the internal structure of
+Diagram                           containers, showing components and
+                                  their relationships.
+
+Code Diagram Class Diagrams       Provide detailed views of the code
+                                  structure, including classes and their
+                                  relationships.
+    4+1 View Model
+
+                  UML Diagrams               Purpose
+
+21                                           Show the static structure of the system.
+
+Logical View      Class Diagrams             Represent the states and transitions of
+                                             objects.
+                  State Diagrams
+                                             Illustrate the flow of control and data.
+Process View      Activity Diagrams
+                                             Show interactions between objects over
+                  Sequence Diagrams          time.
+                                             Represent interactions focusing on the
+                  Communication              relationships between objects.
+                  Diagrams                   Depict the organization of software
+                                             components.
+Development View  Component Diagrams         Show the organization of classes and
+                                             components into packages.
+                  Package Diagrams           Illustrate the physical deployment of
+                                             software components on hardware.
+Physical View     Deployment Diagrams        Capture functional requirements and
+                                             interactions between users and systems.
+Scenarios (Use Case View) Use Case Diagrams
+   Le modèle conceptuel du système
+
+23
+
+                                               machine états-transitions
+                                             UML représentant l'automate
+                                             associé à une réparation de
+                                             véhicule dans le cadre de la
+
+                                                   gestion d'un garage
+                                                        automobile.
+
+                                                              Flot de données pour
+                                                              le test unitaire
+
+Code     Executer le    Résultats des tests  Contrôler les  Décision
+source   test unitaire                       résultats      Du contrôle
+
+Plan de
+test
+  Le modèle conceptuel du système
+
+24
+
+     Pour chaque fonction
+
+         un modèle conceptuel
+
+  Ici le modèle conceptuel de la
+  PAIE décrit l’ensemble des sous
+  fonctions qui le composent. Les
+  flèches matérialisent les flux
+  d’informations entre ces
+  fonctions.
+   Software Requirements
+   Specification: Purpose
+
+25
+
+     Communication
+
+         explains the application domain and the system to be
+           developed
+
+     Contractual
+
+         May be legally binding!
+         Expresses agreement and a commitment
+
+     Baseline for evaluating the software
+
+         supports testing, V&V
+         “enough information to verify whether delivered system
+
+           meets requirements”
+
+     Baseline for change control
+  Audience
+
+26
+
+      Clients et utilisateurs
+           intéressés par les spécifications du système à définir…
+           …mais de façon non détaillée
+
+      Analystes
+           Ecrivent d’autres spécifications en relation
+
+      Développeurs, Programmeurs
+           Doivent implémenter ces spécifications
+
+      Testeurs
+           Doivent effectuer les tests, pour voir si les spécifications ont été
+             respectées
+
+      Chefs de projet (Project Manager)
+           Doivent gérer, contrôler et piloter le projet
+    Appropriate Specification
+
+27
+
+     Consider two different projects:
+
+    A) Tiny project, 1 programmer, 2 months work
+
+    programmer talks to customer, then writes up a 2-page memo
+
+    B) Large project, 50 programmers, 2 years work
+
+    team of analysts model the requirements, then document them in a
+       500-page SRS
+
+    Purpose of spec?            Project A                   Project B
+                      Crystalizes programmer’s    Build-to document; must
+       Management     understanding; feedback     contain enou gh detail for
+            view?
+                               to customer           all the programmers
+         Readers?      Spec is irre levant; have     Will use the spec to
+                                                  estimate resource needs
+                           already allocated      and plan the development
+                                resources          Primary: programmers,
+                                                      testers, managers;
+                        Primary: Spec author;       Secondary: customers
+                        Secondary: Customer
+   Procurement: An ‘SRS’ may be
+28 written by…?
+
+      …the procurer: (the client)
+
+            SRS is really a call for proposals (CfP)
+            Must be general enough to yield a good selection of bids…
+            …and specific enough to exclude unreasonable bids
+
+      …the bidders:
+
+            SRS is a proposal to implement a system to meet the CfP
+            must be specific enough to demonstrate feasibility and technical
+
+              competence
+            …and general enough to avoid over-commitment
+
+      …the selected developer:
+
+            reflects the developer’s understanding of the customer’s needs
+            forms the basis for evaluation of contractual performance
+
+      …or by an independent RE contractor!
+   A complication: Procurement
+
+29
+
+     Choice over at what point to compete the contract
+
+         Early (conceptual stage)
+
+            ◼ can only evaluate bids on apparent competence & ability
+
+         Late (detailed specification stage)
+
+            ◼ more work for procurer; appropriate RE expertise may not
+               be available in-house
+
+     IEEE Standard recommends SRS jointly developed
+       by procurer & developer
+   Organizing the requirements
+
+30
+
+    Need a logical organization for the document
+
+         Sommerville, IEEE standard offers different templates,
+           etc…
+
+    Example Structures - organize by…
+
+         …Subsystem
+
+             ◼ e.g. for spacecraft: command&control, data handling, comms,
+                instruments, etc.
+
+         …User type
+
+             ◼ e.g. for a project support system: manager, technical staff,
+                administrator, etc.
+
+         …Mode
+
+             ◼ e.g. for word processor: page layout mode, outline mode, text
+                editing mode, etc
+   Le plan du cahier des charges selon
+31 Sommerville (1/2)
+
+      Présentation générale de l’application et du contenu du
+        document
+
+      Glossaire
+      Index
+      Description du matériel et des interfaces avec le logiciel
+
+            Définition des configurations minimales sur lesquelles le système pourra
+              s’exécuter
+
+      Présentation du modèle conceptuel (vue générale des
+        principales fonctions du système et leurs relations.
+
+            La représentation graphique est une très bonne manière de décrire le
+              modèle.
+
+      Besoins fonctionnels
+   Le plan du cahier des charges selon
+32 Sommerville (2/2)
+
+      Besoins B.D. (Selon la nature et l’importance des données qui
+        sont traitées)
+
+      Besoins non fonctionnels
+
+            Ces besoins sont des contraintes (ou restrictions) liées au système
+            Elles doivent être décrites et reliées aux besoins fonctionnels
+
+      Informations sur la maintenance
+
+            Repose sur des hypothèses du fait que le système n’en est qu’a sa phase
+              d’élaboration.
+
+            Prévisions sur l’évolution du matériel, des besoins des usagers, de
+              l'évolution du logiciel.
+
+            Les fonctions et contraintes qui risquent le plus d’évoluer doivent être
+              mises en évidence
+  IEEE Standard for SRS
+
+33
+   IEEE STD Section 3 (example)
+
+                                                                                                       NFR
+
+34
+
+ 3.1 External Interface Requirements              3.3 Performance Requirements
+
+        3.1.1 User Interfaces                            Remember to state this in measurable
+        3.1.2 Hardware Interfaces                            terms!
+        3.1.3 Software Interfaces
+        3.1.4 Communication Interfaces            3.4 Design Constraints (a type of NFR)
+
+ 3.2 Functional Requirements                             3.4.1 Standards compliance
+                                                          3.4.2 Hardware limitations
+        this section organized by mode, user             etc.
+           class, feature, etc. For example:
+                                                   3.5 Software System Attributes
+        3.2.1 Mode 1
+                                                          3.5.1 Reliability
+             ◼ 3.2.1.1 Functional Requirement 1.1         3.5.2 Availability
+             ◼…                                           3.5.3 Security
+                                                          3.5.4 Maintainability
+        3.2.2 Mode 2                                     3.5.5 Portability
+
+             ◼ 3.2.1.1 Functional Requirement 1.1  3.6 Other Requirements
+             ◼…
+
+ ...           Bad: The system shall be responsive to
+ 3.2.2 Mode n  any user input.
+                Good: The system shall respond to any
+    ◼ ...       user input within 0.01 seconds.
+  IEEE STD Section 3
+35 (example)
+
+      La norme IEEE 830 fait des propositions pour différentes approches.
+           On peut s'en inspirer en décrivant les fonctions si on utilise une approche
+             fonctionnelle, ou on peut organiser le document en termes d'objets et de
+             classe, si l'on utilise une méthode basée sur le concept d'objet.
+
+        Ex: Définition des objets
+
+            i. Identification de l’objet -i
+            i. Contraintes sur l’objet i
+
+      D'autres normes existent encore nous en citons:
+           AFNOR X50-151 plan-type
+  Cahier des charges (SEL)
+
+36
+
+      Dans presque tous les logiciels qui échouent, la SEL s'est trouvée avoir
+         du retard, être incomplète, trop contraignante ou simplement incorrecte.
+
+      Une erreur introduite dans le cahier des charges, donc tôt dans le cycle
+         de vie du logiciel, est extrêmement couteuse à corriger
+           ces erreurs sont généralement découvertes tard dans le développement
+             du logiciel
+           nécessitant souvent l'adjonction de code,
+           remettant en cause la conception du logiciel et
+           nécessitant de re-tester certaines parties du logiciel
+   Sept Caractéristiques d’une Spécification des
+   exigences bien rédigée [IEEE 830]
+
+37
+
+    1. Non ambiguë
+    2. Complète
+    3. Cohérente
+    4. Vérifiable
+    5. Modifiable
+    6. Traçable
+    7. Utilisable durant la maintenance
+
+    Ranked for Importance and Stability
+Desiderata for Specifications
+
+38                                                         • Consistent
+
+    Valid (or “correct”)                                         – Doesn’t contradict itself
+                                                                  – Uses all terms consistently
+            Expresses the real needs of the
+               stakeholders (customers, users,…)           • Ranked
+
+            Does not contain anything that is                    – Indicates relative importance /
+               not “required”                                         stability of each requirement
+
+    Unambiguous                                           • Verifiable
+
+            Every statement can be read in                       – A process exists to test satisfaction
+               exactly one way                                        of each requirement
+
+    Complete                                              • Modifiable
+
+            All the things the system must do…                   – Can be changed without difficulty
+            …and all the things it must not do!
+            Conceptual Completeness                                         • Good structure and cross-
+                                                                                 referencing
+                 ◼ E.g. responses to all classes of input
+                                                           • Traceable
+            Structural Completeness
+                                                                  – Origin of each requirement is clear
+                 ◼ E.g. no TBDs!!!                                – Labels each requirement for future
+
+    Understandable (Clear)                                           referencing
+
+            E.g. by non-computer specialists
+  Example
+
+39
+
+     Requirement ID: REQ-2025-Login-01
+     Text: “The system shall allow a user to log in using
+
+      email and password.”
+     Origin: Client interview, 15/09/2025, stakeholder
+
+      = Marketing Dept.
+     Traceability Links:
+
+        Design: UML Use Case “User Authentication”
+        Code Module: AuthService.java
+        Test Case: TC-Login-01 – Verify login with valid
+
+          credentials
+        Change Request: CR-77 – Add 2FA in v2.0
+  Non ambiguë et Verifiable
+
+40
+
+     Une SEL est non ambiguë si et seulement si chaque exigence
+        qu’elle décrit a une seule interprétation
+
+ Tâche terriblement difficile: exige une grande précision
+   dans l'utilisation des termes introduits
+
+ Moyens qui aident :
+
+ Révision du texte par d’autres personnes
+
+ Employer des outils (ex. Visual Paradigm, IBM Rhapsody)
+
+ Employer une langue de spécification (ex. UML)
+
+ Glossaire            Writing test cases during the requirements
+                       process is an excellent means of ensuring your
+                       requirements are unambiguous and testable
+  Non ambiguë et Verifiable
+
+41
+
+ Une SEL est vérifiable si et seulement si chaque exigence qu’elle
+   contient est vérifiable.
+
+     Pas d’adjectifs qualificatifs
+     Pouvoir définir une suite d’action pour vérifier
+     Les énoncés ambigus ne sont généralement pas vérifiables
+
+ Exemple d'une spécification non vérifiable:
+
+     "Le logiciel doit être facile à utiliser"
+
+  three ways to make your requirements more testable:
+  1. Specify a quantitative description for each adverb and adjective so that the
+  meaning of qualifiers is clear and unambiguous.
+  2. Replace pronouns with specific names of entities.
+  3. Make sure that every noun is defined in exactly one place in the requirements
+  document (Glossaire)
+ Complète  L’utilisateur a une grande responsabilité lorsqu’il
+           recense ses besoins : fonctions et contraintes
+42         sur ces fonctions. Il doit ne rien oublier
+
+ Une SEL est complète si et seulement si elle contient tous ces éléments :
+
+     Toutes les exigences significatives !
+
+     La réponse du logiciel à toutes les classes d’entrées dans toutes les
+       situations possibles.
+
+        ◼ On oublie facilement de préciser le comportement lors d'un événement
+           non désiré
+
+                 ◼ Erreur dans les données introduites par l'utilisateur, etc…
+                 ◼ Panne du matériel
+
+        ◼ Ce n'est pas au programmeur d'inventer lors de l'implémentation ce que
+           devra faire le programme dans de telles situations.
+
+     Définition de tous les termes et présence de toutes les légendes et les
+       références aux figures et aux tableaux
+
+     Pas de « à venir» (S’il y en a, il faut dire comment et quand ils seront
+       enlevés)
+  Cohérente
+
+43
+
+     Une SEL est cohérente si et seulement si aucun sous ensemble
+        d’exigences est en conflit.
+
+          Le problème devient sensible à partir d'une certaine taille du
+            cahier des charges
+
+     Conflits possibles:
+
+          Caractéristiques d’objets physiques en conflits (ex: format
+            d’impression…)
+
+          Conflits logiques ou temporels (A avant B et B avant A)
+          Descriptions des mêmes objets du monde réel avec des termes
+
+            différents
+
+                                          For ex. When you interview two different stakeholders
+  Modifiable et Utilisable durant la
+
+44 maintenance
+
+     Les spécifications peuvent changer durant le développement
+        ou durant la maintenance du logiciel. Ces modifications
+        doivent être reportées facilement dans le cahier des
+        charges.
+
+     Définition: Une SEL est modifiable si et seulement si sa
+        structure et le style d’écriture sont tels que chaque
+        changement aux exigences est facile et laisse le document
+        cohérent sans changer la structure et le style. Doit avoir
+
+          Table des matières, index, références
+          Pas de redondance
+          Exigences séparées et non mélangées
+  Modifiable et Utilisable durant la
+45 maintenance
+
+     La SEL doit pouvoir évoluer car il est pratiquement
+      impossible (et dangereux) de « tout » spécifier dès
+      le début.
+
+         Être le plus complet possible à un moment donné
+
+            ◼ Tenter de prévoir certaines évolutions du logiciel
+
+         Si les exigences ne sont pas complètes il faut le
+          signaler
+
+         À partir d’un certain moment (dépendant du projet)
+          tout changement doit être officialisé
+  Traçable
+
+46
+
+     Le traçage est la possibilité d'avoir des références
+        croisées entre les spécifications de plusieurs versions du
+        cahier des charges (parfois aussi entre les spécifications et
+        la conception du logiciel, ainsi qu’avec un stated user need)
+
+     Le traçage arrière consiste à pouvoir, à partir d'une
+        spécification, retrouver la spécification dont elle découle
+        (dans la version précédente du cahier des charges).
+
+     Le traçage avant consiste à pouvoir, à partir d'une
+        spécification, retrouver les spécifications auxquelles elle a
+        donné naissance (dans la version suivante)
+
+      - Versionning: Version 1.1 July 22, 2004
+      - Assign requirements unique identifiers: you might call up a customer
+      for clarification on Requirement 4.1
+There is no perfect SRS!
+
+47
+
+                                                                                 ambiguous
+
+            expand                                                                          expand
+
+                    condense
+
+            redundant         formalize                                                             inconsistent
+
+reduce
+
+                                                                                            resolve
+
+               add     not understandable
+        explanations
+
+incomplete
+
+                                                                                                    …etc!
+   Appropriate Specification
+
+48
+
+       Natural Language?
+
+              “The system shall report to the operator all faults that originate in
+                 critical functions or that occur during execution of a critical sequence
+                 and for which there is no fault recovery response.”
+                 (this is adapted from a real NASA spec for the international space
+                 station)
+
+       Or a decision table?
+
+               Originate in critical functions? F T F T F T F T
+
+               Occur during critical sequence? F F T T F F T T
+
+               No fault recov ery response? F F F F T T T T
+
+               Report to operator?
+   SRS Contents
+
+49
+
+     Software Requirements Specification should address:
+
+           Functionality.
+
+                 ◼ What is the software supposed to do?
+
+           External interfaces.
+
+                 ◼ How does the software interact with people, the system's hardware, other
+                     hardware, and other software?
+
+                 ◼ What assumptions can be made about these external entities?
+
+           Required Performance.
+
+                 ◼ What is the speed, availability, response time, recovery time of various software
+                     functions, and so on?
+
+           Quality Attributes.
+
+                 ◼ What are the portability, correctness, maintainability, security, and other
+                     considerations?
+
+           Design constraints imposed on an implementation.
+
+                 ◼ Are there any required standards in effect, implementation language, policies
+                     for database integrity, resource limits, operating environment(s) and so on?
+   SRS should not include...
+
+50
+
+     Project development plans
+
+          E.g. cost, staffing, schedules, methods, tools, etc
+
+               ◼ Lifetime of SRS is until the software is made obsolete
+               ◼ Lifetime of development plans is much shorter
+
+     Product assurance plans
+
+          Configuration Management, Verification & Validation, test plans,
+             Quality Assurance, etc
+
+               ◼ Different audiences
+               ◼ Different lifetimes
+
+     Designs
+
+          Requirements and designs have different audiences
+          Analysis and design are different areas of expertise
+
+               ◼ I.e. requirements analysts shouldn’t do design!
+
+          Except where application domain constrains the design
+
+               ◼ e.g. limited communication between different subsystems for security
+                   reasons.
+    Typical mistakes
+
+51
+
+ Noise                                           – Requirements on users
+
+    ◼ text that carries no relevant information to  • Cannot require users to do certain things, can
+      any feature of the problem.                     only assume that they will
+
+ Silence                                         – Jigsaw puzzles
+
+    ◼ a feature that is not covered by any text.    • distributing key information across a
+
+ Over-specification                                      document and then cross-referencing
+
+     ◼ text that describes a detailed design      – Duckspeak requirements
+        decision, rather than the problem.
+                                                       • Requirements that are only there to conform
+ Contradiction                                           to standards
+
+     ◼ text that defines a single feature in a    – Unnecessary invention of terminology
+        number of incompatible ways.
+                                                       • E.g. ‘user input presentation function’
+
+ Ambiguity                                       – Inconsistent terminology
+
+    ◼ text that can be interpreted in at least two  • Inventing and then changing terminology
+
+    different ways.                               – Putting the onus on the developers
+
+ Forward reference                                 • i.e. making the reader work hard to decipher
+                                                      the intent
+
+     ◼ text that refers to a terms or features yet – Writing for the hostile reader
+
+        to be defined.
+                                                                               • There are fewer of these than friendly readers
+
+ Wishful thinking
+
+    ◼ text that defines a feature that cannot
+      possibly be verified.
+                                                                     we may have an automated test
+
+Validation des besoins requirement works perfectly!!! case that may verify that the “wrong”
+
+52
+
+      Des oublis, des erreurs ont des conséquences coûteuses
+        exemple:
+
+            95% de code est réécrit pour des erreurs dans l’expression des
+              besoins
+
+            et 12% des erreurs détectées après 3 ans d’utilisation sont dues à une
+              mauvaise analyse des besoins; (Boehm)
+
+      validité:
+
+           Les services demandés par l’utilisateur se traduisent par des
+             fonctionnalités du système.
+
+           réalisme: Les développeurs, analyste, ingénieurs informaticiens
+             doivent informer l’utilisateur des limites matérielles et logicielles.
+
+           Ces fonctionnalités peuvent être quelque peu modifiées, améliorées
+             du fait de l’informatisation du système.
+  Comment effectuer cette
+53 validation?
+
+ Requirements Validation Review using validation checklists (critères présentés
+    dans les slides précédents)
+
+      team of engineers that developed the SRS and the stakeholders gather in a room for a
+         formal meeting. Someone other than the author of the requirements reads the SRS. The
+         review team determines if what is read represents a clear description of the system and
+         if there are any potential problems
+
+      probably about 40 requirements can be inspected per hour
+
+      Faire relire les documents par les utilisateurs et les développeurs (project
+        personnel, managers, users, customers, or other interested parties for comment
+        or approval) à la recherche des anomalies, des oublis, mauvaises
+        interpretations.
+
+ A l’aide d’outils d'analyse et recherche d'anomalies
+
+      https://thedigitalprojectmanager.com/tools/requirements-management-tools/
+
+       AI, lifecycle, traceability, collaboration, etc…
+       analyseur de mots clés qui repère les paragraphes concernés
+  Comment effectuer cette
+54 validation?
+
+   Par une technique de simulation (Surtout pour les besoins non
+      fonctionnels)
+        Attention: Le développement du simulateur peut être aussi
+          coûteux que la réalisation elle même. Dans des domaines
+          d’activités à hauts risques ces simulateurs sont fortement
+          employés.
+
+   Prototypage
+       cas concret de discussion pour montrer les aspects fonctionnels les
+         plus importants (ne pas insister sur les aspects non fonctionnels
+         (contraintes))
+       détection des fonctions manquantes
+       démonstration de la faisabilité
+   Summary
+
+55
+
+     Requirements Specs have several purposes:
+
+           Communication
+           Contractual
+           Basis for Verification
+           Basis for Change Control
+
+     Requirements Specs have several audiences:
+
+           Technical and non-technical
+
+     Good Specs are hard to write
+
+           Complete, consistent, valid, unambiguous, verifiable, modifiable,
+               traceable…
+
+     Project needs vary
+
+           The amount of effort put into getting the spec right should depend on the
+               possible consequences of requirements errors
+  Benefits of requirements                                          https://confluence.atlas
+57 management tools                                                 sian.com/jirakb/using-
+                                                                    jira-for-requirements-
+                                                                    management-
+                                                                    193300521.html
+
+ Feature: Shopping Cart
+
+Users shall be able to add  The shopping cart will store a list of  TC1: Verify that users can add products to
+products to their shopping  products, quantities, and prices.       their shopping cart.
+cart                                                                TC2: Verify that the shopping cart
+
+                                                                    displays the correct product information
+
+                                                                    and total price.
+
+ Requirements Traceability Matrix Example:                         TC3: Verify that users can remove
+                                                                    products from their shopping cart.
+
+requirements are traced between a Functional Requirements Specification, Design
+
+Specification, and Operational Qualification.
+  How AI can help with requirements
+58 analysis tools
+
+     AI and natural language processing (NLP) are now
+      more commonly used to identify problems in user
+      stories and requirements as they are written.
+
+     These technological advancements provide clearer
+      feedback to the business, and in turn send better
+      user stories and requirements to the development
+      team.
+
+     It can also help improve planning software
+      development schedules.
+  Types of defects in user stories
+
+59
+
+       The NLP engines in these requirement analysis tools evaluate the text of
+         user stories and then cross references the results with all the other user
+         stories in a set. It detects the functional intent from each user story.
+
+       AI can detect defects related to ambiguity, inconsistency, complexity,
+         duplication, omissions, testability etc….
+
+       Observation: There are seven times more omissions than duplicates.
+           Omissions are what cause projects to go over the original estimate,
+             budget and timeline.
+
+       Ambiguities are particularly harmful, and often mask other
+         defects. Hammond recommends that teams focus first on disambiguating
+         requirements. Then it’s easier to remove any subsequently exposed defects
+
+How AI can help with requirements analysis tools (theserverside.com)
+  Requirements management tools
+60 that supports AI and NLP
+
+      IBM Engineering Requirements Quality Assistant (RQA)
+      Visure Requirements Management Suite
+      Jama Requirements Management Suite
+      These tools offer a variety of features for using AI and NLP to
+
+        improve the quality of requirements, such as:
+
+           Requirement analysis: These tools can use NLP to analyze requirements
+             for completeness, consistency, and ambiguity.
+
+           Risk identification: These tools can use AI and NLP to identify potential
+             risks and impacts of changes to requirements.
+
+           Requirement recommendation: These tools can use AI and NLP to
+             recommend new requirements or to change existing requirements.
+61 Expression des besoins
+
+        Techniques d’Elicitation
+  Élicitation
+
+62
+
+     déterminer l’information à obtenir
+     déterminer les sources de l’information
+     déterminer les techniques pour l’acquérir
+
+         Elicitation
+             Définition: aider un expert à formaliser
+               ses connaissances pour permettre de
+               les sauvegarder et/ou les partager.
+   Difficulties of elicitation
+
+63
+
+     Thin spread of domain knowledge
+
+           It is rarely available in an explicit form (i.e. not written down)
+           …distributed across many sources
+           …with conflicts between knowledge from different sources
+
+     Tacit knowledge (The “say-do” problem)
+
+           People find it hard to describe knowledge they regularly use
+
+     Limited Observability
+
+           Presence of an observer may change the problem
+
+                 ◼ E.g. Probe Effect;
+
+     Bias
+
+           People may not be free to tell you what you need to know
+           People may not want to tell you what you need to know
+
+                 ◼ The outcome will affect them, so they may try to influence you (hidden agendas)
+   Example: Loan approval department
+   in a large bank
+
+64
+
+     The analyst is trying to elicit the rules and procedures for
+        approving a loan
+
+     Why this might be difficult:
+
+           Implicit knowledge:
+
+                 ◼ There is no document in which the rules for approving loans are written down
+
+           Conflicting information:
+
+                 ◼ Different bank staff have different ideas about what the rules are
+
+           Say-do problem:
+
+                 ◼ The loan approval process described to you by the loan approval officers is quite
+                     different from your observations of what they actually do
+
+           Probe effect:
+
+                 ◼ The loan approval process used by the officers while you are observing is
+                     different from the one they normally use
+
+           Bias:
+
+                 ◼ The loan approval officers fear that your job is to computerize their jobs out of
+                     existence, so they are deliberately emphasizing the need for case-by-case
+                     discretion (to convince you it has to be done by a human!)
+  Exemples de sources
+
+65
+
+     Système existant
+     Personnes
+     Documents pertinents
+
+         normes, procédures, manuels de référence, formulaires
+  Élicitation - artéfacts
+
+66
+
+     notes et comptes-rendus des entrevues et autres
+      activités.
+
+     répertoires commentées des sources utilisées
+  Exemples de techniques
+
+67
+
+     Entrevues
+     Questionnaires
+     Vidéos
+     Observation des tâches
+     Brainstorming
+     Storyboarding
+   Background reading
+
+68
+
+     Sources of information:
+
+           company reports, organization charts, policy manuals, job descriptions,
+               reports, documentation of existing systems, etc.
+
+     Advantages:
+
+           Helps you get an understanding of an organization before meeting the
+               people who work there.
+
+           Helps to prepare for other types of fact finding
+
+                 ◼ e.g. by being aware of the business objectives of the organization.
+
+           may provide detailed requirements for the current system.
+
+     Disadvantages:
+
+           written documents often do not match up to reality.
+           Can be long-winded with much irrelevant detail
+
+     Appropriate for
+
+           Whenever you not familiar with the organization being investigated.
+   “Hard data” and Sampling
+
+69
+
+ Hard data includes facts and figures…
+
+           ◼ Forms, Invoices, financial information,…
+           ◼ Reports used for decision making,…
+           ◼ Survey results, marketing data,…
+
+ Sampling
+
+      Sampling used to select representative set from a population
+
+           ◼ Purposive Sampling - choose the parts you think are relevant without worrying about
+               statistical issues
+
+           ◼ Simple Random Sampling
+           ◼ Clustered Random Sampling - choose a representative subpopulation and sample it
+
+      Sample Size is important
+
+           ◼ balance between cost of data collection/analysis and required significance
+
+      Process:
+
+           ◼ Decide what data should be collected - e.g. banking transactions
+           ◼ Determine the population - e.g. all transactions at 5 branches over one week
+           ◼ Choose type of sample - e.g. simple random sampling
+           ◼ Choose sample size - e.g. every 20th transaction
+   Interviews
+
+ 70
+
+ Types:
+
+     Structured - agenda of fairly open questions
+     Open-ended - no pre-set agenda
+
+ Advantages
+
+     Rich collection of information
+     Good for uncovering opinions, feelings, goals, as well as hard facts
+     Can probe in depth & adapt followup questions to what they tell you
+
+ Disadvantages
+
+     Large amount of qualitative data can be hard to analyze
+     Interviewing is a difficult skill to master
+
+ Watch for
+
+     Unanswerable questions (“how do you tie your shoelaces?”)
+     Tacit knowledge (and post-hoc rationalization)
+     Removal from context
+     Interviewer’s attitude may cause bias (e.g. variable attentiveness)
+   Interviewing tips
+
+71
+
+     Starting off…
+
+           Begin the interview with an innocuous topic to set people at ease
+
+                 ◼ e.g. the weather, the score in last night’s hockey game
+                 ◼ e.g. comment on an object on the person’s desk: “…what a beautiful photograph!
+
+                     Did you take that?”
+
+     Ask if you can record the interview
+
+           Put the recorder where it is visible
+           Let interviewee know they can turn it off at any time.
+
+     Ask easy questions first
+
+           perhaps personal information
+
+                 ◼ e.g. “How long have you worked in your present position?”
+
+     Follow up interesting leads
+
+           E.g. if you hear something that indicates your plan of action may be
+               wrong,
+
+                 ◼ e.g.,“Could we pursue what you just said a little further?”
+
+     Ask open-ended questions towards the end
+
+                 ◼ e.g. “Is there anything else you would like to add?”
+   Questionnaires
+
+72
+
+     Advantages
+
+          Can quickly collect info from large numbers of people
+          Can be administered remotely
+          Can collect attitudes, beliefs, characteristics
+
+     Disadvantages
+
+          Simplistic (presupposed) categories provide very little context
+
+               ◼ No room for users to convey their real needs
+
+     Watch for:
+
+          Bias in sample selection
+          Bias in self-selecting respondents
+          Small sample size (lack of statistical significance)
+          Open ended questions (very hard to analyze!)
+          Leading questions (“have you stopped beating your wife?”)
+          Ambiguous questions (I.e. not everyone is answering the same question)
+   Meetings
+
+73
+
+     Used for summarization and feedback
+
+           E.g. meet with stakeholders towards the end of each stage:
+
+                 ◼ to discuss the results of the information gathering stage
+                 ◼ to conclude on a set of requirements
+                 ◼ to agree on a design etc.
+
+           Use the meeting to confirm what has been learned, talk about findings
+
+     Meetings are an important managerial tool
+
+           Used to move a project forward.
+           Every meeting should have a clear objective:
+
+                 ◼ E.g. presentation, problem solving, conflict resolution, progress analysis,
+                     gathering and merging of facts, training, planning,...
+
+           Plan the meeting carefully:
+
+                 ◼ Schedule the meeting and arrange for facilities
+                 ◼ Prepare an agenda and distribute it well in advance
+                 ◼ Keep track of time and agenda during the meeting
+                 ◼ Follow up with a written summary to be distributed to meeting participants
+                 ◼ Special rules apply for formal presentations, walkthroughs, brainstorming, etc.
+  Conclusion: expression des besoins
+
+74
+
+     Définition des services attendus par l'utilisateur
+     Analyse des fonctions et de leurs contraintes
+     Pas encore de solutions techniques
+     Collaboration de l'utilisateur importante
+     Utilisation de modèles, méthodes ou de techniques
+     Validation correcte avant la phase suivante
+     Définir les limites
+
+          afin d’éviter toutes dérives
+     Envisager les évolutions technologiques du matériel mais
+
+        aussi des fonctionnalités du système
+75
+
+        Techniques et Outils de Spécification
+   Modèles pour la spécification vs
+   Modèles pour la conception
+
+76
+
+     modèles pour la spécification du logiciel :
+
+         exprimer les caractéristiques de l'objet à développer
+         selon une vue externe (comportement, propriété,
+
+          contraintes)
+
+     modèles pour la conception du logiciel :
+
+         donner une description interne de l'objet à développer
+         la plus explicite possible (structure, comportement des
+
+          composants)
+   Techniques de spécification
+
+77
+
+     Typologie des modèles : analytiques, conceptuels
+     Typologie des outils:
+
+          Formatés en langage naturel
+             ◼ Dictionnaire de données,
+             ◼ tables de décision
+
+          informels ou semi-formels comme:
+             ◼ Diagrammes de flot de données, de systèmes, d'états-transitions
+             ◼ Réseaux de Pétri et le Grafcet,
+             ◼ Modèle Entité-Association
+
+          Techniques formelles
+
+     Typologie des méthodes : fonctionnelles, systémiques,
+        orientées objet
+  Modèles Analytiques                               Analytical models are especially
+                                                        relevant in fields such as
+78
+                                                      telecommunications, network
+      très répandus et très variés                  design, real-time systems, and
+
+                                                          safety-critical systems.
+
+ utilisés pour prédire ou estimer (partiellement)
+
+le comportement de l'objet
+
+ utilisés comme moyen de validation
+
+classification des modèles analytiques (Wilson 86)
+  Modèles Conceptuels
+
+79
+
+      permettent de :
+           clarifier une situation (organigramme d'une société)
+           illustrer un concept
+           définir des relations entre entités d'une structure (circulation de flux
+             d'information)
+           définir une méthode
+
+      Ils peuvent être :
+
+           Structurels ou comportementaux
+
+      Et peuvent décrire les activités ou les données.
+81
+
+        Typologie des outils
+  Langage naturel
+
+82
+
+       très usité à cause de l'avantage d'être
+            compréhensible par tous (l'utilisateur et l'analyste)
+            Expressif
+            facilité de rédaction et de modification
+
+       présentation par paragraphes numérotés (textuel mais structuré)
+            le texte avec indentations, mots soulignés, chapitres, sous chapitres....
+
+      2.1. Paie
+      Cette fonction comporte trois fonctions:
+
+           . la saisie des éléments de paie par employé
+           . l'édition des bulletins
+           . la mise à jour de la comptabilité
+
+           2.1.1. La saisie
+           Pour chaque employé, un certain nombre de paramètres sont saisis...
+   Langage naturel: Inconvénients
+
+83
+
+       ambiguïté linguistique
+            interprétation différente du lecteur et du rédacteur qui peut passer inaperçue
+               (chacun étant persuadé avoir compris ce que l’autre a dit ou écrit)
+
+       Le manque de concision est évident si on compare une expression écrite à une
+          expression graphique.
+            Un schéma fonctionnel peut être complémentaire, limiter le texte et éviter ainsi
+               de longs discours
+
+       difficulté de distinction entre besoins fonctionnels, non fonctionnels et buts
+            Dans une même phrase, on peut être amené à parler de besoins fonctionnels,
+               des besoins non fonctionnels (les contraintes associées) et le but à atteindre (la
+               justification de ces choix).
+
+       difficulté de vérification, complétude et cohérence
+            L’écriture naturelle n’incite pas à une rédaction complète des concepts et à la
+               cohérence. En effet on ne peut exprimer en une seule phrase tout ce qui doit
+               être écrit dans le bon ordre et sans contradiction
+            quoi vérifier? où? avec quelle méthode?
+  Exemples:
+
+84
+
+      3.1 Les écrans de saisie:
+      Les saisies doivent être contrôlées et la présentation
+      doit respecter les règles de base de l'ergonomie des
+      interfaces
+
+       Ceci n'est pas un besoin! mais une recommandation très générale qui peut
+       être rappelée tout au long de la conception du système
+
+      3.2 La fonction de saisie regroupe plusieurs sous-fonctions:
+      La sous-fonction de saisie des éléments de paie qui devra se
+      limiter à fournir les éléments de calcul: généraux et
+      spécifiques pour chaque employé ... Avec un temps de réponse …
+      La sous-fonction de demande d'édition des bulletins de paie...
+
+        Mélange de besoins fonctionnels, non fonctionnels : saisie paie, saisie des
+        éléments de paie.... et des besoins non fonctionnels: éléments de calculs
+        spécifiques pour chaque employé... (liste des éléments). Contraintes,
+        conditions, restrictions
+  Recommandations:
+
+85
+
+      faire relire et corriger le document
+           par les utilisateurs, par des informaticiens non spécialistes du domaine
+             d’activité du système et au contraire par des spécialistes
+
+       rédaction séparée par besoin
+       1 paragraphe = 1 idée
+       polices de caractères différentes
+
+           qui mettent en évidence les éléments essentiels du document.
+    Langage spécification formelle
+
+86
+
+     Encore un type de langage                package PAIE is
+        pour définir les besoins                           procedure SAISIE_PAIE
+        fonctionnels: les langages de                      procedure EDITION_PAIE
+        spécification formelle                             procedure COMPTA_PAIE
+
+     exemple ADA                              end PAIE
+
+     Il faut toutefois faire usage    package PAIE_CTES
+        intensif de commentaires                   PLAFOND_A: constant:= 8000
+        pour le rendre expressif!                  PLAFOND_B: constant:= 12000
+
+     Attention: Avec ce type de       ....
+        langage ne pas tomber à un
+        niveau de réalisation.....
+
+    utiles dans les domaines où la précision, la fiabilité et la sécurité
+    sont essentielles, tels que l'aérospatiale, les systèmes critiques, les
+    systèmes médicaux, et d'autres domaines où des erreurs peuvent
+
+                        avoir des conséquences graves
+  langages de spécification formelle
+
+87 dédiés
+
+       Z: se concentre sur la description mathématique des spécifications. Il est
+         souvent utilisé pour spécifier les propriétés comportementales des systèmes.
+
+       VDM (Vienna Development Method) : basé sur les mathématiques qui
+         permet de définir des modèles précis de systèmes.
+
+       B: Le langage B est utilisé pour la spécification formelle de systèmes et
+         l'analyse de leur comportement.
+
+       Event-B: se concentre sur la modélisation des systèmes basés sur des
+         événements.
+
+       Alloy: utilisé pour la modélisation des systèmes et la vérification de leurs
+         propriétés.
+   Présentations formatées
+
+88
+
+     Les spécifications écrites uniquement en langage
+      naturel (même respectant plans types normalisés
+      :ISO STD 830, DoD 2167-A) posent des problèmes
+      de non cohérence, d'ambiguïté, de non complétude
+
+         => présentations formatées les plus connues :
+
+            ◼ le dictionnaire de données
+            ◼ les tables de décision,
+            ◼ les tables d'état-transition
+   Dictionnaire des données ou glossaire
+
+89
+
+     Un dictionnaire de données est une table contenant des
+        informations sur les données utilisées aux différents niveaux
+
+         d'analyse et de conception.
+
+     Durant la phase de spécifications, le dictionnaire de
+        données est constitué par les données du domaine du
+        problème.
+
+          contient en général les définitions des termes utilisés classées par
+            ordre alphabétique
+
+          Ex: Une entrée classique comprend le nom de la donnée, la classe
+            dans laquelle elle se trouve, son type et sa signification.
+   Dictionnaire des données ou glossaire
+
+90
+
+        présente des sigles, codes ou symboles employés dans les documents, précise les
+           synonymes, alias.
+
+        permet de définir la structure d'une donnée (notation syntaxique stricte - Naur-Backus)
+
+               Ex: nom = titre-de-courtoisie + nom-de-famille + premier-prenom + (deuxieme-prenom) ( ) veut
+                  dire optionnel
+
+        peut intégrer des informations sur les fichiers contenant les données et les processus qui
+           les utilisent
+
+        peut indiquer le nombre des versions stockées (pour chaque information) avec dates de
+           création ou de modification (utile dans la gestion des versions)
+
+         a valuable resource for various stakeholders analysts, designers, developers,
+           and testers. It helps ensure a common understanding of data requirements
+
+Nom         Classe  Type    Taille     Signification
+Auteur      Livre   Chaine  <40        Nom, prénom, peut être tronque
+Livre       Livre   Objet              Concept abstrait de livre
+ISBN        Livre   Chaine  10-20 car  Identifiant international
+Emprunteur  Pret    Clé                Clé pointant vers le lecteur qui a effectué le pret
+    Table de décision
+
+91
+
+     représentation tabulaire de tous les cas des valeurs d'entrée d'un processus et
+        des valeurs de sortie correspondant à chacune de ces combinaisons
+
+     adaptée à la spécification de systèmes dont les sorties sont, à tout moment,
+        uniquement définies par les entrées
+
+     Ces listes d'actions conditionnées peuvent alors se représenter par un
+        organigramme.
+
+    Partie conditionnelle                  La deuxième colonne se lit: Si Cond1 est
+                                            vraie, et Cond2 est vraie et Cond 3 est
+                                                 fausse, alors exécuter action2.
+
+                           Partie actions
+  Table états-transitions
+
+92
+
+        composée de colonnes représentant les
+           différents états du système
+
+        pour chaque état, les événements qui
+           provoquent des transitions d'un état à un
+           autre, les actions à effectuer et l'état
+           suivant pour chaque transition
+
+        adaptée à la spécification de systèmes
+           dont les sorties sont déterminées par
+           les entrées et l'historique des états
+           antérieurs
+
+        représentation similaire : matrice états-
+           transitions
+   Outils graphiques ou semi- formelles
+
+93
+
+       favorisent la communication entre développeurs du système et futurs utilisateurs
+          de celui-ci
+
+       introduisent un aspect formel
+       en général accompagné de "textes" informels
+
+            => techniques "semi-formelles"
+
+       outils graphiques ou semi-formels les plus utilisés :
+            Modèle objet
+            les diagrammes de flot de données (DFD)
+            Modélisation Comportementale: Cas d'utilisation, Scenarios, les diagrammes
+               d'états-transitions
+            les diagrammes de systèmes
+            les réseaux de Pétri et le Grafcet
+            l'Entité-Association
+    Modèle Objet
+
+94
+
+     Objectif : modéliser le domaine du problème, et pas de concevoir une
+       implémentation de la solution
+
+         Les entités essentielles à la compréhension du problème devront figurer
+           même si elles ne doivent pas apparaitre dans la solution
+
+         Par contre les entités qui n'ont de sens qu'au niveau de l'implémentation
+           ne doivent pas figurer dans le modèle.
+
+         Une entité est décrite par ses attributs et ses méthodes
+
+    lecteur                  bibliothèque
+    nom
+
+    emprunter                                             livre
+    rendre
+                                                          titre
+                  prêt       exemplaire
+
+             Date de retour
+
+                             emprunter
+
+                             retourner
+   Diagrammes de flots de données (DFD)
+   : Data Flow Diagrams)
+
+95
+
+      Utilisés pour la modélisation des traitements
+
+            Montrer comment chaque processus transforme ses entrées (flots de
+              données entrants) en sorties correspondantes (flots de données sortants)
+
+            Les données peuvent être persistantes (dans des stockages) ou
+              circulantes (flots de données).
+
+      Bien adaptés à la description de systèmes réactifs (systèmes
+        toujours prêts à réagir à l'arrivée de données)
+
+      les DFD jouent toujours un rôle important dans les spécifications
+        de nombreux systèmes.
+
+      Peu employés dans le développement orienté objet.
+
+       Requirements Analysis: During the requirements analysis phase of a project, DFDs can be
+         used to capture and validate the functional requirements of the system, ensuring that
+                               data flows and processing align with user needs.
+Exemple de Diagramme de flots de
+
+   données       Zone de
+                 stockage
+96
+
+flots de                    Flux sortant
+données
+entrants                   Zone de
+                           stockage
+      Processus
+
+ le processus "Évaluation" prend en compte des critères obtenus à partir du flux entrant
+    des "Critères de sélection" pour évaluer une proposition rangée dans la zone de
+    stockage "proposition" par rapport à un projet rangé dans la zone de stockage "projet".
+
+ la note attribuée (flux sortant) est rangée dans la zone de stockage "proposition".
+  Modélisation Comportementale
+
+97
+
+     Ces diagrammes permettent de spécifier certains aspects du
+        système que l'on se propose de développer.
+
+     On s'intéresse au comportement du système le plus souvent
+        du point de vue de l'utilisateur.
+
+     Doivent être compréhensibles à la fois pour le développeur
+        et pour l'utilisateur, afin que ce dernier puisse confirmer que
+        le projet correspond bien à ses besoins.
+   Les cas d'utilisation: leur usage dans un
+
+   projet
+
+98
+  Cas d'utilisation
+
+99
+
+      Présentent le fonctionnement du système du point de vue de l'utilisateur.
+      Toutes les fonctions essentielles doivent y figurer: il est important de
+
+         trouver un équilibre entre le risque de malentendu et la clarté du
+         schéma.
+      Les fonctions négligées sur le diagramme peuvent en revanche
+         apparaitre sous forme de texte.
+Scénarios
+
+ Les cas d’utilisations peuvent être  Exemple: SCENARIO 1
+
+vus comme des classes de                 Jacques insère sa carte dans le distributeur
+scénarios, où chaque scénario               x233.
+correspond à une utilisation
+                                         Le système accepte la carte et lit le numéro
+                                            de compte.
+
+particulière, par un acteur donné,  Le système demande le code confidentiel.
+
+dans des circonstances données.  Jacques tape ‘xwrzhj’.
+
+ Ils servent à illustrer une fonction   Le système détermine que ce n’est pas le
+   importante ou un comportement            bon code.
+   désiré du système.
+                                         Le système affiche un message et propose à
+                                            l’utilisateur de recommencer.
+
+ En UML les scénarios sont              Jacques tape ‘xwrzhi’.
+   représentés sous forme de             Le système affiche que le code est correct.
+   diagrammes d'interaction, ils         Le système demande le montant du retrait.
+   peuvent également se présenter        Jacques tape 300 €.
+   sous la forme de liste de suites      Le système vérifie s’il y a assez d’argent sur
+   d'actions
+                                            le compte.
+                                         etc.
+
+                                                                                          100
+   Diagrammes d'interaction (de
+
+   séquence) UML
+
+101
+   Diagrammes d'état
+
+102
+
+       Etat d'une machine ou d'un programme = ensemble de toutes les variables,
+          registres, etc…
+
+       Un Diagramme d'état présente les différents états du système et les
+          transitions possibles entre ceux-ci.
+
+       Règles à suivre pour obtenir des diagrammes d'état corrects:
+
+             Il doit y avoir un état initial
+             Tout état doit pouvoir être atteint à partir de l'état initial
+             A partir de n'importe quel état, il doit être possible d'atteindre un état d'arrêt.
+             Chaque transition entre deux états doit porter une mention indiquant
+
+               l'événement qui la provoque.
+     Diagrammes d'état
+
+103
+
+      Deux approches possibles pour les diagrammes d'état:
+
+      Seules les transitions qui ne provoquent pas d'erreur sont indiquées
+
+      Indiquer toutes les transitions, y compris celles qui provoquent des erreurs.
+
+      Ex: Diagrammes d'état pour une pile de taille fixe.                     Diagramme
+                                                                             n'indiquant pas
+
+                                                                               les erreurs
+
+                                                                             Diagramme
+                                                                              indiquant
+                                                                             les erreurs
+   Diagrammes d'état: Dans le cadre des
+   spécifications
+
+104
+
+        Tous les états doivent être significatifs par rapport au domaine du problème.
+        Toutes les suites d'actions qui se trouvent dans les scenarios doivent être autorisées.
+        Toutes celles qui ne s'y trouvent pas doivent être interdites.
+
+vi <nom de fichier>        Pour établir un tel
+                       diagramme d'état, il est
+                     important de comprendre le
+
+                           fonctionnement du
+                     programme afin de pouvoir
+                      regrouper ses états avec
+                     des états pertinents dans le
+
+                        domaine du problème.
+
+Diagramme d'état pour un éditeur de style vi.
+   Les Diagrammes système
+
+105
+
+      Ils ne sont pas définis formellement
+      Ils servent à donner une idée générale du système à
+
+         développer
+      On y a recours quand les diagrammes définis plus
+
+         formellement ne parviennent pas à donner une idée suffisante
+         du projet.
+      Ils reprennent des éléments des DFD et des diagrammes de
+         cas d'utilisation
+      Point délicat: Garder une cohérence dans l'utilisation des
+         symboles et de donner suffisamment de détails.
+   Diagrammes système pour un éditeur du
+
+   style de vi
+
+106
+
+       Créer un               Enregistrer   Fichier/BDD
+        fichier               un fichier
+
+                                            Fichier
+
+                 Fichier de   Données
+                   travail
+                                 Ouvrir un
+Roles                              fichier
+
+Insérer du       Modifier du
+  texte              texte
+
+                              Traitements
+
+                 Flux (arcs)
+     Réseau de Petri (RdP )
+
+107
+
+ Outil de representation graphiqe et d’analyse des automatismes pour la modélisation du
+
+comportement d'un système dynamique à événements discrets.
+
+                                     MCT  Activity Diagram
+
+                                                            Place avec marquage
+
+Le franchissement d'une transition
+consiste à retirer un jeton dans
+chacune des places en amont de
+la transition et à ajouter un jeton
+dans chacune des places en aval
+de celle-ci.
+    Grafcet (norme internationale 1987)
+
+108
+
+ Outil de spécification des automates logiques, inspiré des Réseaux de Petri, très
+            utilisé par la communauté française des automaticiens
+                                                                        Représentation d'un
+                                                                        système automatisé par
+                                                                        organigramme
+
+                                                               Représentation du même système
+                                                               automatisé par GRAFCET
+109
+
+         Typologie des méthodes
+    Typologie des méthodes d'analyse et de
+    conception
+
+110
+
+      nombreuses méthodes se sont développées en suivant
+        l'évolution des langages et techniques
+
+      différentes manières de les classer
+
+      approches descendantes / approches ascendantes :
+
+           méthode descendante : on décompose le système de base en
+             sous-systèmes, chacun d'eux pouvant être ensuite redécomposé
+             jusqu'à l'obtention de modules programmables "simplement".
+
+           méthode ascendante : on part de modules déjà existants que l'on
+             essaie de composer.
+   Typologie des méthodes d'analyse et
+   de conception
+
+111
+
+      classification communément admise :
+
+           les méthodes dirigées par les données
+           les méthodes fonctionnelles (dirigées par les traitements)
+           les méthodes systémiques
+           les méthodes orientées objet.
+
+         
+   Méthodes Dirigées par les Données
+
+112
+
+      assez anciennes (1975-1980)
+      reposent sur l'idée que la structure d'un logiciel peut se
+
+         déduire de la structure des données apparaissant en entrée et
+         en sortie de ce logiciel.
+      pratiquement plus utilisées actuellement en France
+      particulièrement bien adaptées à certains problèmes simples
+         d'informatique de gestion
+      traitent mal les problèmes complexes, en particulier de
+         synchronisation => plus vraiment adaptées au développement
+         des logiciels actuels.
+   Les méthodes Fonctionnelles
+
+113
+
+        ont leur origine dans le développement des langages procéduraux
+        très utilisées
+        plus orientées vers les traitements que vers les données
+        mettent en évidence la ou les fonctions à assurer et proposent une approche
+
+           hiérarchique, descendante et modulaire en précisant les liens entre les différents
+           modules.
+        utilisent souvent des notations de type DFD
+        méthodes fonctionnelle les plus connues :
+
+              SA-SD (Strutured Analysis -Structured Design - Yourdon, DeMarco, Constantine, Gane &
+                 Sarson,...)
+
+              SADT (Structured Analysis and Design Technique)
+              SA-RT (Strutured Analysis -Structured Design - Hatley & Pirbhai 1991) spécialisé temps
+
+                 réel
+    SADT (Structured Analysis and Design Technique)
+
+114
+
+       Dans SADT : deux types d'analyse:
+            analyse par actigrammes (boîtes d'action)
+            analyse par datagrammes (boîtes de donnée).
+
+       Sur des actigrammes, les actions sont reliées entre elles par des flux de
+         données alors que les datagrammes se sont les données qui sont reliées
+         entre-elles par des flux d'activité.
+   Les méthodes  While MERISE may not be as commonly used as it once was,
+115 Systémiques    it's important to note that some organizations, especially
+
+                 those with legacy systems developed using MERISE, may still
+                  maintain and enhance systems based on this methodology.
+
+ méthodes s'appuyant sur une approche systémique
+
+ définissent différents niveaux de préoccupation ou d'abstraction
+
+ proposent de nombreux modèles complémentaires
+
+ sont souvent spécialisées pour la conception d'un certain type de
+   systèmes
+
+ méthodes systémiques les plus connues :
+     MERISE (méthode la plus utilisée en informatique de gestion en France
+       et grande partie de l'Europe)
+     AXIAL (IBM - systèmes d'information), MEGA (Mega - systèmes
+       d'information),...
+     OSSAD (systèmes bureautiques)
+     SAGACE (CEA - systèmes complexes (centrales atomiques))
+     GRAI (Productique)
+   Les méthodes Orientées Objet
+
+116
+
+       influencées par le développement du langage Ada et des langages de
+         programmation basés sur les objets C++
+            Reposent sur des concepts communs de classe et objets, d'héritage et de
+              message.
+
+       Dans la plupart l'étude d'un problème est réalisée suivant 3 aspects :
+            Un aspect fonctionnel : précise les fonctions réalisées par les objets par
+              l'intermédiaire des méthodes
+            Un aspect statique : identifie les propriétés des objets et leurs liaisons
+              avec les autres objets
+            Un aspect dynamique définit le cycle de vie des objets en précisant : le
+              comportement des objets, les différents états par lesquels ils passent et
+              les événements qui déclenchent ces changements d'états. (On parle
+              souvent d'un cycle de vie d'un objet)
+   Les méthodes Orientées Objet
+
+117
+
+     Parmi les méthodes orientées objet les plus connues :
+
+         OMT (Rumbaugh 1995) : Object Modeling Technique
+         OOA (Object Oriented Analysis - Coad & Yourdon
+
+          1992)
+         BOOCH (Booch 1991)
+         Objectory-OOSE (Jacobson)
+         HOOD
+         OOM: Orientation Objet dans Merise
+

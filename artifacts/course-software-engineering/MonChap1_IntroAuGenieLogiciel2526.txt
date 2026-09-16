@@ -1,0 +1,965 @@
+     Université Saint-Jospeh
+     Faculté d’Ingénierie
+
+            Génie Logiciel
+
+Rima KILANY CHAMOUN
+
+                                                                                                                                                              1
+THE SCIENTIST WHO INVENTED
+THE TERM “SOFTWARE
+ENGINEERING”
+
+Margaret Hamilton in an Apollo
+
+Command Module. Photo credit:              Margaret H. Hamilton
+NASA
+
+Margaret Hamilton, lead software engineer  She later received the NASA
+of the Apollo 11 Moon Landing Guidance     Exceptional Space Act Award
+project, stands next to a huge stack of    (2003) and a Presidential Medal
+code written by her and her team, in 1969  from Barack Obama (2016).
+
+https://publications.computer.org/software-magazine/2018/06/08/margaret-hamilton-
+
+software-engineering-pioneer-apollo-11/                                     2
+Chapitre I- Introduction
+
+                                                                                                                                                     3
+Introduction au Génie logiciel
+
+◼ Programmer n'est pas Concevoir un
+  système informatique
+
+◼ La technique ? nécessaire, mais pas si
+  importante que ça !
+
+◼ Le VRAI problème difficile : l'organisation, la
+  gestion
+
+   ❑ difficulté de formalisation
+   ❑ multitude de paramètres, facteurs
+   ❑ gestions des humains
+
+                                                                                                                                                              4
+Today, with LLMs
+
+◼ Programming can be automated.
+◼ Engineering is about design, requirements,
+
+  ethics, AI oversight, integration, and
+  lifecycle management.
+◼ Future engineers must focus on system
+  thinking, problem framing, and validation,
+  not only syntax.
+
+                                                                                                                                                              5
+Problématique
+
+◼ Comment acquérir/développer un système
+  sur mesure ?
+
+◼ - Que le logiciel soit
+
+   ❑ » développé en interne
+   ❑ » acheté, sous-traité (outsourcing)
+
+◼ Comment avoir/donner confiance
+
+   ❑ respect des coûts, du calendrier
+   ❑ respect des besoins fonctionnels (functional
+
+      requirements)
+   ❑
+
+                                                                                                                                                              6
+New Problematic
+
+◼ How to develop trustworthy software when
+  parts are:
+
+   ❑ Human-coded
+   ❑ AI-generated
+   ❑ Integrated from external services
+
+◼ New concerns:
+
+   ❑ Data governance (training data bias, IP issues)
+   ❑ AI reliability & explainability
+   ❑ Human-in-the-loop validation
+
+                                                                                                                                                              7
+Objectifs du cours
+
+Deliver quality software when the scope is
+larger and the stakes are higher
+
+◼ Connaître les méthodes qui permettent de
+  développer des systèmes logiciels complexes
+
+   ❑ Forte orientation conception objet
+
+◼ Vous allez aimer
+
+   ❑ car proche de la «vie réelle» : développement en
+      équipe et sur projets importants
+
+                                                                                                                                                             11
+Course Objectives
+
+•Master classical methods of software engineering
+(requirements, design, testing).
+•Learn how to collaborate with AI tools across the
+lifecycle:
+•Requirements elicitation → AI prototypes + human
+negotiation
+•Design → AI-assisted UML/model generation
+•Implementation → LLM code generation + human
+review
+•Testing → AI for unit test synthesis & coverage
+analysis
+•Maintenance → automated refactoring suggestions
+
+                                                                                                                                                             12
+Pourquoi un cours en GL ?
+
+◼ Vos compétences : « programming-in-the-small »
+    ❑ programmation individuelle sur de petits problèmes
+    ❑ algo, langages de programmation, structures de données
+    ❑ (parfois) un peu de méthodologie : analyse descendante
+
+◼ En entreprise : « programming-in-the-large »
+    ❑ travail en équipe sur des projets longs et complexes
+
+        ◼ Définition des rôles spécifiques : analyste, concepteur, développeur,
+             testeur, etc.
+
+        ◼ Formation complémentaire
+
+    ❑ spécifications de départ peu précises
+    ❑ dialogue avec le client/utilisateur : parler métier et non info
+    ❑ organisation, planification, gestion du risque
+    ❑ démarche ingénierique : génie logiciel
+
+                                                                                                                                                             13
+Why a Course in Software Engineering
+(2025+)
+
+◼ Traditional reasons (managing complexity, teamwork,
+   lifecycle) remain, but new dimensions emerge:
+
+    ❑ AI-augmented development:
+
+        ◼ GitHub Copilot already suggests >46% of code in GitHub projects
+             (GitHub, 2023).
+
+        ◼ JetBrains survey (2024) reports 65% of developers use AI tools
+             daily.
+
+    ❑ Changing roles:
+
+        ◼ Programmer → “Prompt engineer + verifier.”
+        ◼ Software engineer → “AI-assisted architect, integrator, and ethical
+
+             overseer.”
+
+    ❑ Programming-in-the-large is now programming-in-the-
+       human+AI-team.
+
+                                                                                                                                                             14
+Programmeur vs ingénieur logiciel?
+
+◼ Programmeur
+
+   ❑ sait programmer (faire la partie construction)
+
+◼ Ingénieur
+
+   ❑ fait une analyse
+   ❑ fait une conception -> FYP: Major design
+
+      experience
+   ❑ fait de la programmation en équipe
+   ❑ pratique le test
+   ❑ communique bien (en oral et en écrit)
+
+                                                                                                                                                             15
+Qu'est-ce que le génie logiciel ?
+
+◼ Des processus « répétables »
+◼ Par exemple, définis à l'ISO 9000, Capability
+
+   Maturity Model (CMM), "maison", etc.
+◼ Choix de méthodes rigoureuses
+◼ Des cycles de vie
+◼ Choix de notations spécialisées selon la nature des
+
+   problèmes
+◼ Utilisation d'environnements riches et d'outils
+
+   support
+
+                                                                                                                                                             16
+The Software Development Process in the
+LLM Era
+
+•From Code-Centric → Knowledge-Centric:
+
+engineers curate what should be built, not every line
+
+of how.    Example: A CI pipeline might retrain a recommendation
+            model weekly and run bias audits to ensure it doesn’t
+
+           favor one demographic group unfairly
+
+•DevOps becomes DevAIps:
+
+•Continuous Integration includes AI model updates,
+retraining pipelines, and bias audits.
+
+•Monitoring extends to AI-driven runtime behavior.
+
+•Agile++:
+
+•Sprints involve human stories + AI capabilities.
+
+•Teams must track AI performance debt as well as technical
+
+debt.                                               17
+DevOps: CI/CD
+
+                                                                               server
+               cluster
+
+                                                                                                                          18
+20
+Human–AI Collaboration Points
+
+◼ Strengths of AI: speed, boilerplate code,
+  exhaustive test generation, pattern detection.
+
+◼ Strengths of humans: problem framing,
+  creativity, ethics, ambiguity resolution,
+  stakeholder negotiation.
+
+◼ New teamwork model: "AI pair programmer" +
+  "human reviewer/strategist."
+
+◼ Gartner (2024): By 2030, 70% of new
+  enterprise applications will be built with AI
+  co-development.
+
+                                                                                                                                                             21
+Pourquoi étudier le génie
+
+logiciel ?
+
+◼ Reconnaissance de la « crise logiciel » (OTAN, 1968)
+    ❑ Le logiciel est difficile à fabriquer !
+
+        ◼ Problèmes budgétaires
+        ◼ Problèmes échéanciers
+        ◼ Problèmes de qualité de produit
+
+◼ Le génie logiciel essaie d'appliquer les principes de l'ingénierie
+   au développement du logiciel
+
+◼ On veut dépasser la simple fabrication artisanale de logiciels
+◼ Règle du CQFD: Le génie logiciel se préoccupe des procédés de
+
+   fabrication des logiciels de façon à s'assurer que les 4 critères
+   suivants soient satisfaits:
+    ❑ Le système fabriqué répond aux besoins
+    ❑ La qualité correspond au contrat de service initial
+    ❑ Les couts restent dans les limites prévues au départ
+    ❑ Les délais restent dans les limites prévues au départ.
+
+                                                                                                                                                             22
+Le cycle de vie du logiciel
+
+                                                                                                                                                             23
+Quality and Risk in the AI Age
+
+◼ Software crisis 2.0: not only
+  budget/schedule, but also trust crisis (can
+  we trust AI-written code?).
+
+◼ Quality frameworks (ISO/IEC 25010) must
+  expand:
+
+   ❑ Traditional: functionality, reliability, usability.
+   ❑ New: transparency, explainability, AI alignment.
+
+◼ Early error detection still applies: but now
+  errors may come from data/model bias,
+  not only human coding.
+
+                                                                                                                                                             24
+Genie Logiciel
+
+◼ Définitions:
+
+    ❑ Méthodologie de construction en équipe d'un logiciel complexe et à
+         multiples versions
+
+    ❑ D'après la norme IEEE 610.12
+
+          ◼ (1) L'application d'une approche systématique, disciplinée et quantifiable au
+                développement, à l'opération, et à la maintenance du logiciel. C'est-à-dire,
+                l'application de l'ingénierie au logiciel.
+
+          ◼ (2) L'étude des approches telles que dans (1).
+
+◼ Programmation vs. Génie Logiciel (approximation)
+
+    ❑ programmation : activité personnelle
+    ❑ génie logiciel : activité d'équipe
+
+◼ Suivant les projets, la partie programmation (codage) ne représentera
+    qu'entre 10 % et 30 % du coût total.
+
+                                                                                                                                                             25
+Deux perspectives
+
+◼ Produit
+
+   ❑ Ce qui est fabriqué
+
+◼ Processus
+
+   ❑ Comment le logiciel est fabriqué
+
+                                                                                                                                                             26
+Logiciel : aspects économiques (1)
+
+◼ importance croissante de l 'informatique dans
+  l'économie
+
+◼ coût du logiciel supérieur à celui du matériel
+
+                                                                                                                                                             27
+Logiciel : aspects économiques (2)
+
+                                                                                                                                                             28
+Failure and Maintenance (Updated
+for the LLM era)
+
+◼ Still: 50% of developer time is debugging
+  (Cambridge, 2013).
+
+◼ But with LLMs:
+
+   ❑ Faster prototyping → more frequent but smaller
+      bugs.
+
+   ❑ Higher risk of “hidden” bugs (AI hallucinations,
+      security issues).
+
+◼ Maintenance is evolving into “prompt
+  maintenance” and “AI retraining
+  maintenance.”
+
+                                                                                                                                                             29
+Examples of Prompt Maintenance
+Tasks
+
+Task                Description
+Refining prompts
+Versioning prompts  Improving clarity, specificity, or structure to get
+Testing prompts     better results.
+Auditing prompts
+Localizing prompts  Tracking changes to prompts over time, especially
+                    when tied to model versions.
+
+                    Validating that prompts still produce expected
+                    outputs after model updates.
+
+                    Ensuring prompts don’t lead to biased, unsafe, or
+                    non-compliant outputs.
+
+                    Adapting prompts for different languages, cultures,
+                    or domains.
+
+                                30
+Logiciel : aspects économiques (3)
+
+                                         Coûts du développement
+
+                                                                                                                                                             31
+Types de maintenance: les proportions
+
+                                  Additive/
+
+                                                                                                                                                             32
+Coût de la maintenance
+
+◼ According to recent Cambridge University research
+   software developers spend 50% of their programming
+   time finding and fixing bugs…
+
+                                                                                                                                                             33
+Intérêt de la maintenance perfective et préventive
+
+            https://www.scrum.org/resources/dealing-technical-debt
+            Technical debt = undone work
+            Definition of done = tests
+            Time to market plus grand
+
+                                                                                                                                                             34
+Génie logiciel :
+encore une définition
+
+◼ D'après « Classical and Object-Oriented Software Engineering with
+    UML and Java » Le génie logiciel est une discipline qui a pour but :
+
+  « la fabrication du logiciel qui est sans
+  faute, qui est livré en respectant le délai
+  et le budget prévus à l'avance et qui
+  satisfait aux besoins du client. »
+
+                                                                                                                                                             35
+Logiciel sans faute
+
+◼ Source d'une faute en logiciel : ????
+◼ Comment réduire le risque d'avoir des
+
+  fautes?
+
+   ❑ ???
+
+                                                                                                                                                             36
+Logiciel sans faute
+
+◼ Source d'une faute en logiciel : l'être humain
+
+◼ Comment réduire le risque d'avoir des
+  fautes?
+
+   ❑ Utiliser un processus bien défini qui décrit des
+      méthodes rigoureuses pour la conception,
+      l'implémentation, la vérification, etc.
+
+                                                                                                                                                             37
+Plus tôt une faute est détectée (et corrigée),
+moins cher ça coûte.
+
+La prévention des erreurs coûte des dizaines
+
+de fois moins cher que leur correction          38
+Les contraintes temporelles et
+budgétaires
+
+◼ Si le développement se termine en retard ?
+
+   ❑ La concurrence aura son produit sur le marché
+      avant nous
+
+   ❑ Les coûts croissent, les bénéfices baissent
+
+◼ Si le projet dépense trop d'argent ?
+
+   ❑ Les bénéfices baissent
+   ❑ Annulation éventuelle du projet
+
+                                                                                                                                                             39
+Echec de projets
+
+◼ cout de l’échec: 50 à 80 billion de $ chaque
+  année (aux USA)
+
+                                                                                                                                                             40
+Echec: Influence de la taille du projet
+
+                                                                                                                                                             41
+Augmentation exponentielle de la taille du logiciel
+
+                                                                              It's Official: The F-22 Raptor Is The Ultimate Aerial Killing Machine
+                                                                                                                                                             42
+Triste Constat (début 90)
+
+                                                                                                                                                             44
+Triste Constat (toujours )
+
+  Standish Chaos Report : 2004
+
+http://www.galorath.com/wp/software-project-failure-costs-billions-better-estimation-planning-can-help.p4h5 p
+Triste Constat (toujours )
+
+                                                                                                                                                             46
+Un logiciel qui satisfait aux
+besoins du client ?
+
+◼ Fonctionnalité et utilité : le logiciel
+
+   ❑ correspond aux besoins du client
+   ❑ est facile à apprendre
+   ❑ est efficace et fiable
+
+◼ Une mauvaise interface usager coûte cher
+
+   ❑ en argent
+   ❑ en vies (par exemple, Therac-25)
+
+◼ L'interface à l'usager est difficile à faire correctement
+
+   ❑ Les êtres humains sont imprévisibles
+
+                                                                                                                                                             47
+Le G.L. doit assurer la qualité
+
+◼ Au niveau du logiciel (produit)
+◼ Au niveau du processus de développement.
+
+   ❑ Productivité
+
+       ◼ diminuer les coûts
+       ◼ réutilisation (compromis)
+       ◼ Utilisation d’outils et environnements
+
+   ❑ Ponctualité
+
+       ◼ livrer logiciel d’ «actualité»
+       ◼ développement incrémental: livraison précoce du logiciel
+
+   ❑ Visibilité (transparence)
+
+       ◼ documentation
+
+                                                                                                                                                             48
+Qualité du logiciel Démarche qualité : ISO 9126
+(1991) -> replaced by ISO/IEC 25010:2011
+
+                  ◼ The six quality characteristics of a software
+
+Sub-characteristic
+Testability
+
+Metrique à mesurer: Complexite
+
+Cyclomatique de McCabe          49
+Génie logiciel versus d'autres
+disciplines d'ingénierie
+
+◼ Pourquoi un logiciel ne se plante-t-il pas
+  aussi rarement qu'un pont s'écroule ?
+
+   ❑ L'attitude de la communauté :
+
+       ◼ Si un pont s'écroule, on va (re)vérifier la conception
+           de ce pont ainsi que d'autres ponts.
+
+       ◼ Si un logiciel se plante, on redémarre !
+
+                                                                                                                                                             53
+Génie logiciel versus d'autres
+disciplines d'ingénierie
+
+◼ Pourquoi un logiciel ne se plante-t-il pas aussi rarement qu'un
+   pont s'écroule ? (suite...)
+    ❑ La maintenance
+    ❑ Le logiciel ne s'use pas MAIS il est très facile à modifier
+    ❑ Si on demandait à un ingénieur civil de faire tourner un pont
+       90° !?
+
+◼ Il existe du logiciel fabriqué « sérieusement »
+    ❑ Systèmes de contrôle temps-réel (médicaux, avioniques,
+       aérospatiaux, nucléaires).
+    ❑ Puisque des fautes peuvent être catastrophiques, ces systèmes
+       incluent la tolérance aux fautes (la redondance).
+
+          ◼ redondance du matériel, des traitements, des données
+
+    ❑ Le développement de ces systèmes est très coûteux et très lent.
+
+                                                                                                                                                             54
+Le cycle de vie du logiciel
+
+<<traditionnel>>
+
+                  ◼ C'est la série des étapes
+                     suivies pour le réaliser,
+                     de sa conception jusqu'à
+                     sa mise hors service
+
+                  ◼ Il est essentiel d'avoir
+                     un processus bien
+                     défini
+
+                  ◼ Le niveau de la maturité
+                     du processus donnera
+                     une indication du succès
+                     d'une organisation pour
+                     fabriquer un logiciel
+
+                             55
+Une approche d’ingénierie
+
+(vue de l’intérieur…)
+
+◼ Construire un logiciel c’est un peu comme construire
+   une maison…
+
+◼ Expression des besoins, Analyse des besoins et
+   spécification
+
+◼ Conception architecturale
+◼ Conception détaillée
+◼ Implémentation
+◼ Tests unitaires
+◼ Tests d’intégration
+◼ Tests système
+◼ Livraison du système
+◼ Maintenance
+
+                                                                                                                                                             56
+Le cycle de vie à la méthode
+« orientée-objet »
+
+Software Engineering 23_24 Teams code
+
+c3fa91f                                58
+  7 Principes de base du génie logiciel
+
+◼ Rigueur et Formalité (solution précise, Développement,
+   soigné, non approx.)
+
+◼ Séparation des questions:
+
+    ❑ temps: cycle de vie,
+    ❑ attributions: persistance, sécurité,
+    ❑ qualités: performance,
+    ❑ vues :données, ordonnancement des opérations , ctrl
+    ❑ parties: noyau, extensions
+
+◼ Modularité (forte cohésion, faible couplage)
+
+    ❑ décomposer un système en
+    ❑ sous-systèmes plus simples (pour maîtriser sa complexité et faciliter
+
+       la réutilisation
+    ❑ -> prog. Par composant
+
+                                                                                                                                                                      59
+7 Principes de base du génie logiciel
+
+◼ Abstraction (faire abstraction de certains aspects pour
+   gérer la complexité)
+
+◼ Anticipation du changement (être capable de gérer
+   +ieurs versions, chgt le plus localisé: faible couplage,
+   code modulaire)
+
+◼ Généricité (La solution pourra être réutilisée, module
+   authentification)
+
+◼ Construction incrémentale (réaliser les fonctions
+   essentielles puis ajouter les aspects secondaires.
+   Produire des prototypes intermédiaires)
+
+                                                                                                                                                             60
+Catégories de logiciel
+
+                                                                                                                                                    61
+Différentes catégories de logiciel
+
+◼ Sur mesure (custom)
+
+   ❑ Pour un client spécifique
+
+◼ Générique (generic)
+
+   ❑ Vendu sur le marché
+
+       ◼ e.g. un tableur (spreadsheet), un outil de base de données
+            (database), un outil de traitement de texte (word processor)
+
+       ◼ COTS = Commercial Off-The-Shelf software
+
+◼ Embarqués (embedded)
+
+   ❑ S'exécutent dans du matériel électronique isolé
+
+       ◼ machine à laver, télévision, lecteur DVD, téléphone mobile,
+            magnétoscope, four à micro-ondes, réfrigérateur, joueur MP3,
+            ...
+
+   ❑ difficile à modifier
+
+                                                                                                                                                             62
+Différentes catégories de logiciel
+
+◼ Logiciel à temps réel (real-time)
+
+    ❑ p.e. les systèmes de contrôle et de surveillance
+    ❑ manipulent et contrôlent le matériel technique
+    ❑ Réaction immédiate requise
+    ❑ Environnement souvent très contraignant
+
+◼ Logiciel de traitement de données (data processing)
+
+    ❑ Ils stockent, recherchent, transforment et présentent l'information
+       aux utilisateurs
+
+    ❑ Grandes quantités de données avec des corrélations complexes,
+       enregistrées dans les bases de données
+
+    ❑ Largement utilisés en administration des affaires
+    ❑ Fiabilité des résultats
+    ❑ Sécurité dans l’accès aux données
+
+◼ Quelques fois les 2 aspects sont présents dans un logiciel
+
+    ❑ Business intelligence
+
+                                                                                                                                                                63
+Différentes catégories de logiciel
+
+◼ Les systèmes distribués
+
+   ❑ synchronisent la transmission, assurent l’intégrité des
+       données et la sécurité, ...
+
+   ❑ Technologies utilisées
+
+       ◼ RMI, CORBA, DOM/DCOM, SOAP, EJB, …
+
+◼ Les systèmes de matériel
+
+   ❑ Systèmes d'exploitation, exécutions de matériel de bas
+       niveau
+
+◼ Les systèmes d'entreprise
+
+   ❑ décrivent les buts, les ressources, les règles et le travail
+       réel dans une entreprise (ERP, CRM, etc…)
+
+                                                                                                                                                             64
+Différentes catégories de logiciel
+
+◼Projets à partir de zéro (greenfield, from scratch)
+
+   ❑Il s’agit là de la minorité des projets entrepris
+
+◼La plupart des projets consiste à faire
+ évoluer ou à maintenir un logiciel existant
+
+   ❑Maintenance (corrective, adaptative,
+     additive/perfective, preventive)
+
+                                                                                                                                                             65
+Categories of Software (Extended)
+
+◼ Custom, generic, embedded, real-time… still
+  valid.
+
+◼ Add:
+
+   ❑ AI-augmented applications (co-pilots,
+      recommendation engines).
+
+   ❑ AI infrastructure software (vector DBs, model
+      serving pipelines).
+
+   ❑ AI governance tools (audit logs, explainability
+      dashboards).
+
+                                                                                                                                                             66
+Projets de génie logiciel
+Projets de réingénierie (re-engineering)
+
+◼ Projets de restructuration
+
+    ❑ changements apportés à la structure interne du programme,
+      sans changer le comportement externe du programme
+
+         ◼ (re-engineering, refactoring)
+
+◼ Surtout necéssaire avec un système patrimonial
+ (legacy system)
+
+    ❑ les corrections, adaptations et additions deviennent trop
+      coûteux.
+
+                                                                                                                                                                67
+Projets de génie logiciel
+Framework-based development
+
+◼Application framework
+
+   ❑Un logiciel dont certains éléments demeurent ouverts.
+   ❑Caracteristiques: inversion of control, extensibilité
+
+◼D’autres projets sont des travaux d’assemblage
+
+ (component-based development)
+   ❑Ils impliquent la mise ensemble de composants
+     fonctionnels existants
+   ❑problématique d’integration
+
+                                                                                                                                                             68
+Les parties prenantes dans le génie
+logiciel (stakeholders)
+
+1. Utilisateurs (users)
+
+    ❑ Ceux qui se servent du logiciel
+
+2. Clients (customers)
+
+    ❑ Ceux qui paient pour le logiciel
+
+3. Développeurs (developers)
+
+    ❑ Ceux qui conçoivent le logiciel
+
+4. Gestionnaires (managers)
+
+    ❑ Ceux qui supervisent la production du logiciel
+
+Tous ces rôles peuvent être remplis par la même
+    personne
+
+                                                                                                                                                             69
+New Roles Emerging
+
+◼ AI Prompt Engineer / Software Designer
+◼ Ethics and Governance Engineer
+◼ Data/Model Ops (MLOps/LLMOps)
+◼ AI Test Engineer (bias, hallucination,
+
+  robustness testing)
+◼ Human–AI Collaboration Manager
+
+                                                                                                                                                             70
+Résumé
+
+◼ Les défis du génie logiciel:
+
+   ❑ Budget
+   ❑ Échéancier
+   ❑ Qualité
+
+◼ La programmation
+
+   ❑ Une phase du génie logiciel
+   ❑ Ne nécessite pas un ingénieur
+   ❑ Souvent basée sur une conception « improvisée »
+
+◼ Un ingénieur en logiciel comprend le cycle de vie en
+   entier
+
+                                                                                                                                                             71
+Conclusion
+
+◼ Le GL doit fournir des méthodes de
+  conception de systèmes complexes
+  permettant :
+
+   ❑ une prise en compte du client,
+   ❑ une démarche qualité
+   ❑ une organisation du travail en équipe
+
+◼ Le GL, ce sont aussi des outils associés :
+
+   ❑ AGL (atelier de génie logiciel)
+
+       ◼ Exemples: Visual Paradigm, Argo UML, Netbeans, IBM
+           Rhapsody
+
+                                                                                                                                                             72
+Conclusion
+
+◼ Il n'est jamais trop tard pour bien faire.
+◼ Mais, faut-il encore vouloir le faire...
+
+                                                                                                                                                             73
+Programming in the Small    Software Engineering (Before              Software Engineering (LLM Era)
+                            LLMs)
+Individual work on small    Team-based projects, long-term,           Human + AI team collaboration
+problems                    complex
+                                                                      Focus on AI-augmented lifecycle
+Focus on algorithms, syntax, data Focus on process, lifecycle, roles  (design + implementation +
+                                                                      testing with AI)
+structures                  (analyst, designer, tester, etc.)         Knowledge-centric: framing
+                                                                      problems, validating AI outputs
+Code-centric                Requirements, design, testing,            Dialogue with clients + AI
+                            project management                        oversight and governance
+                                                                      DevAIps: CI/CD + AI bias audits,
+No real client interaction  Dialogue with client/users                retraining
+                                                                      AI-assisted testing & debugging +
+Minimal methodology         Structured methods (waterfall,            monitoring trustworthiness
+Individual debugging        agile, DevOps)                            Scale: enterprise + AI-integrated
+                            Testing, debugging, quality               applications, AI copilots,
+                            assurance                                 intelligent systems
+                                                                      Goal: deliver trustworthy,
+Scale: small, educational projects Scale: enterprise systems, ERP,    explainable, and ethical software
+                                          avionics, etc.
+
+Goal: make it work          Goal: deliver reliable,
+                            maintainable software
+
+                                                                      74
+Lab
+
+◼ Install GitHub Copilot / ChatGPT integration
+  for IDEs; compare human-written vs AI-
+  generated boilerplate.
+
+                                                                                                                                                             75
+Conclusion: Why Study SE in the
+LLM Era?
+
+◼ Software engineering is more needed than
+  ever:
+
+   ❑ LLMs automate coding, but cannot replace rigor,
+      ethics, and system-level design.
+
+   ❑ Students must learn how to engineer with AI,
+      not against it.
+
+   ❑ The next decade belongs to engineers who can
+      bridge human creativity and AI productivity.
+
+                                                                                                                                                             76
+77
+Stop Vibe Coding: Reasons to Reconsider
+
+                                                              • Increased complexity in debugging
+
+                                                                                      • Code written impulsively or intuitively can be hard to trace and fix
+                                                                                             due to lack of structure.
+
+                                                              • Higher risk of subtle bugs and unpredictable behavior
+
+                                                                                      • Without careful planning, vibe coding can lead to fragile
+                                                                                             implementations.
+
+                                                              • Unclear learning path for new developers
+
+                                                                                      • The absence of consistent patterns or documentation makes
+                                                                                             onboarding and collaboration difficult.
+
+                                                              • Difficulty in tracing and reproducing errors
+
+                                                                                      • Improvised code often lacks proper logging or version control,
+                                                                                             making issues harder to isolate.
+
+                                                              • Potential for decreased code maintainability over time
+
+                                                                                      • Code written in the moment may not scale well or remain
+                                                                                             readable in the long term.
+
+                                                              • Security issues in generated or improvised code
+
+                                                                                      • Quick fixes or shortcuts can introduce vulnerabilities, especially
+                                                                                             when input validation is overlooked.
+
+                                                              • Potential quality issues in the code
+
+                                                                                      • Without peer review or testing, the code may lack robustness,
+                                                                                             clarity, and performance optimization.
+
+                                                                                                                                                             78
+79
+

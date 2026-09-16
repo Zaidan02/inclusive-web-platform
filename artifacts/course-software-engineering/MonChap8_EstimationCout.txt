@@ -1,0 +1,705 @@
+Chapitre 8 -Estimation du cout d'un
+logiciel
+  Introduction
+
+2
+
+     Au niveau projet, il faut estimer la charge du projet
+      complet par la détermination d'une enveloppe
+      budgétaire
+
+     Les coûts du projet doivent être évalués en fonction
+      de leur nature
+
+         Coûts en matériel, en ressources humaines internes, en frais
+           de déplacement, en personnel de prestataires extérieurs…
+
+         Concernant les charges matérielles, il faut les estimer
+           précisément: Besoins en locaux, en ordinateurs, serveurs,
+           logiciels…
+
+      Cette estimation se fait généralement en mois-homme
+Définitions
+
+ Charge: C'est la quantité de travail qu'une personne peut réaliser
+ Unité: en jour/homme, mois/homme, année/homme
+
+     Remarques: mois/homme (charge sur un mois): en général 20 jours.
+
+ Taille du projet: La taille du projet se mesure à sa charge
+
+ Ordre de grandeur: selon les normes ISO
+
+Charge < 6 M/h              Très petit projet
+6 M/h < Charge <= 12 M/h    Petit projet
+12 M/h < Charge <= 30 M/h   Projet moyen
+30 M/h < Charge <= 100 M/h  Grand projet
+100 M/h <= Charge           Très grand projet
+Définitions
+
+ Durée -> dépend de la charge et du nombre de
+  personnes affectées
+
+ Exemple:
+
+    60 M/h peut être 1 personne pendant 5 ans ou
+    10 personnes pendant 6 mois ou
+    60 personnes pendant 1 mois
+                                                                                                                 Use Case Points (RUP) selon
+                                                                                                                   les acteurs (complexes ou
+
+ Evaluation du coût du logiciel transactions par use case, simples), le nbre de
+                                                                                                                               etc…
+
+ Boehm rapporte les méthodes suivantes d'évaluation
+  des coûts :
+
+   1. la modélisation algorithmique des coûts : calcul réalisé à
+        partir de différents critères numériques : taille, coût d'un
+        logiciel comparable (nbre de user stories, use case points,
+        LOC)
+
+   2. le jugement contradictoire d'experts, ramené à un coût
+        unique par consensus ou par moyenne (Méthode Delphi:
+        https://www.youtube.com/watch?v=5DcStnklwCI)
+
+   3. l'estimation par analogie : lorsqu'on a déjà réalisé un
+        logiciel comparable
+
+L'estimation d'un coût se fait en présence d'une définition
+fixe des besoins, même si elle est sommaire
+Evaluation du coût du logiciel (suite)
+
+   4. la loi de parkinson : on utilise toujours les ressources accordées,
+        quels que soient les objectifs. Le coût est donc égal à l'effort
+        que l'on peut fournir. Par exemple, si on veut livrer un logiciel
+        dans 12 mois et on dispose de 5 hommes -> l'effort est estimé
+        à 60 hommes/mois
+
+   5. le coût objectif , ou encore le prix gagnant : c'est le prix que le
+        client est disposé à payer pour son produit.
+
+   6. l'estimation descendante, basée sur les fonctionnalités globales
+        à produire, plutôt que sur les coûts des composants à produire
+        pour implanter ces fonctions.
+
+   7. l'estimation ascendante : cumuls des coûts des composants
+Evaluation du coût du logiciel (suite)
+
+ Ces méthodes se valent toutes. Le choix de l'une ou l'autre
+   repose sur des considérations liées au contexte.
+
+ En général, le coût total est évalué avec une combinaison
+   de ces approches.
+
+ Disons toutefois que l'estimation ascendante donne souvent des
+   résultats catastrophiques si les coûts élémentaires sont
+   surévalués,
+
+ que l'estimation descendante ne peut être réalisée que par
+   des chefs de projets confirmés,
+
+ que le coût objectif est très employé en pratique,
+
+     le client et le prestataire, une fois d'accord sur le prix de cession, définissent les
+        fonctionnalités à prix constant.
+Evaluation du coût du logiciel (suite)
+
+ que la loi de parkinson est véridique
+
+     même sous des contraintes de délais énormes, les programmeurs déploient
+        des trésors d'imagination pour atteindre les objectifs en temps quasiment voulu
+
+ que l'estimation analogique est précieuse, que le jugement
+   d'experts dit aussi estimation "à la louche" est
+   notoirement fiable,
+
+ et enfin que les modèles algorithmiques de calcul de coût
+   sont difficiles à mettre en œuvre à un petit niveau, lourds, et
+   que leurs résultats sont de toutes façons confrontés aux
+   modes précédents d'estimation.
+
+ Dans la pratique, une bonne manière de s'assurer qu'un coût
+   est réaliste consiste à faire converger les estimations
+   provenant de différentes sources.
+Estimation du coût d'un logiciel: par
+calcul
+
+ Il existe plusieurs approches très différentes pour
+  estimer le cout d'un logiciel.
+
+    La plus ancienne est appelée estimation LOC, car elle
+     s'appuie sur l'estimation du nombre de lignes de code
+     qui devront être écrites pour le projet.
+
+    La plus moderne s'appuie, sur le nombre de points de
+     fonction dans la description du projet.
+
+    Avec RUP c’est les Use Case Points.
+    Avec XP c’est les user stories.
+Estimation des lignes de code
+
+ La première étape dans une estimation fondée sur les lignes
+   de code, consiste à estimer leur nombre dans le code du projet
+   terminé.
+
+ Cette estimation peut s'appuyer sur la taille de précédents
+   projets, celle d'un produit concurrent ou diviser le produit en
+   plusieurs parties, plus simples à estimer.
+
+ La démarche standard, consiste pour chaque partie pi du
+   projet, à estimer sa taille maximale, maxi , sa taille minimale
+   mini et une approximation au plus juste, ji
+Estimation des lignes de code: Exemple
+
+Partie  Taille min.  Approximation Taille max.
+
+1       20           30                                 50
+
+2       10           15                                 25
+
+3       25           30                                 45
+
+4       30           35                                 40
+
+5       15           20                                 25
+
+6       10           12                                 14
+
+7       20           22                                 25
+
+L'estimation de la taille des différentes parties est:  Celle pour l'ensemble du
+P1=( 20+4*30+50)/6=190/6=31.6                           projet vaut donc:
+P2=( 10+4*15+25)/6=95/6=15.8                            31.6+15.8+36.7+20+12+22.17
+P3=( 25+4*30+45)/6=190/6=31.6                           =170.07 LOC
+P4=( 30+4*35+40)/6=220/6=36.7
+P5=( 15+4*20+25)/6=120/6=20
+P6=( 10+4*12+14)/6=72/6=12
+P7=( 20+4*22+25)/6=133/6=22.7
+Estimation du coût fondée sur les
+
+lignes de code
+
+ L'approche LOC repose sur une formule qui utilise des données historiques.
+
+ La version la plus simple comprend trois paramètres:
+     Cout =  *KLOCß +
+
+         Alpha,  représente le cout par KLOC (millier de lignes de code), c.-à-d.
+           le cout de chaque millier de lignes de code.
+
+         Le paramètre  est un exposant qui reflète le caractère non linéaire de
+           cette relation.
+
+                  Une valeur supérieure à 1 signifie que le cout du KLOC augmente avec la taille
+                    du projet, ce qui correspond à une deseconomie d'échelle.
+
+                  Une valeur inferieure à 1 représente au contraire une économie d'échelle.
+
+         Le paramètre  représente le cout fixe du projet: sa valeur peut être
+           positive ou nulle.
+Modèle COCOMO 81
+
+ C'est la formule classique d'estimation du cout fondée sur le nombre de lignes de code.
+ (COnstructive COst MOdel) mis au point par B. Boehm sur la base de données statistiques recueillies sur un
+
+     très grand nombre de projets en 80-81. Il utilise le millier d'instruction source livrées (KDSI, Kilo
+     delivered Source Instructions) comme unité de taille et les mois-homme comme unité de cout.
+ COCOMO est divisé en trois modèles, qui affinent l'estimation en prenant en compte de plus en plus de
+     paramètres :
+
+      le modèle de base
+
+              effectue un simple calcul de l'effort et de la durée en fonction du nombre d'instructions que l'application.
+
+      le modèle intermédiaire
+
+              reprend l'effort et la durée du modèle de base, en appliquant cette fois-ci des coefficients prenant en compte des
+                  facteurs de coût (compétence de l'équipe, complexité de l'environnement technique, etc.)
+
+      le modèle détaillé
+
+              reprend les données du modèle intermédiaire en affinant notamment les facteurs de coût en fonction de chaque
+                  phase du cycle de développement. Ce modèle n'est véritablement nécessaire que pour de très gros projets.
+
+ Aujourd'hui, il existe également le modèle COCOMO II, plus adapté à l'aspect ré-
+    utilisation des composants.
+Modèle COCOMO 81: Equations
+
+ Bohem a reparti les données historiques selon trois types de projet:
+
+     En mode organique (1): des projets avec des petites équipes travaillant sur des
+        Applications bien comprises déterministes (indépendantes, par exemple pour le
+        traitement de données). Dans ce cas, on perd peu de temps à communiquer et
+        l'équipe réalise rapidement son travail.
+
+           Très peu de projet de ce type ont dépassé 50 KDSI
+
+     En mode semi- détaché (2): l' équipe est constituée de personnes expérimentées
+        et de débutants. L' équipe ne connait pas certains aspects du système, mais c’est
+        quand même toujours des applications déterministes (ex: Utilitaires par exemple
+        les compilateurs)
+
+           Taille < 300 KDSI
+
+     En mode intégré(3) (embedded): concerne le développement de logiciels
+        complexes. Avec des contraintes, et un couplage complexe entre le hardware, le
+        software, les régulations, etc. Dans ce cas, l'équipe n'est pas trop expérimentée.
+        (ex: Programmes systèmes)
+Modèle COCOMO 81 (simple)
+
+ B. Boehm, comme d’autres auteurs, a observé des relations quantitatives entre
+    certaines grandeurs caractéristiques des projets logiciels :
+
+      le millier d'instructions sources livrées (KIL ) ; (sans compter les commentaires)
+      l’effort total exprimé en hommes-mois (HM ) ; (homme/mois = 152 heures (au lieu de 22 jours
+
+          * 8 heures = 176 heures) à cause des maladies et des absences.
+      la durée du développement (TDEV).
+
+ En fonction du type des programmes 1, 2 ou 3, le modèle propose les relations
+    suivantes : effort = A (KIL)B
+
+ 1: effort (en HM) = 2,4 (KIL )1,05 TDEV = 2,5 (HM )0,38
+ 2 :effort (en HM) = 3,0 (KIL )1,12 TDEV = 2,5 (HM )0,35
+ 3: effort (en HM) = 3,6 (KIL )1,20 TDEV = 2,5 (HM )0,32
+ Exemple: un projet en mode organique de 32 000 ISL ->
+
+      HM= 2,4 (32)1,05 et TDEV=2.5*(91)0.38=14 mois.
+Exemple COCOMO 81 (simple)
+
+ Exercice 1: Estimer la taille moyenne de l'équipe qu'il faudrait prévoir pour
+   développer un logiciel estimé à 40 000 instructions sources.
+
+ On utilise la méthode COCOMO et vu que la taille ne dépasse pas 50
+   KDSI, nous utiliserons les formules du mode organique.
+
+ Nous avons donc pour le calcul de la charge et du délai, les coefficients
+   suivants:
+
+     a=2.4 et b=1.05 c=2.5 et d=0.38
+     charge=2.4 (40)1.05 ≈115 M/h
+     délai = 2.5 (115) 0.38 ≈ 15 Mois
+
+     -> Taille équipe = charge / délai = 115 /15 ≈ 8 personnes.
+Modèle COCOMO 81 (Intermédiaire)
+
+ Il se différencie de COCOMO simple par:
+
+ Des valeurs de coefficients différentes
+
+ Organique: a=3.2 b=1.05, semi-détaché: a=3.0 b=1.12, intégré: a=2.8 b=1.20
+
+ Un facteur d'ajustement d'effort qui dépend de 15 facteurs de couts
+
+ Ce facteur tient en compte d'autres éléments dans l'estimation du coût et
+   applique alors une série de multiplicateurs, tel que:
+
+ effort = A (KIL)B * m(X)                          15
+
+ Xj est un facteur de cout (cost driver)           m(X )   m(x j )
+
+ Les facteurs de cout sont valués de normal, très bas ou trèjs1haut.
+
+ m(xj) est le poids affecté au facteur de cout xj
+
+     Ce poids va de 0.70 à 1.66
+
+ m(xj) = 1 pour tout xj valorisé comme nominal
+Cost drivers (Caractéristiques du
+projet )
+
+ Fiabilité
+
+     Une fiabilité très haute-> une panne aurait très peu de conséquences
+     Une fiabilité très haute est nécessaire lorsque la panne met en jeu le système.
+
+ Taille de la BDD
+
+     Plus la base est importante, plus l'effort est grand
+
+ Complexité du produit
+
+     C'est la complexité de l'interface ou la gestion de données complexes ou les
+        traitements parallèles par exemple.
+
+ Caractéristiques du matériel:
+
+     Taille mémoire nécessaire, vitesse de processeur, etc.…
+     Contraintes de stockage
+Caractéristiques du projet
+
+ Caractéristiques du personnel
+
+     Capacité d'analyse
+     Expérience de l'application
+     Expérience dans le langage de programmation
+     Elles seront notées de très faible (peu ou pas d'expérience), normal (une
+
+       année d'expérience), très fort (>= 3 ans d'expérience)
+
+ Caractéristiques du projet
+
+     Utilisation d'outils logiciels
+     Existence d'une conception
+     Planning
+Modèle COCOMO détaillé (ou
+complet)
+
+ Les modèles COCOMO simplifiés et intermédiaires
+  considèrent le logiciel comme un tout, sans tenir
+  compte des sous-systèmes
+
+ Le modèle COCOMO complet:
+
+    Divise le système en sous-systèmes
+    Tient compte de l' hétérogénéité des sous-systèmes et
+
+     de leur diversité (certains fiables, d'autres pas, etc.)
+    Estime le cout de chaque sous-système et effectue
+
+     ensuite la somme.
+Ressources Humaines
+
+ Le nombre de personnes sur un projet n'est pas uniforme
+   pendant le temps de développement. Au début d'un projet, le
+   nombre de personnes est petit (phases de planification et de
+   spécification)
+
+ On augmente ensuite l'effectif pour le développement et on
+   le diminue à la fin une fois que l'implémentation est terminée.
+
+ Le temps nécessaire pour mener un projet dépend de l'effort
+   total et non du nombre d'ingénieurs travaillant sur le projet.
+Month-Man
+
+ L'idée sous-jacente est que les hommes et les mois sont
+   interchangeables (2 hommes pendant un mois équivaut à un
+   homme pendant deux mois) n'est vrai que lorsque le
+   problème est partitionnable en sous-problèmes
+   indépendants.
+
+ Dès qu'il y a nécessité de communication, l'effort pour
+   assurer cette communication doit être pris en compte et il croit
+   non linéairement.
+
+ Pour N personnes, l'effort de communication est proportionnel
+   à N(N-1)/2
+
+ N=2 -> e=1  N=3 -> e=3
+
+ N=4 -> e=6  N=5 -> e=10
+Estimation du cout fondée sur l'analyse des
+points de fonctions (1/4)
+
+ Ce principe consiste à identifier et à quantifier les
+  fonctionnalités réclamées par le projet, en comptant
+  les éléments extérieurs qui devront être traités.
+
+ Les éléments les plus courants à prendre en compte
+  sont les suivants:
+
+    Interrogations
+    Entrées
+    Sorties
+    Fichiers Internes
+    Interfaces externes.
+Estimation du cout fondée sur l'analyse des
+points de fonctions (2/4)
+
+ Les Interrogations: sont des paires requête-réponse qui ne
+   modifient pas les données internes (sans aucun algo).
+
+     Exemple: une requête pour connaitre l'adresse d'un employé donné
+
+ Les entrées: sont des données fournies au programme. Une
+   entrée logique est considérée comme un seul élément, et les
+   champs qui la composent ne sont généralement pas comptés
+   séparément.
+
+     Exemple: l'entrée du nom, du prénom et de l'adresse d'un employé sera
+       considérée comme une seule entrée.
+Estimation du cout fondée sur l'analyse des
+points de fonctions (3/4)
+
+ Les sorties (après l’appli d’une transf, d’un algo):
+  correspondent aux données qu'affiche le programme,
+  comme un rapport ou un message d'erreur. La aussi
+  les champs individuels ne sont pas comptés
+  séparément.
+
+    Exemple: Si un rapport contient plusieurs lignes, une pour
+      chaque employé de l'entreprise, l'ensemble de ces lignes
+      sera compté comme un unique élément.
+
+        Il existe cependant des cas particuliers où elles seraient comptées
+          séparément.
+Estimation du cout fondée sur l'analyse des
+points de fonctions (4/4)
+
+ Les fichiers internes: sont les fichiers logiques que le système
+   doit gérer.
+
+     Exemple: Si un fichier réel contient 1000 entrées de données
+       personnelles et d'autre part des données relatives au département,
+       il sera compté comme deux fichiers différents.
+
+ Les interfaces externes: sont les données partagées avec
+   d'autres programmes.
+
+     Exemple: le fichier du personnel pourra être utilisé par les ressources
+       humaines pour calculer les payes et les promotions et sera alors
+       considéré comme une interface dans les deux systèmes.
+Comptage des points de fonction bruts
+(1/3)
+
+ Les points de fonctions sont recensés puis classés en trois catégories: simples,
+   moyens ou complexes.
+
+ Les coefficients d'un tableau de coefficient sont ensuite appliqués aux
+   différents éléments:
+
+      la somme de ces produits s'appelle les points de fonction bruts.
+
+Sorties         Simple  Moyens  Complexes
+Interrogations  4       5       7
+                3       4       6
+
+Entrées         3       4       6
+
+Fichiers        7       10      15
+
+Interfaces      5       7       10
+Comptage des points de fonction bruts
+(2/3)
+
+ Il n'existe pas de standard pour compter les points de fonctions et on trouve
+   différentes règles dans la littérature sur le sujet.
+
+ La seule chose importante à garder en tête, est que les points de fonction
+   doivent servir à mesurer la quantité de travail nécessaire au
+   développement d'un logiciel.
+     Ainsi, les phénomènes qui demandent beaucoup de travail doivent
+       générer un nombre important de points de fonctions.
+
+ Exemple: Les règles de comptage diffèrent pour décider s'il faut compter
+   les lignes de résumé à la fin des rapports:
+
+      certains considérant qu'elles correspondent à une sortie supplémentaire qu'il faut inclure
+         dans le calcul,
+
+      alors que d'autres estiment qu'il ne faut prendre en compte que les éléments principaux du
+         rapport.
+
+ La réponse à cette question dépend en fait du travail supplémentaire
+   qu'induisent ces lignes.
+Comptage des points de fonction bruts
+(3/3)
+
+  Les règles choisies sont moins importantes en elles-mêmes que leur
+     homogénéité à l'intérieur de l'entreprise.
+
+        Pour cela il est important que les différents employés travaillent ensemble et
+           contrôlent les analyses des points de fonction les uns des autres.
+
+  Des comparaisons entre les estimations et les caractéristiques réelles du
+     projet une fois celui-ci terminé, peuvent permettre également de
+     déterminer:
+
+        les éléments qui ont demandé plus de travail que prévu par les analyses de points
+           de fonctions,
+
+        et éventuellement ceux qui ont été surévalués par ces analyses.
+
+Conclusion: Essayez de faire en sorte que vos points
+de fonction soient en rapport direct avec le travail
+nécessaire au traitement de chaque élément.
+Productivité
+
+ La productivité des développeurs est un paramètre
+   important à mesurer.
+
+ Elle est définie en divisant la taille totale du produit fini, par
+   la quantité de travail fournie par tous les programmeurs
+
+ Elle s'exprime le plus souvent en LOC/jour-homme mais
+   peut également être mesurée en points de fonction par
+   jour-homme
+
+ Notez que la productivité comprend le travail consacré à
+   l'ensemble des phases du cycle de vie du logiciel.
+Evaluer les estimations
+
+ Pour évaluer les estimations il faut disposer d'une mesure, Tom DeMarco a proposé
+    l'EQF (Estimate Quality Factor), facteur de qualité de l'estimation, qu'il définit
+    comme l'aire sous la courbe réelle divisée par l'aire entre la valeur estimée et la
+    valeur réelle.
+
+ Ainsi , plus l'EQF est élevée, meilleure est l'estimation.
+
+      DeMarco précise que les valeurs supérieures à 8 sont raisonnables.
+
+ Les estimations suivantes concernaient un projet qui a duré 11 mois et demi en
+    définitive et coute 3.5 millions d'euros.
+
+      L'aire totale vaut: 11,5 mois * 3,5 millions = 40.25 millions d'euros.
+      La différence entre la courbe réelle et l'estimation vaut:
+      (2.3-3.5)*1.5+(3.1-3.5)*4+(3.9-3.5)*2.5+(3.4-3.5)*3.5=4.75 millions d'euros-mois.
+      Le rapport vaut 40.25/4.75=8.7
+
+Initiale      1,5 mois      5,5 mois      8 mois
+2.3 millions  3.1 millions  3.9 millions  3.4 millions
+   L'aire totale vaut: 11,5 mois * 3,5 millions = 40.25 millions d'euros.
+   La différence entre la courbe réelle et l'estimation vaut:
+   (2.3-3.5)*1.5+(3.1-3.5)*4+(3.9-3.5)*2.5+(3.4-3.5)*3.5=4.75 millions d'euros-mois.
+   Le rapport vaut 40.25/4.75=8.7 > 8 donc valable
+
+EQF=l'aire
+sous la courbe
+réelle divisée
+par l'aire entre
+la valeur
+estimée et la
+valeur réelle.
+Ainsi , plus
+l'EQF est
+élevée,
+meilleure est
+l'estimation
+
+Initiale      1,5 mois      5,5 mois      8 mois
+2.3 millions  3.1 millions  3.9 millions  3.4 millions
+Outils d'estimation automatique
+
+ Il existe de nombreux outils disponibles sur Internet
+  pour calculer COCOMO 81 ou COCOMO II
+  (extension introduite en 1995), ayant pour la
+  plupart des interfaces très simples à comprendre.
+
+ Une recherche sur le terme "COCOMO" avec votre
+  navigateur vous fournira les adresses d'un grand
+  nombre de sites.
+
+https://strs.grc.nasa.gov/repository/forms/cocomo-
+calculation/
+Maintenance du logiciel
+Maintenance corrective: corriger des défauts
+
+adaptive: modifications à apporter au système de façon à
+  tenir compte de changement dans
+
+     Le système d’opération
+     Le plate-forme
+     Les données ou la base de données
+     Les règles et procédures
+
+perfective/additive: ajouter de nouvelles exigences
+
+préventive: faire des refactorings pour améliorer la qualité
+  du logiciel
+Types de maintenance: les
+proportions
+
+                                Additive/
+Intérêt de la maintenance perfective et préventive
+Maintenance
+
+ Les erreurs de codage sont relativement peu
+  couteuses à corriger
+
+ Les erreurs de conception sont relativement chères
+ Les erreurs de spécification sont encore plus chères.
+Demande de modification
+
+ Le processus de maintenance est déclenché par:
+
+    Un ensemble de demandes de modification, à la demande
+      des utilisateurs ou de la direction
+
+    On estime le cout et l'impact de changement
+    On planifie la prochaine livraison
+    On implémente les modifications
+    On valide la nouvelle version.
+
+ La maintenance est mal vue parmi les ingénieurs mais
+  si on la confie aux débutants, on augmentera la cout
+  de la maintenance.
+Coût de Maintenance
+
+ Pour les grands systèmes intégrés, le coût de maintenance = 2 à 4 fois le coût de
+    développement
+
+ Pour les systèmes de gestion, les coûts de maintenance sont presque égales au coût
+    de développement.
+
+ Certains facteurs influent sur le coût de maintenance.
+     Application à maintenir: si l'application est complètement nouvelle ->les
+        besoins seront modifiés fréquemment.
+     Stabilité de l'équipe -> les coûts de maintenance vont diminuer lorsque les
+        développeurs sont responsables de la maintenance du système
+     Durée de vie du programme: Plus le programme est vieux, plus la maintenance
+        est importante, plus la structure est dégradée.
+     Dépendance du programme vis-à-vis de son environnement extérieur
+     Stabilité du matériel -> on est obligé de modifier le programme pour
+        remplacer un matériel donné.
+Coût de Maintenance
+
+ Le coût de la maintenance dépend aussi de
+  l'approche adoptée pendant le développement du
+  système:
+
+    Indépendance des modules
+    Langage de programmation
+    Style de programmation
+    Validation et test du programme -> minimisent la
+
+      maintenance corrective
+    Qualité de la documentation du programme
+    Technique de gestion de configuration
+COCMO et l'estimation du Coût de
+Maintenance
+
+ TAM = Taux Annuel d'une Modification (% de code modifié)
+ TDL = Temps de développement du Logiciel(en HM)
+ EAM = Effort annuel de Maintenance (en HM)
+ EAM = TAM * TDL
+ Par exemple, si TDL = 236HM et TAM=15% alors
+ EAM = (15 * 236)/100 = 35.4 HM
+Facteurs multiplicatifs
+
+ On peut appliquer des multiplicateurs à l'estimation initiale en
+   considérant des facteurs de couts ayant un impact sur le cout de la
+   maintenance, en vue de calculer un facteur d'ajustement d'effort
+   (Exemple: utilisation de technique modernes de programmation)
+
+ On peut estimer le coût de maintenance de chaque sous-système
+
+   indépendamment
+ Cette formule d'estimation ne tient pas compte du fait qu'on dégrade la
+
+   structure du programme
+ Dans certains cas, on a intérêt à redévelopper le logiciel.
+Effets de la maintenance
+
+ Effet de bord du codage
+
+       Modification ou suppression d'un sous-programme
+       Modification ou suppression d'un identifiant
+       Opérations logiques
+       Test de condition de sortie de boucle
+
+ Effet de bord de données: Il est induit généralement par une modification d'une structure de
+    données ou d'un champ.
+
+       Réduction ou augmentation de la taille d'un tableau ou structure complexe
+       Redéfinition de format de fichier
+       Redéfinition de constante locale ou globale
+       Réinitialisation d'un pointeur
+
+ Effet de bord de la documentation: essentiellement l'adéquation entre le code source et les
+    autres documents
+
+      Remarque: Toute modification du code doit être reflétée
+      dans les documents de maintenance, le manuel de
+      l'utilisateur et le document de conception.
+

@@ -37,6 +37,14 @@ $mist = ConvertTo-Rgb '#E9EEF5'
 $muted = ConvertTo-Rgb '#5D6B80'
 $line = ConvertTo-Rgb '#CBD5E1'
 
+# PowerPoint COM can reuse an already-running interactive instance. Calling
+# Quit() on that instance would close presentations the user is editing, so
+# generation must never start while PowerPoint is open.
+$activePowerPointProcesses = @(Get-Process POWERPNT -ErrorAction SilentlyContinue)
+if ($activePowerPointProcesses.Count -gt 0) {
+    throw 'PowerPoint is already running. Save and close every PowerPoint window before running this presentation generator.'
+}
+
 $powerPoint = New-Object -ComObject PowerPoint.Application
 $powerPoint.Visible = -1
 $presentation = $powerPoint.Presentations.Add()

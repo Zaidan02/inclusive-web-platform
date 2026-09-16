@@ -1,0 +1,2497 @@
+Chapitre 2 : Activités et
+Modèles de développement
+du logiciel
+
+                                                                                                                                                         1
+Plan du chapitre
+
+   ❑ Les activités ou étapes du processus de développement
+   ❑ Les differents cycles de vie du logiciel
+   ❑ Types de Méthodologies
+
+        ◼ Les méthodes robustes vs Les Méthodes Agiles
+
+                                                                                                                                                                  2
+Programmation «in-the-small»
+
+ • Spécifications : données
+       complètes et précises
+
+ • analyse descendante :
+       décomposition fonctionnelle
+
+ • implémentation : un seul
+       langage de programmation
+
+ • validation : jeux d’essais
+
+                                                                                                                                                                    3
+Cycle de vie du logiciel vs cycle de développement
+du logiciel
+
+                                                                                                                                                                  5
+                                    These activities remain essential. What
+
+ According              to ChatGPT    changes in the LLM era is how they are
+                                      performed and who (or what) performs
+SDLC Activity           Output      them. Large Language Models (LLMs) and
+
+Requirements Gathering                   AI copilots now act as teammates
+and                                         alongside human developers.
+
+                        Requirements document, user stories, use cases,
+
+Analysis                Specifications
+System Design           High-level system architecture, detailed component
+                        designs
+
+Implementation (Coding) Source code for software components
+
+Testing                 Test plans, test cases, test scripts, defect reports
+
+Deployment              Deployed and configured software, installation guides
+Maintenance             Bug fixes, patches, updates, enhancements,
+Documentation           documentation
+Project Management      Requirements docs, design specs, user manuals, tech
+                        docs
+                        Project plans, schedules, resource plans, risk
+                        assessments
+
+Quality Assurance       QA plans, code review reports, testing reports
+
+Change Management       Change requests, impact analysis reports, updated plans
+
+Training and User Support User training materials, support documentation         6
+Requirements activities
+
+◼ Eliciting requirements and Documenting requirements
+
+   ❑ In requirements elicitation, distinguishing between
+       client "wants" and project "needs" is crucial for effectively
+       understanding and prioritizing what stakeholders are
+       requesting
+
+   ❑ it is the role of the software product manager to make sure
+       that the goals are feasible
+
+◼ Analyzing requirements- and Prioritizing
+   requirements
+
+◼ Managing requirements (within the project scope)
+
+   ❑ Any changes that occur in the project should fall within the
+       vision of the product. In other words, changes to the
+       project should not change the purpose of the product
+
+                                                                                                                                                                  12
+Requirements Gathering and Analysis
+
+◼ Customer Focus Groups: A powerful tool
+  within the broader context of requirement
+  elicitation
+
+       ◼ participants:
+
+            ❑ A facilitator
+            ❑ Developpers (Silent participants)
+            ❑ The project manager
+            ❑ And the client
+
+A stakeholder is anyone affected by or who has an effect on the success of the project,
+such as end-users, clients, managers of end-users, and system administrators. A
+successful project addresses the needs of all stakeholders
+
+                                                                                                                                                                  14
+Expression des besoins
+
+ Etape préalable si le client n’a qu’une idée peu précise
+                       du système à réaliser
+
+◼ Etude informelle des fonctionnalités (externes) du
+   système sans considération technique : point de vue
+   métier / utilisateur
+
+◼ Dialogue fournisseur / client en termes intelligibles
+   pour ce dernier : l’aider à formaliser le problème à
+   résoudre
+
+◼ Produit un document textuel avec schémas…
+
+◼ Conduit généralement à la définition du cahier des
+   charges (parfois manuel d’utilisation préliminaire)
+
+                                                                                                                                                                 15
+Expression des besoins : exemple
+
+  ◼ Contrôle d ’accès à l’IUP de Vannes (adapté de P-A Muller et N. Gaertner,
+       2000; Modélisation objet avec UML, Eyrolles)
+
+  ◼ Le bâtiment de l’IUP se divise en 4 zones (enseignement TD,
+       enseignement TP, administration et enseignants) correspondant à des
+       droits d ’accès différents. 200 personnes ont quotidiennement accès au
+       site. En dehors des visiteurs, tous les autres catégories de personnes
+       disposeront d ’une carte d ’accès : enseignants (20), personnels
+       administratifs (15) et étudiants (150). Les visiteurs n’auront accès au
+       bâtiment qu’aux heures de libre ouverture (voir planning associé). En
+       dehors de cet horaire, l’autorisation d’accès dans chaque zone sera
+       limitée au porteurs de badge et dépendra de leur statut (enseignant,
+       administratif, étudiant) et de l’horaire. Chaque zone est contrôlée par
+       une porte d ’accès munie d’un lecteur de badge spécifique.
+       Les droits d’accès ainsi que le planning des horaires d ’ouverture seront
+       définis par un superviseur ….
+
+                                                                                                                                                                     16
+Specifications
+
+◼ Après la collection des besoins, on procède à l’analyse et à la
+   documentation de ceux-ci dans ce qu’on appelle un Document
+   de Spécification de Besoins ( en anglais Software
+   Requirements Specification)
+
+◼ Il y a plusieurs formats (en anglais templates) possibles pour
+   un document de spécification de besoins. Nous étudions
+   seulement 3 formats dérivant du format SRS du standard IEEE
+   (ISO/IEC/IEEE 29148 -> the successor of IEEE 830.)
+
+◼ Le format SRS général
+◼ Le format SRS utilisant les diagrammes de Use Case UML
+◼ Le format SRS utilisant le format agile de User Stories
+
+                                                                                                                                                                 18
+ Spécifications
+
+Que doit faire le système (côté client): le quoi, pas le comment
+
+  ◼ Document précis spécifiant les fonctionnalités attendues
+  ◼ Base du contrat commercial avec le client
+  ◼ Données
+
+       ❑ résultats de l‘expression des besoins + considérations
+            technique/faisabilité informatique, pas de choix d'implémentation
+
+  ◼ Résultat : spécification technique de besoins STB
+
+       ❑ exigences fonctionnelles attendues: opérations, etc.
+       ❑ qualités non fonctionnelles attendues: performance, portabilité, etc.
+
+  ◼ ! Eviter des décisions prématurées de réalisation
+
+       ❑ trop difficile d'anticiper les conséquences sur la réalisation finale en
+            termes de performances, ressources, ou même de faisabilité.
+
+Documents: cahier des charges du logiciel, et plan de test du
+
+système (éventuellement)                                       ◼19
+Final Year Project Report template
+
+                                                                                    Functional requirements are those behaviors
+                                                                                         that the developed product should do
+
+                                                                                                          quality
+                                                                                                      requirements
+
+                                                                                                                                                                 21
+Format SRS Général
+
+◼ [Project Name] Requirements Specification
+◼ Equipe:
+◼ Auteur:
+◼ Client:
+
+◼ Introduction
+◼ Besoins Fonctionnels:
+◼ Besoins Non Fonctionnels:
+◼ Matrice de dépendances entre les besoins
+◼ Glossaire des termes
+◼ Historique de versions
+
+                                                                                                                                                                 22
+Specifications
+
+◼ Il est important d’indiquer pour chacun des besoins:
+◼ Un identifiant
+◼ Une priorité
+◼ Un niveau de stabilité
+◼ La matrice de dépendances entre les besoins permet de détecter les
+
+    besoins critiques et de visualiser l’ordre de livraison durant l'implémentation
+
+FR ID  Need            Priority  Stability  Depends On
+FR1    Description     High      Stable
+FR2                    High      Stable     FR1
+FR3    User            Medium    Evolving   FR2
+FR4    Authentication  High      Stable     FR1
+FR5                    High      Stable     FR1, FR4
+FR6    User Account    High      Stable
+       Creation                                                        23
+
+       User Profile                         FR5
+       Management
+
+       Product Search
+
+       Adding
+       Products to
+       Cart
+
+       Online Payment
+  Spécifications : Use cases format
+
+◼ Cas d ’utilisation de l’application « accès IUP »
+    • use case : configuration système (acteur : superviseur)
+    • use case : demande d’accès (acteur : porteur de badge)
+    • …
+
+◼ Nom du Use case : “Configurer le système” // commencer par un verbe
+◼ Perimètre: le systeme en cours de conception ex: “accès IUP”
+◼ Acteur Principal: “Superviseur”
+◼ Cas nominal
+
+    • 1) identification
+            • a) saisie du code personnel
+            • b)vérification du code personnel
+            • c) autorisation
+
+    • 2) Modification de configuration
+            • a) choix d ’une zone
+
+    • ….
+◼ Extensions : Autres scenarios de succès ou d’echec
+◼ Specifications supplementaires: Besoins non fonctionnels associés
+◼ Etc…
+
+                                                                                                                                                                        24
+   Exemple simplifié de diagramme de cas
+d’utilisation modélisant une borne d’accès à
+
+                       une banque
+
+             Fonctionnalité vue
+                de l’extérieur
+
+Personne ou
+ composant
+
+Etape: Analyse OO
+But: structurer les besoins des utilisateurs et les objectifs
+correspondants du système.
+                Exercise
+
+• Give 5 functional requirements for a
+  Library Management System
+
+• Give 5 non-functional requirements related
+  to the performance of the Library
+  Management System
+Functional Requirements
+Non-Functional
+
+                                                                                                   According
+
+Requirements/Performancesttoanwdhaicrdh,
+
+• Measurable values  guidelihe,
+                       etc…
+Specifications/Conceptual model
+Analyse du systeme
+
+◼ « Quoi faire » : comprendre et modéliser le métier
+
+   ❑ Réflexion métier hors de tout choix d'implementation
+   ❑ Reste un support de discussion avec le client/utilisateur
+   ❑ Premier modèle du système (niveau métier)
+
+         ◼ Identifier les éléments intervenants hors (acteurs) et dans le système:
+               fonctionnalités, structure et relations, états par lesquels ils passent suivant
+               certains événements.
+               Exemples : diagrammes de classes, de collaborations, ...
+
+       Identifier les classes conceptuelles (non logicielles)
+
+                                                                                                                                                                 30
+Analyse : exemple
+
+◼ « Accès IUP » : identification du superviseur
+
+                                                                                                                                                                 31
+Requirements Engineering
+
+◼ Traditional: Interviews, use cases,
+  specifications.
+
+◼ Now:
+
+   ❑ AI can summarize client discussions and generate
+      draft user stories.
+
+   ❑ AI tools can analyze large sets of customer
+      feedback to detect hidden needs.
+
+   ❑ Engineers validate and refine requirements to
+      avoid ambiguity and hallucinations.
+
+                                                                                                                                                                 32
+Conception (System Design)
+
+◼ Comment faire le système : choix techniques
+
+◼ Choix d’une architecture technique (matériel, logiciel)
+   suivant certaines priorités (facteurs qualités : robustesse,
+   efficacité, portabilité…)
+
+◼ Expertise informatique : hors compréhension du client
+
+◼ Modèle de l’architecture logicielle du système
+   Décomposition en sous-systèmes : interfaces, et
+   infrastructure.
+
+                                                                                                                                                                 33
+Conceptions architecturale et détaillée
+
+◼ une description du logiciel très proche d'un programme
+   avec détails d'implémentation
+
+   ❑ Conception architecturale :
+
+       ◼ décomposer le logiciel en composants plus simples
+           (modules)
+
+       ◼ préciser les interfaces et les fonctions de chaque
+           composant (fonctions et services offerts)
+
+       ◼ fournir une description de l'architecture du logiciel et un
+           ensemble de spécifications de ses divers composants.
+
+   ❑ Conception détaillée :
+
+       ◼ fournir pour chaque module une description précisant
+           comment ses fonctions sont réalisées : algorithmes
+           essentiels, représentation des données,...
+
+                                                                                                                                                                  34
+35
+36
+Software Architecture Models
+
+◼ Layered architecture, MVC, etc…
+◼ SOA (ESB),
+◼ Microservices,
+◼ Event-Driven architecture, Event Sourcing,
+◼ pipes and filters,
+
+                                  https://www.linkedin.com/pulse/top-10-software-
+                                  architecture-patterns-2022-neha-khanna/
+
+                                                                                                                                                                 38
+Conceptions architecturale et détaillée
+
+◼ Remarques
+
+   ❑ frontière entre spécification et conception souvent floue car
+       pas raisonnable de spécifier un système indépendamment
+       de toute considération de faisabilité.
+
+   ❑ la conception commence souvent pendant la spécification,
+       et peut la remettre en cause
+
+   ❑ des contraintes de réalisation peuvent anticiper sur la
+       conception au moment de la spécification
+
+◼ Documents: document de conception , plan de test
+   global et plan de test par module.
+
+                                                                                                                                                                  39
+Conception architecturale
+
+◼ Modèle d’architecture en couches
+
+   ❑ Ex: diagramme de package UML
+
+• diagramme de composants UML  Persistence, logging, etc…
+• diagramme de deployment UML
+                                                                                   40
+42
+Conception détaillée : exemple
+
+◼ « Accès IUP » : personne et code
+
+                                                                                                                                                                 43
+La conception couvre
+
+◼ La conception des interfaces graphiques
+
+      ❑ Modélisation des écrans du logiciel -> Wireframe.cc – The Go-to Free, Online Wireframing Tool.
+      ❑ Développement de prototype modélisant l'expérience de navigation dans l’interface graphique
+
+◼ La conception de l’expérience utilisateur:
+
+      ❑ Définition de “personas” d’utilisateurs et optimisation de la nature de leur contact avec le logiciel
+
+◼ L’architecture technique et matérielle
+
+      ❑ Spécification des composants matériels de l’architecture (serveurs, machines clients, …)
+      ❑ Spécification des logiciels installés sur les composants (Base de données, serveur web, …)
+
+◼ L’architecture des données (ou plus généralement l’”information”)
+
+      ❑ Spécification de type de base(s) de données (relationnelle, non-relationnelle)
+      ❑ Spécification des entités et de leurs relations
+
+◼ L’architecture applicative
+
+     ❑ Permet de modéliser les composants internes du logiciel
+     ❑ Il y a différents moyens de modéliser une architecture:
+
+            ◼ Par couches
+            ◼ Par classes
+            ◼ Par service
+
+                                                                                                                                                                 44
+System & Software Design
+
+◼ Traditional: UML diagrams, architecture
+  choices, modularization.
+
+◼ Now:
+
+   ❑ AI tools generate UML diagrams from text/code.
+   ❑ Engineers evaluate trade-offs (scalability,
+
+      maintainability, ethics).
+   ❑ Design patterns remain essential for guiding AI-
+
+      generated architectures.
+
+                                                                                                                                                                 45
+ Implémentation
+
+◼ passer du résultat de la conception détaillée à un ensemble de
+   programmes ou de composants de programmes
+
+◼ la mieux maîtrisée et la mieux "outillée" (parfois automatisée)
+
+◼ Documents: dossiers de programmation, codes sources commentés.
+
+◼ Souvent trop de temps consacré au codage au détriment
+   des phases d’analyse et de conception : mauvaise pratique parfois
+   très coûteuse…
+
+◼ Savoir user de la réutilisabilité de composants, voire d’outils de
+   génération de code (mise en place automatique
+   du squelette du code à partir du modèle système)
+
+                                                                                                                                                                        46
+Implementation
+
+◼ Traditional: Humans write all the code.
+◼ Now:
+
+   ❑ AI copilots generate boilerplate and suggest
+      implementations.
+
+   ❑ Engineers supervise code quality, maintainability,
+      and security.
+
+   ❑ Teams must track AI performance debt
+      (hallucinations, brittle code).
+
+                                                                                                                                                                 47
+Gestion de configuration et Intégration
+
+  ❑ Gestion de Configuration:
+
+       ◼ permettre la gestion des composants du logiciel, d'en maîtriser l'évolution
+            et les mises à jour tout au long du processus de développement
+            (documentation homogène)
+
+       ◼ Les IDE permettent de gérer de façon plus cohérente les documents
+            relatifs à un logiciel.
+
+  ❑ Intégration:
+
+       ◼ assembler tout ou partie des composants logiciels pour obtenir un
+            système exécutable
+
+       ◼ existe souvent plusieurs choix possibles pour certains composants ->
+            variantes du logiciel (ex: pour des systèmes d'exploitation différents)
+
+       ◼ utilise la gestion de configuration pour :
+            ❑ assembler des versions cohérentes de composants
+            ❑ gérer des variantes du logiciel
+
+                                                                                                                                                                 48
+https://www.atlassian.com/continuous-
+delivery/principles/configuration-management
+
+◼ Consider a microservice architecture. Each service in a microservice
+    architecture uses configuration metadata to register itself and initialize.
+    Some examples of software configuration metadata are:
+
+     ❑ Specifications of computational hardware resource allocations for CPU, RAM,
+         etc.
+
+     ❑ Endpoints that specify external connections to other services, databases, or
+         domains
+
+     ❑ Secrets like passwords and encryption keys
+
+◼ Configuration values will often be added, removed, or modified. Without
+    version control this can cause problems.
+
+◼ Version control and configuration management solve this problem by adding
+    visibility to configuration modifications.
+
+     ❑ When a change is made to configuration data, the version control system tracks
+         it, which allows team members to review an audit trail of modifications.
+
+                                                                                                                                                                 49
+DevOps: CI/CD
+
+                 cluster
+AIOps (Artificial Intelligence for IT Operations):
+AI code review.
+AI test generation (during testing).
+AI monitoring (in production).
+How configuration management fits
+
+with DevOps, CI/CD and agile
+
+◼ Configuration data has historically been hard to manage.
+
+    ❑ It's not really code so it’s not immediately put in version control and it’s
+        not first-class data so It isn’t stored in a primary database.
+
+    ❑ Traditional and small scale system administration is usually done with a
+        collection of scripts and ad-hoc processes.
+
+    ❑ Configuration data can be overlooked at times, but it is critical to system
+        operation.
+
+◼ The rise of cloud infrastructures has led to the development
+   and adoption of new patterns of infrastructure management.
+
+    ❑ These new cloud platforms allow teams to specify the hardware
+        resources and network connections they need provisioned through
+        human and machine readable data files like YAML.
+
+    ❑ The data files are then read and the infrastructure is provisioned in the
+        cloud. This pattern is called infrastructure as code (IaC).
+
+                                                                                                                                                                 51
+How configuration management fits
+with DevOps, CI/CD and agile
+
+◼ Configuration management is a key part of a DevOps lifecycle.
+   DevOps configuration brings automation to infrastructure
+   management and deployment.
+
+◼ CI/CD configuration management utilizes pull request-based
+   code review workflows to automate deployment of code
+   changes to a live software system.
+
+◼ This same flow can be applied to configuration changes.
+◼ CI/CD can be set up so that approved configuration change
+
+   requests can immediately be deployed to a running system.
+
+                                                                                                                                                                 52
+Configuration management tools
+
+                                                                                                                                                                 53
+Vérification
+
+◼ le développement est-il correct par rapport à la
+   spécification de départ?
+
+   ❑ s'assurer que les descriptions successives du logiciel, et,
+       in fine, le logiciel lui-même, satisfont la spécification
+       globale : inspections de spécifications, de programme,
+       preuve et tests.
+
+   ❑ test : consiste à rechercher des erreurs dans une
+       spécification ou un programme par :
+
+        ◼ examen ou analyse du texte (test statique)
+        ◼ par des exécutions sur un sous-ensemble fini de données (test
+
+             dynamique).
+
+                                                                                                                                                                 55
+Vérification (suite)
+
+◼ On distingue différents niveaux de tests:
+
+        ◼ test unitaire : tester avec les jeux d'essais des composants isolés
+             selon le plan de test;
+
+        ◼ test d'intégration : Composition progressive des modules - Tests des
+             regroupements de modules
+
+        ◼ test système : tester le système sur son futur site d'exploitation, dans
+             des conditions opérationnelles et au-delà (surcharge, défaillances
+             matérielles, ... ), selon le plan de test global.
+
+   ❑ Testeur différent du concepteur ou programmeur
+       • Logiciels de test : toute ligne de code doit être testée !
+
+◼ Documents: rapport de vérification par test.
+
+                                                                                                                                                                 56
+Testing
+
+◼ Traditional:
+
+   ❑ Manual unit/integration/system tests.
+
+◼ Now:
+
+   ❑ AI generates unit tests automatically.
+   ❑ AI suggests edge cases by analyzing code.
+   ❑ Humans remain responsible for defining
+
+      acceptance criteria and verifying correctness.
+
+                                                                                                                                                                 57
+Validation
+
+                        Activité souvent sous-estimée...
+
+◼ A-t-on décrit le "bon" système, c'est-à-dire un système qui
+   répond à l'attente des utilisateurs et aux contraintes de leur
+   environnement ?
+
+◼ s'assurer de l'adéquation des résultats de l'analyse des
+   besoins et de la spécification globale
+
+    ❑ consiste en des revues et inspections de spécifications ou de
+        manuels, et du prototypage rapide
+
+◼ Recette
+
+    ❑ Validation client : accord avec les besoins
+    ❑ une fois les tests de vérification satisfaisants
+    ❑ Planification dès les spécifications : cahier de recettes
+
+Le cahier de recette est la liste exhaustive
+
+de tous les tests pratiqués par le fournisseur                       58
+
+avant la livraison du produit.
+Installation et maintenance
+
+   ❑ Installation:
+
+       ◼ Mise en fonctionnement opérationnel chez les
+           utilisateurs.
+
+       ◼ Parfois restreint (dans un 1er temps) à des utilisateurs
+           sélectionnés.
+
+   ❑ Maintenance:
+
+       ◼ Maintenance corrective (corriger erreurs)
+       ◼ Maintenance adaptative (modifications)
+       ◼ Maintenance additive/perfective (améliorations)
+       ◼ Aussi: maintenance préventive (pour faciliter les
+
+           opérations de maintenance à venir).
+
+                                                                                                                                                                 59
+Deployment
+
+◼ Traditional: Manual packaging and
+  deployment.
+
+◼ Now:
+
+   ❑ Automated pipelines integrate AI-based
+      monitoring.
+
+   ❑ Continuous Delivery includes AI components
+      (models, prompts, retrievers).
+
+   ❑ Engineers must ensure compliance and
+      explainability in production.
+
+                                                                                                                                                                 60
+Maintenance
+
+◼ Traditional: Bug fixing, updates,
+  enhancements.
+
+◼ Now:
+
+   ❑ Maintenance also means AI retraining (models
+      must be updated when data changes).
+
+   ❑ Prompt maintenance: refining prompts and
+      workflows when AI outputs drift.
+
+   ❑ Monitoring includes AI hallucinations, bias, and
+      runtime safety.
+
+                                                                                                                                                                 61
+Cycle de vie de developpement du
+
+logiciel: Activités exécutées en continu
+
+◼ Validation
+
+   ❑ Le produit répond-il aux besoins du client? «Construit-on le bon
+       produit?»
+
+   ❑ S’assurer de répondre aux exigences du client.
+
+◼ Vérification
+
+   ❑ Le produit est-t-il correct (par rapport à la spécification)?
+       «Construit-on le produit comme il faut?»
+
+   ❑ S’assurer de la qualité du produit (révisions et inspections)
+
+◼ Gestion
+
+   ❑ Du processus de développement (suivi de projet, révision, etc.)
+   ❑ De la configuration: politique de gestion des versions, des
+
+       documents, politique de réutilisation
+   ❑ Des ressources humaines
+   ❑ Du risque
+
+◼ Documentation
+
+                                                                                                                                                                 62
+L’équipe de développement: le rôle des
+membres dans le cycle de vie
+
+Analyse des beoisns,    Analyste
+    Spécification et
+
+analyse du système
+
+Conception architect.   Concepteur
+Conception détaillée.   Programmeur
+
+     Programmation          Testeur
+
+     Tests unitaires
+    Test d’intégration
+
+      Test système
+
+   Installation         Formateur
+
+Maintenance                                                                63
+Processus de développement
+
+Objectif: «Comment produire efficacement un produit de qualité»
+
+◼ Décrit un ensemble de tâches ordonnées impliquant
+
+    ❑ des activités (celles du cycle de vie)
+    ❑ des contraintes (sur le temps, ressources, etc.)
+    ❑ des ressources (humaines, matérielles, etc.)
+
+◼ Doit être «personnalisé» pour l'entreprise de façon à définir
+   l'ordonnancement idéal des activités.
+
+    ❑ spécifier les artéfacts à produire (types de documents, format,
+        échéancier).
+
+    ❑ attribuer activités & artéfacts aux membres de l’équipe de
+        développement
+
+    ❑ proposer des critères pour superviser l'évolution du projet, ses résultats
+        et prévoir plans futurs (vérification, validation, documentation, etc.)
+
+    ❑ proposer une méthodologie pour gérer les changements tant dans le
+        processus et que le logiciel.
+
+                                                           ◼64
+Processus de développement
+
+◼ A définir en équipe, de préférence, car ce
+  travail permet:
+
+      ◼ Compréhension commune des activités,
+         ressources et contraintes.
+
+      ◼ Identification des incohérences, redondances et
+         omissions dans le processus.
+
+      ◼ Identification des activités permettant de réaliser
+         les objectifs de qualité.
+
+      ◼ Adaptation du processus aux besoins spécifiques
+         du projet et compréhension de ses particularités.
+
+                                                                                                                                                                65
+Processus de développement
+
+◼ Quelques modèles de cycle de vie existants
+◼ … à personnaliser
+
+   ❑ Modèle en cascade
+   ❑ Modèle en V
+   ❑ Modèle SASHIMI
+   ❑ Modèle par prototypage
+   ❑ Modèles évolutifs: incrémental et itératif
+   ❑ Modèle en spirale
+   ❑ Modèle transformationnel
+
+                                                                                                                                                                 66
+Modèle en cascade (waterfall model)
+
+◼ Historiquement, la première tentative pour mettre de la rigueur
+   dans le ‘développement sauvage’ (coder et corriger ou ‘code
+   and fix’) a consisté à distinguer une phase d’analyse avant la
+   phase d’implantation (séparation des questions).
+
+◼ Très vite, pendant les années 70, on s’est aperçu qu’un plus
+   grand nombre d’étapes étaient nécessaires pour organiser le
+   développement des applications complexes.
+
+◼ Le modèle en cascade décrit cette succession d’étapes
+
+                                                                                                                                                                 67
+Modèle en cascade
+
+       ❑ modèle très simple, nécessite d'avoir un certain nombre d'étapes (Boehm 76)
+       ❑ Etapes réalisées de façon strictement séquentielle.
+       ❑ Attention centrée sur les artéfacts produits à la fin chaque étape. (document-driven)
+
+                                                         Les versions actuelles
+                                                         font apparaitre la
+                                                         validation vérification a
+                                                         chaque étape.
+
+                                                                                                                                                                 68
+ Modèle en Cascade
+
+ ◼ Cycle de vie linéaire sans aucune évaluation
+    entre le début du projet et la validation
+
+ ◼ une étape doit se terminer à une certaine date,
+    par la production de certains documents ou
+    logiciels.
+
+ ◼ les résultats de l'étape sont soumis à une revue
+    approfondie, et on ne passe à l'étape suivante
+    que quand ils sont jugés satisfaisants.
+
+In 1985, the United States Department of Defense captured this approach in DOD-STD-
+2167A, their standards for working with software development contractors, which stated that
+"the contractor shall implement a software development cycle that includes the following six
+phases: Software Requirement Analysis, Preliminary Design, Detailed Design, Coding and
+Unit Testing, Integration, and Testing".[7]
+Modèle en Cascade
+
+◼ Dans la version actuelle une étape ne peut remettre
+   en cause que l'étape précédente
+
+   ❑ -> en pratique: il y a toujours des problèmes qui se
+       propagent de bas en haut
+
+◼ documents, normes, recommandations décrivent
+   précisément les étapes (IEEE, AFNOR).
+
+◼ Limites du modèle
+
+   ❑ souvent abandonné au profit du modèle en V, plus
+       réaliste dans l'articulation entre les activités de réalisation
+       et de validation/vérification.
+
+                                                                                                                                                                 70
+Modèle en cascade                 Inconvénients
+                                   • Hypothèses souvent irréalistes
+Avantages
+                                      que l'on peut dès le départ définir
+ • Plan simple de ce qu'il faut       complètement et en détail
+   faire (Un seul fil directeur)
+                                        o ce qu'on veut réaliser
+ • Facile à comprendre                  o les résultats intermédiaires
+
+ • Calendrier plus facile à                obtenus
+   élaborer
+                                   • Trop rigide, manque de flexibilité
+ • Qualité des livrables              pour imprévus.
+
+ • Cette première définition a     • Pas de «feedback» avant la
+   permis la normalisation            livraison au client....
+   des cadres conceptuels et           • Effet tunnel
+   terminologiques des
+   différentes activités.          • Difficulté de revenir en arrière
+                                   • Temps de réaction plus long
+
+                                                                                                                  71
+72
+Le cycle de vie du logiciel
+74
+Modèle en V: Variante du modèle en
+Cascade
+
+◼ Créé suite au manque de réactivité du
+   modèle en cascade.
+
+◼ Il part du principe que les procédures de
+   vérification de la conformité doivent être
+   élaboré dès les phases de conception
+
+◼ Le client connait son besoin dans le détail
+
+◼ Standard AFNOR depuis les années 1980
+Modèle en V (annees 80)
+
+    ❑ Attention centrée sur la correction: vérification et validation
+    ❑ Les premières étapes du développement (conception logiciel) prépare les
+
+         dernières étapes (validation et vérification)
+
+                  Plan de test système (fonctionnel)  Test de recette
+                                                      (avec client)
+
+                Plan de test système (fonctionnel)
+
+                                                       Tests
+                                                       systèmes
+Cahier des charges
+
+                      Plan de test d’intégration
+
+Cheminement
+
+Document produit                                                               76
+le Modèle en V
+
+◼ 2 sortes de dépendances entre étapes :
+
+   ❑ celles du V : enchaînement du modèle de la
+      cascade. Les étapes se déroulent séquentiellement
+      en suivant le V de gauche à droite.
+
+   ❑ celles transversales : une partie des résultats de
+      l'étape de départ est utilisée directement par l'étape
+      d'arrivée
+
+   ❑ évite d'énoncer une propriété impossible à vérifier
+       objectivement une fois le logiciel réalisé:
+
+        ◼ toute description d'un composant est accompagnée des tests qui
+             permettront de s'assurer qu'il correspond à sa description
+
+                                                                                                                                                                 77
+le Modèle en V
+
+◼ Avantages                            ◼ Inconvénients
+
+❑ Meilleur temps de réaction           ❑ Manque de « feedback ».
+                                          Pas de résultats
+❑ Anticipation des étapes                 intermédiaires dont on peut
+                                          discuter avec le client.
+    ◼ Montre comment les activités
+        de «test» sont liées à celles  – Risque d’effet tunnel
+        d'«analyse et de conception».
+
+                                                        78
+80
+Modèle par prototypage
+
+◼ Principale difficulté en validation = l'imprécision des
+   besoins et des caractéristiques du système à
+   développer
+
+◼ Développer très rapidement un programme, la
+   maquette, qui est une ébauche du futur système et de
+   préciser les besoins
+   ❑ elle n'en a pas les performances,
+   ❑ ni toutes les fonctionnalités et
+   ❑ elle ne répond pas aux exigences de qualité d'un
+      produit fini.
+
+                                                                                                                                                                 81
+ Modèle par prototypage
+
+  ◼ Prototype jetable: maquette exploratoire soumise à des
+      scénarios en liaison avec les futurs utilisateurs afin de préciser
+      leurs besoins ou leurs souhaits, développée rapidement et jeté
+      ensuite.
+
+  ◼ Prototype évolutif (ou réutilisable): maquette expérimentale
+      lors d'une étape de conception, permet l'expérimentation et la
+      comparaison de choix différents, destinée à être
+      complétée/optimisée dans les prochaines étapes du
+      développement jusqu’à l’obtention du produit final.
+
+Il est Important de bien définir les objectifs d'une
+opération de prototypage rapide, et d'en tenir compte pour
+la conception de la maquette
+
+                                                                                                                                                                     82
+Modèle par prototypage
+
+    ❑ À chaque étape, un ou plusieurs prototypes sont soumis au client
+        pour évaluation/révision.
+
+    ❑ Permet d'examiner et d'explorer certains aspects du système pour
+        évaluer et choisir les meilleures stratégies/solutions.
+
+Liste de                         Liste de        Liste de
+révisions                        révisions       révisions
+
+Révision du  Évaluation avec
+prototype    client/utilisateur
+
+                       Analyse    Conception     Implémentation  Test
+                    des besoins  et prototypage  et prototypage
+                                                                 Installation &
+                           et                                    maintenance
+                    prototypage
+                                                                                     83
+Besoins
+(description informelle,
+souvent incomplète)
+Modèle par prototypage
+
+Besoins  Concevoir   Construire                  Tester   Spécif.
+         prototype   prototype                 prototype  besoins
+
+Spécif.  Concevoir   Construire                 Tester
+besoins  prototype   prototype                 prototype
+
+         Conception  Implément   Installation             Maintenance
+                             .
+                                                                                           84
+Modèle par prototypage
+
+◼ Avantages                         ◼ Inconvénients
+
+   ❑ Améliore la                       ❑ Tentation d’abréger le
+       compréhension mutuelle              processus et de se
+       du problème entre client,           contenter d’un prototype
+       développeur et utilisateur.         incomplet…
+
+   ❑ Favorise les activités de
+       vérification et de
+       validation intermédiaires.
+
+                                                                     85
+Modèles évolutifs: incrémental et itératif
+
+    ❑ Le processus de développement d’un logiciel peut être très long
+        (mois, années…)
+
+    ❑ Le logiciel est un produit de nature évolutive…
+    ❑ Pour être compétitif, il faut réduire le temps de mise en marché et
+
+        pouvoir
+
+         ◼ produire des versions partielles du système
+         ◼ ajouter graduellement des qualités et fonctionnalités.
+
+                                    Solution:
+ Modèle évolutif: développement au cours duquel des versions
+
+       du logiciel de plus en plus complexes et détaillées sont
+                                   développées.
+
+    ❑ Deux versions du logiciel existent alors en parallèle
+
+         ◼ logiciel opérationnel (version utilisée actuellement)
+         ◼ logiciel en développement (prochaine version)
+
+                                                                                                                                                                 86
+Modèle évolutif - incrémental vs itératif
+
+❑ Approche incrémentale
+
+   ◼ division du système en sous-systèmes (un par
+       fonctionnalité).
+
+   ◼ 1re version: système partiel.
+   ◼ Chaque nouvelle version (incrément) ajoute une nouvelle
+
+       fonctionnalité.
+
+noyau      cycle de vie             cycle de vie
+             complet                  complet
+
+Version 1                Version 2                Version 3
+
+                                                                                 87
+Modèle évolutif - incrémental vs itératif
+
+❑ Approche itérative
+
+   ◼ division du système en sous-systèmes (un par
+       fonctionnalité).
+
+   ◼ 1re version: coquille complète du système.
+   ◼ Chaque nouvelle version apporte une
+
+       modification/amélioration à une fonctionnalité.
+
+           cycle de vie             cycle de vie
+             complet                  complet
+
+Version 1                Version 2                Version 3
+
+                                                                                       88
+Modèles évolutifs
+
+◼ Inconvénients               ◼ Avantages
+
+                              ❑ Formation précoce des
+
+❑ Risque de la remise en         utilisateurs. Réponse rapide
+   cause du noyau                possible.
+   (fonctionnalités de base)
+   au cours du                ❑ Création précoce de nouveaux
+   développement.                marchés pour nouvelles
+                                 fonctionnalités.
+
+                              ❑ Focus sur un nouveau domaine
+
+                              d'expertise à chaque étape
+
+                              (version).
+
+                              ❑ Détection précoce des problèmes
+                                 imprévus (correction immédiate
+                                 du système en développement).
+
+                                                          89
+90
+Will hopefully decrease
+rework, but makes the
+model more predictive
+
+                                                      91
+Modèle en spirale (Boehm 88)
+     ❑ Beaucoup plus général que les précédents et peut les inclure
+     ❑ Met l'accent sur l’analyse des risques
+     ❑ Modèle cyclique. Chaque cycle est composé de 4 étapes.
+
+1                                                                    2
+
+alternatives                                            - Effort and
+(acheter/vendre/                                            detail driven by
+concevoir/etc.)                                             risk
+
+     4                                                  - Process model
+                                                            generator
+  Evaluer les résultats des
+ étapes traversées.                                3
+
+                             analyse, conception, implémentation, test:
+                             Decider du type (cascade?, evolutif?, 96
+The spiral model represents a paradigm shift
+from the waterfall’s specification driven
+approach to a risk-driven one
+
+                                                                                                                                                                 97
+risks are categorized as
+  performance, or user
+
+interface related risks or
+development risks, etc…
+
+                                                                                                                                                                98
+  Develop a
+  prototype,
+verify against
+requirements
+and validate
+through tests
+
+                                                                                                                                                                     99
+100
+◼ Risk management is used to determine the amount of time and effort to be
+    expended for all activities during the cycle, such as planning, project
+    management, configuration management, quality assurance, formal
+    verification and testing.
+
+◼ Risk management is used as a tool to control the costs of each cycle.
+
+https://www.softwaretestinghelp.com/types-of-risks-in-software-projects/     105
+Modèle en Spirale: risques majeurs du
+
+développement de logiciel
+
+Défaillance de             embauche de personnel de haut niveau; adéquation entre profil et
+personnel                  fonction; esprit d'équipe; formation mutuelle ; personnes
+                           clés(leaders).
+Calendrier et budget       estimation détaillée des coûts et calendriers; développement incrémental
+irréalistes :              ; réutilisation ; élagage des besoins.
+Volatilité des besoins     développement incrémental de la partie la plus stable d’abord.
+tâches ou composants       audit des sous-traitants, contrats, revues, analyse de compatibilité,
+externes défaillants       essais et mesures,
+Problèmes de               simulations ; modélisations ; essais et mesures maquettage.
+performances
+Exigences démesurées       analyses techniques de faisabilité ; maquettage
+par rapport à la
+technologie                analyse de l'organisation, de la mission; revues d'utilisateurs; manuel
+Développement de           d'utilisation précoce
+fonctions inappropriées    maquettage ; scénarios et revues d'utilisateurs ; analyse des tâches.
+Développement
+d'interfaces utilisateurs                                                                                                                           106
+Modèle en spirale start small, think big
+
+◼ Avantages                         ◼ Limites
+
+❑ Le modèle en spirale promeut      ❑ Difficile à faire accepter aux
+    l'assurance qualité à travers       clients, car très lourd.
+    le prototypage à chaque étape
+    dans le developpement du        ❑ Calendrier et budget souvent
+    système.                            irréalistes (on ne sait chiffrer
+                                        qu’un cycle à la fois)
+❑ Permet d'établir le modèle de
+    développement le plus           ❑ mise en œuvre qui demande
+    adéquat en regard du risque.        des compétences et un effort
+                                        importants
+❑ Méta-modèle: tous les autres
+    modèles de développement        ❑ Limité aux projets innovants
+    constituent une variante de la      (étude des risques)
+    spirale!
+                                         ◼ Pour des projets plus petits, le
+                                               concept de dévelopment agile
+
+❑ Cahier des charges respecté       constitue une alternative viable.
+
+au pied de la lettre    La US military a adopté le Modèle de la Spirale
+
+❑ Validité des besoins  dans le : Future Combat Systems Program:
+                        the US Army's principal modernization program
+
+                        from 2003 to early 2009
+
+                                                                       111
+112
+Modèle transformationnel
+
+❑ Développement consistant en une séquence d'étapes qui
+
+transforment graduellement une spécification formelle en
+
+implémentation.
+
+                                 Enregistrement des étapes
+
+Valider et                       de transformation formelle
+
+mettre à jour  Transformation N
+
+Spécification    Transformation 2                   Test
+   formelle               Transformation 1
+                                                 Installation &
+Besoins        Ex. de transformations            maintenance
+                • Changer la représentation des
+                                                                               113
+                    données
+                • Sélectionner un algorithme
+                • Optimisation
+                • Compilation
+Modèle transformationnel
+
+1) Spécification formelle (incrémentale) des besoins.
+
+2) Transformation de la spécification initiale en une
+spécification plus détaillée et moins abstraite = raffinement.
+
+3) Répétition du raffinement jusqu'à l'obtention
+
+d'une description exécutable (non optimisée) = prototype
+
+évolutif.                          Exemple de spécification formelle:
+
+Ex: La méthode B est une           •Introduction: cette spécification concerne l'enregistrement des
+méthode formelle de                passagers à bord d'un avion. Les places ne sont pas numérotées.
+développement logiciel qui permet  Les passagers sont autorises a embarquer selon la règle du
+de modéliser de façon abstraite    premier arrive, premier servi.
+dans le langage de B le            •Types
+comportement d'un programme,       [PERSONNE] ensemble des personnes identifiées de manière
+puis par raffinements successifs,  unique
+d'aboutir à un modèle concret,     capacité : N capacité de l'avion (c'est un entier naturel)
+sous-ensemble du langage           REPONSE ::= OK | dejaAbord | plein | Erreur
+transcodable en Ada ou en C
+
+https://www.methode-b.com/methode-formelle/ 114
+Outil: Atelier B : https://www.atelierb.eu/
+Modèle transformationnel
+
+◼ Avantages                              ◼ Inconvénients
+
+    ❑ Chaque transformation est              ❑ Demeure une approche
+        prouvée formellement.                    expérimentale et de recherche.
+        Preuves gardées dans un
+        registre.                            ❑ Exige une certaine expertise
+                                                 en méthodes formelles pour le
+        ◼ Favorise le développement              développement de systèmes
+             de programme correct et             complexes.
+             documenté formellement.
+                                                                                                                   115
+    ❑ Modifications répercutées dans
+        le code & spécification. Pas de
+        divergences.
+
+    ❑ Environnement et outils
+
+        ◼ Développer des
+             composants réutilisables.
+
+        ◼ Outils informatiques
+             intelligents d’aide à la
+             preuve.
+Choix d'un cycle de vie
+
+◼ Quel cycle de vie choisir?
+
+   ❑ En premier, CHOSISSEZ UN!
+
+         ◼ Beaucoup de projets vont a la dérive sans but, sans aucune stratégie
+
+   ❑ Deuxièmement, Si possible, Eviter le modèle en CASCADE
+
+         ◼ Le cycle de vie le plus dérisoire, et le plus sujet aux erreurs
+         ◼ Bien que c'est encore toujours le cycle de vie de choix dans plusieurs
+
+               sociétés
+
+   ❑ Troisièmement, les prototypes et les itérations sont un bon
+       choix
+
+         ◼ Vérification
+         ◼ A peu prés jamais une perte de temps/ressources
+
+   ❑ Quatrièmement, choisissez selon le contexte et la
+       convenance
+
+                                                                                                                                                                116
+Méthodologies
+
+                                                                                                                                                      118
+Methodologies dans l'ingenierie du
+logiciel
+
+◼ Rappel: Un cycle de vie est une description
+   abstraite de la vie d'un projet
+
+◼ Une méthodologie est une association de
+   techniques qui fonctionnent bien conjointement
+
+◼ Cycle de vie != Méthodologies
+
+   ❑ Les Méthodologies sont usuellement construit sur une
+       certaine stratégie de cycle de vie.
+
+                                                                                                                                                                119
+https://www.slideserve.com/johnna/cmm-and-software-process-improvements-powerpoint-
+ppt-presentation
+
+                                                                                                                                                                   120
+Types de Méthodologies
+
+◼ Distinction principale: Sturdy(robuste) vs. Agile
+
+◼ La différence clé réside dans le traitement des incertitudes
+
+❑ Les approches Sturdy essaient de minimiser les incertitudes
+
+◼ Planning, prévention dePsrerisdqicuteivse->
+
+     ❑ CMM,
+
+❑ PSP,
+
+❑ TSP
+
+❑ Les approches Agile essaient de minimiser l'impact des incertitudes
+
+◼ Adaptabilité, processus incrémental ->
+
+❑ SCRUM,  Adaptive
+❑ XP,
+
+❑ RAD
+
+❑ RUP?,
+
+                                                                       121
+CMM: Maturité du processus de
+
+développement
+
+◼ Capacity Maturity Model (CMM): notion définie par le SEI (Software
+    Engineering Institute du CMU, financé par le DOD, introduit en 1986)
+
+     ❑ une rivale de la norme ISO 9000 (ou plus exactement des recommandations ISO
+         9000-3) en matière de qualité de développement de produits logiciels.
+
+     ❑ Développé dès les années 70 pour le compte du DOD qui souhaitait évaluer ses
+         sous traitants
+
+     ❑ Elaboré en vue d’une utilisation dans un contexte de développement logiciel et
+         non pas, comme c’est le cas pour ISO 9000, une adaptation d’une norme multi-
+         domaines au cas particulier du génie logiciel
+
+◼ 5 niveaux de maturité :
+
+                                     Initial
+                                     Reproductible
+                                     Défini
+                                     Géré
+                                     Optimisé
+
+     ❑ Un processus de Certification
+
+            ◼ Les Compagnies sont évaluées comme étant “CMM level 3”, par exemple
+
+                                                                                                                                                                123
+Niveaux de maturité
+
+                                                                                                                                                                126
+Niveaux de maturité
+
+◼ Initial (niveau de maturité 1) :
+
+     ❑ Il n'y a pas de grand pilier directionnel, aucune façon de faire ou standard
+        ne sont établis (ou bien ils sont documentés mais ne sont pas utilisés).
+
+     ❑ Il n'y a pas de surveillance (monitoring), aucune évaluation de performance
+        et la communication est absente.
+
+     ❑ Les faiblesses ne sont pas identifiées et les employés ne sont pas au
+        courant de leurs responsabilités de façon définie et absolue. Les réactions
+        aux incidents se font en mode urgence, sans identification claire des
+        priorités.
+
+     ❑ À ce niveau les solutions ainsi que les projets sont décidés, développés et
+        instaurés par un individu. Les compétences et les ressources propres de
+        cet individu sont la raison du succès ou de l'échec du projet (par dérision,
+        ce niveau est aussi nommé héroïque ou chaotique).
+
+                                                                                                                                                                127
+Niveaux de maturité
+
+◼ « Optimizing », (niveau de maturité 5) :
+
+    ❑ Les processus qui sont gérés quantitativement pour le pilotage
+       de projet (niveau de maturité 4) sont en optimisation constante
+       afin d'anticiper les évolutions prévues (besoins clients,
+       nouvelles technologies...).
+
+                                                                                                                                                                128
+Etude américaine (1991)
+
+                                             Etude SEI
+                                             Organisations américaines
+
+                                                                                                                                                                129
+Etude américaine (1999)
+
+                                             Etude SEI
+                                             Organisations américaines
+
+                                                                                                                                                                130
+Maturity-Profile-30-June-2018
+
+                                                                                                                                                                132
+CMM (cont)
+
+◼ Avantages:
+
+    ❑ Techniques prouvées
+    ❑ Requis dans le cas de certains
+
+        contrats de software
+
+◼ Inconvénients
+
+    ❑ Peur de prendre des risques
+    ❑ Non populaire parmi les
+
+        employés ni les compagnies
+        importantes
+    ❑ Il n'y a pas de plus rigide!
+        ◼ Sauf si on choisit l'ISO
+
+                                                                                                                                                                134
+CMM variants:
+TSP and PSP
+
+◼ TSP: Team Software Process
+
+   ❑ CMM n'est pas apprécié dans votre compagnie?
+
+        ◼ Vous pouvez toujours adopter ses processus au niveau de l'équipe
+        ◼ Même recette que CMM, mais à une échelle plus restreinte
+
+◼ PSP: Personal Software Process
+
+   ❑ Non, ce n'est pas PlayStation Portable!
+   ❑ De même que TSP, mais à l'échelle individuelle
+
+        ◼ Processus qui permet à chaque ingénieur de s’améliorer
+             personnellement contrastant en cela avec le CMM qui vise lui à
+             l’amélioration globale de l’organisation.
+
+        ◼ Des résultats récents prouvent que l’utilisation du PSP contribue à
+             l’amélioration de la qualité et de la productivité globale
+
+                                                                                                                                                                135
+TSP (Team Software Process)
+
+◼ Team Dynamics:
+
+   ❑ Success or failure often due to non-technical issues.
+   ❑ Importance of team cohesion and effective communication.
+
+◼ Team Structure:
+
+   ❑ Five defined roles: Team Leader, Development Manager,
+       Planning Manager, Quality/Process Manager, Support Manager.
+
+◼ Common Team Problems:
+
+   ❑ Ineffective leadership, lack of cooperation, procrastination, poor
+       quality, and uncontrolled changes (function creep).
+
+◼ Why TSP?:
+
+   ❑ TSP helps teams to work more effectively by providing a
+       structured framework that enhances collaboration, improves
+       quality, and ensures that projects are completed on time and
+       within budget.
+
+                                                                                                                                                                136
+PSP (Personal Software Process)
+
+◼ Logic of Time Management:
+
+     ❑ Track and compare time spent to improve planning.
+     ❑ Categorize activities and record time spent.
+     ❑ Use an engineering notebook for time tracking.
+
+◼ Managing Variable Time:
+
+     ❑ Prioritize tasks and set deadlines.
+     ❑ Identify activities to do when time permits.
+
+◼ Managing Commitments:
+
+     ❑ Analyze and plan before committing.
+     ❑ Document agreements and notify if unable to meet commitments.
+
+◼ Handling Missed Commitments:
+
+     ❑ Seek alternative strategies and add resources if needed.
+     ❑ Avoid last-minute problem recognition.
+
+◼ Why PSP?:
+
+     ❑ Quality of software is determined by the developer's knowledge, discipline, and
+         commitment.
+
+     ❑ Measure, track, and analyze performance to improve practices.
+
+                                                                                                                                                                137
+Azure boards
+
+         Agile Project Management
+         Work Item Tracking
+         Integration with Azure repos and CI/CD pipelines
+         Release Planning
+         Etc…
+
+                                                                                                                                                                151
+Les Méthodes agiles Historique et Principes
+
+                                                                                                                                                           152
+Les Méthodes Agiles
+
+◼ “Un mouvement de remise en cause des méthodes
+   informatiques traditionnelles, perçues comme
+   « bureaucratiques » est apparu à la fin des années quatre-
+   vingt-dix.”
+
+◼ Méthodes Agiles publiées
+
+    ❑ Rapid Application Development (RAD)
+    ❑ Extreme programming (XP)
+    ❑ Feature Driven Development(FDD)
+    ❑ Scrum, Kanban, Scrumban ☺
+    ❑ RUP ? OpenUP, XUP
+
+                                                                                                                                                                153
+Historique: Évolution du courant de pensée Agile en
+matière de systèmes d'informations (1/2)
+
+   ◼ En 1988, Barry W. Boehm présentait un nouveau modèle de
+      développement itératif et incrémental.
+
+                                                                                                                             Barry W. Boehm is an American software
+                                                                                                                          engineer, distinguished professor of computer
+                                                                                                                            science, industrial and systems engineering
+
+   ◼ En 1991, James Martin (RAD), proposa une méthode de
+      développement rapide d’application.
+
+   ◼ Sa structure, mettait en œuvre un principe adaptatif fondé sur:
+
+        ❑ la validation permanente des utilisateurs,
+        ❑ l’utilisation d’outils CASE (Computer-Aided Software Engineering/ Atelier
+
+            de Génie Logiciel (AGL))
+        ❑ du prototypage incrémental
+        ❑ et l’observation d’échéanciers rigoureux.
+
+                                                            ◼155
+Historique: Évolution du courant de
+pensée Agile en matière de systèmes
+d'informations (2/2)
+
+◼ Dans la seconde moitié des années 90, une vague d’une dizaine de
+    méthodes (dont Extreme programming et Scrum sont les principales
+    représentantes) poussa à l’extrême certaines pratiques de qualité de la
+    construction applicative ainsi que les techniques adaptatives
+    d’estimation, de planification et de pilotage de projet.
+
+◼ En 2001, aux États-Unis, dix-sept figures éminentes du développement
+    logiciel se sont réunies pour débattre du thème unificateur de leurs
+    méthodes respectives, dites méthodes agiles.
+    ❑ De cette réunion devait émerger le Manifeste Agile, considéré comme
+        la définition canonique du développement Agile et de ses principes
+        sous-jacents.
+
+                                                          ◼156
+Le Manifeste Agile: 4 valeurs fondamentales
+
+                 https://www.youtube.com/watch?v=rf8Gi2RLKWQ
+
+                                                                                                                                                                157
+  Le Manifeste Agile: 12 principes
+
+1. livrer tôt et régulièrement des logiciels utiles.
+2. Le changement est toujours bienvenu.
+3. Livrer une application fonctionnelle, toutes les deux semaines à deux
+
+   mois.
+4. Client et développeurs doivent collaborer quotidiennement.
+5. Motiver les personnes.
+6. Transmettre l'information par conversation en face à face.
+7. Un logiciel fonctionnel est la meilleure unité de mesure de la
+
+   progression du projet.
+8. Maintenir un rythme de développement soutenable.
+9. l'excellence technique et la qualité de la conception améliore l'agilité.
+10. Maximiser la quantité de travail à ne pas faire: faire simple
+11. Les meilleures architectures, spécifications et conceptions sont issues
+
+   d'équipes qui s'auto-organisent.
+12. À intervalle régulier, l'équipe réfléchit aux moyens de devenir plus
+
+   efficace, puis accorde et ajuste son comportement dans ce sens.
+
+                                                                                                                                                                       158
+Rendre agile un processus traditionnel
+
+                                                                          (en cascade)
+
+                                                                                                                                                                159
+Rendre agile un processus traditionnel
+
+                                                                                                                                                                160
+Méthodes Agiles : Des approches
+
+modernes dérivées du RAD
+
+◼ a ‘release early; release often; listen to your customers’ philosophy
+
+    ❑ a methodology that uses prototyping as a mechanism, for iterative
+        development
+
+           ◼ Les prototypes exploratoires peuvent se transformer en prototypes opérationnels
+
+◼ Équipes hybrides
+
+   ❑ Environ 6 personnes incluant les développeurs, les utilisateurs du
+       système ainsi que toute personne impliquée dans la définition des
+       exigences du projet (client)
+
+◼ Utilisation d’outils spécialisés supportant
+
+    ❑ Développement visuel, création de prototypes (jetables et incrémentales),
+        langages multiples, planification, travail d’équipe et en collaboration, utilisation
+        de composants réutilisables, utilisation d’API, gestion de versions.
+
+◼ Encadrement stricte du temps (timeboxing)
+
+    ❑ Les aspects secondaires sont éliminés (définitivement ou temporairement)
+        afin de respecter des échéanciers fixes
+
+    ❑ Dans certains cas, une solution satisfaisant 4/5 des exigences peut être
+        produite dans le ¼ du temps requis pour développer une solution complè16t1e.
+  Qu’est-ce qu’un AGL (ou outil CASE) ?
+
+                      Requirements Management Tool (casecomplete.com)
+
+   ◼ Les fonctions d’un atelier
+
+        ❑ saisie (graphique, textuelle) de spécifications;
+        ❑ Gestion et validation des spécifications
+        ❑ visualisation, exploration, consultation, recherche
+        ❑ génération de code
+        ❑ rétro-ingénierie
+        ❑ interopérabilité entre ateliers (export/import, to XMI - xml metada
+
+            interchange)
+        ❑ travail coopératif (gestion des versions concurrentes)
+        ❑ extensibilité, adaptabilité (support de plugin)
+
+                  Outil CASE ≠ IDE
+
+Computer Aided Software Engineering (CASE) – GeeksforGeeks:
+https://www.geeksforgeeks.org/computer-aided-software-engineering-case/ 164
+Rapid Application Development
+
+Clients et Developpeurs: Duree 2 heures
+Moderateur expert pour éclaircir les points importants
+Document en sortie: rapport rédigé par le modérateur
+
+Répéter jusqu’à ce que le système soit terminé
+
+durée de chaque itération
+
+Les changements et exigences secondaires qui ne peuvent être cadrés  168
+
+dans l’horaire doivent être éliminés (TimeBoxing)
+Rapid Application Development:
+Conclusion
+
+◼ Fiabilité moindre, plus d’erreurs (si le code a été écrit à un
+   rythme d’enfer!)
+
+    ❑ Possiblement moins d’erreurs (utilisation d’outils CASE)
+    ❑ Mais le code est moins efficace (généré)
+
+◼ Visibilité précoce et meilleure rétroaction (feedback) avec une
+   grande flexibilité de modification
+
+◼ Expérience réussie difficile à répéter (il n’y en a pas deux
+   pareilles!)
+
+                                                          ◼171
+RUP: Rational Unified
+Process
+
+         The unified model was created to
+         address the specific development
+         requirements of object-oriented software
+         and its design
+
+                                                                                                                                                      172
+Processus Unifié
+
+◼ C'est un processus de développement logiciel
+  construit sur UML.
+
+◼ Il est itératif et incrémental
+◼ Centré sur l'architecture
+◼ Conduit par les cas d'utilisation
+
+  (architecture and use-case driven)
+◼ Et piloté par les risques
+
+        RUP is still used in certain specialized domains, such as large-scale
+        government projects, aerospace, and defense, where strict regulatory
+        compliance and documentation requirements are essential. In these contexts,
+        RUP's disciplined approach can be advantageous.
+
+                                                                                                                                                                173
+UML Use Case Diagram example
+
+                                                                                                                                                                174
+RUP: Use case centric
+
+                                                                                                                                                                175
+UP vs RUP
+
+◼ Le Unified Process n'est pas simplement un processus, mais
+   plutôt un framework extensible et qui doit être personnalisé
+   pour chaque organisation ou projet.
+
+◼ Historiquement, la personnalisation pour chaque projet se
+   fait par un expert RUP,
+
+    ❑ le succès du projet dépendait des capacités de cette personne.
+
+◼ On parle de UP:
+
+    ❑ pour décrire le processus generique
+
+◼ On parle de RUP:
+   ❑ Rational Unified Process: processus propriétaire, IBM
+
+    ❑ trademark IBM.
+
+                                                                                                                                                                176
+RUP: Rational Unified (1997) Process
+
+On dirait une évolution matricielle du modèle en cascade
+
+◼ “Phases” et “Disciplines”                               ◼177
+RUP (cont) Phases du développement
+itératif
+
+◼ Inception (préétude): définition de la porté du projet
+
+     ❑ Analyse 10% des CU critiques de pt de vue architecture et risque (90% identifiés)
+     ❑ Analyse des besoins non fonctionnels critiques
+     ❑ Etude d’opportunité
+     ❑ Préparation de l’environnement de développement
+
+                                                                                                                                                                178
+RUP (cont) Phases du développement
+itératif
+
+◼ Elaboration: planification du projet, spécification des fonctionnalités,
+    architecture de base (architecture exécutable ≠ prototype jetable)
+
+     ❑ 3 à 4 itérations – chaque itération de 2 à 6 semaines
+     ❑ Itérations courtes de durée fixe.
+     ❑ 90% des CU analysés et rédigés en détail, seult 10% implémentés, testés et
+
+          intégrés.
+     ❑ À la fin de chaque itération, planifier l’itération suivante.
+
+                                                                                                                                                                179
+RUP (cont) Phases du développement
+itératif
+
+◼ Construction: réalisation du produit
+
+◼ Transition: transfert du produit vers les utilisateurs
+
+                                                                                                                                                                180
+181
+Le modèle RUP (Rational Unified
+Process)
+
+  Choix des outils et
+   personnalisation
+
+     du processus
+
+                                                    produce external releases of the
+                                                    software, package the software and
+                                                    business application, distribute the
+                                                    software, install the software, and
+                                                    provide help and assistance to users.
+
+                                                                                                                                                                184
+UP (cont)
+
+◼ Chaque itération garantit aux équipes qu'ils
+   peuvent intégrer et fournir aux clients un
+   résultat tangible de leurs spécifications
+
+◼ Le suivi des itérations constitue un excellent
+   contrôle des couts et des délais.
+
+       ◼ C’est la meilleure pratique pour la gestion de risques
+           (techniques ou fonctionnels)
+
+       Estimation: Un projet qui ne produit rien dans
+       les 9 mois court un risque majeur d'échec.
+
+                                                                                                                                                                185
+UP (cont)
+
+◼ Avantages:
+
+   ❑ Approche plus relaxe, mais toujours assez robuste
+   ❑ Populaire dans quelques compagnies de software
+
+       moyennes à larges
+
+◼ Inconvénients
+
+   ❑ Il faut former les employés à la modélisation (UML)
+   ❑ Ne fonctionne pas très bien dans des environnements
+
+       très changeants
+
+                                                                                                                                                                187
+UP : liste de quelques variations
+
+◼ EssUP : Essential unified process version qui intègre certains
+   concepts de la méthode Agile.
+
+    ❑ Intégration de EssUP aux outils de travail collaboratifs de la Microsoft
+        Visual Studio Team System.
+
+◼ OpenUP-> Lighter version
+◼ XUP : Extreme Unified Process, Instanciation hybride intégrant
+
+   UP avec Extreme Programming.
+◼ Agile UP:
+◼ 2TUP : Two Tracks Unified Process
+
+    ❑ Le système d'informations est soumis à deux natures de contraintes et
+        de changements:
+
+           ◼ Contraintes fonctionnelles
+           ◼ Contraintes techniques
+
+                                                          ◼188
+2TUP: Cycle de vie en Y
+
+                                                                                                                                                                190
+Agile Frameworks
+
+                                                                                                                                                      191
+                                                                                                                                                                                                                                                                                                Agile Frameworks
+
+Agile Frameworks
+
+                                                                                                                                                                192
+Kanban more used in Support Teams  193
+From Agile to IT Automation and DevOps
+
+                                                                                                                                                                194
+ From Agile to IT Automation and
+ DevOps
+
+◼ While DevOps draws inspiration from XP and other Agile
+   methodologies, it extends these principles to address the
+   entire software delivery lifecycle, including operations
+   and infrastructure management.
+
+◼ DevOps aims to create a culture of collaboration,
+   automation, and continuous improvement across
+   development and operations, with the ultimate goal of
+   delivering high-quality software quickly and reliably.
+
+                                                                                                                                                                     195
+DevOps: CI/CD
+
+                                                                               server
+               cluster
+AGILE PRINCIPLES
+
+                                                                                                                                                          198
+Just enough - Just in time which is also called Progressive
+Refinement-> Client or Product Owner creates Lots of high
+level functionality cards
+
+        once the functionality is done, what criteria they
+        will use to say that this is actually done
+
+                                                                                                                                                        199
+User stories cards -> Product backlog
+
+                                                              user stories are the primary means of
+                                                           capturing functional requirements from the
+
+                                                             perspective of end-users or customers.
+
+                                                                                                                                                                200
+201
+INVEST
+
+                                                                                                                                                                202
+Generating user stories
+
+                                                                                                                                                                203
+Generating user stories
+
+                                                                                                                                                                204
+after that you create the product backlog with all of these stories.205
+DEEP Backlog
+
+                                                   https://www.productplan.com/glossary/deep-backlog/
+
+                                                      evolving in terms of user needs,
+                                                      in terms of the details
+
+                                                         Note
+
+◼ Maintaining the product backlog is a primary responsibility of the product owner.
+    Part of that process involves refining details and estimates and prioritizing items.
+
+◼ Obtaining a DEEP backlog is one of the key outcomes of a product backlog
+    grooming or refinement session, which is a recurring event for agile product
+    development teams. Regular backlog grooming sessions help ensure prioritizing the
+    right stories and that the product backlog does not become a black hole.
+
+                                                                                                                                                                206
+Backlog grooming
+
+                                                                                                                                                                207
+Story mapping                   Mockups or
+                                screenshots
+          High priority to low
+          priority or basic to                                 Non-functional
+          advanced                                              Requirements
+
+Helps you discover user needs.
+And in addition, it helps you organize and prioritize your story backlogs,
+helps you understand and communicate user needs, and it also helps you plan release2s09.
+AND Then ->
+  Horizontal
+
+                                        Vertical: from basic
+                                        to the advanced or
+                                       higher priority to the
+
+                                            lower priority
+
+                                                                                          210
+https://www.visual-paradigm.com/tour/agile-
+development-tools/user-story-map.jsp
+
+                                                                                                                                                                211
+                       Couple of
+                        months
+
+               Daily   Couple of  Iterations
+             planning    weeks      sprints
+
+Gantt Chart                       Stories
+                                  Tasks
+
+                                    212
+         we cut out a bunch of stories that we  Within each sprint,
+         want to build in a release             we create the tasks
+                                                for each of those
+                                                stories,
+                                                and then put them
+                                                on the task board
+
+product  Or
+
+                                                                                                                             213
+3 types of backlog
+
+                        Product Owner with the         Engineering team
+                        engineering team
+         Product Owner
+
+•Initiatives -> Epics -> Features -> Stories -> Tasks
+
+https://www.aha.io/roadmapping/guide/release-management/product-release-sprint-
+
+backlog                                                                  214
+ESTIMATION
+
+                                                                                                                                                          215
+Estimation
+
+◼ In Agile, we use these three concepts,
+
+  ❑ Effort vs. Duration. So we measure Effort or we
+     estimate Effort rather than Duration.
+
+  ❑ Accuracy vs. Precision. We prefer Accuracy.
+
+  ❑ And there are two ways to go about
+    estimation, either Relative or Absolute.
+
+                                                                                                                                                                216
+217
+218
+219
+Takes more time,
+but using buckets
+should help (4 to 5
+
+      buckets)
+
+                                    220
+221
+                                so that they own the
+                                    estimates and
+
+                                 everybody gets an
+                                idea of what we are
+
+                                    about to build.
+
+Useful for estimating large
+number of stories together
+
+                                                                                           222
+223
+224
+  https://scrumpoker.online/
+
+I’am tired
+let’s have
+ a break
+
+                                                                                                                                                                       225
+226
+                                                                                Buckets size( 1,2,4,8 or
+                                                                                Fibonacci series or S, M.
+
+                                                                                           L, etc…
+
+Useful for estimating large number of stories all
+together
+
+                                                                                                                                                              227
+Velocity
+
+◼ A very important concept in agile planning
+◼ It is the amount of work that a team is getting
+
+  done in a sprint.
+
+   ❑ it depends on the team or the project.
+
+                                                                                                                                                                228
+229
+230
+231
+Nb of weeks
+
+                    in weeks.
+
+                this is your story map and you want to
+                release everything in release 1.
+
+                                                                                    232
+FIXED SCOPE RELEASE: delivery date
+calculation example using Velocity range
+
+                                                                                            Story Map
+
+                                                                                                                                                                233
+How to select a story for a fixed scope
+
+release?                            Since, it is a global  Choose the most
+                                    coherent view of all   important stories ->
+                                    releases               get the most
+                                                           important feedback
+
+          Choose the stories        If story 2 depends on
+          that will help you learn  story 1
+          something about your
+          product
+
+                                                                                 234
+so you can
+know what is the highest priority and
+the lowest priority
+
+                                                           235
+FIXED DATE RELEASE: scope
+calculation example
+
+Groomed backlog            236
+237
+either we have added something
+to the release
+or we learn something and they
+have increased the estimate.
+
+   And similarly, if it goes down
+   then either
+   the work was taken out or the
+   estimate went down.
+
+                                          238
+let's say you are one week from the release,
+
+then you can definitely say that you are not going to make it,
+
+there are too many stories in the backlog.
+
+So, this tool basically gives you a gut sense of whether you are on track or not.  239
+240
+SCRUM (1996)
+
+◼ Une alternative lightweight de “méthodologie” agile.
+
+                                                                                                                                                                 241
+242
+243
+Scrum concepts
+
+◼ Three roles in Scrum:
+
+   ❑ Scrum Master,
+   ❑ The Team,
+   ❑ and the Product Owner.
+
+◼ There are a couple rituals (ceremonies):
+
+   ❑ the Sprint Planning Meeting
+
+            ◼ Each sprint begins with a sprint planning meeting. Typically, for a four-week sprint this meeting should
+                   last eight hours.
+
+   ❑ Daily Scrum Meeting-> 15 minutes
+   ❑ Sprint Review->one hour for a one-week sprint.
+   ❑ and a Sprint Retrospective: -> 45 minutes for a one-week sprint.
+
+◼ And there are some artifacts:
+
+   ❑ product backlog, sprint backlog, and Burndown chart, etc...
+
+                                                                                                                                                               244
+246
+It is about the
+improvement of the
+process
+
+                                                        247
+How Scrum actually supports the
+Agile principles
+
+◼ build iteratively, so it embraces change.
+
+   ❑ After every sprint, you can make changes to your
+      product backlog and shift your products to a
+      different direction.
+
+◼ support a lot of meetings for collaboration,
+
+   ❑ between the team members and with the clients.
+
+◼ support continuous improvement with a Sprint
+  Retrospective
+
+                                                                                                                                                                248
+SPRINT PLANNING AND
+TRACKING
+
+                                                                                                                                                          249
+Sprint  planning  preparation work
+                                                     all of these activities
+                                                      happen either in a
+                                                  meeting or a session like
+                                                 backlog grooming, or they
+                                                  can also happen without
+                                                      a meeting as well.
+
+                  250
+Sprint planning preparation
+
+◼ Once the backlog is up-to-date,
+
+◼
+
+◼ Then the next task is to select the stories for
+  the next sprint.
+
+                                                                                                                                                                251
+Sprint planning preparation
+
+                    written
+
+                                                                                                                                                                252
+BEGINS
+
+                                                                                253
+Capacity vs Velocity
+
+◼ Capacity is specific to an individual sprint and guides
+   sprint planning.
+
+◼ Velocity is a historical metric based on past sprints
+   and is used for longer-term planning (i.e release
+   planning) and predicting the team's overall capability.
+
+◼ Capacity Adjustment: While velocity is a valuable
+   guideline, the team may need to consider any
+   changes in their capacity or special circumstances for
+   the upcoming sprint. If there are team members on
+   vacation or other events affecting availability, they
+   may need to adjust their commitment accordingly.
+
+                                                                                                                                                                254
+255
+                      CASE OF A 2 WEEKS SPRINT
+
+          sprint planning, or retrospective and review, backlog grooming
+
+John is
+taking 1
+day off
+
+Capacity can be calculated in hours or ideal days to represent the available time for
+work during a sprint.
+Velocity is typically measured in story points or other relative estimation units to
+represent the team's historical performance in completing work during past sprints. 256
+257
+258
+After Discussing and tasking out stories (Steps 4 and 5)
+
+                                                                                                                             259
+260
+SPRINT TRACKING
+
+                                                                                                                                                          261
+sum of task estimates
+
+                                                                                                                                                                         262
+SCRUM (cont)
+
+◼ Avantages:
+
+   ❑ La “méthodologie” la plus simple à implémenter
+   ❑ Très peu de temps passé par le développeur en
+
+       documentation et meetings
+   ❑ 15 minutes par jour de meetings sont une excellente
+
+       pratique
+
+◼ Inconvénients
+
+   ❑ Pas tous les clients acceptent
+   ❑ Difficultés de passer à des échelles plus grandes
+   ❑ Appréhensions concernant les plannings à long terme
+
+                                                                                                                                                                263
+XP (1999)
+
+◼ XP = eXtreme Programming
+
+   ❑ Intuition: Le changement dans la specification des
+       besoins est inévitable; opter plutot pour l'adaptabilité
+
+   ❑ Pratiques:
+
+        ◼ User Stories
+        ◼ Planning Game ou Planning Poker
+
+               ❑ The game is a meeting that occurs once per iteration, typically once a
+                   week
+
+        ◼ System Metaphor
+        ◼ Test-Driven Development
+        ◼ Small Releases
+        ◼ Pair Programming
+
+                                                                                                                                                                264
+Agile Model (XP)
+
+material adapted from Steve Easterbrook
+
+               Collect                                    Game=meeting
+           User stories
+                                                     Planning
+           Each cycle:                                 Game
+         approx 2 weeks
+Release
+
+         code                            Write test
+                  integrate                cases
+
+         test
+
+                                                                        265
+XP Process model
+
+                 starts with release planning
+
+What to work on comes from two sources.              Based on the work
+Either user stories or architectural spike, or both     done, project
+
+                                                     velocity is updated
+
+                                                     If fail
+
+  solve tough    Spike Story-> pour mieux                      Created from user
+  technical or   comprendre un requirement,                   stories, and presents
+design problems  un risque technique, ameliorer               some expected result
+                 l’estimation d’une story,
+                 etc…expect to throw most of                    from the system266
+XP (cont)
+
+◼ Le plus réussi des méthodologies agiles
+
+    ❑ Bien qu'il est discutable, si tous les gens qui pretendent utiliser XP le
+        font vraiment.
+
+◼ Avantages:
+
+    ❑ Peu de dépenses dans les étapes initiales, les résultats apparaissent
+        très tôt.
+
+    ❑ Les changements sont prévus, le logiciel s'adapte rapidement
+    ❑ Des cycles de feedback très courts.
+
+◼ Inconvénients
+
+    ❑ Pas assez de temps réservé à l'analyse, ce qui implique qu'il faut
+        certainement beaucoup retravailler plus tard.
+
+    ❑ Pas de fin claire en vue, les projets peuvent continuer à l'infini.
+    ❑ La programmation par paire n'est pas acceptée par la plupart.
+
+                                                                                                                                                                267
+            SaFe
+
+How CMMI V2.0 Helps Agile Scale?
+a 2017 survey found that 80 percent of companies that use CMMI also use agile!
+
+                                                                                                                                                                       268
+ SaFe (1/2)
+
+◼ Scaled Agile Framework (SAFe): A set of procedures
+   and practices designed to help large organizations with
+   multiple teams to be more agile.
+
+◼ Agile Release Train (ART): A team that is made up of
+   Agile teams.
+
+   ❑ A cross-functional group of 50 to 125 people who work on the
+       same project.
+
+   ❑ The members of the ART are aligned to a shared business and
+       technological mission.
+
+   ❑ This team plans and commits to the work that will be completed
+       in the PI (Program Increment)
+
+                                                                                                                                                                    269
+SaFe(2/2)
+
+◼ Program Increment (PI): A time-managed period (usually eight
+   to 12 weeks long) in a SAFe environment. A PI consists of a
+   series of iterations within a fixed schedule that defines the work
+   that will be done by multiple Agile teams during each
+   iteration.
+
+    ❑ PI is similar to a sprint (scrum) but scaled for large corporations with
+        multiple Agile teams across an organization all working toward the same
+        goal.
+
+◼ PI planning: An activity with the intent of ensuring that the ART
+   is on the same track moving in the same direction. PI planning
+   events are face-to-face meetings held every eight to 12 weeks
+   after the previous PI.
+
+    ❑ Multiple teams come together to plan and define the work that needs to
+        be done, review backlogs, discuss which features will add value, create
+        or update the product roadmap, and identify risks and dependencies.
+
+                                                                                                                                                                270
+271
+choix d'une Méthodologie
+
+◼ ELLES FONCTIONNENT TOUTES
+
+   ❑ En fournissant un cadre à vos plans de projet
+   ❑ Mais vous devez être engagé pour que ça marche
+
+◼ Les choix dependent des préférences du
+   personel/compagnie/client
+
+                                                                                                                                                                272
+◼ LessonLaunch Page (teacherai.netlify.app)
+
+                                                                                                                                                                277
+

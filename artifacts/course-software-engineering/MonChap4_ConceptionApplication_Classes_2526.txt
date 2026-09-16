@@ -1,0 +1,1571 @@
+                                                                                                                                 1
+
+Chapitre 4- Conception et
+Implémentation et Deploiement
+       Activités du Cycle de vie d'un logiciel
+
+2
+
+    CYCLE DE VIE D'UN LOGICIEL
+    EXPRESSION DES BESOINS
+    SPÉCIFICATIONS DU LOGICIEL
+    CONCEPTION DU LOGICIEL
+    LA PROGRAMMATION
+    TESTS ET MISE AU POINT
+    DOCUMENTATION
+    CONCLUSION
+3
+
+ 3 Conception
+  Introduction
+
+4
+
+      Définir un système avec suffisamment de précision pour permettre sa
+         réalisation physique.
+
+            Cette phase doit aboutir à un document suffisamment précis pour que le système
+              puisse être implémenté sans faire appel à l'utilisateur final, ou à la personne
+              ayant rédigé les spécifications.
+
+      C'est la phase la plus créative du processus de développement
+
+            et il existe peu de règles pour la guider.
+
+      Le processus de conception convertit les "quoi" des spécifications en
+         "comment".
+
+            Il y a conversion de la terminologie de l'espace du problème (ex: objet
+              personne du monde réel) vers l'espace de la solution (on parlera de la classe
+              java Personne)
+  Phases du processus de conception
+
+5
+
+     Conception des données: produit les structures de données
+     Conception architecturale: produit les unités structurelles
+
+       (classes)
+     Conception des interfaces: définit les interfaces entre les
+
+       unités (le plus souvent des méthodes publiques)
+     Conception des procédures: définit les algorithmes des
+
+       différentes méthodes.
+6
+7
+  Deux types d'approches pour la
+  conception
+
+8
+
+    Raffinement:
+
+        consiste à concevoir successivement des niveaux de
+          détails de plus en plus fins. On parle d'approche
+          descendante.
+
+    Modularité:
+
+        Il s'agit d'une approche structurante qui divise le
+          logiciel en composants de plus petite taille. L'ensemble
+          des composants sont ensuite rassemblés pour satisfaire
+          aux spécifications du problème initial.
+  Concepts à couvrir
+
+9
+
+    Conception fonctionnelle vs conception orientée
+      objet
+
+    Stratégie de conception
+    Découvrir les classes
+    Fiches CRC (Classes, Responsabilités,
+
+      Collaborateurs)
+    Patrons (patterns)
+    Principes avancés de conception OO
+   Conception fonctionnelle
+
+10
+
+     Approche par les traitements.
+     Le système est conçu d'un point de vue fonctionnel,
+
+      en partant d'une vue haut niveau, affinée
+      successivement afin d'obtenir une conception plus
+      détaillée.
+     L'état du système est centralisé et partagé par les
+      fonctions qui agissent sur cet état.
+11
+
+        Conception Orientée Objet
+   Conception orientée objet
+
+12
+
+      Le système est vu comme un ensemble d'objets, plutôt que
+        comme un ensemble de fonctions.
+
+      L'état du système est décentralisé, chaque objet est responsable
+        de gérer l'information qui concernent son propre état.
+
+      Ce n'est qu'au milieu des années 80, que la conception
+        orientée objet a été largement adoptée
+  Analyse et conception
+
+13
+
+     Apres avoir fait l'analyse du système informatique,
+      vient la phase de décomposition modulaire, puis
+      celle de l'implémentation
+
+     Un sujet très large et complexe.
+     La méthode verbe/nom est utilisable pour des
+
+      problèmes relativement petits.
+     Les fiches CRC supportent le processus de
+
+      conception. (Classes, Responsabilités,
+      Collaborations)
+
+     Les use cases sont utilisés pour découvrir les
+       interactions entre objets (collaborations).
+  La méthode noms/verbes
+
+14
+
+     Les noms dans une description réfèrent à des
+      ‘choses’
+
+         Une source de classes et d’objets.
+
+     Les verbes réfèrent à des actions.
+
+         Une source d’interaction entre objets.
+         Les actions sont des comportements, c’est-à-dire des
+
+          méthodes.
+  Description d’un problème
+
+15
+
+    Le système de réservation de cinéma doit enregistrer les
+    réservations de salles pour de multiples cinémas.
+
+    Chaque salle possède des sièges disposés en rangées.
+    Les clients peuvent réserver des sièges et on leur assigne
+    un numéro de rangée et un numéro de siège.
+    Ils peuvent demander de réserver plusieurs sièges adjacents.
+
+    Chaque réservation est pour un film en particulier (le
+    visionnement d’un film donné à un certain moment).
+
+    Les représentations sont à une date et une heure assignées,
+    et planifiées dans un cinéma où le film est joué.
+
+    Le système enregistre le numéro de téléphone des clients.
+  Noms et verbes                      Theatre      Movie
+                                      Has (seats)
+16
+
+           Cinema booking system
+           Stores (seat bookings)
+           Stores (telephone number)
+
+Customer                              Time Date
+Reserves (seats)
+Is given (row number, seat number)    Seat booking
+Requests (seat booking)
+                                      Seat         Seat number
+Show
+Is scheduled (in theatre)             Row          Row number
+
+Telephone number
+17
+18
+19
+20
+  Utilisation des fiches CRC
+
+22
+
+  Décrites pour la première fois par Kent Beck et Ward
+    Cunningham.
+
+  Chaque fiche contient: Un nom de classe, Les responsabilités
+
+    de la classe, Les collaborateurs de la classe.
+
+         Collective code ownership
+  Une fiche CRC                   Collaborateurs
+
+23
+
+                Nom de la classe
+                Responsabilités
+
+CRC Card session
+https://www.youtube.com/watch?v=otKUer13HnA
+
+https://echeung.me/crcmaker/
+  Scénarios
+
+24
+
+     Une activité que le système doit mener ou
+      supporter.
+
+         Appelées parfois scénarios d’utilisation (use cases).
+
+   Utilisés pour découvrir et saisir les
+   interactions entre objets (collaborations).
+
+            Remarque :Dans ces slides, le terme Use Case désigne une
+            activité ou un scénario que le système doit supporter. Dans les
+            méthodes agiles modernes comme Extreme Programming, on
+            parle plutôt de User Stories
+  Identifier les Use Case to implement
+
+25
+
+      Lors d'une “CRC card
+        session”, sorte de jeu de
+        rôle, réunion de
+        communication entre les
+        membres de l'équipe à
+        propos du modèle basé sur
+        le concept de classes), un
+        "brainstorming" permettra
+        de déterminer les différents
+        “Use Cases” à implementer.
+
+           http://www.extremeprogramming.org/rules/crccards.html
+   Scénarios utilisés pour analyse
+
+26
+
+         Les scénarios sont utilisés pour vérifier si la
+           description du problème est claire et complète.
+
+         L’analyse des scénarios va mener à la
+           conception.
+
+             Identifier des erreurs ou des omissions à ce stade-
+               ci économisera beaucoup d’effort perdu plus tard.
+  Identifier les Use Case
+
+27
+
+    Deux méthodes s'offrent :
+
+       méthode basée sur les acteurs
+
+           ◼ identifier les acteurs
+           ◼ pour chaque acteur, identifier les “Use Cases” qu'il initie,
+
+             ou auxquels il participe.
+
+       méthode basée sur les événements
+
+           ◼ identifier les événements auxquels le système doit
+             répondre
+
+           ◼ relier chaque événement aux acteurs et aux “Use Cases”
+  Conception de classe
+
+28
+
+     L’analyse par scénario aide à clarifier la
+      structure de l’application.
+
+         À chaque fiche correspond une classe.
+         Les collaborations révèlent la collaboration entre les
+
+           classes / les interactions entre objets.
+
+     Les responsabilités révèlent les méthodes
+      publiques.
+
+         Et parfois aussi les champs “Stocke une collection...”
+  Un exemple partiel
+
+29
+
+CinemaBookingSystem          Collaborators
+Can find shows by title and  Show
+day.
+Stores collection of shows.   Collection
+Retrieves and displays show
+details.
+...
+   Conception des interfaces de classe
+
+30
+
+     Rejouer les scénarios en termes d'appels de méthodes, de
+        paramètres et de valeurs de retour.
+
+     Noter les signatures de méthodes résultantes.
+     Créer le corps des classes avec les entêtes de méthodes
+
+        publiques (sans l'implémentation).
+
+     Une conception soignée est la clé pour une implémentation
+        avec succès.
+  Traçabilité des spécifications
+
+31
+
+       La traçabilité des spécifications tente d'établir un lien entre chaque élément des
+           spécifications et celui qui lui correspond dans la conception.
+
+       Si un élément des spécifications ne correspond à aucun élément de la conception ou
+           le contraire, alors il y a un problème potentiel.
+             Il existe certaines spécifications qui sont très générales et ne renvoient pas à un élément
+
+                 précis de la conception et inversement.
+
+       Une approche possible pour vérifier cette concordance consiste a utiliser une
+           matrice, dont une dimension représente les éléments des spécifications et l'autre
+           ceux de la conception, une croix dans une case indiquant qu'une correspondance
+           existe entre deux éléments.
+
+     A (une classe)  A.1 (un attribut)  A.2 (un attribut)  A.3 (une méthode)
+                     x                  x                  x
+1
+
+2    x
+
+2.1
+  AI Enhanced collaboration
+
+32
+
+     Today, CRC sessions can be supported by AI tools
+      that automatically extract candidate classes,
+      responsibilities, and collaborators from user stories.
+
+     AI copilots can help maintain traceability from
+      requirements to design artifacts automatically.
+  Conception: Disciplines de support
+
+33
+
+     Documentation
+     Conception OO propre (Faible couplage)
+     Prototypage
+     Developpement Iteratif
+  Documentation
+
+34
+
+     Écrire les commentaires de classe.
+     Écrire les commentaires de méthodes.
+     Décrire l'objectif global de chacune.
+
+              La documentation nous assure que:
+                    Le focus est sur le Quoi plutôt que sur le Comment.
+                    Qu'elle n'est pas oubliée!!!!
+  Coopération
+
+35
+
+     Le travail d'équipe risque d'être la norme et non
+      l'exception.
+
+     La documentation est essentielle pour le travail
+      d'équipe.
+
+     Une conception OO propre, avec des composantes
+      possédant un faible degré de couplage, supporte
+      très bien la coopération.
+  Prototypage
+
+36
+
+     Supporte l'investigation préliminaire d'un système.
+
+         Identification hâtive des problèmes.
+
+     Les composantes incomplètes peuvent être simulées.
+
+         Ex: retourner toujours un résultat fixe.
+  Développement itératif
+
+37
+
+     Utiliser le prototypage dans les premiers stades.
+     Interaction fréquente avec le client.
+     Itération à travers les étapes:
+
+          Analyse
+          Conception
+          Prototypage
+          Rétroaction du client
+
+     Un modèle en croissance comme celui-ci est plus réaliste.
+                                                                                                                                38
+
+Conception Orientee Objet Propre
+
+      Comment écrire des classes de façon à ce
+      qu’elles soient facilement compréhensibles,
+      réutilisables et faciles d’entretien
+  Concepts
+
+39
+
+     Faible Couplage
+     Grande Cohésion
+     Conception guidée par les responsabilités
+     Refactorisation (réingénierie)
+  Changements aux logiciels
+
+40
+
+     Les logiciels ne sont pas comme un roman qui est
+      écrit une fois et qui demeure inchangé par la suite.
+
+     Un logiciel est amélioré, corrigé, maintenu, adapté..
+     Le travail est fait par plusieurs personnes
+
+      différentes à travers le temps (souvent des
+      décennies).
+  Change ou crève
+
+41
+
+     Il n’y a que deux options pour un logiciel:
+
+         Soit il est maintenu de façon continue
+         Soit il meurt.
+
+     Un logiciel qui ne peut pas être maintenu sera jeté
+      aux oubliettes.
+La conception Orientée–Objet
+
+ Les enjeux :
+    Limiter l’impact d’une révision fonctionnelle ou
+     technique
+
+ Principes appliqués
+    Limiter le couplage entre classifiers
+    Distribuer les responsabilités des objets
+   Utiliser les patrons de conception
+   (design patterns)
+
+43
+
+     Les relations entre les classes sont importantes et
+       peuvent être complexes.
+
+     Faciliter la réutilisation de savoir faire
+
+     Certaines relations se reproduisent d'une application
+       à l'autre.
+
+     Les patrons de conception aident à clarifier les
+       relations, et facilitent la réutilisation et la
+       documentation.
+   Utiliser les patrons de conception
+   (design patterns)
+
+44
+
+      Design Patterns (GOF)
+      Grasp patterns (Craig Larman) General Responsibility
+
+        Assignment Software Patterns
+
+      Utiliser les patterns dans tous les domaines
+
+           SOA Patterns
+           Workflow Patterns
+           Enterprise software development patterns (Data persistence,
+
+             concurrency, intergration)
+
+               ◼ Enterprise Application Architecture Patterns (Martin Fowler)
+Design Patterns (GOF)
+  Selon GOF ->Structure du patron
+47 (pattern)
+
+     Un nom de patron (pattern).
+     Le problème adressé par ce patron.
+     Comment il procure une solution:
+
+         Structures, participants, collaborations.
+
+     Ses conséquences.
+
+         Résultats, inconvénients...
+
+                          https://refactoring.guru/design-patterns
+  Qualité du code
+
+48
+
+     Deux concepts très importants pour un code de
+      qualité:
+
+         Faible Couplage
+         Grande Cohésion
+  Couplage
+
+49
+
+     Le couplage réfère aux liens entre les parties d’un
+      programme.
+
+     Si deux classes dépendent de façon importante sur
+      plusieurs détails de chacune d’entre elles, on dit
+      qu’elles ont un degré de couplage élevé.
+
+     Nous visons un degré de couplage faible.
+  Degré de couplage faible
+
+50
+
+     Un degré de couplage faible permet de:
+
+         Comprendre une classe sans avoir à en regarder
+          d’autres;
+
+         Modifier une classe sans en affecter d’autres.
+         Conclusion: facilite la maintenance.
+
+Tight coupling                             Loose Coupling
+
+Content coupling: happens when module A    Data coupling (passage de paramètres à
+directly relies on the local data members  une fonction), Message Coupling
+of module B rather than relying on some    (communication par messages)
+access or a method.
+  Coupling
+
+51
+
+Coupling Type Example                            Tightness
+Content Coupling Accessing moduleB.internalData  Very Tight
+Accessor Method Calling moduleB.getData()        Medium
+Parameter Passing moduleA.processData(data)      Loose
+Message Coupling Using interfaces or messages    Very Loose
+  Tight Coupling
+
+52
+
+  Content Coupling: One module directly accesses or
+   modifies the content of another.
+
+     Example: Module A changes the internal variables of Module B.
+
+  Common Coupling: Multiple modules share global data.
+
+     Example: Several functions access and modify a global
+       variable.
+
+  External Coupling: Modules depend on externally
+   imposed data formats or communication protocols.
+
+     Example: Two modules rely on a specific file format to
+       exchange data.
+  Medium Coupling
+
+53
+
+     Control Coupling: One module controls the
+      behavior of another by passing it information on
+      what to do.
+
+         Example: A function passes a flag to another function
+          to determine which operation to perform.
+
+     Data-Structure Coupling: Modules share data
+      structures.
+
+         Example: Two modules use the same complex data
+          structure like a tree or graph.
+  Loose Coupling
+
+54
+
+     Data Coupling: Modules share data through
+       parameters.
+
+         Example: A function receives only the data it needs via
+           arguments.
+
+     Message Coupling: Modules communicate via
+       messages, often in message-oriented systems.
+
+         Example: Objects interact by sending messages (method
+           calls) without knowing each other's internal details.
+
+     No Coupling: Modules are completely independent.
+
+         Example: A logging module that operates separately from
+           the business logic.
+  Cohésion
+
+57
+
+     La cohésion réfère au nombre et à la diversité des tâches
+       dont une partie de programme est responsable.
+
+     Si chaque unité est responsable d’une tâche logique
+       seulement, nous disons que le degré de cohésion est élevé.
+
+     La cohésion s’applique aussi bien aux classes qu’aux
+       méthodes.
+
+     Nous désirons un haut degré de cohésion.
+    Cohésion élevée
+
+60
+
+     Le haut degré de cohésion permet plus facilement
+      de :
+
+        Comprendre ce qu’une classe ou une méthode effectue;
+        Utiliser des noms significatifs;
+        Réutiliser les classes ou les méthodes.
+
+Weak Cohesion                                  Strong Cohesion
+
+Coincidental cohesion is effectively the idea  Object cohesion: each operation in a module is
+that parts of the module are together just     provided to allow the object attributes to be
+because they are. It's in the same class, for  modified or inspected.
+example, in object-oriented programming.       Functional cohesion: every part of the
+                                               component is necessary for the execution of a
+                                               single well-defined function or behavior.
+                                               Everything together is functionally cohesive.
+  Cohésion des méthodes
+
+61
+
+     Une méthode devrait être responsable pour une
+      seule et unique tâche.
+  Cohésion des classes
+
+62
+
+     Les classes devraient représenter une seule entité
+      bien définie.
+  Weak Cohesion
+
+63
+
+      Coincidental Cohesion: Unrelated tasks grouped together.
+
+           Example: A module with logError(), calculateTax(), and
+             connectToDB().
+
+      Temporal Cohesion: Tasks grouped because they occur at the
+        same time.
+
+           Example: Initialization routines like loadConfig(), startLogger(),
+             checkDisk().
+
+      Logical Cohesion:Tasks grouped by a control flag.
+
+           Example: A method handleEvent(int type) that performs different
+             actions based on type.
+  Medium Cohesion
+
+64
+
+    Procedural Cohesion:Tasks follow a specific sequence.
+
+        Example: validateInput() → parseData() → saveToDB().
+
+    Communicational Cohesion: Tasks operate on the
+     same data.
+
+        Example: Reading, processing, and writing the same file.
+
+    Sequential Cohesion:Output of one task is input to
+     the next.
+
+        Example: readData() → filterData() → transformData().
+  Strong Cohesion
+
+65 Functional Cohesion: All parts contribute to a single, well-
+  defined function.
+
+    Example: A module that calculates invoice totals from item prices
+      and taxes.
+
+ Informational Cohesion: Multiple operations on the same
+  data structure.
+
+    Example: A class with methods like sortList(), searchList(),
+      updateList(). (List is passed as parameter, not owned by the class
+      as an attribute)
+
+ Object Cohesion: Each method in a class modifies or
+  inspects the object’s attributes.
+
+    Example: A Student class with getName(), setGrade(),
+      calculateAverage()—all centered on the student’s data.
+  Duplication du code
+
+67
+
+     La duplication du code est
+
+         Un indicateur de mauvaise conception
+         Rend la maintenance plus difficile
+         Peut mener à l’introduction d’erreurs durant la
+
+          maintenance
+   Conception dirigée par les
+   responsabilités
+
+68
+
+     Ayant un modèle de conception avec des milliers de classes
+        logicielles
+
+     Et une application qui nécessite des milliers de
+        responsabilités
+
+     Comment affecter les responsabilites aux classes logicielles
+        en vue de faciliter la maintenance et la reutilisabilité?
+
+     Solution: affecter la responsabilité à l’expert en
+        information: la classe qui possède les informations
+        nécessaires pour s’acquitter de la responsabilité.
+
+                       Use AI-Augmented Responsibility Assignment
+   Conception dirigée par les
+   responsabilités
+
+69
+
+     Pattern Expert en Information (ou Expert) (General
+    Responsibility Assignment Software Patterns : GRASP de
+    Craig Larman)
+
+        La classe qui est propriétaire des données devrait être
+           responsable de les traiter
+
+     La CDR (conception dirigée par les responsabilités) nous
+        mène vers un faible degré de couplage.
+Les patterns GRASP (General Responsibility Assignment
+Software Patterns : GRASP de Craig Larman)
+  Changement ‘local’
+
+71
+
+     Un des objectifs de réduire le degré de couplage
+      et de concevoir les classes en fonction des
+      responsabilités est de localiser le changement.
+
+     Quand un changement est requis, le moins de
+      classes devraient être affectées.
+  Penser vers l’avenir
+
+72
+
+     Lors de la conception d’une classe, nous devons
+      penser quels changements sont susceptibles de se
+      produire dans le futur.
+
+     L’objectif est de rendre ces changements faciles.
+     Pattern Grasp: protection des variations
+  Refactorisation (réingénierie)
+
+73
+
+     Quand l’entretien est effectué sur les classes,
+      souvent du code est ajouté.
+
+     Classes et méthodes deviennent souvent plus
+      longues.
+
+     De temps en temps, classes et méthodes devraient
+      faire l’objet d’une réingénierie (refactorisation) afin
+      de maintenir la cohésion et le faible degré de
+      couplage.
+  Refactorisation et tests
+
+74
+
+     Quand on effectue de la refactorisation, il ne faut
+       pas mélanger d’autres changements au code en
+       même temps.
+
+     Il faut faire la refactorisation seulement, sans
+       changer les fonctionnalités.
+
+     Tester avant et après la refactorisation nous assure
+       que rien n’a été brisé.
+  Questions de conception..
+
+75
+
+     Questions courantes:
+
+         Quelle longueur devrait avoir une classe?
+         Quelle longueur devrait avoir une méthode?
+
+     Nous pouvons répondre à ces questions en termes
+      de cohésion et de degré de couplage.
+   Lignes directrices de conception
+
+76
+
+     Une méthode est trop longue si elle fait plus d’une
+      tâche logique.
+
+     Une classe est trop complexe si elle représente plus
+      d’une entité logique.
+
+     Note: ce sont des lignes directrices – elles laissent
+      beaucoup de champ libre au concepteur.
+  Les patterns GRASP(1/3)
+
+77
+
+       Créateur
+
+            Qui doit avoir la responsabilité de créer une nouvelle instance d’une classe
+               donnée
+
+                   ◼ i.e Class B, if Instances of B have the initializing information for instances of A and pass it on
+                      creation.
+
+       Expert en Information
+
+            Affecter une responsabilité à l’expert en information: la classe qui possède les
+               informations nécessaires pour s’acquitter de cette responsabilité
+
+       Protection des variations (PV) (Strategy)
+
+            Comment concevoir des objets, des sous-systemes ou des systemes de telle façon
+               que les variations ou l’instabilité des éléments n’aient pas d’impact indésirable
+               sur d’autres éléments?
+
+            Reponse: Identifier les points de variations ou d’instabilité prévisibles.
+               Affecter les responsabilités pour créer une interface stable autour d’eux
+  Les patterns GRASP (2/3)
+
+78
+
+       Polymorphisme (method overriding->flexibility, extensibility)
+
+       Indirection (mediator)
+
+            Où affecter une responsabilité pour éviter le couplage entre deux entités (ou
+               plus)? Comment découpler les objets pour maintenir le potentiel de
+               réutilisation?
+
+            Reponse: Affecter la responsabilité à un objet intermédiaire entre services
+               pour éviter de les coupler.
+
+       Fabrication pure
+
+            Quel est l’objet qui doit être responsable, lorsqu’on ne veut pas transgresser les
+               principes de Faible couplage et de Forte Cohésion mais que les solutions
+               offertes par Expert ne sont pas appropriés?
+                ◼ Reponse: Une classe imaginaire pure introduite au niveau de la phase
+                    conception, et qui n’a pas forcément une image au niveau de la phase analyse
+                    du domaine.
+  Les patterns GRASP (3/3)
+
+79
+
+       Controleur
+
+             Quel est le premier objet au-dela de l’IHM qui recoit et coordonne (“controle”)
+                une opération systeme?
+
+             Réponse:
+                ◼ un objet racine representant le systeme, ou sous-systeme, soit un controleur de
+                    façade
+                ◼ utiliser le meme objet pour tous les evenements systeme appartenant au meme
+                    scenario
+
+       Faible Couplage
+           Minimiser les dépendances
+
+       Forte Cohésion
+           Cohésion et couplage: le yin et le yang
+
+                ◼ Une faible cohesion, entraine un couplage elevé
+80 WHAT ARE DRY, KISS, SOLID PRINCIPLES
+   WHAT ARE DRY, KISS, SOLID PRINCIPLES
+
+81
+
+      DRY:
+         In software engineering, Don’t Repeat Yourself (DRY) or
+           Duplication is Evil (DIE) is a principle of software
+           development
+
+      KISS:
+         KISS is an acronym for the design principle “Keep it simple,
+           Stupid!”.
+
+      SOLID:
+         The principles when applied together intends to make it
+           more likely that a programmer will create a system that is
+           easy to maintain and extend over time
+   Principes avancés de conception Objet
+
+82
+
+    Trois groupes principaux de qqes principes
+      extrêmement utiles en matière de design:
+
+      1. Gestion des évolutions et des dépendances entre
+      classes,
+      2. Organisation de l'application en modules,
+      3. Gestion de la stabilité de l'application.
+83
+
+     On parle des cinq principes SOLID de base pour la
+      programmation orientee objet:
+                 - Single responsibility principle
+                     - Open Closed Principle
+                  - Liskov Substitution Principle
+                - Interface Segragation Principle
+                - Dependency Inversion Principle
+  Single responsibility principle
+
+84
+
+     “A class should have only one reason to change.”
+     Every module or class should have responsibility
+
+      over a single part of the functionality provided by
+      the software, and that responsibility should be
+      entirely encapsulated by the class.
+
+     Solid Principles: Single responsibility principle –
+      Emmanouil Gkatziouras (egkatzioura.com)
+
+         https://egkatzioura.com/2018/02/23/solid-
+          principles-single-responsibility-principle/
+   Gestion des évolutions et des
+   dépendances entre classes (1/4)
+
+85
+
+     Principe d'ouverture/fermeture - Open-Closed
+       Principle (OCP)
+
+         Un module doit être ouvert aux extensions mais fermé aux
+           modifications
+
+              ◼ l'ajout de fonctionnalités doit se faire en ajoutant du code et non en
+                 éditant du code existant.
+
+         Utiliser l’abstraction comme moyen
+           d’ouverture/fermeture
+
+             ◼ utiliser des interfaces ou des classes abstraites, et des templates
+                (generics).
+    Gestion des évolutions et des dépendances entre
+
+    classes (2/4)  https://egkatzioura.com/2018/02/23/solid-principles-liskov-
+                                           substitution-principle/
+
+86
+
+     Principe de substitution de Liskov- Liskov Substitution Principle (LSP)
+
+     Les méthodes qui utilisent des objets d'une classe doivent pouvoir utiliser
+       des objets dérivés de cette classe sans même le savoir.
+
+    ◼ Hériter pour substituer, sinon aggréger
+
+     Principe d'inversion des dépendances - Dependency Inversion Principle (DIP)
+
+     "Les modules de haut niveau ne doivent pas dépendre de modules de bas niveau.
+       Tous deux doivent dépendre d'abstractions."
+
+    L’abstraction comme technique
+    d’inversion des dépendances:
+
+    Pour inverser la dépendance de A vers B,
+    on introduit une classe d’interface I dont
+    dérive B.
+
+https://dzone.com/articles/solid-principles-dependency-inversion-principle
+   Gestion des évolutions et des dépendances entre
+   classes (3/4)
+
+87
+
+       Principe de séparation des interfaces - Interface Segregation Principle (ISP)
+
+            No client should be forced to depend on methods it does not use.
+
+      C’est la pollution d'interface par agrégation de services
+
+            On retrouve dans la plupart des designs quelques classes qui rendent plusieurs
+               services simultanément, comme l'illustre le schéma ci-dessous :
+   Gestion des évolutions et des dépendances entre
+   classes (4/4)
+
+88
+
+       Principe de séparation des interfaces - Interface Segregation Principle (ISP)
+       Solution: séparation des services de l’interface
+
+            Le principe de séparation des interfaces stipule que chaque client ne doit "voir" que les
+               services qu'il utilise réellement :
+
+                                                            Séparation par héritage
+   Organisation de l'application en modules
+
+89
+
+     Principe de fermeture commune - Common Closure
+       Principle (CCP)
+
+         Les classes impactées par les mêmes changements
+           doivent être placées dans un même package.
+
+     Il faut :
+
+         Décomposer l'application en packages pour gérer
+           correctement les versions et permettre une réelle
+           réutilisation,
+
+         Regrouper dans un même package les classes qui sont
+           utilisées ensemble et qui sont impactées par les mêmes
+           changements.
+   Gestion de la stabilité de l'application
+   (1/3)
+
+90
+
+     Principe des dépendances acycliques - Acyclic
+      Dependencies Principle (ADP)
+
+         "Les dépendances entre packages doivent former un
+          graphe acyclique."
+  Gestion de la stabilité de
+91 l'application (2/3)
+
+      Principe des dépendances acycliques: par Technique
+        d'inversion des dépendances
+
+      La technique d'inversion de dépendances est celle présentée
+        dans le principe d'inversion des dépendances, et repose sur
+        l'introduction d'une classe d'interface :
+  Gestion de la stabilité de
+92 l'application (3/3)
+
+     Il faut :
+
+         Organiser les modules en un arbre de dépendances (en
+          supprimant donc tout cycle dans le graphe des
+          dépendances),
+
+         Placer les packages les plus stables à la base de
+          l'arbre,
+
+         Placer les interfaces dans les packages les plus
+          stables.
+  Principes OO : synthèse
+
+93
+
+     Les principes énoncés ici placent le contrôle des
+      dépendances au coeur de l'activité de design, dans
+      le but de limiter le coût des modifications et ainsi
+      atteindre les objectifs recherchés d'extensibilité et de
+      réutilisabilité.
+
+     Ce contrôle repose sur une utilisation efficace des
+      interfaces, qu'il s'agisse d'interfaces entre
+      applications, entre packages ou entre classes.
+  Conclusion
+
+94
+
+     Les programmes sont constamment modifiés au cours de leur
+        existence.
+
+     C’est important de rendre ces changements possibles.
+     Du code de qualité requiert plus que de seulement
+
+        s’exécuter correctement une fois.
+     Le code doit être compréhensible et maintenable.
+  Conclusion
+
+95
+
+     Du code de qualité évite la duplication, montre de la
+        cohésion et un faible degré de couplage.
+
+     Le style du code (commentaire, choix des noms, alignement,
+        etc.) est également important.
+
+     Il y a une énorme différence entre la quantité de travail
+        requise pour modifier du code mal conçu versus du code
+        bien structuré.
+  Conclusion
+
+96
+
+     Les collaborations entre les classes et les interactions entre
+        les objets doivent être identifiés.
+
+          Analyse par fiche CRC supporte ce besoin.
+
+     Une approche itérative à la conception, l'analyse et
+        l'implémentation peut être extrêmement bénéfique.
+
+          Voit les logiciels comme des entités qui croîtront et évolueront
+            dans le temps.
+  Conclusion
+
+97
+
+     Travailler d'une façon qui facilitera la collaboration
+      avec les autres.
+
+     Conception flexible et extensible des structures de
+      classes.
+
+         Être attentif aux patrons de conception (design
+          patterns) vous aidera à accomplir cet objectif.
+
+     Continuer à apprendre de vos propres expériences
+      et celles des autres.
+98 Implémentation
+                                                                                                   99
+
+Directives d'implémentation
+   Implémentation
+
+100
+
+      Ecriture d'un programme = implémentation = implantation
+      Principes rigoureux de base
+
+            De fond - > déjà défini au niveau de la phase d'analyse
+            De la forme: présentation, mise en page, choix des identificateurs, etc.
+
+              qui jouent un rôle fondamental lors de la réalisation d'un logiciel
+
+      Tant qu'on n'utilise pas des outils de conception ou d'assistance à
+         la conception permettant la réalisation d'applications, à partir de
+         simples spécifications édictées en langues naturelles, il faudra
+         user de la plus grande rigueur lors de l'écriture des logiciels.
+   Deux Principes fondamentaux
+
+101
+
+       Deux Principes fondamentaux de la méthodologie de la programmation
+
+          Localité maximale (1)
+          Couplage minimum (2)
+
+      Ces 2 principes sont induits par le concept général de
+        réutilisabilité (qui n'est rien d'autre que la minimisation de
+        l'entropie appliquée au logiciel)
+
+      De ces 2 principes découlent les règles suivantes:
+
+            Minimum de redondance (3)
+            Maximum de concision respectant (4)
+            Clarté maximale (5)
+   Localité maximale
+
+102
+
+     Tout ce qui peut être décrit à un endroit et un seul
+       des sources doit l'être.
+
+         Regrouper les opérations afférentes à un même sous
+          ensemble
+
+     Première conséquence : limitation de l'utilisation des
+       effets de bords à des cas strictement nécessaires.
+
+         Le rejet des effets de bord induit une forte
+         restriction à l'utilisation de variables globales
+   Couplage minimum
+
+110033
+
+     Les différentes entités composant le
+      programme doivent avoir le minimum de
+      relations entre eux
+
+         Pour les procédures, ce sera le nombre de
+          paramètres qui devra être le plus faible, tout en
+          respectant le principe de Localité maximale
+
+            ◼ Dans certains cas on passe des structures
+   Redondance minimum
+
+104
+
+     La redondance est en opposition avec une Localité
+       maximale
+
+     Le respect de cette règle rend plus concise les
+       sources, donc plus compréhensibles.
+
+     Le minimum de redondance est en rapport avec la
+       durée de vie d'une application informatique donc
+       vis-à-vis de sa maintenance.
+   Concision versus clarté maximale
+
+105
+
+     Equilibre difficile à mettre en œuvre.
+     Manque d'information -> source d'obscurité
+     Mais aussi: trop de précision noie l'essentiel
+     Le juste équilibre sera de rigueur
+
+     Cette règle s’applique aux commentaires, et elle est
+       également valable pour le code.
+                                                                                                  106
+
+Conventions de programmation
+   Introduction
+
+107
+
+       Les conventions sont introduites pour augmenter la lisibilité des sources des
+          programmes.
+
+       Elles sont fortement liées au langage utilisé.
+       Elles sont souvent édictées par l'équipe de développement.
+       Parmi ces conventions, on parlera de:
+
+             Variables versus constantes
+             Identificateurs
+             Variables muettes
+             Commentaires
+             Procédures
+             Paramètres formels
+             Fonctions
+   Variables versus constantes
+
+108
+
+      Il est souhaitable à la simple lecture de l'identificateur de
+        différencier une variable d'une constante.
+
+            Par exemple une majuscule comme premier caractère marquera une
+              constante, une minuscule définira une variable.
+
+            Ou selon les recommandations de Ada quality & style: Guidelines for
+              Professional Programmers où on préconise l'utilisation d'une lettre
+              majuscule en début de chaque identificateur, soit tout en majuscule pour
+              les constantes.
+
+      Les noms utilisés pour désigner les variables ou les constantes
+        doivent , impérativement, être des substantifs (des noms).
+   Choix des Identificateurs
+
+109
+
+      C'est le choix le plus difficile du métier de l'informaticien.
+
+            Les quelques lettres qui forment un identificateur peuvent véhiculer un
+              concept parfois fort complexe
+
+                ◼ Pointeur sur une liste chainée, une constante permettant le calcul de la
+                   longueur d'un buffer en tenant compte des débordements circulaires.
+
+            Une application informatique de taille moyenne peut comporter jusqu'à
+              plusieurs milliers d'identificateurs
+
+      Règles à suivre:
+
+            Un identificateur doit être le plus significatif possible
+            Pas trop long, pas trop court
+            Cohérent par rapport au contexte
+   Choix des Identificateurs
+
+110
+
+       S'il est nécessaire d'utiliser plusieurs mots pour former un identificateur
+          significatif, alors selon le langage de programmation:
+
+              Chaque début de mot sera indiqué par une lettre majuscule, sauf pour le premier, pour
+                 lequel on respecte la règle mentionnée plus haut concernant les variables et les constantes
+
+              Chaque élément de l'identificateur sera séparé par un caractère souligné ou encore par
+                 le caractère moins lorsque cela est syntaxiquement possible.
+
+              Préférer la première notation quand c'est possible, le caractère souligné alourdit
+                 l'écriture.
+
+       Il est d'usage d'utiliser des abréviations: Elles devront être suffisamment
+          universelles pour être comprises de tous les informaticiens.
+
+              Il existe des abréviations que l'on pourrait qualifier de standard
+              Un technique universelle de construction d'abréviations compréhensibles consiste en
+
+                 l'élimination des voyelles centrales des identificateurs pour ne conserver que les
+                 consonnes.
+   Variables muettes
+
+111
+
+       Nommées encore variables d' implémentation
+       Elles n'ont aucune raison d'être que celle d'être liées aux impératifs de
+
+          l'implémentation (sans rapport direct avec l'application)
+       Exemple: les indices de boucle, les index de tableaux, les copies
+
+          temporaires, etc.…
+       Dans ce cas, utiliser des identificateurs mono lettre ou encore "à la Basic",
+
+          une lettre et un chiffre.
+
+       Les informaticiens, essentiellement par héritage du FORTRAN, ont l'habitude
+          d'utiliser les lettres i, j, k, l, m, n pour nommer les variables muette de type
+          entier et les lettres v, r, x, y, z pour celles de type réel. La lettre 'b' est
+          souvent utilisée pour le type booléen ou encore 'f' pour flag.
+   Commentaires
+
+112
+
+       Il n'est pas nécessaire de rappeler leur importance dans les sources d'une
+          application informatique.
+
+             Ils sont le support de tout ce que le langage de programmation ne peut pas
+               transmettre: "la raison du pourquoi"
+
+             Ils sont exprimés en langue naturelle, par opposition au langage formel de
+               programmation
+
+             Ils doivent être claire et concis, les abréviations pouvant être utilisées dans la
+               mesure où elles sont suffisamment universelles .
+
+       Doit être commentée:
+
+             Chaque ligne de déclaration
+             Chaque début de bloc logique
+             Chaque entête de méthode ou procédure
+   Procédures
+
+113
+
+      Ce sont des pièces maitresses de la réalisation d'une
+        application informatique.
+
+            Ils définissent la granularité de l'application.
+            Leur rôle est essentiel dans la modularisation
+
+      Le choix de l'identificateur, nom de la procédure, est
+        déterminant pour la compréhension de son but. Il devra être un
+        verbe à l'infinitif, le différenciant ainsi des identificateurs
+        variables et constantes.
+
+      Le volume de code par procédure ne devra pas (sauf
+        exceptionnellement) dépasser une page, c.-à-d. l'ordre d'une
+        cinquantaine de lignes.
+   Paramètres formels
+
+114
+
+     Doivent respecter un certain ordre d'apparition:
+
+         Paramètres en entrée seulement
+         Paramètres en entrée et sortie
+         Paramètres en sortie seulement
+
+     Leur désignation sera sémantiquement caractérisée
+       par leur utilisation à l'intérieur de la procédure et
+       non celle de l'application en générale
+   Fonctions
+
+115
+
+     Elles obéissent aux mêmes règles que les
+       procédures.
+
+     La seule différence est celle du nom donne a la
+       fonction:
+
+         On utilise un substantif plutôt qu'un verbe a l'infinitif,
+          celui-ci étant plus significatif de la valeur produite ou
+          retournée par la fonction.
+116 Deploiement
+117
+              DevOps: CI/CD
+
+                                                                                                        server
+
+                                        cluster
+
+DevOps-to-DevAIps flow:
+Code → Build → Test → Deploy → Monitor → Retrain → Redeploy
+                     DevAIps
+
+“When systems incorporate AI models, deployment
+extends into model versioning, retraining, drift
+monitoring, and automated rollback through CI/CD/CT
+(Continuous Training).”
+
+Code → Build → Test → Deploy → Monitor → Retrain → Redeploy
+
+Model Testing & Validation
+Bias & Drift Detection
+Continuous Retraining / Monitoring
+Model Governance
+121
+122
+  Deployment:
+
+123
+
+ 30 minutes                         ≠ load
+
+                                     balancing
+ Installed and configured software, data regularly backuped up
+
+ 2 to 4 hours
+
+ Just configured hardware, no data
+
+ 24 hours
+
+ Just hardware
+
+In simple terms, a project cutover is the part of the go-live phase when a
+project is deployed in production. The cutover process includes a series of
+steps that must be precisely orchestrated to ensure the successful
+deployment of project components from pre-production environments.
+124
+
+                                                                                              ➢ Development
+                                                                                              ➢ QA
+                                                                                              ➢ Staging
+                                                                                              ➢ UAT
+                                                                                              ➢ Production
+  Environment   Purpose              Typical        Data Used         Can Share
+125Development                       Activities                       Infrastructure?
+                Build and                                             Yes, often shares
+  QA (Quality   implement new        Coding, unit   Mock, or          with QA in small
+  Assurance)    features locally     testing,       developer-        setups
+                Validate             debugging      generated data
+  Staging       functionality and                                     Yes, sometimes
+                quality (FR and      Functional     Synthetic or      shares with
+  UAT (User     NFR)                 testing,       structured test   Development
+  Acceptance                         regression     data
+  Testing)      Final technical      testing                          Rarely, should
+                validation before                                     ideally be
+  Production    production           Integration    Production-like   isolated to mimic
+                deployment           testing,       data (sanitized)  production
+                                     performance
+                Business validation  testing,                         Sometimes, can
+                by end users         deployment                       share with
+                                     rehearsal                        Staging but risky
+                Live environment
+                for end users        Acceptance Realistic data        No, must be fully
+                                                                      isolated for
+                                     testing, business (often         security and
+
+                                     scenario       anonymized
+
+                                     validation     production data)
+
+                                     Actual usage,  Real production
+                                     monitoring,    data
+                                     maintenance
+DevOps vs. SRE
+
+128      DevOps                          SRE (Site Reliability Engineering)
+
+ Aspect                                  Ensure reliability, availability, and
+                                         performance of systems
+         Bridge gap between
+                                         Reliability & resilience through engineering
+Primary Goal development and operations  practices
+
+         for faster delivery             SLIs/SLOs, error budgets, incident response,
+                                         reliability automation
+Focus    Speed & automation in
+         software delivery               Treat operations as a software problem;
+                                         apply engineering to reliability
+         CI/CD pipelines,                Service Level Indicators (SLIs), Service Level
+                                         Objectives (SLOs)
+Key Practices infrastructure as code,    Monitoring (Prometheus), alerting, chaos
+                                         engineering, automation scripts
+         automated deployments
+
+Mindset  Culture of collaboration
+         between Dev and Ops
+
+Metrics  Deployment frequency, lead
+         time, MTTR
+
+Tools    Jenkins, Docker, Kubernetes,
+         Terraform
+131 Annexe
+
+         Qqes Design patterns
+   Exemple: Décorateur (Decorator)
+
+132
+
+      Augmente les fonctionnalités d'un objet.
+      Les objets décorateurs enveloppent un autre objet.
+
+           Le décorateur possède une interface similaire.
+           Les appels sont relayés à l'objet enveloppé...
+           ... Mais le Décorateur peut effectuer ou interpoler des actions
+
+             additionnelles.
+
+      Exemple: java.io.BufferedReader
+
+           Enveloppe et augmente un objet Reader qui ne contient pas de
+             buffer.
+   Singleton
+
+133
+
+      S'assure que seulement une instance d'une classe existe.
+
+           Tous les clients utilisent le même objet.
+
+      Le constructeur est privé afin de prévenir l'instanciation
+        externe.
+
+      L'instance simple est obtenue via une méthode statique
+        (static) getInstance.
+   Méthode fabrique (factory method)
+
+134
+
+            Un patron créatif (au sens de création).
+            Les clients requièrent un objet d’une interface ou d’une
+
+              superclasse particulière.
+            Une méthode fabrique est libre de retourner un objet
+
+              de la classe ou un objet de la sous-classe.
+            Le type exact de retour dépend du contexte.
+            Exemple: les méthodes iterator situées dans les
+
+              classes Collection.
+   Observateur (Observer)
+
+135
+
+      Supporte la séparation du modèle interne versus une vue de
+        ce modèle.
+
+      Les observateurs définissent une relation un-à-plusieurs entre
+        les objets.
+
+      L'objet observé avertit tous les objets Observateurs de tout
+        changement d'état.
+   Observateurs
+
+136
+
